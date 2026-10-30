@@ -1,22 +1,22 @@
 {
   "total_macros": 144,
-  "ai_count": 135,
-  "procedural_count": 9,
+  "ai_count": 140,
+  "procedural_count": 4,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
     "abyss_edge_m1.webp": {
       "family": "abyss_edge",
       "variant": "m1",
-      "kb": 191.13,
+      "kb": 188.63,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 54.37,
-      "lum_std": 9.67,
-      "sobel_mean": 22.39,
-      "unique_colors_sample": 1413,
+      "lum_std": 9.62,
+      "sobel_mean": 22.22,
+      "unique_colors_sample": 1426,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "abyss_edge_m1.png",
@@ -29,15 +29,15 @@
     "abyss_edge_m2.webp": {
       "family": "abyss_edge",
       "variant": "m2",
-      "kb": 205.91,
+      "kb": 202.38,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 55.1,
-      "lum_std": 10.02,
-      "sobel_mean": 27.63,
-      "unique_colors_sample": 1544,
+      "lum_mean": 55.13,
+      "lum_std": 10.03,
+      "sobel_mean": 27.45,
+      "unique_colors_sample": 1572,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "abyss_edge_m2.png",
@@ -50,15 +50,15 @@
     "abyss_edge_m3.webp": {
       "family": "abyss_edge",
       "variant": "m3",
-      "kb": 186.08,
+      "kb": 185.39,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 54.99,
-      "lum_std": 10.69,
-      "sobel_mean": 21.92,
-      "unique_colors_sample": 2007,
+      "lum_mean": 55.0,
+      "lum_std": 10.68,
+      "sobel_mean": 21.86,
+      "unique_colors_sample": 1987,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "abyss_edge_m3.png",
@@ -71,20 +71,23 @@
     "abyss_edge_m4.webp": {
       "family": "abyss_edge",
       "variant": "m4",
-      "kb": 198.59,
+      "kb": 184.85,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 54.59,
-      "lum_std": 11.79,
-      "sobel_mean": 25.92,
-      "unique_colors_sample": 2511,
+      "lum_mean": 55.15,
+      "lum_std": 12.08,
+      "sobel_mean": 21.76,
+      "unique_colors_sample": 1875,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "abyss_edge_m4.png",
+      "src_sha256": "c8e499c00a2bd5a9861e3addfdb9d957bc8ccf398427f70ce58d8c1fa006e5e7",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "bamboo_floor_m1.webp": {
       "family": "bamboo_floor",
@@ -1427,15 +1430,15 @@
     "island_reef_m1.webp": {
       "family": "island_reef",
       "variant": "m1",
-      "kb": 272.22,
+      "kb": 272.26,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 164.91,
+      "lum_mean": 164.9,
       "lum_std": 19.71,
       "sobel_mean": 38.92,
-      "unique_colors_sample": 24131,
+      "unique_colors_sample": 24261,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "island_reef_m1.png",
@@ -1448,15 +1451,15 @@
     "island_reef_m2.webp": {
       "family": "island_reef",
       "variant": "m2",
-      "kb": 299.35,
+      "kb": 299.89,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 164.21,
-      "lum_std": 22.29,
-      "sobel_mean": 51.09,
-      "unique_colors_sample": 16533,
+      "lum_std": 22.27,
+      "sobel_mean": 51.11,
+      "unique_colors_sample": 16492,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "island_reef_m2.png",
@@ -1469,15 +1472,15 @@
     "island_reef_m3.webp": {
       "family": "island_reef",
       "variant": "m3",
-      "kb": 271.42,
+      "kb": 272.04,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 164.36,
-      "lum_std": 15.0,
-      "sobel_mean": 39.28,
-      "unique_colors_sample": 7750,
+      "lum_mean": 164.35,
+      "lum_std": 14.99,
+      "sobel_mean": 39.31,
+      "unique_colors_sample": 7700,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "island_reef_m3.png",
@@ -1490,20 +1493,23 @@
     "island_reef_m4.webp": {
       "family": "island_reef",
       "variant": "m4",
-      "kb": 300.87,
+      "kb": 287.79,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 164.61,
-      "lum_std": 21.13,
-      "sobel_mean": 49.12,
-      "unique_colors_sample": 29150,
+      "lum_mean": 165.2,
+      "lum_std": 20.49,
+      "sobel_mean": 37.93,
+      "unique_colors_sample": 37350,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "island_reef_m4.png",
+      "src_sha256": "01e1283d6577e39107d76fb6c0ad06619036ce308082495fa8b9264371d41b2e",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "lake_m1.webp": {
       "family": "lake",
@@ -2093,15 +2099,15 @@
     "ocean_m1.webp": {
       "family": "ocean",
       "variant": "m1",
-      "kb": 228.17,
+      "kb": 228.31,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 94.79,
-      "lum_std": 9.55,
-      "sobel_mean": 28.27,
-      "unique_colors_sample": 2065,
+      "lum_mean": 94.8,
+      "lum_std": 9.54,
+      "sobel_mean": 28.23,
+      "unique_colors_sample": 2108,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "ocean_m1.png",
@@ -2114,15 +2120,15 @@
     "ocean_m2.webp": {
       "family": "ocean",
       "variant": "m2",
-      "kb": 228.44,
+      "kb": 225.38,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 94.1,
+      "lum_mean": 94.09,
       "lum_std": 9.57,
-      "sobel_mean": 28.34,
-      "unique_colors_sample": 1520,
+      "sobel_mean": 28.37,
+      "unique_colors_sample": 1521,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "ocean_m2.png",
@@ -2135,15 +2141,15 @@
     "ocean_m3.webp": {
       "family": "ocean",
       "variant": "m3",
-      "kb": 229.76,
+      "kb": 229.48,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 94.61,
-      "lum_std": 9.58,
-      "sobel_mean": 29.27,
-      "unique_colors_sample": 1534,
+      "lum_mean": 94.62,
+      "lum_std": 9.57,
+      "sobel_mean": 29.17,
+      "unique_colors_sample": 1503,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "ocean_m3.png",
@@ -2156,20 +2162,23 @@
     "ocean_m4.webp": {
       "family": "ocean",
       "variant": "m4",
-      "kb": 232.73,
+      "kb": 234.81,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 94.29,
+      "lum_mean": 94.81,
       "lum_std": 9.56,
-      "sobel_mean": 29.13,
-      "unique_colors_sample": 1927,
+      "sobel_mean": 29.03,
+      "unique_colors_sample": 2222,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "ocean_m4.png",
+      "src_sha256": "95fc31491554271cbd84b85736130edd41259f0b5163798db57926fa1ea245d2",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "plains_m1.webp": {
       "family": "plains",
@@ -2423,15 +2432,15 @@
     "road_stone_m1.webp": {
       "family": "road_stone",
       "variant": "m1",
-      "kb": 201.03,
+      "kb": 191.92,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.34,
-      "lum_std": 11.49,
-      "sobel_mean": 25.93,
-      "unique_colors_sample": 1040,
+      "lum_mean": 120.35,
+      "lum_std": 11.47,
+      "sobel_mean": 25.77,
+      "unique_colors_sample": 1055,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "road_stone_m1.png",
@@ -2444,15 +2453,15 @@
     "road_stone_m2.webp": {
       "family": "road_stone",
       "variant": "m2",
-      "kb": 213.48,
+      "kb": 213.12,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.73,
-      "lum_std": 12.2,
-      "sobel_mean": 29.79,
-      "unique_colors_sample": 2334,
+      "lum_mean": 120.74,
+      "lum_std": 12.19,
+      "sobel_mean": 29.69,
+      "unique_colors_sample": 2358,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "road_stone_m2.png",
@@ -2465,15 +2474,15 @@
     "road_stone_m3.webp": {
       "family": "road_stone",
       "variant": "m3",
-      "kb": 229.56,
+      "kb": 230.41,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.38,
+      "lum_mean": 120.39,
       "lum_std": 11.43,
-      "sobel_mean": 33.25,
-      "unique_colors_sample": 2064,
+      "sobel_mean": 33.27,
+      "unique_colors_sample": 2089,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "road_stone_m3.png",
@@ -2486,20 +2495,23 @@
     "road_stone_m4.webp": {
       "family": "road_stone",
       "variant": "m4",
-      "kb": 218.89,
+      "kb": 217.76,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.94,
-      "lum_std": 12.56,
-      "sobel_mean": 29.36,
-      "unique_colors_sample": 2181,
+      "lum_mean": 120.03,
+      "lum_std": 12.15,
+      "sobel_mean": 35.05,
+      "unique_colors_sample": 2863,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "road_stone_m4.png",
+      "src_sha256": "87d72a325568092dedcb931e611dc4163a7b277514675112408645e27868519a",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "rock_ground_m1.webp": {
       "family": "rock_ground",
@@ -2672,15 +2684,15 @@
     "settlement_floor_m1.webp": {
       "family": "settlement_floor",
       "variant": "m1",
-      "kb": 211.93,
+      "kb": 212.85,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 155.02,
-      "lum_std": 10.5,
-      "sobel_mean": 25.17,
-      "unique_colors_sample": 2369,
+      "lum_mean": 154.97,
+      "lum_std": 10.49,
+      "sobel_mean": 25.13,
+      "unique_colors_sample": 2421,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "settlement_floor_m1.png",
@@ -2693,15 +2705,15 @@
     "settlement_floor_m2.webp": {
       "family": "settlement_floor",
       "variant": "m2",
-      "kb": 226.24,
+      "kb": 228.6,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 154.92,
-      "lum_std": 13.29,
-      "sobel_mean": 30.97,
-      "unique_colors_sample": 6143,
+      "lum_mean": 154.88,
+      "lum_std": 13.28,
+      "sobel_mean": 31.0,
+      "unique_colors_sample": 6255,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "settlement_floor_m2.png",
@@ -2714,15 +2726,15 @@
     "settlement_floor_m3.webp": {
       "family": "settlement_floor",
       "variant": "m3",
-      "kb": 288.49,
+      "kb": 294.46,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 154.89,
+      "lum_mean": 154.68,
       "lum_std": 12.31,
-      "sobel_mean": 48.68,
-      "unique_colors_sample": 7252,
+      "sobel_mean": 49.29,
+      "unique_colors_sample": 7053,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "settlement_floor_m3.png",
@@ -2735,20 +2747,23 @@
     "settlement_floor_m4.webp": {
       "family": "settlement_floor",
       "variant": "m4",
-      "kb": 201.29,
+      "kb": 248.72,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 154.99,
-      "lum_std": 9.46,
-      "sobel_mean": 23.6,
-      "unique_colors_sample": 1526,
+      "lum_mean": 154.8,
+      "lum_std": 17.29,
+      "sobel_mean": 42.85,
+      "unique_colors_sample": 3792,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "settlement_floor_m4.png",
+      "src_sha256": "d20bc3ada25f683b4820675e083eeb98f0a31fcac717e59b4fa3c20d9a4fce0f",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "snow_m1.webp": {
       "family": "snow",

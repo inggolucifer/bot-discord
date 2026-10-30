@@ -1058,9 +1058,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "01e1283d6577e39107d76fb6c0ad06619036ce308082495fa8b9264371d41b2e",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "abyss_edge": [
@@ -1093,9 +1096,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "c8e499c00a2bd5a9861e3addfdb9d957bc8ccf398427f70ce58d8c1fa006e5e7",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "settlement_floor": [
@@ -1128,9 +1134,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "d20bc3ada25f683b4820675e083eeb98f0a31fcac717e59b4fa3c20d9a4fce0f",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "road_stone": [
@@ -1163,9 +1172,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "87d72a325568092dedcb931e611dc4163a7b277514675112408645e27868519a",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "ocean": [
@@ -1198,9 +1210,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "95fc31491554271cbd84b85736130edd41259f0b5163798db57926fa1ea245d2",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "river": [
