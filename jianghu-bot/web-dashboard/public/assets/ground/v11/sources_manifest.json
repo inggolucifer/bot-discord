@@ -1,5 +1,5 @@
 {
-  "ai_count": 20,
+  "ai_count": 4,
   "procedural_count": 0,
   "families": {
     "plains": [
@@ -488,9 +488,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "630556a6ef5933464a82cca268a6a95693ae1fb373f77f4900766ca60ec1ad84",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "oasis": [
@@ -523,9 +526,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "db870b59f3be5dbb77919d1cc3b777ef37df5862566791b7e30bd985a3a000c0",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "snow": [
@@ -558,9 +564,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "969eae22d7fb04dfc38603b49df240d228ae6457cb81b7d95fcb19b00aa2572e",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "ice_crack": [
@@ -593,9 +602,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "3dfa739936e852e1de900a2fc9c4f56a02087796a409f6840dcc746b2f70cd28",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "swamp": [
@@ -628,9 +640,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "9c58a94701e500b8b57cddad52b0e2d2f73e31e1b6f96b373d2d795b1e2935b5",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "demonic_swamp": [

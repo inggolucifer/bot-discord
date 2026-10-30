@@ -234,6 +234,14 @@ def preprocess_ai_source(im):
     # Check if this is a 2x2 quad-tiled preview
     if ac_512_x > 0.60 and ac_512_y > 0.60:
         im = im.crop((0, 0, 512, 512)).resize((1024, 1024), Image.Resampling.LANCZOS)
+    elif max(ac_512_x, ac_512_y) > 0.45:
+        # Attenuate excessive 512-period harmonic (tiling echo)
+        arr_rgb = np.array(im, dtype=np.float32)
+        periodic_512 = (arr_rgb + np.roll(arr_rgb, 512, axis=1) + np.roll(arr_rgb, 512, axis=0) + np.roll(arr_rgb, (512, 512), axis=(0, 1))) / 4.0
+        non_periodic = arr_rgb - periodic_512
+        m = arr_rgb.mean(axis=(0, 1))
+        arr_rgb = non_periodic + m + (periodic_512 - m) * 0.68
+        im = Image.fromarray(np.clip(arr_rgb, 0, 255).astype(np.uint8))
         
     # Check for excessive directional macro-gradient that causes negative lag-512
     arr_rgb = np.array(im, dtype=np.float32)
