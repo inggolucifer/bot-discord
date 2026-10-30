@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 105,
-  "procedural_count": 39,
+  "ai_count": 110,
+  "procedural_count": 34,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -899,15 +899,15 @@
     "forest_floor_m1.webp": {
       "family": "forest_floor",
       "variant": "m1",
-      "kb": 274.68,
+      "kb": 274.79,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 93.07,
+      "lum_mean": 93.09,
       "lum_std": 14.43,
-      "sobel_mean": 43.37,
-      "unique_colors_sample": 15391,
+      "sobel_mean": 43.33,
+      "unique_colors_sample": 15361,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "forest_floor_m1.png",
@@ -920,15 +920,15 @@
     "forest_floor_m2.webp": {
       "family": "forest_floor",
       "variant": "m2",
-      "kb": 213.13,
+      "kb": 212.2,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 91.63,
-      "lum_std": 13.06,
-      "sobel_mean": 27.43,
-      "unique_colors_sample": 6677,
+      "lum_mean": 91.66,
+      "lum_std": 13.05,
+      "sobel_mean": 27.41,
+      "unique_colors_sample": 6697,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "forest_floor_m2.png",
@@ -941,15 +941,15 @@
     "forest_floor_m3.webp": {
       "family": "forest_floor",
       "variant": "m3",
-      "kb": 230.61,
+      "kb": 229.65,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 91.53,
+      "lum_mean": 91.55,
       "lum_std": 14.23,
-      "sobel_mean": 35.27,
-      "unique_colors_sample": 14547,
+      "sobel_mean": 35.24,
+      "unique_colors_sample": 14385,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "forest_floor_m3.png",
@@ -962,20 +962,23 @@
     "forest_floor_m4.webp": {
       "family": "forest_floor",
       "variant": "m4",
-      "kb": 269.68,
+      "kb": 224.65,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 92.88,
-      "lum_std": 12.36,
-      "sobel_mean": 37.61,
-      "unique_colors_sample": 11332,
+      "lum_mean": 92.28,
+      "lum_std": 14.34,
+      "sobel_mean": 37.0,
+      "unique_colors_sample": 8513,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "forest_floor_m4.png",
+      "src_sha256": "560e32e462d0f9e0dcd1eeb47d0272343b64096f8c0558dc1c8105adccd5338f",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "formation_tile_m1.webp": {
       "family": "formation_tile",
@@ -1304,15 +1307,15 @@
     "ice_crack_m1.webp": {
       "family": "ice_crack",
       "variant": "m1",
-      "kb": 232.95,
+      "kb": 231.98,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 205.57,
-      "lum_std": 13.78,
-      "sobel_mean": 30.47,
-      "unique_colors_sample": 7002,
+      "lum_mean": 205.55,
+      "lum_std": 13.76,
+      "sobel_mean": 30.48,
+      "unique_colors_sample": 7051,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "ice_crack_m1.png",
@@ -1325,15 +1328,15 @@
     "ice_crack_m2.webp": {
       "family": "ice_crack",
       "variant": "m2",
-      "kb": 222.06,
+      "kb": 221.75,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 204.76,
-      "lum_std": 9.76,
-      "sobel_mean": 29.4,
-      "unique_colors_sample": 4919,
+      "lum_mean": 204.74,
+      "lum_std": 9.74,
+      "sobel_mean": 29.42,
+      "unique_colors_sample": 4946,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "ice_crack_m2.png",
@@ -1346,33 +1349,36 @@
     "ice_crack_m3.webp": {
       "family": "ice_crack",
       "variant": "m3",
-      "kb": 233.42,
+      "kb": 314.6,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 205.57,
-      "lum_std": 13.78,
-      "sobel_mean": 30.42,
-      "unique_colors_sample": 7072,
+      "lum_mean": 206.18,
+      "lum_std": 23.49,
+      "sobel_mean": 41.87,
+      "unique_colors_sample": 7545,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "ice_crack_m3.png",
+      "src_sha256": "abd8f2984665a5cd82afca536516bfffc8bf8d150c69f9cee984b83b466c0d35",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "ice_crack_m4.webp": {
       "family": "ice_crack",
       "variant": "m4",
-      "kb": 228.0,
+      "kb": 226.23,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 205.19,
-      "lum_std": 11.06,
-      "sobel_mean": 29.0,
-      "unique_colors_sample": 5747,
+      "lum_mean": 205.17,
+      "lum_std": 11.02,
+      "sobel_mean": 28.99,
+      "unique_colors_sample": 5707,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1787,15 +1793,15 @@
     "miasma_waste_m1.webp": {
       "family": "miasma_waste",
       "variant": "m1",
-      "kb": 201.73,
+      "kb": 200.71,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 99.55,
-      "lum_std": 13.29,
+      "lum_std": 13.28,
       "sobel_mean": 25.06,
-      "unique_colors_sample": 2402,
+      "unique_colors_sample": 2601,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "miasma_waste_m1.png",
@@ -1808,15 +1814,15 @@
     "miasma_waste_m2.webp": {
       "family": "miasma_waste",
       "variant": "m2",
-      "kb": 202.83,
+      "kb": 203.51,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 100.32,
+      "lum_mean": 100.31,
       "lum_std": 10.39,
-      "sobel_mean": 28.71,
-      "unique_colors_sample": 1103,
+      "sobel_mean": 28.69,
+      "unique_colors_sample": 1124,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "miasma_waste_m2.png",
@@ -1829,33 +1835,36 @@
     "miasma_waste_m3.webp": {
       "family": "miasma_waste",
       "variant": "m3",
-      "kb": 201.77,
+      "kb": 209.24,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 99.56,
-      "lum_std": 13.29,
-      "sobel_mean": 25.07,
-      "unique_colors_sample": 2460,
+      "lum_mean": 99.67,
+      "lum_std": 13.96,
+      "sobel_mean": 26.9,
+      "unique_colors_sample": 1286,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "miasma_waste_m3.png",
+      "src_sha256": "652181c8f5f1547babbb41a3313a5eea6bd86aa8201197c22dd9cb0deff0be98",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "miasma_waste_m4.webp": {
       "family": "miasma_waste",
       "variant": "m4",
-      "kb": 219.87,
+      "kb": 209.96,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 99.97,
-      "lum_std": 13.67,
-      "sobel_mean": 29.83,
-      "unique_colors_sample": 3020,
+      "lum_std": 13.64,
+      "sobel_mean": 29.58,
+      "unique_colors_sample": 3100,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2108,15 +2117,15 @@
     "plains_m1.webp": {
       "family": "plains",
       "variant": "m1",
-      "kb": 271.22,
+      "kb": 271.99,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 146.46,
-      "lum_std": 17.67,
-      "sobel_mean": 36.73,
-      "unique_colors_sample": 8772,
+      "lum_mean": 146.45,
+      "lum_std": 17.65,
+      "sobel_mean": 36.67,
+      "unique_colors_sample": 8585,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "plains_m1.png",
@@ -2129,15 +2138,15 @@
     "plains_m2.webp": {
       "family": "plains",
       "variant": "m2",
-      "kb": 258.41,
+      "kb": 253.69,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 145.6,
-      "lum_std": 14.1,
-      "sobel_mean": 38.84,
-      "unique_colors_sample": 6016,
+      "lum_std": 14.08,
+      "sobel_mean": 38.74,
+      "unique_colors_sample": 6001,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "plains_m2.png",
@@ -2150,15 +2159,15 @@
     "plains_m3.webp": {
       "family": "plains",
       "variant": "m3",
-      "kb": 295.39,
+      "kb": 295.99,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 145.11,
-      "lum_std": 20.23,
-      "sobel_mean": 48.87,
-      "unique_colors_sample": 26044,
+      "lum_std": 20.21,
+      "sobel_mean": 48.91,
+      "unique_colors_sample": 26020,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "plains_m3.png",
@@ -2171,33 +2180,36 @@
     "plains_m4.webp": {
       "family": "plains",
       "variant": "m4",
-      "kb": 294.87,
+      "kb": 294.6,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 146.35,
-      "lum_std": 20.04,
-      "sobel_mean": 47.47,
-      "unique_colors_sample": 16783,
+      "lum_mean": 145.24,
+      "lum_std": 19.3,
+      "sobel_mean": 49.69,
+      "unique_colors_sample": 23479,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "plains_m4.png",
+      "src_sha256": "712b932b8cbf7b6b8070be47a3a6f6febbca57c3317ed33042473fff70fa3aa2",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "poison_pool_m1.webp": {
       "family": "poison_pool",
       "variant": "m1",
-      "kb": 213.85,
+      "kb": 220.19,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.11,
-      "lum_std": 14.57,
-      "sobel_mean": 26.27,
-      "unique_colors_sample": 5665,
+      "lum_mean": 110.13,
+      "lum_std": 14.5,
+      "sobel_mean": 25.73,
+      "unique_colors_sample": 5661,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "poison_pool_m1.png",
@@ -2210,15 +2222,15 @@
     "poison_pool_m2.webp": {
       "family": "poison_pool",
       "variant": "m2",
-      "kb": 222.82,
+      "kb": 223.86,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 109.99,
-      "lum_std": 14.53,
-      "sobel_mean": 29.65,
-      "unique_colors_sample": 6685,
+      "lum_mean": 110.0,
+      "lum_std": 14.56,
+      "sobel_mean": 29.66,
+      "unique_colors_sample": 6792,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "poison_pool_m2.png",
@@ -2231,33 +2243,36 @@
     "poison_pool_m3.webp": {
       "family": "poison_pool",
       "variant": "m3",
-      "kb": 215.82,
+      "kb": 217.78,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.11,
-      "lum_std": 14.58,
-      "sobel_mean": 26.44,
-      "unique_colors_sample": 5735,
+      "lum_mean": 110.31,
+      "lum_std": 14.61,
+      "sobel_mean": 29.03,
+      "unique_colors_sample": 16808,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "poison_pool_m3.png",
+      "src_sha256": "73d95baae1a53d3268ce3cfd0c15248b01fc654bda52c30e2813f7c806ead246",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "poison_pool_m4.webp": {
       "family": "poison_pool",
       "variant": "m4",
-      "kb": 221.83,
+      "kb": 221.97,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.19,
-      "lum_std": 14.66,
-      "sobel_mean": 27.51,
-      "unique_colors_sample": 7219,
+      "lum_mean": 110.23,
+      "lum_std": 14.67,
+      "sobel_mean": 27.52,
+      "unique_colors_sample": 7186,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,

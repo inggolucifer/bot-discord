@@ -1,6 +1,6 @@
 {
-  "ai_count": 15,
-  "procedural_count": 5,
+  "ai_count": 3,
+  "procedural_count": 1,
   "families": {
     "plains": [
       {
@@ -32,9 +32,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "712b932b8cbf7b6b8070be47a3a6f6febbca57c3317ed33042473fff70fa3aa2",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "meadow": [
@@ -172,9 +175,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "560e32e462d0f9e0dcd1eeb47d0272343b64096f8c0558dc1c8105adccd5338f",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "bamboo_floor": [
@@ -548,9 +554,12 @@
       },
       {
         "variant": "m3",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "abd8f2984665a5cd82afca536516bfffc8bf8d150c69f9cee984b83b466c0d35",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m4",
@@ -650,9 +659,12 @@
       },
       {
         "variant": "m3",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "73d95baae1a53d3268ce3cfd0c15248b01fc654bda52c30e2813f7c806ead246",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m4",
@@ -682,9 +694,12 @@
       },
       {
         "variant": "m3",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "652181c8f5f1547babbb41a3313a5eea6bd86aa8201197c22dd9cb0deff0be98",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m4",
