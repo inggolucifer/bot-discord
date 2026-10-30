@@ -1,5 +1,5 @@
 {
-  "ai_count": 4,
+  "ai_count": 20,
   "procedural_count": 0,
   "families": {
     "plains": [
@@ -678,9 +678,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "839e48aa78ad443e938db2ecb3df17081507399f271428f884ed617a559dc623",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "poison_pool": [
@@ -713,9 +716,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "ece7c681c468c926580d05a757174efaa59514ac6368920d88dc3b802208778f",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "miasma_waste": [
@@ -748,9 +754,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "4c119e3d5a53c95bb23e10070e08850950bab3cc4803a66413d71c48510fc1cb",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "battlefield_ash": [
@@ -783,9 +792,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "72339b91ff49156b420ec2f02f366f76628649dc56380a568f54daff52562508",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "volcanic": [
@@ -818,9 +830,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "553bf1550c4ba9e803fb3410d0f03522d1fb2d9fafbfeed20b7c753050753616",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "lava_flow": [

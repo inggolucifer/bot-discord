@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 125,
-  "procedural_count": 19,
+  "ai_count": 130,
+  "procedural_count": 14,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -173,15 +173,15 @@
     "battlefield_ash_m1.webp": {
       "family": "battlefield_ash",
       "variant": "m1",
-      "kb": 209.67,
+      "kb": 211.94,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 86.26,
+      "lum_mean": 86.24,
       "lum_std": 12.25,
-      "sobel_mean": 27.88,
-      "unique_colors_sample": 3162,
+      "sobel_mean": 27.94,
+      "unique_colors_sample": 3256,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "battlefield_ash_m1.png",
@@ -194,15 +194,15 @@
     "battlefield_ash_m2.webp": {
       "family": "battlefield_ash",
       "variant": "m2",
-      "kb": 220.49,
+      "kb": 220.7,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 85.08,
-      "lum_std": 14.07,
+      "lum_mean": 85.05,
+      "lum_std": 14.06,
       "sobel_mean": 31.73,
-      "unique_colors_sample": 2825,
+      "unique_colors_sample": 2835,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "battlefield_ash_m2.png",
@@ -215,15 +215,15 @@
     "battlefield_ash_m3.webp": {
       "family": "battlefield_ash",
       "variant": "m3",
-      "kb": 219.87,
+      "kb": 222.52,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 86.24,
-      "lum_std": 11.42,
-      "sobel_mean": 27.84,
-      "unique_colors_sample": 1225,
+      "lum_mean": 86.23,
+      "lum_std": 11.43,
+      "sobel_mean": 27.88,
+      "unique_colors_sample": 1187,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "battlefield_ash_m3.png",
@@ -236,20 +236,23 @@
     "battlefield_ash_m4.webp": {
       "family": "battlefield_ash",
       "variant": "m4",
-      "kb": 214.32,
+      "kb": 204.09,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 85.98,
+      "lum_mean": 85.35,
       "lum_std": 11.89,
-      "sobel_mean": 27.39,
-      "unique_colors_sample": 2218,
+      "sobel_mean": 23.28,
+      "unique_colors_sample": 742,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "battlefield_ash_m4.png",
+      "src_sha256": "72339b91ff49156b420ec2f02f366f76628649dc56380a568f54daff52562508",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "canyon_floor_m1.webp": {
       "family": "canyon_floor",
@@ -584,15 +587,15 @@
     "demonic_swamp_m1.webp": {
       "family": "demonic_swamp",
       "variant": "m1",
-      "kb": 186.76,
+      "kb": 185.62,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 75.3,
-      "lum_std": 13.23,
-      "sobel_mean": 26.11,
-      "unique_colors_sample": 3876,
+      "lum_mean": 75.32,
+      "lum_std": 13.22,
+      "sobel_mean": 26.08,
+      "unique_colors_sample": 3814,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "demonic_swamp_m1.png",
@@ -605,15 +608,15 @@
     "demonic_swamp_m2.webp": {
       "family": "demonic_swamp",
       "variant": "m2",
-      "kb": 193.5,
+      "kb": 194.17,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 75.13,
+      "lum_mean": 75.12,
       "lum_std": 11.42,
-      "sobel_mean": 24.06,
-      "unique_colors_sample": 1285,
+      "sobel_mean": 24.07,
+      "unique_colors_sample": 1222,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "demonic_swamp_m2.png",
@@ -626,15 +629,15 @@
     "demonic_swamp_m3.webp": {
       "family": "demonic_swamp",
       "variant": "m3",
-      "kb": 224.07,
+      "kb": 224.23,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 75.11,
-      "lum_std": 13.22,
-      "sobel_mean": 35.16,
-      "unique_colors_sample": 4766,
+      "lum_std": 13.21,
+      "sobel_mean": 35.13,
+      "unique_colors_sample": 4665,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "demonic_swamp_m3.png",
@@ -647,20 +650,23 @@
     "demonic_swamp_m4.webp": {
       "family": "demonic_swamp",
       "variant": "m4",
-      "kb": 201.99,
+      "kb": 198.31,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 75.44,
-      "lum_std": 12.63,
-      "sobel_mean": 25.35,
-      "unique_colors_sample": 2514,
+      "lum_mean": 74.76,
+      "lum_std": 13.22,
+      "sobel_mean": 22.8,
+      "unique_colors_sample": 1017,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "demonic_swamp_m4.png",
+      "src_sha256": "839e48aa78ad443e938db2ecb3df17081507399f271428f884ed617a559dc623",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "desert_sand_m1.webp": {
       "family": "desert_sand",
@@ -1823,15 +1829,15 @@
     "miasma_waste_m1.webp": {
       "family": "miasma_waste",
       "variant": "m1",
-      "kb": 200.71,
+      "kb": 200.09,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 99.55,
+      "lum_mean": 99.57,
       "lum_std": 13.28,
-      "sobel_mean": 25.06,
-      "unique_colors_sample": 2601,
+      "sobel_mean": 25.09,
+      "unique_colors_sample": 2610,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "miasma_waste_m1.png",
@@ -1844,15 +1850,15 @@
     "miasma_waste_m2.webp": {
       "family": "miasma_waste",
       "variant": "m2",
-      "kb": 203.51,
+      "kb": 202.79,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 100.31,
-      "lum_std": 10.39,
+      "lum_mean": 100.35,
+      "lum_std": 10.41,
       "sobel_mean": 28.69,
-      "unique_colors_sample": 1124,
+      "unique_colors_sample": 1079,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "miasma_waste_m2.png",
@@ -1865,15 +1871,15 @@
     "miasma_waste_m3.webp": {
       "family": "miasma_waste",
       "variant": "m3",
-      "kb": 209.24,
+      "kb": 209.28,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 99.67,
+      "lum_mean": 99.68,
       "lum_std": 13.96,
-      "sobel_mean": 26.9,
-      "unique_colors_sample": 1286,
+      "sobel_mean": 26.97,
+      "unique_colors_sample": 1295,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "miasma_waste_m3.png",
@@ -1886,20 +1892,23 @@
     "miasma_waste_m4.webp": {
       "family": "miasma_waste",
       "variant": "m4",
-      "kb": 209.96,
+      "kb": 195.73,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 99.97,
-      "lum_std": 13.64,
-      "sobel_mean": 29.58,
-      "unique_colors_sample": 3100,
+      "lum_mean": 100.01,
+      "lum_std": 9.56,
+      "sobel_mean": 22.35,
+      "unique_colors_sample": 811,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "miasma_waste_m4.png",
+      "src_sha256": "4c119e3d5a53c95bb23e10070e08850950bab3cc4803a66413d71c48510fc1cb",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "mountain_pass_m1.webp": {
       "family": "mountain_pass",
@@ -2237,15 +2246,15 @@
     "poison_pool_m1.webp": {
       "family": "poison_pool",
       "variant": "m1",
-      "kb": 220.19,
+      "kb": 226.67,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.13,
-      "lum_std": 14.5,
-      "sobel_mean": 25.73,
-      "unique_colors_sample": 5661,
+      "lum_mean": 110.14,
+      "lum_std": 14.57,
+      "sobel_mean": 26.4,
+      "unique_colors_sample": 5767,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "poison_pool_m1.png",
@@ -2258,15 +2267,15 @@
     "poison_pool_m2.webp": {
       "family": "poison_pool",
       "variant": "m2",
-      "kb": 223.86,
+      "kb": 224.07,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.0,
-      "lum_std": 14.56,
-      "sobel_mean": 29.66,
-      "unique_colors_sample": 6792,
+      "lum_mean": 110.01,
+      "lum_std": 14.57,
+      "sobel_mean": 29.71,
+      "unique_colors_sample": 6725,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "poison_pool_m2.png",
@@ -2279,15 +2288,15 @@
     "poison_pool_m3.webp": {
       "family": "poison_pool",
       "variant": "m3",
-      "kb": 217.78,
+      "kb": 222.04,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.31,
-      "lum_std": 14.61,
-      "sobel_mean": 29.03,
-      "unique_colors_sample": 16808,
+      "lum_mean": 110.32,
+      "lum_std": 14.63,
+      "sobel_mean": 29.27,
+      "unique_colors_sample": 16787,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "poison_pool_m3.png",
@@ -2300,20 +2309,23 @@
     "poison_pool_m4.webp": {
       "family": "poison_pool",
       "variant": "m4",
-      "kb": 221.97,
+      "kb": 221.96,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.23,
-      "lum_std": 14.67,
-      "sobel_mean": 27.52,
-      "unique_colors_sample": 7186,
+      "lum_mean": 110.15,
+      "lum_std": 13.58,
+      "sobel_mean": 28.11,
+      "unique_colors_sample": 3880,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "poison_pool_m4.png",
+      "src_sha256": "ece7c681c468c926580d05a757174efaa59514ac6368920d88dc3b802208778f",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "river_m1.webp": {
       "family": "river",
@@ -2894,15 +2906,15 @@
     "volcanic_m1.webp": {
       "family": "volcanic",
       "variant": "m1",
-      "kb": 228.23,
+      "kb": 229.3,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 59.64,
-      "lum_std": 9.8,
-      "sobel_mean": 28.7,
-      "unique_colors_sample": 4058,
+      "lum_mean": 59.59,
+      "lum_std": 9.85,
+      "sobel_mean": 28.69,
+      "unique_colors_sample": 4090,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "volcanic_m1.png",
@@ -2915,15 +2927,15 @@
     "volcanic_m2.webp": {
       "family": "volcanic",
       "variant": "m2",
-      "kb": 213.46,
+      "kb": 212.53,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 59.53,
-      "lum_std": 9.93,
-      "sobel_mean": 25.83,
-      "unique_colors_sample": 2057,
+      "lum_mean": 59.46,
+      "lum_std": 9.94,
+      "sobel_mean": 25.84,
+      "unique_colors_sample": 2051,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "volcanic_m2.png",
@@ -2936,15 +2948,15 @@
     "volcanic_m3.webp": {
       "family": "volcanic",
       "variant": "m3",
-      "kb": 219.95,
+      "kb": 217.79,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 60.58,
-      "lum_std": 11.9,
-      "sobel_mean": 27.48,
-      "unique_colors_sample": 4780,
+      "lum_mean": 60.54,
+      "lum_std": 11.89,
+      "sobel_mean": 27.49,
+      "unique_colors_sample": 4797,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "volcanic_m3.png",
@@ -2957,20 +2969,23 @@
     "volcanic_m4.webp": {
       "family": "volcanic",
       "variant": "m4",
-      "kb": 233.29,
+      "kb": 300.81,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 59.58,
-      "lum_std": 10.32,
-      "sobel_mean": 29.4,
-      "unique_colors_sample": 4014,
+      "lum_mean": 59.75,
+      "lum_std": 9.9,
+      "sobel_mean": 36.34,
+      "unique_colors_sample": 13822,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "volcanic_m4.png",
+      "src_sha256": "553bf1550c4ba9e803fb3410d0f03522d1fb2d9fafbfeed20b7c753050753616",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     }
   }
 }
