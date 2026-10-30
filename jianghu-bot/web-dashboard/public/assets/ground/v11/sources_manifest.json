@@ -868,9 +868,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "2b44d80899afbb6b1ccae2b249ae5d0aeffed845ac3e7735207171f4dea48a89",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "crater": [
@@ -903,9 +906,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "2881ce69268f724795e16f3dabbaaeba02648d2d440abdb721135080db8da150",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "lightning_scar": [
@@ -938,9 +944,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "ec546127f2c00531944fb08047f5a95d9e5fb8eb0f87569c1f73b1e7078e1f49",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "formation_tile": [
@@ -973,9 +982,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "a0091a3f3b28e164ad5db221da3f1f68dda5ae5529946b59ba27c0d2d489c288",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "ruin_floor": [
@@ -1008,9 +1020,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "69867778a09e1f6bdae611c10a3e47797b2842807668bc12a383da411637d0f6",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "island_reef": [
