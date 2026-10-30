@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 110,
-  "procedural_count": 34,
+  "ai_count": 115,
+  "procedural_count": 29,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -89,15 +89,15 @@
     "bamboo_floor_m1.webp": {
       "family": "bamboo_floor",
       "variant": "m1",
-      "kb": 223.55,
+      "kb": 223.21,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 126.29,
-      "lum_std": 13.06,
-      "sobel_mean": 32.55,
-      "unique_colors_sample": 6517,
+      "lum_mean": 126.27,
+      "lum_std": 13.04,
+      "sobel_mean": 32.51,
+      "unique_colors_sample": 6529,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "bamboo_floor_m1.png",
@@ -110,15 +110,15 @@
     "bamboo_floor_m2.webp": {
       "family": "bamboo_floor",
       "variant": "m2",
-      "kb": 228.8,
+      "kb": 225.0,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 124.8,
-      "lum_std": 10.69,
-      "sobel_mean": 28.64,
-      "unique_colors_sample": 8303,
+      "lum_mean": 124.77,
+      "lum_std": 10.68,
+      "sobel_mean": 28.63,
+      "unique_colors_sample": 8287,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "bamboo_floor_m2.png",
@@ -131,15 +131,15 @@
     "bamboo_floor_m3.webp": {
       "family": "bamboo_floor",
       "variant": "m3",
-      "kb": 236.15,
+      "kb": 235.24,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 125.68,
+      "lum_mean": 125.67,
       "lum_std": 11.77,
-      "sobel_mean": 33.91,
-      "unique_colors_sample": 4153,
+      "sobel_mean": 33.9,
+      "unique_colors_sample": 4087,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "bamboo_floor_m3.png",
@@ -152,20 +152,23 @@
     "bamboo_floor_m4.webp": {
       "family": "bamboo_floor",
       "variant": "m4",
-      "kb": 218.39,
+      "kb": 253.06,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 125.56,
-      "lum_std": 9.54,
-      "sobel_mean": 28.02,
-      "unique_colors_sample": 4270,
+      "lum_mean": 125.0,
+      "lum_std": 12.55,
+      "sobel_mean": 37.15,
+      "unique_colors_sample": 4544,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "bamboo_floor_m4.png",
+      "src_sha256": "80082565f6441120ff78e20dc19fcb10dd6d6c2a918760a82337549ff1e9a8d6",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "battlefield_ash_m1.webp": {
       "family": "battlefield_ash",
@@ -494,15 +497,15 @@
     "dead_wood_m1.webp": {
       "family": "dead_wood",
       "variant": "m1",
-      "kb": 223.64,
+      "kb": 223.65,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 109.56,
-      "lum_std": 11.66,
+      "lum_mean": 109.57,
+      "lum_std": 11.64,
       "sobel_mean": 31.52,
-      "unique_colors_sample": 967,
+      "unique_colors_sample": 986,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "dead_wood_m1.png",
@@ -515,15 +518,15 @@
     "dead_wood_m2.webp": {
       "family": "dead_wood",
       "variant": "m2",
-      "kb": 228.76,
+      "kb": 228.4,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.68,
-      "lum_std": 15.14,
-      "sobel_mean": 36.6,
-      "unique_colors_sample": 2113,
+      "lum_mean": 110.69,
+      "lum_std": 15.18,
+      "sobel_mean": 36.59,
+      "unique_colors_sample": 2082,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "dead_wood_m2.png",
@@ -536,15 +539,15 @@
     "dead_wood_m3.webp": {
       "family": "dead_wood",
       "variant": "m3",
-      "kb": 236.91,
+      "kb": 236.24,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.14,
+      "lum_mean": 110.15,
       "lum_std": 11.13,
       "sobel_mean": 36.86,
-      "unique_colors_sample": 964,
+      "unique_colors_sample": 1009,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "dead_wood_m3.png",
@@ -557,20 +560,23 @@
     "dead_wood_m4.webp": {
       "family": "dead_wood",
       "variant": "m4",
-      "kb": 236.56,
+      "kb": 240.84,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.32,
-      "lum_std": 14.78,
-      "sobel_mean": 38.79,
-      "unique_colors_sample": 2059,
+      "lum_mean": 109.77,
+      "lum_std": 10.77,
+      "sobel_mean": 32.3,
+      "unique_colors_sample": 1313,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "dead_wood_m4.png",
+      "src_sha256": "0a802ffe961d8fc5f5d70d56353fdfbb9d68364a3480566fd520fa54703c7549",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "demonic_swamp_m1.webp": {
       "family": "demonic_swamp",
@@ -818,15 +824,15 @@
     "farmland_m1.webp": {
       "family": "farmland",
       "variant": "m1",
-      "kb": 225.72,
+      "kb": 225.73,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 115.18,
-      "lum_std": 11.87,
-      "sobel_mean": 30.84,
-      "unique_colors_sample": 9204,
+      "lum_std": 11.86,
+      "sobel_mean": 30.79,
+      "unique_colors_sample": 9219,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "farmland_m1.png",
@@ -839,15 +845,15 @@
     "farmland_m2.webp": {
       "family": "farmland",
       "variant": "m2",
-      "kb": 222.27,
+      "kb": 224.28,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 117.37,
-      "lum_std": 13.0,
-      "sobel_mean": 28.14,
-      "unique_colors_sample": 2851,
+      "lum_mean": 117.36,
+      "lum_std": 13.02,
+      "sobel_mean": 28.18,
+      "unique_colors_sample": 2945,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "farmland_m2.png",
@@ -860,15 +866,15 @@
     "farmland_m3.webp": {
       "family": "farmland",
       "variant": "m3",
-      "kb": 238.11,
+      "kb": 239.85,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 115.28,
-      "lum_std": 15.63,
-      "sobel_mean": 32.69,
-      "unique_colors_sample": 7327,
+      "lum_mean": 115.27,
+      "lum_std": 15.62,
+      "sobel_mean": 32.96,
+      "unique_colors_sample": 7197,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "farmland_m3.png",
@@ -881,20 +887,23 @@
     "farmland_m4.webp": {
       "family": "farmland",
       "variant": "m4",
-      "kb": 223.19,
+      "kb": 194.27,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 116.79,
-      "lum_std": 11.42,
-      "sobel_mean": 28.11,
-      "unique_colors_sample": 3539,
+      "lum_mean": 115.58,
+      "lum_std": 11.68,
+      "sobel_mean": 23.77,
+      "unique_colors_sample": 2316,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "farmland_m4.png",
+      "src_sha256": "48d6e62cf99a6f3918086ef2be6dfa4806370467ba9ec44692ec82aaa3024e15",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "forest_floor_m1.webp": {
       "family": "forest_floor",
@@ -1145,15 +1154,15 @@
     "herb_field_m1.webp": {
       "family": "herb_field",
       "variant": "m1",
-      "kb": 207.12,
+      "kb": 207.63,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.15,
-      "lum_std": 12.47,
-      "sobel_mean": 25.19,
-      "unique_colors_sample": 6358,
+      "lum_mean": 120.1,
+      "lum_std": 12.46,
+      "sobel_mean": 25.21,
+      "unique_colors_sample": 6319,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "herb_field_m1.png",
@@ -1166,15 +1175,15 @@
     "herb_field_m2.webp": {
       "family": "herb_field",
       "variant": "m2",
-      "kb": 231.8,
+      "kb": 231.4,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.07,
-      "lum_std": 16.27,
-      "sobel_mean": 31.92,
-      "unique_colors_sample": 21211,
+      "lum_mean": 120.01,
+      "lum_std": 16.29,
+      "sobel_mean": 31.95,
+      "unique_colors_sample": 21252,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "herb_field_m2.png",
@@ -1187,15 +1196,15 @@
     "herb_field_m3.webp": {
       "family": "herb_field",
       "variant": "m3",
-      "kb": 248.93,
+      "kb": 249.31,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 119.83,
-      "lum_std": 12.39,
-      "sobel_mean": 37.04,
-      "unique_colors_sample": 4573,
+      "lum_mean": 119.81,
+      "lum_std": 12.4,
+      "sobel_mean": 37.07,
+      "unique_colors_sample": 4595,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "herb_field_m3.png",
@@ -1208,20 +1217,23 @@
     "herb_field_m4.webp": {
       "family": "herb_field",
       "variant": "m4",
-      "kb": 213.06,
+      "kb": 233.68,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.23,
-      "lum_std": 10.51,
-      "sobel_mean": 26.49,
-      "unique_colors_sample": 6790,
+      "lum_mean": 120.19,
+      "lum_std": 15.47,
+      "sobel_mean": 29.76,
+      "unique_colors_sample": 7086,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "herb_field_m4.png",
+      "src_sha256": "63c476ceb33a741a6d0a5520b8026e98c7aa18cf6885098386c0103540158b73",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "hill_m1.webp": {
       "family": "hill",
@@ -1712,15 +1724,15 @@
     "meadow_m1.webp": {
       "family": "meadow",
       "variant": "m1",
-      "kb": 295.23,
+      "kb": 295.33,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 150.72,
-      "lum_std": 14.37,
-      "sobel_mean": 46.61,
-      "unique_colors_sample": 12402,
+      "lum_std": 14.35,
+      "sobel_mean": 46.55,
+      "unique_colors_sample": 12473,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "meadow_m1.png",
@@ -1733,15 +1745,15 @@
     "meadow_m2.webp": {
       "family": "meadow",
       "variant": "m2",
-      "kb": 294.38,
+      "kb": 295.06,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 150.51,
-      "lum_std": 14.63,
-      "sobel_mean": 49.86,
-      "unique_colors_sample": 3872,
+      "lum_mean": 150.5,
+      "lum_std": 14.62,
+      "sobel_mean": 49.88,
+      "unique_colors_sample": 3893,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "meadow_m2.png",
@@ -1754,15 +1766,15 @@
     "meadow_m3.webp": {
       "family": "meadow",
       "variant": "m3",
-      "kb": 282.61,
+      "kb": 283.4,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 150.58,
-      "lum_std": 14.74,
-      "sobel_mean": 44.73,
-      "unique_colors_sample": 6997,
+      "lum_std": 14.73,
+      "sobel_mean": 44.69,
+      "unique_colors_sample": 6909,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "meadow_m3.png",
@@ -1775,20 +1787,23 @@
     "meadow_m4.webp": {
       "family": "meadow",
       "variant": "m4",
-      "kb": 328.38,
+      "kb": 218.67,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 150.93,
-      "lum_std": 19.78,
-      "sobel_mean": 63.07,
-      "unique_colors_sample": 15980,
+      "lum_mean": 149.94,
+      "lum_std": 12.57,
+      "sobel_mean": 34.57,
+      "unique_colors_sample": 14265,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "meadow_m4.png",
+      "src_sha256": "cd2c40a4b5936685af1ca8d040ac0aaa5987d7831df8f6ee5d204d379c923ae3",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "miasma_waste_m1.webp": {
       "family": "miasma_waste",

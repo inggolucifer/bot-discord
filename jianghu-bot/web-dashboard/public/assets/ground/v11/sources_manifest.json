@@ -1,6 +1,6 @@
 {
-  "ai_count": 3,
-  "procedural_count": 1,
+  "ai_count": 20,
+  "procedural_count": 0,
   "families": {
     "plains": [
       {
@@ -70,9 +70,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "cd2c40a4b5936685af1ca8d040ac0aaa5987d7831df8f6ee5d204d379c923ae3",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "farmland": [
@@ -105,9 +108,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "48d6e62cf99a6f3918086ef2be6dfa4806370467ba9ec44692ec82aaa3024e15",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "herb_field": [
@@ -140,9 +146,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "63c476ceb33a741a6d0a5520b8026e98c7aa18cf6885098386c0103540158b73",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "forest_floor": [
@@ -213,9 +222,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "80082565f6441120ff78e20dc19fcb10dd6d6c2a918760a82337549ff1e9a8d6",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "dead_wood": [
@@ -248,9 +260,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "0a802ffe961d8fc5f5d70d56353fdfbb9d68364a3480566fd520fa54703c7549",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "hill": [
