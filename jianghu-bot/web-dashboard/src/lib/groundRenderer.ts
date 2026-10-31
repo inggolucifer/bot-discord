@@ -780,6 +780,12 @@ export function renderChunkGroundBitmap(
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
 
+  // Solid base fill with region base color to prevent any transparency leaks
+  const centerWorldX = cx * CHUNK_SIZE + 16;
+  const centerWorldY = cy * CHUNK_SIZE + 16;
+  ctx.fillStyle = getRegionColorAt(centerWorldX, centerWorldY);
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
   // Build tile lookup dictionary for chunk-local fast neighbor queries
   const tileLookup = new Map<string, string>();
   for (const t of tiles) {
@@ -983,6 +989,12 @@ export function renderChunkGroundBitmapTextured(
   canvas.height = canvasHeight;
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
+
+  // Solid base fill with region base color to prevent any transparency leaks
+  const centerWorldX = cx * CHUNK_SIZE + 16;
+  const centerWorldY = cy * CHUNK_SIZE + 16;
+  ctx.fillStyle = getRegionColorAt(centerWorldX, centerWorldY);
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
   // Build tile lookup dictionary for chunk-local fast neighbor queries
   const tileLookup = new Map<string, string>();

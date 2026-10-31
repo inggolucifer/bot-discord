@@ -702,14 +702,18 @@ export default function WorldCanvas({
 
       for (let cy = minChunkY; cy <= maxChunkY; cy++) {
         for (let cx = minChunkX; cx <= maxChunkX; cx++) {
+          const csx = toScreenX(cx * CHUNK_SIZE);
+          const csy = toScreenY(cy * CHUNK_SIZE);
+          const csw = CHUNK_SIZE * currentTileSize;
+          const csh = CHUNK_SIZE * currentTileSize;
           const bitmap = chunkManager.getChunkBitmap(cx, cy, 54);
           if (bitmap) {
-            const csx = toScreenX(cx * CHUNK_SIZE);
-            const csy = toScreenY(cy * CHUNK_SIZE);
-            const csw = CHUNK_SIZE * currentTileSize;
-            const csh = CHUNK_SIZE * currentTileSize;
             ctx.drawImage(bitmap, csx, csy, csw, csh);
             renderedChunkKeys.add(`${cx}:${cy}`);
+          } else {
+            const regColor = getRegionColorAt(cx * CHUNK_SIZE + 16, cy * CHUNK_SIZE + 16);
+            ctx.fillStyle = regColor;
+            ctx.fillRect(csx, csy, csw, csh);
           }
         }
       }
@@ -733,6 +737,9 @@ export default function WorldCanvas({
           const sy = toScreenY(ty);
 
           if (!tile) {
+            const regColor = getRegionColorAt(tx, ty);
+            ctx.fillStyle = regColor;
+            ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
             if (camera.zoom >= 0.35 && tx >= 0 && tx < 5000 && ty >= 0 && ty < 5000) {
               ctx.strokeStyle = 'rgba(180, 160, 130, 0.12)';
               ctx.lineWidth = 0.5;
