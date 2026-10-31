@@ -243,16 +243,17 @@ def preprocess_ai_source(im):
         arr_rgb = non_periodic + m + (periodic_512 - m) * 0.68
         im = Image.fromarray(np.clip(arr_rgb, 0, 255).astype(np.uint8))
         
-    # Check for excessive directional macro-gradient that causes negative lag-512
-    arr_rgb = np.array(im, dtype=np.float32)
-    gray = 0.299 * arr_rgb[:, :, 0] + 0.587 * arr_rgb[:, :, 1] + 0.114 * arr_rgb[:, :, 2]
-    norm_g = (gray - gray.mean()) / (gray.std() + 1e-6)
-    ac_512 = min(float((norm_g * np.roll(norm_g, 512, axis=0)).mean()), float((norm_g * np.roll(norm_g, 512, axis=1)).mean()))
-    if ac_512 < -0.50:
-        blur = np.array(im.filter(ImageFilter.GaussianBlur(radius=64)), dtype=np.float32)
-        detail = arr_rgb - blur
-        base_mean = arr_rgb.mean(axis=(0, 1))
-        arr_rgb = base_mean + blur * 0.35 + detail
+    elif min(ac_512_x, ac_512_y) < -0.45:
+        # Attenuate excessive anti-periodic 512-harmonic (center-edge macro disparity)
+        arr_rgb = np.array(im, dtype=np.float32)
+        if ac_512_x < -0.45:
+            odd_x = (arr_rgb - np.roll(arr_rgb, 512, axis=1)) * 0.5
+            even_x = (arr_rgb + np.roll(arr_rgb, 512, axis=1)) * 0.5
+            arr_rgb = even_x + odd_x * 0.65
+        if ac_512_y < -0.45:
+            odd_y = (arr_rgb - np.roll(arr_rgb, 512, axis=0)) * 0.5
+            even_y = (arr_rgb + np.roll(arr_rgb, 512, axis=0)) * 0.5
+            arr_rgb = even_y + odd_y * 0.65
         im = Image.fromarray(np.clip(arr_rgb, 0, 255).astype(np.uint8))
         
     return im

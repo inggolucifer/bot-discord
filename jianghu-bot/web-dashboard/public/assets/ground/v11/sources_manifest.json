@@ -1,5 +1,5 @@
 {
-  "ai_count": 20,
+  "ai_count": 4,
   "procedural_count": 0,
   "families": {
     "plains": [
@@ -1248,9 +1248,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "5b214b4ef4c281401418bb7d81d807a1eca78e2278ee38b4d037ba70337ef79d",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "lake": [
@@ -1283,9 +1286,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "d7c63717aa216285ba8f3e7530f5cdbac7394ca1ed3fa00f94d1a061f21d0dcd",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "cliff": [
@@ -1318,9 +1324,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "722aba1cad0f6c478f5d9cbd9eda17a16db31025d05cb7b52509a6fd2633e356",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "glacier": [
@@ -1353,9 +1362,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "19e726034a8b20785a52a4c34d3dccf5e0996d60f3b9caf0695ff1bcf583856e",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ]
   }

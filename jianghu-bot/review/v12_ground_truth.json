@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 140,
-  "procedural_count": 4,
+  "ai_count": 144,
+  "procedural_count": 0,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -344,7 +344,7 @@
     "cliff_m1.webp": {
       "family": "cliff",
       "variant": "m1",
-      "kb": 225.89,
+      "kb": 224.46,
       "dimensions": [
         1024,
         1024
@@ -352,7 +352,7 @@
       "lum_mean": 104.59,
       "lum_std": 10.49,
       "sobel_mean": 30.53,
-      "unique_colors_sample": 1332,
+      "unique_colors_sample": 1325,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "cliff_m1.png",
@@ -365,15 +365,15 @@
     "cliff_m2.webp": {
       "family": "cliff",
       "variant": "m2",
-      "kb": 202.9,
+      "kb": 200.05,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 105.21,
-      "lum_std": 10.98,
-      "sobel_mean": 25.98,
-      "unique_colors_sample": 956,
+      "lum_std": 10.95,
+      "sobel_mean": 25.79,
+      "unique_colors_sample": 1014,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "cliff_m2.png",
@@ -386,15 +386,15 @@
     "cliff_m3.webp": {
       "family": "cliff",
       "variant": "m3",
-      "kb": 210.18,
+      "kb": 209.67,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 105.53,
+      "lum_mean": 105.54,
       "lum_std": 11.23,
-      "sobel_mean": 27.53,
-      "unique_colors_sample": 1292,
+      "sobel_mean": 27.55,
+      "unique_colors_sample": 1282,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "cliff_m3.png",
@@ -407,20 +407,23 @@
     "cliff_m4.webp": {
       "family": "cliff",
       "variant": "m4",
-      "kb": 217.6,
+      "kb": 228.98,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 105.13,
-      "lum_std": 10.19,
-      "sobel_mean": 27.61,
-      "unique_colors_sample": 1080,
+      "lum_mean": 104.76,
+      "lum_std": 11.4,
+      "sobel_mean": 30.98,
+      "unique_colors_sample": 1194,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "cliff_m4.png",
+      "src_sha256": "722aba1cad0f6c478f5d9cbd9eda17a16db31025d05cb7b52509a6fd2633e356",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "crater_m1.webp": {
       "family": "crater",
@@ -1097,15 +1100,15 @@
     "glacier_m1.webp": {
       "family": "glacier",
       "variant": "m1",
-      "kb": 278.02,
+      "kb": 278.98,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 194.07,
-      "lum_std": 21.12,
-      "sobel_mean": 44.15,
-      "unique_colors_sample": 27313,
+      "lum_mean": 194.06,
+      "lum_std": 21.11,
+      "sobel_mean": 44.18,
+      "unique_colors_sample": 27287,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "glacier_m1.png",
@@ -1118,15 +1121,15 @@
     "glacier_m2.webp": {
       "family": "glacier",
       "variant": "m2",
-      "kb": 270.12,
+      "kb": 254.93,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 194.37,
-      "lum_std": 21.58,
-      "sobel_mean": 39.92,
-      "unique_colors_sample": 12875,
+      "lum_mean": 194.36,
+      "lum_std": 17.33,
+      "sobel_mean": 35.27,
+      "unique_colors_sample": 7610,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "glacier_m2.png",
@@ -1139,15 +1142,15 @@
     "glacier_m3.webp": {
       "family": "glacier",
       "variant": "m3",
-      "kb": 271.15,
+      "kb": 271.46,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 195.37,
-      "lum_std": 17.7,
-      "sobel_mean": 36.5,
-      "unique_colors_sample": 16300,
+      "lum_mean": 195.36,
+      "lum_std": 17.69,
+      "sobel_mean": 36.4,
+      "unique_colors_sample": 16291,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "glacier_m3.png",
@@ -1160,20 +1163,23 @@
     "glacier_m4.webp": {
       "family": "glacier",
       "variant": "m4",
-      "kb": 275.73,
+      "kb": 264.06,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 194.15,
-      "lum_std": 19.85,
-      "sobel_mean": 41.72,
-      "unique_colors_sample": 18258,
+      "lum_mean": 194.48,
+      "lum_std": 15.6,
+      "sobel_mean": 36.39,
+      "unique_colors_sample": 13582,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "glacier_m4.png",
+      "src_sha256": "19e726034a8b20785a52a4c34d3dccf5e0996d60f3b9caf0695ff1bcf583856e",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "herb_field_m1.webp": {
       "family": "herb_field",
@@ -1514,15 +1520,15 @@
     "lake_m1.webp": {
       "family": "lake",
       "variant": "m1",
-      "kb": 214.22,
+      "kb": 210.54,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 111.84,
-      "lum_std": 10.47,
-      "sobel_mean": 26.2,
-      "unique_colors_sample": 4762,
+      "lum_mean": 111.88,
+      "lum_std": 11.38,
+      "sobel_mean": 25.06,
+      "unique_colors_sample": 5067,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "lake_m1.png",
@@ -1535,15 +1541,15 @@
     "lake_m2.webp": {
       "family": "lake",
       "variant": "m2",
-      "kb": 204.38,
+      "kb": 202.74,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 112.28,
-      "lum_std": 9.61,
-      "sobel_mean": 26.12,
-      "unique_colors_sample": 1839,
+      "lum_mean": 112.27,
+      "lum_std": 9.58,
+      "sobel_mean": 25.94,
+      "unique_colors_sample": 1899,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "lake_m2.png",
@@ -1556,15 +1562,15 @@
     "lake_m3.webp": {
       "family": "lake",
       "variant": "m3",
-      "kb": 176.6,
+      "kb": 180.35,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 112.31,
-      "lum_std": 10.21,
-      "sobel_mean": 19.79,
-      "unique_colors_sample": 2234,
+      "lum_mean": 112.46,
+      "lum_std": 10.04,
+      "sobel_mean": 20.1,
+      "unique_colors_sample": 2660,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "lake_m3.png",
@@ -1577,20 +1583,23 @@
     "lake_m4.webp": {
       "family": "lake",
       "variant": "m4",
-      "kb": 218.82,
+      "kb": 175.61,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 112.3,
-      "lum_std": 9.58,
-      "sobel_mean": 27.83,
-      "unique_colors_sample": 2887,
+      "lum_mean": 111.07,
+      "lum_std": 10.27,
+      "sobel_mean": 19.17,
+      "unique_colors_sample": 1389,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "lake_m4.png",
+      "src_sha256": "d7c63717aa216285ba8f3e7530f5cdbac7394ca1ed3fa00f94d1a061f21d0dcd",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "lava_flow_m1.webp": {
       "family": "lava_flow",
@@ -2351,15 +2360,15 @@
     "river_m1.webp": {
       "family": "river",
       "variant": "m1",
-      "kb": 188.67,
+      "kb": 189.5,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 117.57,
-      "lum_std": 10.63,
-      "sobel_mean": 21.79,
-      "unique_colors_sample": 3537,
+      "lum_mean": 117.58,
+      "lum_std": 10.64,
+      "sobel_mean": 21.82,
+      "unique_colors_sample": 3592,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "river_m1.png",
@@ -2372,15 +2381,15 @@
     "river_m2.webp": {
       "family": "river",
       "variant": "m2",
-      "kb": 215.08,
+      "kb": 214.15,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 117.79,
+      "lum_mean": 117.8,
       "lum_std": 12.84,
-      "sobel_mean": 29.66,
-      "unique_colors_sample": 5412,
+      "sobel_mean": 29.69,
+      "unique_colors_sample": 5332,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "river_m2.png",
@@ -2393,15 +2402,15 @@
     "river_m3.webp": {
       "family": "river",
       "variant": "m3",
-      "kb": 230.92,
+      "kb": 230.44,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 118.17,
       "lum_std": 10.11,
-      "sobel_mean": 32.03,
-      "unique_colors_sample": 5015,
+      "sobel_mean": 32.02,
+      "unique_colors_sample": 4927,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "river_m3.png",
@@ -2414,20 +2423,23 @@
     "river_m4.webp": {
       "family": "river",
       "variant": "m4",
-      "kb": 206.49,
+      "kb": 202.03,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 117.74,
-      "lum_std": 10.12,
-      "sobel_mean": 25.98,
-      "unique_colors_sample": 4051,
+      "lum_mean": 117.59,
+      "lum_std": 10.91,
+      "sobel_mean": 25.1,
+      "unique_colors_sample": 2873,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "river_m4.png",
+      "src_sha256": "5b214b4ef4c281401418bb7d81d807a1eca78e2278ee38b4d037ba70337ef79d",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "road_stone_m1.webp": {
       "family": "road_stone",
