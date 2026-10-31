@@ -353,7 +353,7 @@ def run_metrics(baseline=False, shots_dir=None, out_json=None):
         results['straight_seam_azure'] = analyze_straight_seam(azure)
     if os.path.exists(frost):
         results['road_ladder_frost'] = analyze_road_ladder(frost)
-        results['pale_flat_frost'] = analyze_pale_flat(frost)
+        # Note: paleFlat excluded for frost/snow biome per prompt V14 specification ("di luar bioma salju/awan")
         results['straight_seam_frost'] = analyze_straight_seam(frost)
 
     white_square = any(v.get('whiteSquareDetected', False) for v in results.values() if isinstance(v, dict))

@@ -53,7 +53,7 @@
       "p90": 20
     },
     "perChunkObjects": {
-      "min": 88,
+      "min": 83,
       "p10": 115.9,
       "median": 127,
       "max": 132
@@ -63,19 +63,19 @@
     "displayName": "Azure Mountain Range",
     "sampleCount": 300,
     "sprites": {
-      "p10": 12,
-      "median": 22,
-      "p90": 31
+      "p10": 11,
+      "median": 21,
+      "p90": 30
     },
     "cellsCoveredPct": {
-      "p10": 26.3,
-      "median": 37.5,
-      "p90": 58.4
+      "p10": 26.7,
+      "median": 38.3,
+      "p90": 57.9
     },
     "emptyRatio": {
-      "p10": 0.417,
-      "median": 0.625,
-      "p90": 0.738
+      "p10": 0.421,
+      "median": 0.617,
+      "p90": 0.733
     },
     "maxEmptyRun": {
       "p10": 13,
@@ -83,9 +83,9 @@
       "p90": 20
     },
     "perChunkObjects": {
-      "min": 51,
-      "p10": 67.5,
-      "median": 89,
+      "min": 46,
+      "p10": 62.3,
+      "median": 84.5,
       "max": 107
     }
   },
@@ -95,7 +95,7 @@
     "sprites": {
       "p10": 11,
       "median": 16,
-      "p90": 21
+      "p90": 20.1
     },
     "cellsCoveredPct": {
       "p10": 4.6,
@@ -123,19 +123,19 @@
     "displayName": "Thundersteppe",
     "sampleCount": 300,
     "sprites": {
-      "p10": 11.9,
+      "p10": 11,
       "median": 16,
       "p90": 21.1
     },
     "cellsCoveredPct": {
-      "p10": 5,
+      "p10": 4.6,
       "median": 6.7,
       "p90": 8.8
     },
     "emptyRatio": {
       "p10": 0.913,
       "median": 0.933,
-      "p90": 0.95
+      "p90": 0.954
     },
     "maxEmptyRun": {
       "p10": 20,
@@ -155,20 +155,20 @@
     "sprites": {
       "p10": 8,
       "median": 13,
-      "p90": 18.1
+      "p90": 18
     },
     "cellsCoveredPct": {
-      "p10": 19.2,
-      "median": 31.3,
-      "p90": 48.8
+      "p10": 20,
+      "median": 30.8,
+      "p90": 47.2
     },
     "emptyRatio": {
-      "p10": 0.513,
-      "median": 0.688,
-      "p90": 0.808
+      "p10": 0.528,
+      "median": 0.692,
+      "p90": 0.8
     },
     "maxEmptyRun": {
-      "p10": 17,
+      "p10": 16,
       "median": 20,
       "p90": 20
     },
@@ -213,17 +213,17 @@
     "displayName": "Beast Prairies",
     "sampleCount": 300,
     "sprites": {
-      "p10": 17,
+      "p10": 16.9,
       "median": 24,
       "p90": 32
     },
     "cellsCoveredPct": {
       "p10": 7.9,
       "median": 11.3,
-      "p90": 27.7
+      "p90": 27.3
     },
     "emptyRatio": {
-      "p10": 0.723,
+      "p10": 0.727,
       "median": 0.888,
       "p90": 0.921
     },
@@ -250,10 +250,10 @@
     "cellsCoveredPct": {
       "p10": 8.8,
       "median": 10.8,
-      "p90": 33.9
+      "p90": 34.7
     },
     "emptyRatio": {
-      "p10": 0.662,
+      "p10": 0.653,
       "median": 0.892,
       "p90": 0.913
     },
@@ -273,29 +273,29 @@
     "displayName": "Western Gorge Labyrinth",
     "sampleCount": 300,
     "sprites": {
-      "p10": 12.9,
+      "p10": 13,
       "median": 21,
-      "p90": 29
+      "p90": 28
     },
     "cellsCoveredPct": {
-      "p10": 26.3,
-      "median": 35,
-      "p90": 54.6
+      "p10": 27.1,
+      "median": 35.8,
+      "p90": 55.4
     },
     "emptyRatio": {
-      "p10": 0.454,
-      "median": 0.65,
-      "p90": 0.738
+      "p10": 0.446,
+      "median": 0.642,
+      "p90": 0.729
     },
     "maxEmptyRun": {
-      "p10": 14,
+      "p10": 13,
       "median": 19,
       "p90": 20
     },
     "perChunkObjects": {
-      "min": 63,
-      "p10": 76.8,
-      "median": 82.5,
+      "min": 61,
+      "p10": 73.8,
+      "median": 83,
       "max": 98
     }
   },
@@ -303,29 +303,29 @@
     "displayName": "Hermit Highlands",
     "sampleCount": 300,
     "sprites": {
-      "p10": 14,
+      "p10": 14.9,
       "median": 25,
-      "p90": 37.1
+      "p90": 37
     },
     "cellsCoveredPct": {
       "p10": 25.4,
-      "median": 35.8,
-      "p90": 54.2
+      "median": 36.3,
+      "p90": 53.4
     },
     "emptyRatio": {
-      "p10": 0.458,
-      "median": 0.642,
+      "p10": 0.466,
+      "median": 0.638,
       "p90": 0.746
     },
     "maxEmptyRun": {
-      "p10": 12.9,
+      "p10": 13,
       "median": 18,
       "p90": 20
     },
     "perChunkObjects": {
-      "min": 86,
-      "p10": 92.5,
-      "median": 110,
+      "min": 72,
+      "p10": 84.9,
+      "median": 111,
       "max": 126
     }
   },
@@ -333,19 +333,19 @@
     "displayName": "Border March",
     "sampleCount": 300,
     "sprites": {
-      "p10": 20,
+      "p10": 21,
       "median": 27,
       "p90": 33
     },
     "cellsCoveredPct": {
-      "p10": 8.3,
+      "p10": 8.8,
       "median": 11.3,
-      "p90": 14.2
+      "p90": 14.6
     },
     "emptyRatio": {
-      "p10": 0.858,
+      "p10": 0.854,
       "median": 0.888,
-      "p90": 0.917
+      "p90": 0.913
     },
     "maxEmptyRun": {
       "p10": 16,
@@ -363,19 +363,19 @@
     "displayName": "Lava Spine",
     "sampleCount": 300,
     "sprites": {
-      "p10": 6,
+      "p10": 7,
       "median": 13,
       "p90": 18
     },
     "cellsCoveredPct": {
-      "p10": 14.2,
-      "median": 25.8,
-      "p90": 49.6
+      "p10": 15.4,
+      "median": 26.1,
+      "p90": 50
     },
     "emptyRatio": {
-      "p10": 0.504,
-      "median": 0.742,
-      "p90": 0.858
+      "p10": 0.5,
+      "median": 0.74,
+      "p90": 0.846
     },
     "maxEmptyRun": {
       "p10": 18,
@@ -384,7 +384,7 @@
     },
     "perChunkObjects": {
       "min": 41,
-      "p10": 43,
+      "p10": 43.9,
       "median": 49,
       "max": 58
     }
@@ -425,15 +425,15 @@
     "sprites": {
       "p10": 12,
       "median": 16,
-      "p90": 21.1
+      "p90": 21
     },
     "cellsCoveredPct": {
       "p10": 5.4,
       "median": 7.9,
-      "p90": 20
+      "p90": 20.4
     },
     "emptyRatio": {
-      "p10": 0.8,
+      "p10": 0.796,
       "median": 0.921,
       "p90": 0.946
     },
@@ -565,7 +565,7 @@
     "perChunkObjects": {
       "min": 51,
       "p10": 55,
-      "median": 80,
+      "median": 79,
       "max": 113
     }
   },
@@ -663,18 +663,18 @@
     "displayName": "Sword Gorge",
     "sampleCount": 300,
     "sprites": {
-      "p10": 12,
-      "median": 22,
-      "p90": 30
+      "p10": 13,
+      "median": 21,
+      "p90": 28
     },
     "cellsCoveredPct": {
       "p10": 27.5,
-      "median": 37.1,
-      "p90": 52.1
+      "median": 37.3,
+      "p90": 53.3
     },
     "emptyRatio": {
-      "p10": 0.479,
-      "median": 0.629,
+      "p10": 0.467,
+      "median": 0.627,
       "p90": 0.725
     },
     "maxEmptyRun": {
@@ -683,40 +683,40 @@
       "p90": 20
     },
     "perChunkObjects": {
-      "min": 76,
-      "p10": 79,
-      "median": 84,
-      "max": 96
+      "min": 73,
+      "p10": 76,
+      "median": 82,
+      "max": 98
     }
   },
   "ore_teeth_range": {
     "displayName": "Ore Teeth Range",
     "sampleCount": 300,
     "sprites": {
-      "p10": 13,
-      "median": 22,
-      "p90": 30
+      "p10": 12,
+      "median": 21,
+      "p90": 29
     },
     "cellsCoveredPct": {
-      "p10": 25.4,
-      "median": 36.3,
-      "p90": 54.6
+      "p10": 25.8,
+      "median": 36.7,
+      "p90": 53.4
     },
     "emptyRatio": {
-      "p10": 0.454,
-      "median": 0.638,
-      "p90": 0.746
+      "p10": 0.466,
+      "median": 0.633,
+      "p90": 0.742
     },
     "maxEmptyRun": {
       "p10": 13,
-      "median": 18.5,
+      "median": 19,
       "p90": 20
     },
     "perChunkObjects": {
-      "min": 64,
-      "p10": 82,
-      "median": 89,
-      "max": 107
+      "min": 63,
+      "p10": 80.9,
+      "median": 87.5,
+      "max": 110
     }
   },
   "eastern_sea": {
@@ -870,10 +870,10 @@
     }
   },
   "_summary": {
-    "measuredAt": "2026-10-31T13:51:14.451Z",
+    "measuredAt": "2026-10-31T14:21:37.638Z",
     "mode": "V14",
     "totalRegions": 29,
     "totalCachedChunks": 11315,
-    "collinearLatticeCount": 19
+    "collinearLatticeCount": 0
   }
 }

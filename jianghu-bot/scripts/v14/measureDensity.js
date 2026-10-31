@@ -133,30 +133,32 @@ function analyzeViewport(vx, vy) {
 
 function checkCollinearLattice(objs) {
   const rowMap = new Map();
-  const colMap = new Map();
   for (const o of objs) {
     if (!rowMap.has(o.y)) rowMap.set(o.y, []);
-    rowMap.get(o.y).push(o.x);
-    if (!colMap.has(o.x)) colMap.set(o.x, []);
-    colMap.get(o.x).push(o.y);
+    rowMap.get(o.y).push(o);
   }
 
   let latticeViolations = 0;
-  for (const [y, xs] of rowMap.entries()) {
-    if (xs.length >= 6) {
-      xs.sort((a, b) => a - b);
-      let diff = xs[1] - xs[0];
-      let streak = 2;
-      for (let i = 2; i < xs.length; i++) {
-        if (xs[i] - xs[i - 1] === diff && diff <= 4) {
-          streak++;
-          if (streak >= 6) {
-            latticeViolations++;
-            break;
+  for (const [y, rowObjs] of rowMap.entries()) {
+    if (rowObjs.length >= 6) {
+      rowObjs.sort((a, b) => a.x - b.x);
+      let diff = rowObjs[1].x - rowObjs[0].x;
+      let streak = [rowObjs[0], rowObjs[1]];
+      for (let i = 2; i < rowObjs.length; i++) {
+        if (rowObjs[i].x - rowObjs[i - 1].x === diff && diff >= 2 && diff <= 4) {
+          streak.push(rowObjs[i]);
+          if (streak.length >= 6) {
+            const fam = (id) => (id || '').replace(/_v\d+$/, '').replace(/_\d+$/, '');
+            const baseFam = fam(streak[0].defId);
+            const sameFamCount = streak.filter(s => fam(s.defId) === baseFam).length;
+            if (sameFamCount >= 4) {
+              latticeViolations++;
+              break;
+            }
           }
         } else {
-          diff = xs[i] - xs[i - 1];
-          streak = 2;
+          diff = rowObjs[i].x - rowObjs[i - 1].x;
+          streak = [rowObjs[i - 1], rowObjs[i]];
         }
       }
     }

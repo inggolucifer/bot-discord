@@ -953,8 +953,8 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       { defId: 'mt_rock_4x3', fw: 5, fh: 3, ra: 1 },
       { defId: 'mt_rock_3x2', fw: 4, fh: 2, ra: 3 }
     ];
-    const targetMedium = 6 + Math.floor(mtRand() * 3); // 6..8 medium mountains
-    for (let attempt = 0; attempt < 20 && objects.filter(o => o.isMedMountain).length < targetMedium; attempt++) {
+    const targetMedium = 7 + Math.floor(mtRand() * 3); // 7..9 medium mountains
+    for (let attempt = 0; attempt < 25 && objects.filter(o => o.isMedMountain).length < targetMedium; attempt++) {
       const pDef = medMacroPeaks[Math.floor(mtRand() * medMacroPeaks.length)];
       const g = GC.getGrid(pDef.defId);
       if (!g) continue;
@@ -2583,15 +2583,15 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       'rock_cleft_stone_v2',
       'rock_cleft_stone_v3',
       'rock_cleft_stone_v4',
-      'mt_karst_pillar_v1',
-      'mt_karst_pillar_v2',
+      'mt_rock_3x2',
+      'rock_boulder_moss_v3',
       'nature_limestone_stalagmite_spire',
       'spirit_tree_2x2',
       'nature_ancient_scholar_cypress_stone_cairn'
     ].filter(id => !isDefForbiddenInRegion(id, chunkRegion.id));
 
     if (candidatePool.length > 0) {
-      for (let attempt = 0; attempt < 400 && objects.length < minBudgetTarget; attempt++) {
+      for (let attempt = 0; attempt < 160 && objects.length < minBudgetTarget; attempt++) {
         const rx = startTileX + Math.floor(refillRand() * 32);
         const ry = startTileY + Math.floor(refillRand() * 32);
         const rTile = getLocalTile(rx, ry);
