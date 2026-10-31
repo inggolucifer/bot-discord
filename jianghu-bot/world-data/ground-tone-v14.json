@@ -1,0 +1,36 @@
+{
+  "version": "v14",
+  "comment": "Color tone adjustments for ground macro rendering (Prompt V14 P2 & P3)",
+  "tones": {
+    "plains": {
+      "targetRgb": [120, 142, 90],
+      "strength": 0.35,
+      "blendMode": "soft-light",
+      "description": "Shifts dry straw/olive plains towards fresh Song Dynasty jade grass green matching minimap"
+    },
+    "farmland": {
+      "targetRgb": [130, 136, 92],
+      "strength": 0.30,
+      "blendMode": "soft-light",
+      "description": "Rich fertile cultivated soil with fresh sprout green tint"
+    },
+    "meadow": {
+      "targetRgb": [112, 145, 88],
+      "strength": 0.35,
+      "blendMode": "soft-light",
+      "description": "Lush vibrant green meadow"
+    },
+    "rock_ground": {
+      "targetRgb": [95, 110, 125],
+      "strength": 0.45,
+      "blendMode": "multiply",
+      "description": "Cool slate darkening for Azure mountains to eliminate pale flat Xuan paper exposure"
+    },
+    "canyon_floor": {
+      "targetRgb": [105, 115, 125],
+      "strength": 0.40,
+      "blendMode": "multiply",
+      "description": "Deep ravine floor shadow tone"
+    }
+  }
+}

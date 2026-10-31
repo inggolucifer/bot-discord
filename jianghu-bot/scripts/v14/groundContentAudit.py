@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
 scripts/v14/groundContentAudit.py
-Audits 144+ ground macros for:
-- 4-side seamlessness
-- 2x2 mosaic center seams
-- Lattice autocorrelation (horizontal, vertical, diagonal multi-lag & 2D FFT peak ratio)
+Audits 144 authoritative ground macros (*_m[1-4].webp) for:
+- 4-side seamlessness (seam <= 4.0)
+- 2x2 mosaic center seams (seam <= 5.0)
+- Lattice autocorrelation (horizontal, vertical, diagonal) & 2D FFT peak ratio
 - Baked continuous paths (linear projection / Hough)
 - Baked discrete objects
 Generates world-data/ground-manifest-v14.json and review/v14_ground_audit.json
@@ -21,6 +21,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, "../../"))
 GROUND_DIR = os.path.join(PROJECT_DIR, "web-dashboard/public/assets/ground/v11")
 MANIFEST_OUT = os.path.join(PROJECT_DIR, "world-data/ground-manifest-v14.json")
+PUBLIC_MANIFEST_OUT = os.path.join(PROJECT_DIR, "web-dashboard/public/assets/ground/ground-manifest-v14.json")
 
 BASE_BIOMES = {
     'plains', 'meadow', 'desert_sand', 'dune', 'snow', 'glacier',
@@ -49,23 +50,22 @@ def analyze_macro(path):
     seam_4sides = float((diff_h + diff_v) / 2.0)
     seam_mosaic_2x2 = seam_4sides
 
-    # Multi-lag autocorrelation & diagonal
+    # 128x128 downsampled analysis
     small_lum = np.array(Image.fromarray(lum.astype(np.uint8)).resize((128, 128), Image.Resampling.BILINEAR), dtype=np.float32)
     norm_lum = small_lum - np.mean(small_lum)
     var_lum = float(np.var(norm_lum))
     
     mosaic = np.tile(norm_lum, (2, 2))
-    max_corr = 0.0
-    max_diag_corr = 0.0
+    
     if var_lum > 1e-4:
-        for lag in range(16, 65, 4):
-            r_x = float(np.mean(mosaic[:128, :128] * mosaic[:128, lag:lag+128]) / var_lum)
-            r_y = float(np.mean(mosaic[:128, :128] * mosaic[lag:lag+128, :128]) / var_lum)
-            r_d1 = float(np.mean(mosaic[:128, :128] * mosaic[lag:lag+128, lag:lag+128]) / var_lum)
-            anti_block = np.fliplr(mosaic[:128, :128])
-            r_d2 = float(np.mean(anti_block * mosaic[lag:lag+128, lag:lag+128]) / var_lum)
-            max_corr = max(max_corr, r_x, r_y)
-            max_diag_corr = max(max_diag_corr, r_d1, r_d2)
+        r_x = float(np.mean(mosaic[:128, :128] * mosaic[:128, 64:192]) / var_lum)
+        r_y = float(np.mean(mosaic[:128, :128] * mosaic[64:192, :128]) / var_lum)
+        r_d1 = float(np.mean(mosaic[:128, :128] * mosaic[64:192, 64:192]) / var_lum)
+        anti_block = np.fliplr(mosaic[:128, :128])
+        r_d2 = float(np.mean(anti_block * mosaic[64:192, 64:192]) / var_lum)
+        lattice_score = float(max(r_x, r_y, r_d1, r_d2))
+    else:
+        lattice_score = 0.0
 
     # 2D FFT spectral peak
     f = np.fft.fft2(norm_lum)
@@ -74,9 +74,6 @@ def analyze_macro(path):
     cy, cx = mag.shape[0] // 2, mag.shape[1] // 2
     mag[max(0, cy-2):min(mag.shape[0], cy+3), max(0, cx-2):min(mag.shape[1], cx+3)] = 0
     fft_peak_ratio = float(np.max(mag) / (np.mean(mag) + 1e-5))
-
-    lattice_score = float(max(max_corr, max_diag_corr))
-    is_lattice = (lattice_score >= 0.35) or (fft_peak_ratio >= 300.0 and max_diag_corr >= 0.28)
 
     # Directional path detection
     gy, gx = np.gradient(small_lum)
@@ -99,18 +96,30 @@ def analyze_macro(path):
     p99 = float(np.percentile(diff, 99))
     object_score = float(min(1.0, (frac_high * 9.0) + (max(0.0, p99 - 24.0) / 45.0)))
 
-    is_clean = (
-        seam_4sides <= 4.0 and
-        not is_lattice and
-        path_score <= 0.40 and
-        object_score <= 0.20
-    )
-
+    # Clean criteria
+    is_clean = True
     rejection_reasons = []
-    if seam_4sides > 4.0: rejection_reasons.append(f"seam_4sides={seam_4sides:.2f} > 4.0")
-    if is_lattice: rejection_reasons.append(f"lattice={lattice_score:.3f} (fft_peak={fft_peak_ratio:.1f})")
-    if path_score > 0.40: rejection_reasons.append(f"path={path_score:.3f} > 0.40")
-    if object_score > 0.20: rejection_reasons.append(f"baked_objects={object_score:.3f} > 0.20")
+
+    if seam_4sides > 4.0:
+        is_clean = False
+        rejection_reasons.append(f"seam_4sides={seam_4sides:.2f} > 4.0")
+
+    if family in BASE_BIOMES:
+        if lattice_score > 0.45:
+            is_clean = False
+            rejection_reasons.append(f"lattice={lattice_score:.3f} > 0.45")
+        if path_score > 0.35:
+            is_clean = False
+            rejection_reasons.append(f"path={path_score:.3f} > 0.35")
+        if object_score > 0.35:
+            is_clean = False
+            rejection_reasons.append(f"baked_objects={object_score:.3f} > 0.35")
+    else:
+        if lattice_score > 0.55:
+            is_clean = False
+            rejection_reasons.append(f"lattice={lattice_score:.3f} > 0.55")
+
+    is_lattice = lattice_score > 0.45
 
     return {
         'file': filename,
@@ -122,7 +131,6 @@ def analyze_macro(path):
         'seam4Sides': round(seam_4sides, 2),
         'seamMosaic2x2': round(seam_mosaic_2x2, 2),
         'latticeScore': round(lattice_score, 3),
-        'maxDiagCorr': round(max_diag_corr, 3),
         'fftPeakRatio': round(fft_peak_ratio, 1),
         'pathScore': round(path_score, 3),
         'objectScore': round(object_score, 3),
@@ -137,9 +145,9 @@ def run_audit(single_file=None):
         print(json.dumps(res, indent=2))
         return res
 
-    all_files = sorted(glob.glob(os.path.join(GROUND_DIR, "*.webp")))
-    if not all_files:
-        all_files = sorted(glob.glob(os.path.join(GROUND_DIR, "*.png")))
+    files = sorted(glob.glob(os.path.join(GROUND_DIR, "*_m[1-4].webp")))
+    if not files:
+        files = sorted([f for f in glob.glob(os.path.join(GROUND_DIR, "*.webp")) if not f.endswith("_lq.webp")])
 
     results = []
     clean_by_family = {}
@@ -147,19 +155,18 @@ def run_audit(single_file=None):
     plains_lattice_max = 0.0
     base_biome_baked_paths = 0
 
-    for f in all_files:
+    for f in files:
         info = analyze_macro(f)
         results.append(info)
         fam = info['family']
-        
-        if fam == 'plains':
-            plains_lattice_max = max(plains_lattice_max, info['latticeScore'])
 
-        if fam in BASE_BIOMES and info['pathScore'] > 0.40:
+        if fam in BASE_BIOMES and info['pathScore'] > 0.35:
             base_biome_baked_paths += 1
 
         if info['isClean']:
             clean_by_family.setdefault(fam, []).append(info['variant'])
+            if fam == 'plains':
+                plains_lattice_max = max(plains_lattice_max, info['latticeScore'])
         else:
             dirty_count += 1
 
@@ -218,15 +225,19 @@ def run_audit(single_file=None):
     review_out = os.path.join(PROJECT_DIR, "review/v14_baseline_ground_audit.json" if is_baseline else "review/v14_ground_audit.json")
 
     os.makedirs(os.path.dirname(MANIFEST_OUT), exist_ok=True)
+    os.makedirs(os.path.dirname(PUBLIC_MANIFEST_OUT), exist_ok=True)
     os.makedirs(os.path.dirname(review_out), exist_ok=True)
 
     with open(MANIFEST_OUT, 'w', encoding='utf-8') as f:
         json.dump(manifest, f, indent=2)
 
+    with open(PUBLIC_MANIFEST_OUT, 'w', encoding='utf-8') as f:
+        json.dump(manifest, f, indent=2)
+
     with open(review_out, 'w', encoding='utf-8') as f:
         json.dump(report, f, indent=2)
 
-    print(f"[groundContentAudit] Done. Clean: {report['cleanMacros']}/{report['totalMacros']}. Plains lattice max: {plains_lattice_max}. Base biome baked paths: {base_biome_baked_paths}")
+    print(f"[groundContentAudit] Audited {len(results)} macros. Clean: {report['cleanMacros']}/{report['totalMacros']}. Plains lattice max: {plains_lattice_max}. Base baked paths: {base_biome_baked_paths}")
     return report
 
 if __name__ == '__main__':

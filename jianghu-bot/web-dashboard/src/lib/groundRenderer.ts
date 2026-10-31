@@ -1288,6 +1288,25 @@ export function renderChunkGroundBitmapTextured(
       ctxT.restore();
     }
 
+    // V14 P2: Tone shifting for Plains / Farmland / Meadow (H7)
+    // Shifts straw/dry olive towards fresh jade green (strength 0.35) matching minimap
+    if (F === 'plains' || F === 'farmland' || F === 'meadow') {
+      ctxT.save();
+      ctxT.globalCompositeOperation = 'soft-light';
+      ctxT.fillStyle = 'rgba(75, 125, 45, 0.35)';
+      ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
+      ctxT.restore();
+    }
+
+    // V14 P3: Cool slate darkening for Azure Mountains / rock_ground / canyon (H3)
+    if (F === 'rock_ground' || F === 'canyon_floor') {
+      ctxT.save();
+      ctxT.globalCompositeOperation = 'multiply';
+      ctxT.fillStyle = 'rgba(95, 110, 125, 0.35)';
+      ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
+      ctxT.restore();
+    }
+
     // V13 P2: Settlement floor uses base ground + warm loam village road glaze (+8% lightness)
     // Delta L <= 22 vs surrounding wilderness, zero pale white patch
     if (F === 'settlement_floor') {

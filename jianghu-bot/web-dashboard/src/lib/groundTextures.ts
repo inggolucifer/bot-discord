@@ -44,17 +44,31 @@ class GroundTextures {
         // Filter runtime: load clean status audit from v13 manifest and only select clean variants
         let cleanMap: Record<string, boolean> = {};
         try {
-          const v13Res = await fetch('/assets/ground/ground-manifest-v13.json');
-          if (v13Res.ok) {
-            const v13Data = await v13Res.json();
-            for (const [key, info] of Object.entries(v13Data)) {
-              if (info && typeof (info as any).clean === 'boolean') {
-                cleanMap[key] = (info as any).clean;
+          const v14Res = await fetch('/assets/ground/ground-manifest-v14.json');
+          if (v14Res.ok) {
+            const v14Data = await v14Res.json();
+            if (v14Data && v14Data.cleanFamilies) {
+              for (const [fam, vars] of Object.entries(v14Data.cleanFamilies)) {
+                if (Array.isArray(vars)) {
+                  for (const vNum of vars) {
+                    cleanMap[fam + '_m' + vNum + '.webp'] = true;
+                  }
+                }
+              }
+            }
+          } else {
+            const v13Res = await fetch('/assets/ground/ground-manifest-v13.json');
+            if (v13Res.ok) {
+              const v13Data = await v13Res.json();
+              for (const [key, info] of Object.entries(v13Data)) {
+                if (info && typeof (info as any).clean === 'boolean') {
+                  cleanMap[key] = (info as any).clean;
+                }
               }
             }
           }
         } catch {
-          // ignore if v13 manifest not reachable
+          // ignore
         }
 
         // Filter variants in manifest to keep only clean variants
