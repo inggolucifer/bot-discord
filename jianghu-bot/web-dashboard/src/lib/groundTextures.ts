@@ -41,6 +41,33 @@ class GroundTextures {
           return;
         }
 
+        // Filter runtime: load clean status audit from v13 manifest and only select clean variants
+        let cleanMap: Record<string, boolean> = {};
+        try {
+          const v13Res = await fetch('/assets/ground/ground-manifest-v13.json');
+          if (v13Res.ok) {
+            const v13Data = await v13Res.json();
+            for (const [key, info] of Object.entries(v13Data)) {
+              if (info && typeof (info as any).clean === 'boolean') {
+                cleanMap[key] = (info as any).clean;
+              }
+            }
+          }
+        } catch {
+          // ignore if v13 manifest not reachable
+        }
+
+        // Filter variants in manifest to keep only clean variants
+        for (const tInfo of Object.values(this.manifest.terrains)) {
+          if (Array.isArray(tInfo.variants)) {
+            const cleanVariants = tInfo.variants.filter((v) => {
+              const fileKey = v.replace(/^v11\//, '') + '.webp';
+              return cleanMap[fileKey] !== false;
+            });
+            tInfo.variants = cleanVariants.length > 0 ? cleanVariants : [`v11/${tInfo.family}_m1`];
+          }
+        }
+
         // Collect all unique variant IDs and unique family names
         const uniqueVariants = new Set<string>();
         const uniqueFamilies = new Set<string>();

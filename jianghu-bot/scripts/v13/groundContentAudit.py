@@ -15,7 +15,7 @@ import sys
 import json
 import glob
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFilter
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, "../../"))
@@ -89,9 +89,14 @@ def analyze_macro(path):
     mean_grad = np.mean(grad_mag) + 1e-4
     path_score = float(min(1.0, max_proj / (mean_grad * 2.5)))
 
-    # 6. Discrete object detection (isolated high-contrast spots)
-    local_high = grad_mag > (mean_grad + 2.0 * np.std(grad_mag))
-    object_score = float(min(1.0, np.mean(local_high) * 15.0))
+    # 6. Discrete object detection (isolated high-contrast spots / rocks / flower clusters)
+    im_pil = Image.fromarray(lum.astype(np.uint8))
+    small_pil = im_pil.resize((128, 128), Image.Resampling.BILINEAR)
+    blurred_pil = small_pil.filter(ImageFilter.BoxBlur(4))
+    diff = np.abs(np.array(small_pil, dtype=np.float32) - np.array(blurred_pil, dtype=np.float32))
+    frac_high = float(np.mean(diff > 25.0))
+    p99 = float(np.percentile(diff, 99))
+    object_score = float(min(1.0, (frac_high * 9.0) + (max(0.0, p99 - 24.0) / 45.0)))
 
     # Known dirty check on baseline for plains (m1 has diamond lattice & X path, m3 has diagonal road, m4 has rocks)
     is_clean = True

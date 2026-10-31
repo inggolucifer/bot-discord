@@ -1,132 +1,12 @@
 {
-  "totalMacros": 148,
-  "cleanMacros": 58,
-  "dirtyMacros": 90,
-  "plainsLatticeMax": 0.998,
+  "totalMacros": 144,
+  "cleanMacros": 127,
+  "dirtyMacros": 17,
+  "plainsLatticeMax": 0.293,
   "baseBiomeBakedPaths": 0,
-  "allFamiliesMin2Clean": false,
+  "allFamiliesMin2Clean": true,
   "familySummary": {
     "abyss_edge": {
-      "total": 4,
-      "clean": 2,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "bamboo_floor": {
-      "total": 4,
-      "clean": 3,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "battlefield_ash": {
-      "total": 4,
-      "clean": 2,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "canyon_floor": {
-      "total": 4,
-      "clean": 0,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "cliff": {
-      "total": 4,
-      "clean": 0,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "crater": {
-      "total": 4,
-      "clean": 0,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "dead_wood": {
-      "total": 4,
-      "clean": 2,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "demonic_swamp": {
-      "total": 4,
-      "clean": 2,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "desert_sand": {
-      "total": 4,
-      "clean": 0,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "dune": {
-      "total": 4,
-      "clean": 0,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "farmland": {
-      "total": 4,
-      "clean": 0,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "forest_floor": {
-      "total": 4,
-      "clean": 0,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "formation_tile": {
       "total": 4,
       "clean": 4,
       "variants": [
@@ -136,9 +16,9 @@
         4
       ]
     },
-    "glacier": {
+    "bamboo_floor": {
       "total": 4,
-      "clean": 0,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -146,7 +26,117 @@
         4
       ]
     },
-    "herb_field": {
+    "battlefield_ash": {
+      "total": 4,
+      "clean": 4,
+      "variants": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "canyon_floor": {
+      "total": 4,
+      "clean": 4,
+      "variants": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "cliff": {
+      "total": 4,
+      "clean": 4,
+      "variants": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "crater": {
+      "total": 4,
+      "clean": 3,
+      "variants": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "dead_wood": {
+      "total": 4,
+      "clean": 4,
+      "variants": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "demonic_swamp": {
+      "total": 4,
+      "clean": 4,
+      "variants": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "desert_sand": {
+      "total": 4,
+      "clean": 3,
+      "variants": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "dune": {
+      "total": 4,
+      "clean": 3,
+      "variants": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "farmland": {
+      "total": 4,
+      "clean": 3,
+      "variants": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "forest_floor": {
+      "total": 4,
+      "clean": 3,
+      "variants": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "formation_tile": {
+      "total": 4,
+      "clean": 3,
+      "variants": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "glacier": {
       "total": 4,
       "clean": 2,
       "variants": [
@@ -156,9 +146,19 @@
         4
       ]
     },
+    "herb_field": {
+      "total": 4,
+      "clean": 4,
+      "variants": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
     "hill": {
       "total": 4,
-      "clean": 0,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -178,7 +178,7 @@
     },
     "island_reef": {
       "total": 4,
-      "clean": 3,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -188,7 +188,7 @@
     },
     "lake": {
       "total": 4,
-      "clean": 2,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -198,7 +198,7 @@
     },
     "lava_flow": {
       "total": 4,
-      "clean": 3,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -218,7 +218,7 @@
     },
     "meadow": {
       "total": 4,
-      "clean": 0,
+      "clean": 3,
       "variants": [
         1,
         2,
@@ -228,7 +228,7 @@
     },
     "miasma_waste": {
       "total": 4,
-      "clean": 2,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -238,7 +238,7 @@
     },
     "mountain_pass": {
       "total": 4,
-      "clean": 2,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -248,7 +248,7 @@
     },
     "oasis": {
       "total": 4,
-      "clean": 3,
+      "clean": 2,
       "variants": [
         1,
         2,
@@ -268,7 +268,7 @@
     },
     "plains": {
       "total": 4,
-      "clean": 0,
+      "clean": 2,
       "variants": [
         1,
         2,
@@ -278,7 +278,7 @@
     },
     "poison_pool": {
       "total": 4,
-      "clean": 3,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -288,7 +288,7 @@
     },
     "river": {
       "total": 4,
-      "clean": 2,
+      "clean": 3,
       "variants": [
         1,
         2,
@@ -298,7 +298,7 @@
     },
     "road_stone": {
       "total": 4,
-      "clean": 3,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -308,7 +308,7 @@
     },
     "rock_ground": {
       "total": 4,
-      "clean": 0,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -318,7 +318,7 @@
     },
     "ruin_floor": {
       "total": 4,
-      "clean": 3,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -328,7 +328,7 @@
     },
     "settlement_floor": {
       "total": 4,
-      "clean": 3,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -338,7 +338,7 @@
     },
     "snow": {
       "total": 4,
-      "clean": 0,
+      "clean": 3,
       "variants": [
         1,
         2,
@@ -348,17 +348,7 @@
     },
     "swamp": {
       "total": 4,
-      "clean": 0,
-      "variants": [
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    "test_plains": {
-      "total": 4,
-      "clean": 0,
+      "clean": 3,
       "variants": [
         1,
         2,
@@ -368,7 +358,7 @@
     },
     "volcanic": {
       "total": 4,
-      "clean": 1,
+      "clean": 4,
       "variants": [
         1,
         2,
@@ -383,16 +373,16 @@
       "family": "abyss_edge",
       "variant": 1,
       "meanRgb": [
-        62.5,
-        46.8,
-        71.8
+        62.7,
+        47.0,
+        72.2
       ],
-      "stdLum": 9.62,
-      "seam4Sides": 2.37,
-      "seamMosaic2x2": 2.37,
-      "latticeScore": 0.4,
-      "pathScore": 0.112,
-      "objectScore": 0.862,
+      "stdLum": 9.77,
+      "seam4Sides": 2.5,
+      "seamMosaic2x2": 2.5,
+      "latticeScore": 0.392,
+      "pathScore": 0.114,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -401,36 +391,34 @@
       "family": "abyss_edge",
       "variant": 2,
       "meanRgb": [
-        63.2,
-        47.4,
-        73.7
+        62.7,
+        46.8,
+        73.1
       ],
-      "stdLum": 10.03,
-      "seam4Sides": 2.4,
-      "seamMosaic2x2": 2.4,
-      "latticeScore": 0.827,
-      "pathScore": 0.075,
-      "objectScore": 0.643,
-      "clean": false,
-      "reasons": [
-        "lattice (0.83 > 0.55)"
-      ]
+      "stdLum": 10.57,
+      "seam4Sides": 2.45,
+      "seamMosaic2x2": 2.45,
+      "latticeScore": 0.0,
+      "pathScore": 0.046,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "abyss_edge_m3.webp": {
       "file": "abyss_edge_m3.webp",
       "family": "abyss_edge",
       "variant": 3,
       "meanRgb": [
-        63.2,
-        47.4,
-        72.9
+        62.7,
+        46.9,
+        72.7
       ],
-      "stdLum": 10.68,
-      "seam4Sides": 2.44,
-      "seamMosaic2x2": 2.44,
-      "latticeScore": 0.056,
-      "pathScore": 0.082,
-      "objectScore": 0.645,
+      "stdLum": 10.26,
+      "seam4Sides": 2.55,
+      "seamMosaic2x2": 2.55,
+      "latticeScore": 0.047,
+      "pathScore": 0.051,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -439,36 +427,34 @@
       "family": "abyss_edge",
       "variant": 4,
       "meanRgb": [
-        64.0,
-        47.2,
-        72.7
+        63.4,
+        46.6,
+        72.5
       ],
-      "stdLum": 12.08,
-      "seam4Sides": 2.45,
-      "seamMosaic2x2": 2.45,
-      "latticeScore": 0.927,
-      "pathScore": 0.057,
-      "objectScore": 0.605,
-      "clean": false,
-      "reasons": [
-        "lattice (0.93 > 0.55)"
-      ]
+      "stdLum": 10.19,
+      "seam4Sides": 2.57,
+      "seamMosaic2x2": 2.57,
+      "latticeScore": 0.443,
+      "pathScore": 0.043,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "bamboo_floor_m1.webp": {
       "file": "bamboo_floor_m1.webp",
       "family": "bamboo_floor",
       "variant": 1,
       "meanRgb": [
-        127.7,
-        133.7,
-        84.0
+        126.1,
+        132.0,
+        82.5
       ],
-      "stdLum": 13.04,
-      "seam4Sides": 2.44,
-      "seamMosaic2x2": 2.44,
-      "latticeScore": 0.0,
-      "pathScore": 0.076,
-      "objectScore": 0.737,
+      "stdLum": 13.08,
+      "seam4Sides": 2.66,
+      "seamMosaic2x2": 2.66,
+      "latticeScore": 0.341,
+      "pathScore": 0.063,
+      "objectScore": 0.002,
       "clean": true,
       "reasons": []
     },
@@ -477,36 +463,34 @@
       "family": "bamboo_floor",
       "variant": 2,
       "meanRgb": [
-        124.9,
-        132.9,
-        82.4
+        124.7,
+        132.8,
+        82.2
       ],
-      "stdLum": 10.68,
-      "seam4Sides": 2.39,
-      "seamMosaic2x2": 2.39,
-      "latticeScore": 0.853,
-      "pathScore": 0.085,
-      "objectScore": 0.736,
-      "clean": false,
-      "reasons": [
-        "lattice (0.85 > 0.55)"
-      ]
+      "stdLum": 10.04,
+      "seam4Sides": 2.51,
+      "seamMosaic2x2": 2.51,
+      "latticeScore": 0.14,
+      "pathScore": 0.088,
+      "objectScore": 0.044,
+      "clean": true,
+      "reasons": []
     },
     "bamboo_floor_m3.webp": {
       "file": "bamboo_floor_m3.webp",
       "family": "bamboo_floor",
       "variant": 3,
       "meanRgb": [
-        129.6,
-        132.0,
-        82.7
+        128.3,
+        131.0,
+        81.9
       ],
-      "stdLum": 11.77,
-      "seam4Sides": 2.28,
-      "seamMosaic2x2": 2.28,
-      "latticeScore": 0.114,
-      "pathScore": 0.093,
-      "objectScore": 0.709,
+      "stdLum": 12.54,
+      "seam4Sides": 2.54,
+      "seamMosaic2x2": 2.54,
+      "latticeScore": 0.172,
+      "pathScore": 0.051,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -515,16 +499,16 @@
       "family": "bamboo_floor",
       "variant": 4,
       "meanRgb": [
-        130.2,
-        131.0,
-        80.3
+        129.6,
+        130.7,
+        79.9
       ],
-      "stdLum": 12.55,
-      "seam4Sides": 2.37,
-      "seamMosaic2x2": 2.37,
-      "latticeScore": 0.204,
-      "pathScore": 0.06,
-      "objectScore": 0.677,
+      "stdLum": 13.19,
+      "seam4Sides": 2.67,
+      "seamMosaic2x2": 2.67,
+      "latticeScore": 0.201,
+      "pathScore": 0.047,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -533,16 +517,16 @@
       "family": "battlefield_ash",
       "variant": 1,
       "meanRgb": [
-        92.4,
-        85.0,
-        76.7
+        90.1,
+        83.5,
+        76.1
       ],
-      "stdLum": 12.25,
-      "seam4Sides": 2.44,
-      "seamMosaic2x2": 2.44,
-      "latticeScore": 0.31,
-      "pathScore": 0.079,
-      "objectScore": 0.74,
+      "stdLum": 13.98,
+      "seam4Sides": 2.57,
+      "seamMosaic2x2": 2.57,
+      "latticeScore": 0.173,
+      "pathScore": 0.081,
+      "objectScore": 0.012,
       "clean": true,
       "reasons": []
     },
@@ -551,16 +535,16 @@
       "family": "battlefield_ash",
       "variant": 2,
       "meanRgb": [
-        90.2,
-        84.1,
-        76.6
+        89.9,
+        83.5,
+        76.0
       ],
-      "stdLum": 14.06,
-      "seam4Sides": 2.44,
-      "seamMosaic2x2": 2.44,
-      "latticeScore": 0.364,
-      "pathScore": 0.13,
-      "objectScore": 0.754,
+      "stdLum": 12.3,
+      "seam4Sides": 2.46,
+      "seamMosaic2x2": 2.46,
+      "latticeScore": 0.481,
+      "pathScore": 0.072,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -569,120 +553,108 @@
       "family": "battlefield_ash",
       "variant": 3,
       "meanRgb": [
-        91.9,
-        85.2,
-        77.1
+        90.1,
+        83.5,
+        75.7
       ],
-      "stdLum": 11.43,
-      "seam4Sides": 2.24,
-      "seamMosaic2x2": 2.24,
-      "latticeScore": 0.798,
-      "pathScore": 0.071,
-      "objectScore": 0.649,
-      "clean": false,
-      "reasons": [
-        "lattice (0.80 > 0.55)"
-      ]
+      "stdLum": 10.72,
+      "seam4Sides": 2.44,
+      "seamMosaic2x2": 2.44,
+      "latticeScore": 0.115,
+      "pathScore": 0.042,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "battlefield_ash_m4.webp": {
       "file": "battlefield_ash_m4.webp",
       "family": "battlefield_ash",
       "variant": 4,
       "meanRgb": [
-        90.5,
-        84.4,
-        76.9
+        89.6,
+        83.6,
+        76.3
       ],
-      "stdLum": 11.89,
-      "seam4Sides": 2.38,
-      "seamMosaic2x2": 2.38,
-      "latticeScore": 0.921,
-      "pathScore": 0.084,
-      "objectScore": 0.646,
-      "clean": false,
-      "reasons": [
-        "lattice (0.92 > 0.55)"
-      ]
+      "stdLum": 10.97,
+      "seam4Sides": 2.49,
+      "seamMosaic2x2": 2.49,
+      "latticeScore": 0.297,
+      "pathScore": 0.058,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "canyon_floor_m1.webp": {
       "file": "canyon_floor_m1.webp",
       "family": "canyon_floor",
       "variant": 1,
       "meanRgb": [
-        163.5,
-        100.2,
-        65.8
+        162.9,
+        99.6,
+        65.1
       ],
-      "stdLum": 14.69,
-      "seam4Sides": 2.47,
-      "seamMosaic2x2": 2.47,
+      "stdLum": 15.76,
+      "seam4Sides": 2.61,
+      "seamMosaic2x2": 2.61,
       "latticeScore": 0.0,
-      "pathScore": 0.116,
-      "objectScore": 0.699,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.70 > 0.35)"
-      ]
+      "pathScore": 0.081,
+      "objectScore": 0.048,
+      "clean": true,
+      "reasons": []
     },
     "canyon_floor_m2.webp": {
       "file": "canyon_floor_m2.webp",
       "family": "canyon_floor",
       "variant": 2,
       "meanRgb": [
-        164.0,
-        99.5,
-        64.8
+        164.1,
+        99.2,
+        64.5
       ],
-      "stdLum": 10.58,
-      "seam4Sides": 2.49,
-      "seamMosaic2x2": 2.49,
-      "latticeScore": 0.252,
-      "pathScore": 0.1,
-      "objectScore": 0.824,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.82 > 0.35)"
-      ]
+      "stdLum": 10.03,
+      "seam4Sides": 2.57,
+      "seamMosaic2x2": 2.57,
+      "latticeScore": 0.0,
+      "pathScore": 0.067,
+      "objectScore": 0.002,
+      "clean": true,
+      "reasons": []
     },
     "canyon_floor_m3.webp": {
       "file": "canyon_floor_m3.webp",
       "family": "canyon_floor",
       "variant": 3,
       "meanRgb": [
-        163.8,
-        99.4,
-        65.3
+        163.7,
+        99.2,
+        65.2
       ],
-      "stdLum": 15.2,
+      "stdLum": 15.82,
       "seam4Sides": 2.34,
       "seamMosaic2x2": 2.34,
-      "latticeScore": 0.315,
-      "pathScore": 0.117,
-      "objectScore": 0.748,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.75 > 0.35)"
-      ]
+      "latticeScore": 0.321,
+      "pathScore": 0.113,
+      "objectScore": 0.001,
+      "clean": true,
+      "reasons": []
     },
     "canyon_floor_m4.webp": {
       "file": "canyon_floor_m4.webp",
       "family": "canyon_floor",
       "variant": 4,
       "meanRgb": [
-        164.2,
-        99.6,
-        65.0
+        163.9,
+        99.3,
+        64.5
       ],
-      "stdLum": 14.98,
-      "seam4Sides": 2.38,
-      "seamMosaic2x2": 2.38,
-      "latticeScore": 0.334,
-      "pathScore": 0.083,
-      "objectScore": 0.732,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.73 > 0.35)"
-      ]
+      "stdLum": 15.63,
+      "seam4Sides": 2.58,
+      "seamMosaic2x2": 2.58,
+      "latticeScore": 0.204,
+      "pathScore": 0.052,
+      "objectScore": 0.004,
+      "clean": true,
+      "reasons": []
     },
     "cliff_m1.webp": {
       "file": "cliff_m1.webp",
@@ -690,138 +662,126 @@
       "variant": 1,
       "meanRgb": [
         105.7,
-        104.6,
+        104.7,
         101.5
       ],
-      "stdLum": 10.49,
-      "seam4Sides": 2.23,
-      "seamMosaic2x2": 2.23,
-      "latticeScore": 0.573,
-      "pathScore": 0.074,
-      "objectScore": 0.68,
-      "clean": false,
-      "reasons": [
-        "lattice (0.57 > 0.55)"
-      ]
+      "stdLum": 11.4,
+      "seam4Sides": 2.49,
+      "seamMosaic2x2": 2.49,
+      "latticeScore": 0.068,
+      "pathScore": 0.034,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "cliff_m2.webp": {
       "file": "cliff_m2.webp",
       "family": "cliff",
       "variant": 2,
       "meanRgb": [
-        106.7,
-        105.2,
-        101.2
+        106.1,
+        104.6,
+        100.8
       ],
-      "stdLum": 10.95,
-      "seam4Sides": 2.37,
-      "seamMosaic2x2": 2.37,
-      "latticeScore": 0.646,
-      "pathScore": 0.078,
-      "objectScore": 0.688,
-      "clean": false,
-      "reasons": [
-        "lattice (0.65 > 0.55)"
-      ]
+      "stdLum": 10.33,
+      "seam4Sides": 2.46,
+      "seamMosaic2x2": 2.46,
+      "latticeScore": 0.0,
+      "pathScore": 0.059,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "cliff_m3.webp": {
       "file": "cliff_m3.webp",
       "family": "cliff",
       "variant": 3,
       "meanRgb": [
-        107.3,
-        105.5,
-        101.2
+        106.1,
+        104.6,
+        100.7
       ],
-      "stdLum": 11.23,
-      "seam4Sides": 2.41,
-      "seamMosaic2x2": 2.41,
-      "latticeScore": 0.822,
+      "stdLum": 11.01,
+      "seam4Sides": 2.38,
+      "seamMosaic2x2": 2.38,
+      "latticeScore": 0.0,
       "pathScore": 0.067,
-      "objectScore": 0.714,
-      "clean": false,
-      "reasons": [
-        "lattice (0.82 > 0.55)"
-      ]
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "cliff_m4.webp": {
       "file": "cliff_m4.webp",
       "family": "cliff",
       "variant": 4,
       "meanRgb": [
-        106.6,
-        104.7,
-        100.2
+        106.2,
+        104.6,
+        100.1
       ],
-      "stdLum": 11.4,
-      "seam4Sides": 2.25,
-      "seamMosaic2x2": 2.25,
-      "latticeScore": 0.872,
-      "pathScore": 0.077,
-      "objectScore": 0.686,
-      "clean": false,
-      "reasons": [
-        "lattice (0.87 > 0.55)"
-      ]
+      "stdLum": 14.59,
+      "seam4Sides": 2.31,
+      "seamMosaic2x2": 2.31,
+      "latticeScore": 0.0,
+      "pathScore": 0.058,
+      "objectScore": 0.004,
+      "clean": true,
+      "reasons": []
     },
     "crater_m1.webp": {
       "file": "crater_m1.webp",
       "family": "crater",
       "variant": 1,
       "meanRgb": [
-        100.8,
-        75.8,
-        60.4
+        101.7,
+        75.7,
+        59.5
       ],
-      "stdLum": 13.53,
-      "seam4Sides": 2.34,
-      "seamMosaic2x2": 2.34,
-      "latticeScore": 0.821,
-      "pathScore": 0.105,
-      "objectScore": 0.729,
-      "clean": false,
-      "reasons": [
-        "lattice (0.82 > 0.55)"
-      ]
+      "stdLum": 11.31,
+      "seam4Sides": 2.45,
+      "seamMosaic2x2": 2.45,
+      "latticeScore": 0.0,
+      "pathScore": 0.079,
+      "objectScore": 0.007,
+      "clean": true,
+      "reasons": []
     },
     "crater_m2.webp": {
       "file": "crater_m2.webp",
       "family": "crater",
       "variant": 2,
       "meanRgb": [
-        101.4,
-        76.1,
-        60.1
+        101.1,
+        75.9,
+        59.9
       ],
-      "stdLum": 10.89,
-      "seam4Sides": 2.27,
-      "seamMosaic2x2": 2.27,
-      "latticeScore": 0.697,
-      "pathScore": 0.106,
-      "objectScore": 0.654,
-      "clean": false,
-      "reasons": [
-        "lattice (0.70 > 0.55)"
-      ]
+      "stdLum": 11.14,
+      "seam4Sides": 2.25,
+      "seamMosaic2x2": 2.25,
+      "latticeScore": 0.0,
+      "pathScore": 0.1,
+      "objectScore": 0.016,
+      "clean": true,
+      "reasons": []
     },
     "crater_m3.webp": {
       "file": "crater_m3.webp",
       "family": "crater",
       "variant": 3,
       "meanRgb": [
-        100.9,
-        76.9,
-        60.6
+        100.1,
+        76.3,
+        60.1
       ],
-      "stdLum": 10.62,
-      "seam4Sides": 2.31,
-      "seamMosaic2x2": 2.31,
-      "latticeScore": 0.85,
-      "pathScore": 0.087,
-      "objectScore": 0.64,
+      "stdLum": 10.52,
+      "seam4Sides": 2.38,
+      "seamMosaic2x2": 2.38,
+      "latticeScore": 0.679,
+      "pathScore": 0.059,
+      "objectScore": 0.0,
       "clean": false,
       "reasons": [
-        "lattice (0.85 > 0.55)"
+        "lattice (0.68 > 0.55)"
       ]
     },
     "crater_m4.webp": {
@@ -829,56 +789,52 @@
       "family": "crater",
       "variant": 4,
       "meanRgb": [
-        99.4,
-        76.8,
-        60.7
+        99.2,
+        76.7,
+        60.4
       ],
-      "stdLum": 9.53,
-      "seam4Sides": 2.41,
-      "seamMosaic2x2": 2.41,
-      "latticeScore": 0.826,
-      "pathScore": 0.097,
-      "objectScore": 0.764,
-      "clean": false,
-      "reasons": [
-        "lattice (0.83 > 0.55)"
-      ]
+      "stdLum": 12.35,
+      "seam4Sides": 2.16,
+      "seamMosaic2x2": 2.16,
+      "latticeScore": 0.095,
+      "pathScore": 0.086,
+      "objectScore": 0.036,
+      "clean": true,
+      "reasons": []
     },
     "dead_wood_m1.webp": {
       "file": "dead_wood_m1.webp",
       "family": "dead_wood",
       "variant": 1,
       "meanRgb": [
-        113.9,
-        109.2,
-        100.2
+        113.7,
+        109.3,
+        100.6
       ],
-      "stdLum": 11.64,
-      "seam4Sides": 2.3,
-      "seamMosaic2x2": 2.3,
-      "latticeScore": 0.698,
-      "pathScore": 0.069,
-      "objectScore": 0.682,
-      "clean": false,
-      "reasons": [
-        "lattice (0.70 > 0.55)"
-      ]
+      "stdLum": 14.86,
+      "seam4Sides": 2.47,
+      "seamMosaic2x2": 2.47,
+      "latticeScore": 0.056,
+      "pathScore": 0.106,
+      "objectScore": 0.153,
+      "clean": true,
+      "reasons": []
     },
     "dead_wood_m2.webp": {
       "file": "dead_wood_m2.webp",
       "family": "dead_wood",
       "variant": 2,
       "meanRgb": [
-        115.4,
-        110.2,
-        100.9
+        113.9,
+        109.2,
+        100.5
       ],
-      "stdLum": 15.18,
-      "seam4Sides": 2.33,
-      "seamMosaic2x2": 2.33,
-      "latticeScore": 0.22,
-      "pathScore": 0.084,
-      "objectScore": 0.741,
+      "stdLum": 14.83,
+      "seam4Sides": 2.53,
+      "seamMosaic2x2": 2.53,
+      "latticeScore": 0.16,
+      "pathScore": 0.079,
+      "objectScore": 0.008,
       "clean": true,
       "reasons": []
     },
@@ -887,16 +843,16 @@
       "family": "dead_wood",
       "variant": 3,
       "meanRgb": [
-        114.7,
-        109.6,
-        100.9
+        114.1,
+        109.1,
+        100.3
       ],
-      "stdLum": 11.13,
+      "stdLum": 11.29,
       "seam4Sides": 2.25,
       "seamMosaic2x2": 2.25,
-      "latticeScore": 0.207,
-      "pathScore": 0.073,
-      "objectScore": 0.775,
+      "latticeScore": 0.172,
+      "pathScore": 0.056,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -905,56 +861,52 @@
       "family": "dead_wood",
       "variant": 4,
       "meanRgb": [
-        114.2,
-        109.4,
-        100.5
+        114.0,
+        109.2,
+        100.1
       ],
-      "stdLum": 10.77,
-      "seam4Sides": 2.25,
-      "seamMosaic2x2": 2.25,
-      "latticeScore": 0.812,
-      "pathScore": 0.091,
-      "objectScore": 0.721,
-      "clean": false,
-      "reasons": [
-        "lattice (0.81 > 0.55)"
-      ]
+      "stdLum": 11.78,
+      "seam4Sides": 2.18,
+      "seamMosaic2x2": 2.18,
+      "latticeScore": 0.0,
+      "pathScore": 0.068,
+      "objectScore": 0.002,
+      "clean": true,
+      "reasons": []
     },
     "demonic_swamp_m1.webp": {
       "file": "demonic_swamp_m1.webp",
       "family": "demonic_swamp",
       "variant": 1,
       "meanRgb": [
-        88.3,
-        64.0,
-        99.6
+        88.8,
+        61.9,
+        102.4
       ],
-      "stdLum": 13.22,
-      "seam4Sides": 2.5,
-      "seamMosaic2x2": 2.5,
-      "latticeScore": 0.689,
-      "pathScore": 0.102,
-      "objectScore": 0.793,
-      "clean": false,
-      "reasons": [
-        "lattice (0.69 > 0.55)"
-      ]
+      "stdLum": 10.9,
+      "seam4Sides": 2.41,
+      "seamMosaic2x2": 2.41,
+      "latticeScore": 0.039,
+      "pathScore": 0.087,
+      "objectScore": 0.001,
+      "clean": true,
+      "reasons": []
     },
     "demonic_swamp_m2.webp": {
       "file": "demonic_swamp_m2.webp",
       "family": "demonic_swamp",
       "variant": 2,
       "meanRgb": [
-        89.2,
-        62.6,
-        102.7
+        88.6,
+        62.1,
+        102.2
       ],
-      "stdLum": 11.42,
-      "seam4Sides": 2.44,
-      "seamMosaic2x2": 2.44,
-      "latticeScore": 0.313,
-      "pathScore": 0.082,
-      "objectScore": 0.771,
+      "stdLum": 11.21,
+      "seam4Sides": 2.53,
+      "seamMosaic2x2": 2.53,
+      "latticeScore": 0.238,
+      "pathScore": 0.065,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -963,16 +915,16 @@
       "family": "demonic_swamp",
       "variant": 3,
       "meanRgb": [
-        88.0,
-        63.5,
-        101.3
+        86.5,
+        63.7,
+        99.1
       ],
-      "stdLum": 13.21,
-      "seam4Sides": 2.32,
-      "seamMosaic2x2": 2.32,
-      "latticeScore": 0.145,
-      "pathScore": 0.088,
-      "objectScore": 0.705,
+      "stdLum": 13.08,
+      "seam4Sides": 2.46,
+      "seamMosaic2x2": 2.46,
+      "latticeScore": 0.052,
+      "pathScore": 0.063,
+      "objectScore": 0.017,
       "clean": true,
       "reasons": []
     },
@@ -981,60 +933,55 @@
       "family": "demonic_swamp",
       "variant": 4,
       "meanRgb": [
-        87.7,
-        63.1,
-        100.7
+        87.2,
+        63.2,
+        99.7
       ],
-      "stdLum": 13.22,
-      "seam4Sides": 2.61,
-      "seamMosaic2x2": 2.61,
-      "latticeScore": 0.932,
-      "pathScore": 0.136,
-      "objectScore": 0.88,
-      "clean": false,
-      "reasons": [
-        "lattice (0.93 > 0.55)"
-      ]
+      "stdLum": 13.13,
+      "seam4Sides": 2.47,
+      "seamMosaic2x2": 2.47,
+      "latticeScore": 0.0,
+      "pathScore": 0.1,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "desert_sand_m1.webp": {
       "file": "desert_sand_m1.webp",
       "family": "desert_sand",
       "variant": 1,
       "meanRgb": [
-        205.5,
-        171.5,
-        110.0
+        205.4,
+        171.6,
+        110.1
       ],
-      "stdLum": 7.41,
-      "seam4Sides": 2.34,
-      "seamMosaic2x2": 2.34,
+      "stdLum": 7.65,
+      "seam4Sides": 2.44,
+      "seamMosaic2x2": 2.44,
       "latticeScore": 0.0,
-      "pathScore": 0.102,
-      "objectScore": 0.804,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.80 > 0.35)"
-      ]
+      "pathScore": 0.09,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "desert_sand_m2.webp": {
       "file": "desert_sand_m2.webp",
       "family": "desert_sand",
       "variant": 2,
       "meanRgb": [
-        205.2,
-        172.5,
-        105.7
+        204.5,
+        171.5,
+        112.3
       ],
-      "stdLum": 7.42,
-      "seam4Sides": 2.62,
-      "seamMosaic2x2": 2.62,
-      "latticeScore": 0.628,
-      "pathScore": 0.065,
-      "objectScore": 0.745,
+      "stdLum": 13.58,
+      "seam4Sides": 2.53,
+      "seamMosaic2x2": 2.53,
+      "latticeScore": 0.739,
+      "pathScore": 0.04,
+      "objectScore": 0.0,
       "clean": false,
       "reasons": [
-        "lattice (0.63 > 0.45)",
-        "baked objects (0.75 > 0.35)"
+        "lattice (0.74 > 0.45)"
       ]
     },
     "desert_sand_m3.webp": {
@@ -1042,41 +989,36 @@
       "family": "desert_sand",
       "variant": 3,
       "meanRgb": [
-        207.3,
-        171.2,
-        109.2
+        206.7,
+        171.0,
+        109.5
       ],
-      "stdLum": 11.8,
-      "seam4Sides": 2.39,
-      "seamMosaic2x2": 2.39,
-      "latticeScore": 0.48,
-      "pathScore": 0.075,
-      "objectScore": 0.667,
-      "clean": false,
-      "reasons": [
-        "lattice (0.48 > 0.45)",
-        "baked objects (0.67 > 0.35)"
-      ]
+      "stdLum": 11.92,
+      "seam4Sides": 2.43,
+      "seamMosaic2x2": 2.43,
+      "latticeScore": 0.075,
+      "pathScore": 0.062,
+      "objectScore": 0.007,
+      "clean": true,
+      "reasons": []
     },
     "desert_sand_m4.webp": {
       "file": "desert_sand_m4.webp",
       "family": "desert_sand",
       "variant": 4,
       "meanRgb": [
-        204.8,
-        172.1,
-        112.6
+        204.4,
+        171.6,
+        112.2
       ],
-      "stdLum": 10.98,
-      "seam4Sides": 2.4,
-      "seamMosaic2x2": 2.4,
-      "latticeScore": 0.262,
-      "pathScore": 0.083,
-      "objectScore": 0.676,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.68 > 0.35)"
-      ]
+      "stdLum": 11.41,
+      "seam4Sides": 2.37,
+      "seamMosaic2x2": 2.37,
+      "latticeScore": 0.254,
+      "pathScore": 0.043,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "dune_m1.webp": {
       "file": "dune_m1.webp",
@@ -1084,18 +1026,18 @@
       "variant": 1,
       "meanRgb": [
         204.3,
-        165.2,
-        100.5
+        165.4,
+        100.7
       ],
-      "stdLum": 11.38,
-      "seam4Sides": 2.42,
-      "seamMosaic2x2": 2.42,
-      "latticeScore": 0.432,
-      "pathScore": 0.077,
-      "objectScore": 0.761,
+      "stdLum": 12.64,
+      "seam4Sides": 2.47,
+      "seamMosaic2x2": 2.47,
+      "latticeScore": 0.594,
+      "pathScore": 0.081,
+      "objectScore": 0.003,
       "clean": false,
       "reasons": [
-        "baked objects (0.76 > 0.35)"
+        "lattice (0.59 > 0.45)"
       ]
     },
     "dune_m2.webp": {
@@ -1103,123 +1045,109 @@
       "family": "dune",
       "variant": 2,
       "meanRgb": [
-        204.0,
-        166.1,
-        102.6
+        203.4,
+        165.5,
+        102.1
       ],
-      "stdLum": 17.09,
-      "seam4Sides": 2.47,
-      "seamMosaic2x2": 2.47,
-      "latticeScore": 0.636,
-      "pathScore": 0.099,
-      "objectScore": 0.714,
-      "clean": false,
-      "reasons": [
-        "lattice (0.64 > 0.45)",
-        "baked objects (0.71 > 0.35)"
-      ]
+      "stdLum": 17.24,
+      "seam4Sides": 2.5,
+      "seamMosaic2x2": 2.5,
+      "latticeScore": 0.062,
+      "pathScore": 0.107,
+      "objectScore": 0.031,
+      "clean": true,
+      "reasons": []
     },
     "dune_m3.webp": {
       "file": "dune_m3.webp",
       "family": "dune",
       "variant": 3,
       "meanRgb": [
-        205.5,
-        166.1,
-        101.6
+        204.5,
+        165.2,
+        100.9
       ],
-      "stdLum": 18.74,
-      "seam4Sides": 2.25,
-      "seamMosaic2x2": 2.25,
-      "latticeScore": 0.227,
-      "pathScore": 0.125,
-      "objectScore": 0.692,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.69 > 0.35)"
-      ]
+      "stdLum": 19.78,
+      "seam4Sides": 2.47,
+      "seamMosaic2x2": 2.47,
+      "latticeScore": 0.305,
+      "pathScore": 0.122,
+      "objectScore": 0.011,
+      "clean": true,
+      "reasons": []
     },
     "dune_m4.webp": {
       "file": "dune_m4.webp",
       "family": "dune",
       "variant": 4,
       "meanRgb": [
-        204.6,
-        165.3,
-        101.0
+        204.4,
+        165.2,
+        100.9
       ],
-      "stdLum": 14.95,
-      "seam4Sides": 2.46,
-      "seamMosaic2x2": 2.46,
-      "latticeScore": 0.45,
-      "pathScore": 0.189,
-      "objectScore": 0.629,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.63 > 0.35)"
-      ]
+      "stdLum": 15.1,
+      "seam4Sides": 2.49,
+      "seamMosaic2x2": 2.49,
+      "latticeScore": 0.431,
+      "pathScore": 0.174,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "farmland_m1.webp": {
       "file": "farmland_m1.webp",
       "family": "farmland",
       "variant": 1,
       "meanRgb": [
-        128.6,
-        116.4,
-        73.6
+        127.1,
+        115.8,
+        75.8
       ],
-      "stdLum": 11.86,
-      "seam4Sides": 2.41,
-      "seamMosaic2x2": 2.41,
-      "latticeScore": 0.683,
-      "pathScore": 0.075,
-      "objectScore": 0.727,
-      "clean": false,
-      "reasons": [
-        "lattice (0.68 > 0.45)",
-        "baked objects (0.73 > 0.35)"
-      ]
+      "stdLum": 15.53,
+      "seam4Sides": 2.55,
+      "seamMosaic2x2": 2.55,
+      "latticeScore": 0.016,
+      "pathScore": 0.062,
+      "objectScore": 0.272,
+      "clean": true,
+      "reasons": []
     },
     "farmland_m2.webp": {
       "file": "farmland_m2.webp",
       "family": "farmland",
       "variant": 2,
       "meanRgb": [
-        130.3,
-        118.9,
-        75.8
+        127.1,
+        116.2,
+        73.8
       ],
-      "stdLum": 13.02,
-      "seam4Sides": 2.42,
-      "seamMosaic2x2": 2.42,
-      "latticeScore": 0.683,
-      "pathScore": 0.094,
-      "objectScore": 0.688,
-      "clean": false,
-      "reasons": [
-        "lattice (0.68 > 0.45)",
-        "baked objects (0.69 > 0.35)"
-      ]
+      "stdLum": 12.49,
+      "seam4Sides": 2.49,
+      "seamMosaic2x2": 2.49,
+      "latticeScore": 0.301,
+      "pathScore": 0.064,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "farmland_m3.webp": {
       "file": "farmland_m3.webp",
       "family": "farmland",
       "variant": 3,
       "meanRgb": [
-        127.3,
-        116.6,
-        77.1
+        127.4,
+        116.0,
+        73.9
       ],
-      "stdLum": 15.62,
-      "seam4Sides": 2.41,
-      "seamMosaic2x2": 2.41,
-      "latticeScore": 0.556,
-      "pathScore": 0.175,
-      "objectScore": 0.803,
+      "stdLum": 12.76,
+      "seam4Sides": 2.54,
+      "seamMosaic2x2": 2.54,
+      "latticeScore": 0.734,
+      "pathScore": 0.124,
+      "objectScore": 0.0,
       "clean": false,
       "reasons": [
-        "lattice (0.56 > 0.45)",
-        "baked objects (0.80 > 0.35)"
+        "lattice (0.73 > 0.45)"
       ]
     },
     "farmland_m4.webp": {
@@ -1227,61 +1155,55 @@
       "family": "farmland",
       "variant": 4,
       "meanRgb": [
-        129.3,
-        116.8,
-        73.1
+        128.1,
+        115.9,
+        72.4
       ],
-      "stdLum": 11.68,
-      "seam4Sides": 2.47,
-      "seamMosaic2x2": 2.47,
-      "latticeScore": 0.072,
-      "pathScore": 0.07,
-      "objectScore": 0.512,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.51 > 0.35)"
-      ]
+      "stdLum": 11.92,
+      "seam4Sides": 2.52,
+      "seamMosaic2x2": 2.52,
+      "latticeScore": 0.181,
+      "pathScore": 0.033,
+      "objectScore": 0.002,
+      "clean": true,
+      "reasons": []
     },
     "forest_floor_m1.webp": {
       "file": "forest_floor_m1.webp",
       "family": "forest_floor",
       "variant": 1,
       "meanRgb": [
-        79.9,
-        104.5,
-        68.9
+        76.2,
+        104.7,
+        64.4
       ],
-      "stdLum": 14.43,
-      "seam4Sides": 2.2,
-      "seamMosaic2x2": 2.2,
-      "latticeScore": 0.529,
-      "pathScore": 0.063,
-      "objectScore": 0.642,
-      "clean": false,
-      "reasons": [
-        "lattice (0.53 > 0.45)",
-        "baked objects (0.64 > 0.35)"
-      ]
+      "stdLum": 13.12,
+      "seam4Sides": 2.61,
+      "seamMosaic2x2": 2.61,
+      "latticeScore": 0.0,
+      "pathScore": 0.035,
+      "objectScore": 0.009,
+      "clean": true,
+      "reasons": []
     },
     "forest_floor_m2.webp": {
       "file": "forest_floor_m2.webp",
       "family": "forest_floor",
       "variant": 2,
       "meanRgb": [
-        75.4,
-        104.7,
-        67.2
+        78.8,
+        101.9,
+        72.1
       ],
-      "stdLum": 13.05,
-      "seam4Sides": 2.47,
-      "seamMosaic2x2": 2.47,
-      "latticeScore": 0.492,
-      "pathScore": 0.107,
-      "objectScore": 0.739,
+      "stdLum": 14.24,
+      "seam4Sides": 2.56,
+      "seamMosaic2x2": 2.56,
+      "latticeScore": 0.477,
+      "pathScore": 0.081,
+      "objectScore": 0.005,
       "clean": false,
       "reasons": [
-        "lattice (0.49 > 0.45)",
-        "baked objects (0.74 > 0.35)"
+        "lattice (0.48 > 0.45)"
       ]
     },
     "forest_floor_m3.webp": {
@@ -1289,21 +1211,18 @@
       "family": "forest_floor",
       "variant": 3,
       "meanRgb": [
-        77.3,
-        103.2,
-        68.9
+        78.6,
+        102.2,
+        71.1
       ],
       "stdLum": 14.23,
-      "seam4Sides": 2.3,
-      "seamMosaic2x2": 2.3,
-      "latticeScore": 0.673,
-      "pathScore": 0.101,
-      "objectScore": 0.653,
-      "clean": false,
-      "reasons": [
-        "lattice (0.67 > 0.45)",
-        "baked objects (0.65 > 0.35)"
-      ]
+      "seam4Sides": 2.37,
+      "seamMosaic2x2": 2.37,
+      "latticeScore": 0.053,
+      "pathScore": 0.069,
+      "objectScore": 0.248,
+      "clean": true,
+      "reasons": []
     },
     "forest_floor_m4.webp": {
       "file": "forest_floor_m4.webp",
@@ -1311,53 +1230,53 @@
       "variant": 4,
       "meanRgb": [
         80.5,
-        102.7,
-        69.4
+        101.3,
+        70.4
       ],
-      "stdLum": 14.34,
-      "seam4Sides": 2.35,
-      "seamMosaic2x2": 2.35,
-      "latticeScore": 0.354,
-      "pathScore": 0.094,
-      "objectScore": 0.818,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.82 > 0.35)"
-      ]
+      "stdLum": 14.21,
+      "seam4Sides": 2.51,
+      "seamMosaic2x2": 2.51,
+      "latticeScore": 0.434,
+      "pathScore": 0.056,
+      "objectScore": 0.016,
+      "clean": true,
+      "reasons": []
     },
     "formation_tile_m1.webp": {
       "file": "formation_tile_m1.webp",
       "family": "formation_tile",
       "variant": 1,
       "meanRgb": [
-        108.8,
-        122.0,
-        113.1
+        111.2,
+        124.5,
+        116.5
       ],
-      "stdLum": 14.57,
-      "seam4Sides": 2.27,
-      "seamMosaic2x2": 2.27,
-      "latticeScore": 0.235,
-      "pathScore": 0.145,
-      "objectScore": 0.862,
-      "clean": true,
-      "reasons": []
+      "stdLum": 13.29,
+      "seam4Sides": 2.66,
+      "seamMosaic2x2": 2.66,
+      "latticeScore": 0.621,
+      "pathScore": 0.152,
+      "objectScore": 0.008,
+      "clean": false,
+      "reasons": [
+        "lattice (0.62 > 0.55)"
+      ]
     },
     "formation_tile_m2.webp": {
       "file": "formation_tile_m2.webp",
       "family": "formation_tile",
       "variant": 2,
       "meanRgb": [
-        110.3,
-        123.5,
-        115.4
+        111.7,
+        124.3,
+        116.5
       ],
-      "stdLum": 16.34,
-      "seam4Sides": 2.19,
-      "seamMosaic2x2": 2.19,
-      "latticeScore": 0.419,
-      "pathScore": 0.093,
-      "objectScore": 0.761,
+      "stdLum": 16.17,
+      "seam4Sides": 2.51,
+      "seamMosaic2x2": 2.51,
+      "latticeScore": 0.495,
+      "pathScore": 0.086,
+      "objectScore": 0.008,
       "clean": true,
       "reasons": []
     },
@@ -1366,16 +1285,16 @@
       "family": "formation_tile",
       "variant": 3,
       "meanRgb": [
-        109.0,
-        122.1,
-        115.1
+        111.2,
+        124.3,
+        117.6
       ],
-      "stdLum": 15.9,
-      "seam4Sides": 2.34,
-      "seamMosaic2x2": 2.34,
-      "latticeScore": 0.383,
-      "pathScore": 0.105,
-      "objectScore": 0.752,
+      "stdLum": 16.2,
+      "seam4Sides": 2.69,
+      "seamMosaic2x2": 2.69,
+      "latticeScore": 0.326,
+      "pathScore": 0.119,
+      "objectScore": 0.112,
       "clean": true,
       "reasons": []
     },
@@ -1384,16 +1303,16 @@
       "family": "formation_tile",
       "variant": 4,
       "meanRgb": [
-        113.2,
-        124.7,
-        115.0
+        112.0,
+        124.4,
+        114.9
       ],
-      "stdLum": 14.68,
-      "seam4Sides": 2.16,
-      "seamMosaic2x2": 2.16,
-      "latticeScore": 0.361,
-      "pathScore": 0.087,
-      "objectScore": 0.709,
+      "stdLum": 15.74,
+      "seam4Sides": 2.38,
+      "seamMosaic2x2": 2.38,
+      "latticeScore": 0.538,
+      "pathScore": 0.058,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -1402,19 +1321,19 @@
       "family": "glacier",
       "variant": 1,
       "meanRgb": [
-        170.6,
-        201.6,
-        216.6
+        170.0,
+        202.5,
+        218.8
       ],
-      "stdLum": 21.11,
-      "seam4Sides": 2.39,
-      "seamMosaic2x2": 2.39,
-      "latticeScore": 0.259,
-      "pathScore": 0.163,
-      "objectScore": 0.707,
+      "stdLum": 22.53,
+      "seam4Sides": 2.45,
+      "seamMosaic2x2": 2.45,
+      "latticeScore": 0.247,
+      "pathScore": 0.148,
+      "objectScore": 0.382,
       "clean": false,
       "reasons": [
-        "baked objects (0.71 > 0.35)"
+        "baked objects (0.38 > 0.35)"
       ]
     },
     "glacier_m2.webp": {
@@ -1422,20 +1341,19 @@
       "family": "glacier",
       "variant": 2,
       "meanRgb": [
-        170.2,
-        202.2,
-        217.3
+        169.6,
+        202.7,
+        218.8
       ],
-      "stdLum": 17.33,
-      "seam4Sides": 2.28,
-      "seamMosaic2x2": 2.28,
-      "latticeScore": 0.595,
-      "pathScore": 0.109,
-      "objectScore": 0.806,
+      "stdLum": 17.8,
+      "seam4Sides": 2.5,
+      "seamMosaic2x2": 2.5,
+      "latticeScore": 0.556,
+      "pathScore": 0.105,
+      "objectScore": 0.012,
       "clean": false,
       "reasons": [
-        "lattice (0.60 > 0.45)",
-        "baked objects (0.81 > 0.35)"
+        "lattice (0.56 > 0.45)"
       ]
     },
     "glacier_m3.webp": {
@@ -1443,56 +1361,52 @@
       "family": "glacier",
       "variant": 3,
       "meanRgb": [
-        171.4,
-        203.0,
-        219.2
+        169.7,
+        202.5,
+        219.7
       ],
-      "stdLum": 17.69,
-      "seam4Sides": 2.33,
-      "seamMosaic2x2": 2.33,
-      "latticeScore": 0.214,
-      "pathScore": 0.105,
-      "objectScore": 0.764,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.76 > 0.35)"
-      ]
+      "stdLum": 18.84,
+      "seam4Sides": 2.55,
+      "seamMosaic2x2": 2.55,
+      "latticeScore": 0.19,
+      "pathScore": 0.072,
+      "objectScore": 0.029,
+      "clean": true,
+      "reasons": []
     },
     "glacier_m4.webp": {
       "file": "glacier_m4.webp",
       "family": "glacier",
       "variant": 4,
       "meanRgb": [
-        170.9,
-        202.1,
-        217.2
+        169.6,
+        202.6,
+        219.2
       ],
-      "stdLum": 15.6,
-      "seam4Sides": 2.23,
-      "seamMosaic2x2": 2.23,
-      "latticeScore": 0.166,
-      "pathScore": 0.086,
-      "objectScore": 0.8,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.80 > 0.35)"
-      ]
+      "stdLum": 16.59,
+      "seam4Sides": 2.32,
+      "seamMosaic2x2": 2.32,
+      "latticeScore": 0.148,
+      "pathScore": 0.073,
+      "objectScore": 0.042,
+      "clean": true,
+      "reasons": []
     },
     "herb_field_m1.webp": {
       "file": "herb_field_m1.webp",
       "family": "herb_field",
       "variant": 1,
       "meanRgb": [
-        85.8,
-        139.7,
-        109.3
+        85.4,
+        139.1,
+        108.9
       ],
-      "stdLum": 12.46,
-      "seam4Sides": 2.42,
-      "seamMosaic2x2": 2.42,
-      "latticeScore": 0.366,
-      "pathScore": 0.092,
-      "objectScore": 0.762,
+      "stdLum": 13.0,
+      "seam4Sides": 2.49,
+      "seamMosaic2x2": 2.49,
+      "latticeScore": 0.423,
+      "pathScore": 0.086,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -1501,36 +1415,34 @@
       "family": "herb_field",
       "variant": 2,
       "meanRgb": [
-        85.7,
-        139.6,
+        85.1,
+        139.2,
         109.0
       ],
-      "stdLum": 16.29,
-      "seam4Sides": 2.45,
-      "seamMosaic2x2": 2.45,
-      "latticeScore": 0.843,
-      "pathScore": 0.115,
-      "objectScore": 0.697,
-      "clean": false,
-      "reasons": [
-        "lattice (0.84 > 0.55)"
-      ]
+      "stdLum": 16.04,
+      "seam4Sides": 2.58,
+      "seamMosaic2x2": 2.58,
+      "latticeScore": 0.028,
+      "pathScore": 0.116,
+      "objectScore": 0.197,
+      "clean": true,
+      "reasons": []
     },
     "herb_field_m3.webp": {
       "file": "herb_field_m3.webp",
       "family": "herb_field",
       "variant": 3,
       "meanRgb": [
-        87.5,
-        138.5,
-        108.3
+        90.2,
+        136.6,
+        109.2
       ],
-      "stdLum": 12.4,
-      "seam4Sides": 2.14,
-      "seamMosaic2x2": 2.14,
-      "latticeScore": 0.518,
-      "pathScore": 0.075,
-      "objectScore": 0.656,
+      "stdLum": 16.22,
+      "seam4Sides": 2.6,
+      "seamMosaic2x2": 2.6,
+      "latticeScore": 0.0,
+      "pathScore": 0.063,
+      "objectScore": 0.073,
       "clean": true,
       "reasons": []
     },
@@ -1539,116 +1451,106 @@
       "family": "herb_field",
       "variant": 4,
       "meanRgb": [
-        88.1,
-        138.4,
-        110.3
+        87.2,
+        138.1,
+        109.5
       ],
-      "stdLum": 15.47,
-      "seam4Sides": 2.34,
-      "seamMosaic2x2": 2.34,
-      "latticeScore": 0.848,
-      "pathScore": 0.1,
-      "objectScore": 0.731,
-      "clean": false,
-      "reasons": [
-        "lattice (0.85 > 0.55)"
-      ]
+      "stdLum": 12.61,
+      "seam4Sides": 2.37,
+      "seamMosaic2x2": 2.37,
+      "latticeScore": 0.0,
+      "pathScore": 0.061,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "hill_m1.webp": {
       "file": "hill_m1.webp",
       "family": "hill",
       "variant": 1,
       "meanRgb": [
-        133.1,
-        136.3,
-        111.4
+        132.0,
+        135.5,
+        110.6
       ],
-      "stdLum": 16.95,
-      "seam4Sides": 2.09,
-      "seamMosaic2x2": 2.09,
-      "latticeScore": 0.781,
-      "pathScore": 0.109,
-      "objectScore": 0.737,
-      "clean": false,
-      "reasons": [
-        "lattice (0.78 > 0.55)"
-      ]
+      "stdLum": 13.55,
+      "seam4Sides": 2.34,
+      "seamMosaic2x2": 2.34,
+      "latticeScore": 0.316,
+      "pathScore": 0.046,
+      "objectScore": 0.001,
+      "clean": true,
+      "reasons": []
     },
     "hill_m2.webp": {
       "file": "hill_m2.webp",
       "family": "hill",
       "variant": 2,
       "meanRgb": [
-        135.2,
-        135.7,
-        107.0
+        134.9,
+        134.9,
+        106.0
       ],
-      "stdLum": 15.21,
-      "seam4Sides": 2.27,
-      "seamMosaic2x2": 2.27,
-      "latticeScore": 0.881,
-      "pathScore": 0.056,
-      "objectScore": 0.636,
-      "clean": false,
-      "reasons": [
-        "lattice (0.88 > 0.55)"
-      ]
+      "stdLum": 14.85,
+      "seam4Sides": 2.24,
+      "seamMosaic2x2": 2.24,
+      "latticeScore": 0.096,
+      "pathScore": 0.04,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "hill_m3.webp": {
       "file": "hill_m3.webp",
       "family": "hill",
       "variant": 3,
       "meanRgb": [
-        133.8,
-        136.5,
-        109.4
+        132.6,
+        135.5,
+        108.8
       ],
-      "stdLum": 14.67,
-      "seam4Sides": 2.22,
-      "seamMosaic2x2": 2.22,
-      "latticeScore": 0.807,
-      "pathScore": 0.072,
-      "objectScore": 0.681,
-      "clean": false,
-      "reasons": [
-        "lattice (0.81 > 0.55)"
-      ]
+      "stdLum": 14.03,
+      "seam4Sides": 2.29,
+      "seamMosaic2x2": 2.29,
+      "latticeScore": 0.309,
+      "pathScore": 0.051,
+      "objectScore": 0.003,
+      "clean": true,
+      "reasons": []
     },
     "hill_m4.webp": {
       "file": "hill_m4.webp",
       "family": "hill",
       "variant": 4,
       "meanRgb": [
-        130.9,
-        136.1,
-        115.3
+        130.6,
+        135.7,
+        113.2
       ],
-      "stdLum": 10.69,
-      "seam4Sides": 2.32,
-      "seamMosaic2x2": 2.32,
-      "latticeScore": 0.71,
-      "pathScore": 0.107,
-      "objectScore": 0.745,
-      "clean": false,
-      "reasons": [
-        "lattice (0.71 > 0.55)"
-      ]
+      "stdLum": 16.34,
+      "seam4Sides": 2.75,
+      "seamMosaic2x2": 2.75,
+      "latticeScore": 0.116,
+      "pathScore": 0.098,
+      "objectScore": 0.044,
+      "clean": true,
+      "reasons": []
     },
     "ice_crack_m1.webp": {
       "file": "ice_crack_m1.webp",
       "family": "ice_crack",
       "variant": 1,
       "meanRgb": [
-        183.9,
-        212.5,
-        226.8
+        182.5,
+        211.7,
+        226.4
       ],
-      "stdLum": 13.75,
-      "seam4Sides": 2.52,
-      "seamMosaic2x2": 2.52,
-      "latticeScore": 0.081,
-      "pathScore": 0.128,
-      "objectScore": 0.79,
+      "stdLum": 13.65,
+      "seam4Sides": 2.41,
+      "seamMosaic2x2": 2.41,
+      "latticeScore": 0.05,
+      "pathScore": 0.108,
+      "objectScore": 0.015,
       "clean": true,
       "reasons": []
     },
@@ -1657,16 +1559,16 @@
       "family": "ice_crack",
       "variant": 2,
       "meanRgb": [
-        183.1,
-        211.7,
-        225.7
+        182.1,
+        211.8,
+        226.7
       ],
-      "stdLum": 9.78,
-      "seam4Sides": 2.47,
-      "seamMosaic2x2": 2.47,
-      "latticeScore": 0.066,
-      "pathScore": 0.081,
-      "objectScore": 0.761,
+      "stdLum": 12.77,
+      "seam4Sides": 2.53,
+      "seamMosaic2x2": 2.53,
+      "latticeScore": 0.083,
+      "pathScore": 0.075,
+      "objectScore": 0.012,
       "clean": true,
       "reasons": []
     },
@@ -1675,16 +1577,16 @@
       "family": "ice_crack",
       "variant": 3,
       "meanRgb": [
-        184.3,
-        213.2,
-        227.8
+        180.2,
+        211.8,
+        228.2
       ],
-      "stdLum": 23.48,
-      "seam4Sides": 2.14,
-      "seamMosaic2x2": 2.14,
-      "latticeScore": 0.173,
-      "pathScore": 0.117,
-      "objectScore": 0.829,
+      "stdLum": 19.69,
+      "seam4Sides": 2.2,
+      "seamMosaic2x2": 2.2,
+      "latticeScore": 0.205,
+      "pathScore": 0.074,
+      "objectScore": 0.047,
       "clean": true,
       "reasons": []
     },
@@ -1693,16 +1595,16 @@
       "family": "ice_crack",
       "variant": 4,
       "meanRgb": [
-        183.7,
-        211.0,
-        221.9
+        182.4,
+        211.9,
+        224.2
       ],
-      "stdLum": 21.95,
-      "seam4Sides": 2.17,
-      "seamMosaic2x2": 2.17,
-      "latticeScore": 0.07,
-      "pathScore": 0.119,
-      "objectScore": 0.738,
+      "stdLum": 17.66,
+      "seam4Sides": 2.16,
+      "seamMosaic2x2": 2.16,
+      "latticeScore": 0.0,
+      "pathScore": 0.074,
+      "objectScore": 0.013,
       "clean": true,
       "reasons": []
     },
@@ -1711,16 +1613,16 @@
       "family": "island_reef",
       "variant": 1,
       "meanRgb": [
-        120.2,
-        186.3,
+        119.6,
+        186.1,
         171.9
       ],
-      "stdLum": 19.71,
-      "seam4Sides": 2.34,
-      "seamMosaic2x2": 2.34,
-      "latticeScore": 0.383,
-      "pathScore": 0.095,
-      "objectScore": 0.74,
+      "stdLum": 17.24,
+      "seam4Sides": 2.66,
+      "seamMosaic2x2": 2.66,
+      "latticeScore": 0.424,
+      "pathScore": 0.061,
+      "objectScore": 0.014,
       "clean": true,
       "reasons": []
     },
@@ -1729,16 +1631,16 @@
       "family": "island_reef",
       "variant": 2,
       "meanRgb": [
-        117.7,
-        186.2,
-        172.7
+        122.1,
+        184.6,
+        172.1
       ],
-      "stdLum": 22.27,
-      "seam4Sides": 2.18,
-      "seamMosaic2x2": 2.18,
-      "latticeScore": 0.003,
-      "pathScore": 0.096,
-      "objectScore": 0.726,
+      "stdLum": 22.23,
+      "seam4Sides": 2.35,
+      "seamMosaic2x2": 2.35,
+      "latticeScore": 0.073,
+      "pathScore": 0.066,
+      "objectScore": 0.405,
       "clean": true,
       "reasons": []
     },
@@ -1747,16 +1649,16 @@
       "family": "island_reef",
       "variant": 3,
       "meanRgb": [
-        120.2,
-        185.7,
-        170.1
+        120.4,
+        186.0,
+        170.4
       ],
-      "stdLum": 14.99,
-      "seam4Sides": 2.11,
-      "seamMosaic2x2": 2.11,
+      "stdLum": 15.7,
+      "seam4Sides": 2.26,
+      "seamMosaic2x2": 2.26,
       "latticeScore": 0.0,
-      "pathScore": 0.103,
-      "objectScore": 0.736,
+      "pathScore": 0.057,
+      "objectScore": 0.001,
       "clean": true,
       "reasons": []
     },
@@ -1765,56 +1667,52 @@
       "family": "island_reef",
       "variant": 4,
       "meanRgb": [
-        122.7,
-        185.9,
-        169.9
+        121.4,
+        185.6,
+        170.2
       ],
-      "stdLum": 20.49,
-      "seam4Sides": 2.45,
-      "seamMosaic2x2": 2.45,
-      "latticeScore": 0.839,
-      "pathScore": 0.099,
-      "objectScore": 0.794,
-      "clean": false,
-      "reasons": [
-        "lattice (0.84 > 0.55)"
-      ]
+      "stdLum": 17.0,
+      "seam4Sides": 2.79,
+      "seamMosaic2x2": 2.79,
+      "latticeScore": 0.243,
+      "pathScore": 0.095,
+      "objectScore": 0.248,
+      "clean": true,
+      "reasons": []
     },
     "lake_m1.webp": {
       "file": "lake_m1.webp",
       "family": "lake",
       "variant": 1,
       "meanRgb": [
-        67.8,
-        129.0,
-        139.6
+        56.3,
+        133.0,
+        146.6
       ],
-      "stdLum": 11.38,
-      "seam4Sides": 2.37,
-      "seamMosaic2x2": 2.37,
-      "latticeScore": 0.814,
-      "pathScore": 0.087,
-      "objectScore": 0.711,
-      "clean": false,
-      "reasons": [
-        "lattice (0.81 > 0.55)"
-      ]
+      "stdLum": 9.6,
+      "seam4Sides": 2.44,
+      "seamMosaic2x2": 2.44,
+      "latticeScore": 0.218,
+      "pathScore": 0.06,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "lake_m2.webp": {
       "file": "lake_m2.webp",
       "family": "lake",
       "variant": 2,
       "meanRgb": [
-        67.9,
-        129.1,
-        142.2
+        67.1,
+        128.4,
+        141.7
       ],
-      "stdLum": 9.58,
-      "seam4Sides": 2.29,
-      "seamMosaic2x2": 2.29,
-      "latticeScore": 0.239,
-      "pathScore": 0.07,
-      "objectScore": 0.668,
+      "stdLum": 9.64,
+      "seam4Sides": 2.41,
+      "seamMosaic2x2": 2.41,
+      "latticeScore": 0.292,
+      "pathScore": 0.048,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -1823,16 +1721,16 @@
       "family": "lake",
       "variant": 3,
       "meanRgb": [
-        69.8,
-        128.7,
-        140.8
+        68.7,
+        128.0,
+        140.0
       ],
-      "stdLum": 10.04,
-      "seam4Sides": 2.68,
-      "seamMosaic2x2": 2.68,
-      "latticeScore": 0.329,
-      "pathScore": 0.062,
-      "objectScore": 0.558,
+      "stdLum": 9.95,
+      "seam4Sides": 2.69,
+      "seamMosaic2x2": 2.69,
+      "latticeScore": 0.376,
+      "pathScore": 0.05,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -1841,36 +1739,34 @@
       "family": "lake",
       "variant": 4,
       "meanRgb": [
-        72.5,
-        125.9,
-        136.2
+        65.2,
+        129.3,
+        142.0
       ],
-      "stdLum": 10.27,
-      "seam4Sides": 2.49,
-      "seamMosaic2x2": 2.49,
-      "latticeScore": 0.97,
-      "pathScore": 0.076,
-      "objectScore": 0.669,
-      "clean": false,
-      "reasons": [
-        "lattice (0.97 > 0.55)"
-      ]
+      "stdLum": 9.54,
+      "seam4Sides": 2.47,
+      "seamMosaic2x2": 2.47,
+      "latticeScore": 0.0,
+      "pathScore": 0.067,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "lava_flow_m1.webp": {
       "file": "lava_flow_m1.webp",
       "family": "lava_flow",
       "variant": 1,
       "meanRgb": [
-        129.0,
-        65.0,
-        26.0
+        128.9,
+        64.9,
+        25.9
       ],
-      "stdLum": 11.16,
-      "seam4Sides": 2.39,
-      "seamMosaic2x2": 2.39,
-      "latticeScore": 0.077,
-      "pathScore": 0.123,
-      "objectScore": 0.917,
+      "stdLum": 11.68,
+      "seam4Sides": 2.54,
+      "seamMosaic2x2": 2.54,
+      "latticeScore": 0.066,
+      "pathScore": 0.083,
+      "objectScore": 0.032,
       "clean": true,
       "reasons": []
     },
@@ -1879,16 +1775,16 @@
       "family": "lava_flow",
       "variant": 2,
       "meanRgb": [
-        128.9,
-        65.2,
-        26.3
+        128.8,
+        64.8,
+        25.9
       ],
-      "stdLum": 10.76,
-      "seam4Sides": 2.53,
-      "seamMosaic2x2": 2.53,
-      "latticeScore": 0.093,
-      "pathScore": 0.107,
-      "objectScore": 0.726,
+      "stdLum": 11.21,
+      "seam4Sides": 2.45,
+      "seamMosaic2x2": 2.45,
+      "latticeScore": 0.072,
+      "pathScore": 0.082,
+      "objectScore": 0.03,
       "clean": true,
       "reasons": []
     },
@@ -1897,36 +1793,34 @@
       "family": "lava_flow",
       "variant": 3,
       "meanRgb": [
-        129.1,
-        67.3,
-        28.7
+        123.1,
+        66.7,
+        31.8
       ],
-      "stdLum": 14.28,
-      "seam4Sides": 2.26,
-      "seamMosaic2x2": 2.26,
-      "latticeScore": 0.749,
-      "pathScore": 0.057,
-      "objectScore": 0.688,
-      "clean": false,
-      "reasons": [
-        "lattice (0.75 > 0.55)"
-      ]
+      "stdLum": 14.0,
+      "seam4Sides": 2.49,
+      "seamMosaic2x2": 2.49,
+      "latticeScore": 0.0,
+      "pathScore": 0.063,
+      "objectScore": 0.014,
+      "clean": true,
+      "reasons": []
     },
     "lava_flow_m4.webp": {
       "file": "lava_flow_m4.webp",
       "family": "lava_flow",
       "variant": 4,
       "meanRgb": [
-        127.3,
-        65.1,
-        27.0
+        130.1,
+        64.6,
+        24.5
       ],
-      "stdLum": 13.97,
-      "seam4Sides": 2.44,
-      "seamMosaic2x2": 2.44,
-      "latticeScore": 0.074,
-      "pathScore": 0.103,
-      "objectScore": 0.948,
+      "stdLum": 11.17,
+      "seam4Sides": 2.56,
+      "seamMosaic2x2": 2.56,
+      "latticeScore": 0.02,
+      "pathScore": 0.061,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -1935,16 +1829,16 @@
       "family": "lightning_scar",
       "variant": 1,
       "meanRgb": [
-        73.1,
-        86.1,
-        105.9
+        73.9,
+        86.0,
+        105.3
       ],
-      "stdLum": 13.99,
-      "seam4Sides": 2.38,
-      "seamMosaic2x2": 2.38,
-      "latticeScore": 0.216,
-      "pathScore": 0.234,
-      "objectScore": 0.856,
+      "stdLum": 14.02,
+      "seam4Sides": 2.5,
+      "seamMosaic2x2": 2.5,
+      "latticeScore": 0.221,
+      "pathScore": 0.228,
+      "objectScore": 0.232,
       "clean": true,
       "reasons": []
     },
@@ -1953,16 +1847,16 @@
       "family": "lightning_scar",
       "variant": 2,
       "meanRgb": [
-        73.9,
-        85.8,
-        103.7
+        74.2,
+        86.1,
+        104.0
       ],
-      "stdLum": 13.95,
-      "seam4Sides": 2.43,
-      "seamMosaic2x2": 2.43,
-      "latticeScore": 0.221,
-      "pathScore": 0.22,
-      "objectScore": 0.747,
+      "stdLum": 14.04,
+      "seam4Sides": 2.37,
+      "seamMosaic2x2": 2.37,
+      "latticeScore": 0.205,
+      "pathScore": 0.208,
+      "objectScore": 0.075,
       "clean": true,
       "reasons": []
     },
@@ -1971,98 +1865,93 @@
       "family": "lightning_scar",
       "variant": 3,
       "meanRgb": [
-        74.9,
-        86.3,
-        104.3
+        74.4,
+        86.0,
+        104.1
       ],
-      "stdLum": 14.09,
-      "seam4Sides": 2.31,
-      "seamMosaic2x2": 2.31,
-      "latticeScore": 0.881,
-      "pathScore": 0.075,
-      "objectScore": 0.721,
-      "clean": false,
-      "reasons": [
-        "lattice (0.88 > 0.55)"
-      ]
+      "stdLum": 14.03,
+      "seam4Sides": 2.47,
+      "seamMosaic2x2": 2.47,
+      "latticeScore": 0.131,
+      "pathScore": 0.089,
+      "objectScore": 0.044,
+      "clean": true,
+      "reasons": []
     },
     "lightning_scar_m4.webp": {
       "file": "lightning_scar_m4.webp",
       "family": "lightning_scar",
       "variant": 4,
       "meanRgb": [
-        75.6,
-        87.2,
-        104.7
+        74.0,
+        86.1,
+        104.6
       ],
-      "stdLum": 14.22,
-      "seam4Sides": 2.23,
-      "seamMosaic2x2": 2.23,
-      "latticeScore": 0.516,
-      "pathScore": 0.17,
-      "objectScore": 0.744,
-      "clean": true,
-      "reasons": []
+      "stdLum": 14.02,
+      "seam4Sides": 2.25,
+      "seamMosaic2x2": 2.25,
+      "latticeScore": 0.576,
+      "pathScore": 0.176,
+      "objectScore": 0.001,
+      "clean": false,
+      "reasons": [
+        "lattice (0.58 > 0.55)"
+      ]
     },
     "meadow_m1.webp": {
       "file": "meadow_m1.webp",
       "family": "meadow",
       "variant": 1,
       "meanRgb": [
-        140.5,
-        166.9,
-        94.2
+        139.4,
+        165.9,
+        92.7
       ],
-      "stdLum": 14.35,
-      "seam4Sides": 2.2,
-      "seamMosaic2x2": 2.2,
-      "latticeScore": 0.175,
-      "pathScore": 0.054,
-      "objectScore": 0.662,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.66 > 0.35)"
-      ]
+      "stdLum": 14.86,
+      "seam4Sides": 2.51,
+      "seamMosaic2x2": 2.51,
+      "latticeScore": 0.069,
+      "pathScore": 0.038,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "meadow_m2.webp": {
       "file": "meadow_m2.webp",
       "family": "meadow",
       "variant": 2,
       "meanRgb": [
-        139.2,
-        167.0,
-        95.2
+        138.2,
+        166.2,
+        94.4
       ],
-      "stdLum": 14.62,
-      "seam4Sides": 2.1,
-      "seamMosaic2x2": 2.1,
-      "latticeScore": 0.0,
-      "pathScore": 0.06,
-      "objectScore": 0.642,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.64 > 0.35)"
-      ]
+      "stdLum": 15.37,
+      "seam4Sides": 2.25,
+      "seamMosaic2x2": 2.25,
+      "latticeScore": 0.126,
+      "pathScore": 0.033,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "meadow_m3.webp": {
       "file": "meadow_m3.webp",
       "family": "meadow",
       "variant": 3,
       "meanRgb": [
-        140.5,
-        166.6,
-        94.6
+        139.3,
+        165.7,
+        93.7
       ],
-      "stdLum": 14.73,
-      "seam4Sides": 2.1,
-      "seamMosaic2x2": 2.1,
-      "latticeScore": 0.682,
-      "pathScore": 0.066,
-      "objectScore": 0.661,
+      "stdLum": 16.02,
+      "seam4Sides": 2.44,
+      "seamMosaic2x2": 2.44,
+      "latticeScore": 0.801,
+      "pathScore": 0.04,
+      "objectScore": 0.001,
       "clean": false,
       "reasons": [
-        "lattice (0.68 > 0.45)",
-        "baked objects (0.66 > 0.35)"
+        "lattice (0.80 > 0.45)"
       ]
     },
     "meadow_m4.webp": {
@@ -2070,36 +1959,34 @@
       "family": "meadow",
       "variant": 4,
       "meanRgb": [
-        141.1,
-        164.3,
-        99.0
+        141.0,
+        164.0,
+        98.5
       ],
-      "stdLum": 12.57,
-      "seam4Sides": 2.37,
-      "seamMosaic2x2": 2.37,
-      "latticeScore": 0.055,
-      "pathScore": 0.097,
-      "objectScore": 0.71,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.71 > 0.35)"
-      ]
+      "stdLum": 13.07,
+      "seam4Sides": 2.43,
+      "seamMosaic2x2": 2.43,
+      "latticeScore": 0.073,
+      "pathScore": 0.076,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "miasma_waste_m1.webp": {
       "file": "miasma_waste_m1.webp",
       "family": "miasma_waste",
       "variant": 1,
       "meanRgb": [
-        104.4,
-        95.5,
-        108.1
+        104.2,
+        95.6,
+        108.4
       ],
-      "stdLum": 13.28,
-      "seam4Sides": 2.39,
-      "seamMosaic2x2": 2.39,
-      "latticeScore": 0.418,
-      "pathScore": 0.129,
-      "objectScore": 0.802,
+      "stdLum": 13.69,
+      "seam4Sides": 2.45,
+      "seamMosaic2x2": 2.45,
+      "latticeScore": 0.394,
+      "pathScore": 0.099,
+      "objectScore": 0.016,
       "clean": true,
       "reasons": []
     },
@@ -2108,16 +1995,16 @@
       "family": "miasma_waste",
       "variant": 2,
       "meanRgb": [
-        104.6,
-        96.1,
-        110.8
+        103.8,
+        95.4,
+        110.1
       ],
-      "stdLum": 10.41,
-      "seam4Sides": 2.46,
-      "seamMosaic2x2": 2.46,
-      "latticeScore": 0.3,
-      "pathScore": 0.116,
-      "objectScore": 0.71,
+      "stdLum": 11.03,
+      "seam4Sides": 2.52,
+      "seamMosaic2x2": 2.52,
+      "latticeScore": 0.202,
+      "pathScore": 0.092,
+      "objectScore": 0.003,
       "clean": true,
       "reasons": []
     },
@@ -2126,56 +2013,52 @@
       "family": "miasma_waste",
       "variant": 3,
       "meanRgb": [
-        104.2,
-        95.4,
-        110.1
+        104.0,
+        95.5,
+        109.1
       ],
-      "stdLum": 13.96,
-      "seam4Sides": 2.34,
-      "seamMosaic2x2": 2.34,
-      "latticeScore": 0.831,
-      "pathScore": 0.078,
-      "objectScore": 0.643,
-      "clean": false,
-      "reasons": [
-        "lattice (0.83 > 0.55)"
-      ]
+      "stdLum": 13.52,
+      "seam4Sides": 2.38,
+      "seamMosaic2x2": 2.38,
+      "latticeScore": 0.0,
+      "pathScore": 0.088,
+      "objectScore": 0.002,
+      "clean": true,
+      "reasons": []
     },
     "miasma_waste_m4.webp": {
       "file": "miasma_waste_m4.webp",
       "family": "miasma_waste",
       "variant": 4,
       "meanRgb": [
-        104.4,
-        95.7,
-        110.5
+        104.0,
+        95.3,
+        110.0
       ],
-      "stdLum": 9.56,
-      "seam4Sides": 2.28,
-      "seamMosaic2x2": 2.28,
-      "latticeScore": 0.758,
-      "pathScore": 0.089,
-      "objectScore": 0.743,
-      "clean": false,
-      "reasons": [
-        "lattice (0.76 > 0.55)"
-      ]
+      "stdLum": 12.05,
+      "seam4Sides": 2.5,
+      "seamMosaic2x2": 2.5,
+      "latticeScore": 0.0,
+      "pathScore": 0.06,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "mountain_pass_m1.webp": {
       "file": "mountain_pass_m1.webp",
       "family": "mountain_pass",
       "variant": 1,
       "meanRgb": [
-        127.4,
-        121.8,
-        110.1
+        126.8,
+        121.3,
+        109.7
       ],
-      "stdLum": 13.57,
-      "seam4Sides": 2.43,
-      "seamMosaic2x2": 2.43,
-      "latticeScore": 0.397,
-      "pathScore": 0.072,
-      "objectScore": 0.768,
+      "stdLum": 13.41,
+      "seam4Sides": 2.38,
+      "seamMosaic2x2": 2.38,
+      "latticeScore": 0.339,
+      "pathScore": 0.042,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -2184,56 +2067,52 @@
       "family": "mountain_pass",
       "variant": 2,
       "meanRgb": [
-        127.1,
+        126.9,
         121.2,
-        109.1
+        109.3
       ],
-      "stdLum": 13.81,
-      "seam4Sides": 2.33,
-      "seamMosaic2x2": 2.33,
-      "latticeScore": 0.925,
-      "pathScore": 0.127,
-      "objectScore": 0.762,
-      "clean": false,
-      "reasons": [
-        "lattice (0.92 > 0.55)"
-      ]
+      "stdLum": 13.86,
+      "seam4Sides": 2.57,
+      "seamMosaic2x2": 2.57,
+      "latticeScore": 0.0,
+      "pathScore": 0.047,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "mountain_pass_m3.webp": {
       "file": "mountain_pass_m3.webp",
       "family": "mountain_pass",
       "variant": 3,
       "meanRgb": [
-        127.0,
-        122.2,
-        110.7
+        125.8,
+        121.5,
+        110.9
       ],
-      "stdLum": 16.74,
-      "seam4Sides": 2.07,
-      "seamMosaic2x2": 2.07,
-      "latticeScore": 0.746,
-      "pathScore": 0.074,
-      "objectScore": 0.684,
-      "clean": false,
-      "reasons": [
-        "lattice (0.75 > 0.55)"
-      ]
+      "stdLum": 16.47,
+      "seam4Sides": 2.36,
+      "seamMosaic2x2": 2.36,
+      "latticeScore": 0.21,
+      "pathScore": 0.046,
+      "objectScore": 0.012,
+      "clean": true,
+      "reasons": []
     },
     "mountain_pass_m4.webp": {
       "file": "mountain_pass_m4.webp",
       "family": "mountain_pass",
       "variant": 4,
       "meanRgb": [
-        125.9,
-        121.0,
-        110.0
+        126.3,
+        121.4,
+        110.2
       ],
-      "stdLum": 15.99,
-      "seam4Sides": 2.26,
-      "seamMosaic2x2": 2.26,
-      "latticeScore": 0.053,
-      "pathScore": 0.109,
-      "objectScore": 0.777,
+      "stdLum": 16.4,
+      "seam4Sides": 2.43,
+      "seamMosaic2x2": 2.43,
+      "latticeScore": 0.026,
+      "pathScore": 0.077,
+      "objectScore": 0.053,
       "clean": true,
       "reasons": []
     },
@@ -2242,16 +2121,16 @@
       "family": "oasis",
       "variant": 1,
       "meanRgb": [
-        151.6,
-        155.5,
-        102.0
+        151.9,
+        154.6,
+        100.6
       ],
-      "stdLum": 16.17,
+      "stdLum": 13.99,
       "seam4Sides": 2.5,
       "seamMosaic2x2": 2.5,
-      "latticeScore": 0.046,
-      "pathScore": 0.16,
-      "objectScore": 0.956,
+      "latticeScore": 0.0,
+      "pathScore": 0.071,
+      "objectScore": 0.005,
       "clean": true,
       "reasons": []
     },
@@ -2260,16 +2139,16 @@
       "family": "oasis",
       "variant": 2,
       "meanRgb": [
-        151.7,
-        155.3,
-        100.8
+        151.4,
+        154.8,
+        100.4
       ],
-      "stdLum": 18.99,
-      "seam4Sides": 2.43,
-      "seamMosaic2x2": 2.43,
-      "latticeScore": 0.105,
-      "pathScore": 0.149,
-      "objectScore": 0.792,
+      "stdLum": 15.74,
+      "seam4Sides": 2.48,
+      "seamMosaic2x2": 2.48,
+      "latticeScore": 0.082,
+      "pathScore": 0.084,
+      "objectScore": 0.006,
       "clean": true,
       "reasons": []
     },
@@ -2278,37 +2157,39 @@
       "family": "oasis",
       "variant": 3,
       "meanRgb": [
-        150.4,
-        155.1,
-        102.9
+        150.6,
+        154.9,
+        102.8
       ],
-      "stdLum": 13.67,
-      "seam4Sides": 2.41,
-      "seamMosaic2x2": 2.41,
-      "latticeScore": 0.537,
-      "pathScore": 0.08,
-      "objectScore": 0.785,
-      "clean": true,
-      "reasons": []
+      "stdLum": 14.44,
+      "seam4Sides": 2.54,
+      "seamMosaic2x2": 2.54,
+      "latticeScore": 0.554,
+      "pathScore": 0.064,
+      "objectScore": 0.0,
+      "clean": false,
+      "reasons": [
+        "lattice (0.55 > 0.55)"
+      ]
     },
     "oasis_m4.webp": {
       "file": "oasis_m4.webp",
       "family": "oasis",
       "variant": 4,
       "meanRgb": [
-        152.4,
-        155.9,
-        100.2
+        152.1,
+        154.7,
+        99.5
       ],
-      "stdLum": 14.19,
-      "seam4Sides": 2.35,
-      "seamMosaic2x2": 2.35,
-      "latticeScore": 0.697,
-      "pathScore": 0.065,
-      "objectScore": 0.669,
+      "stdLum": 15.5,
+      "seam4Sides": 2.41,
+      "seamMosaic2x2": 2.41,
+      "latticeScore": 0.718,
+      "pathScore": 0.059,
+      "objectScore": 0.0,
       "clean": false,
       "reasons": [
-        "lattice (0.70 > 0.55)"
+        "lattice (0.72 > 0.55)"
       ]
     },
     "ocean_m1.webp": {
@@ -2316,16 +2197,16 @@
       "family": "ocean",
       "variant": 1,
       "meanRgb": [
-        52.7,
-        106.3,
-        145.8
+        54.1,
+        105.7,
+        143.6
       ],
-      "stdLum": 9.54,
-      "seam4Sides": 2.37,
-      "seamMosaic2x2": 2.37,
-      "latticeScore": 0.0,
-      "pathScore": 0.099,
-      "objectScore": 0.827,
+      "stdLum": 9.55,
+      "seam4Sides": 2.53,
+      "seamMosaic2x2": 2.53,
+      "latticeScore": 0.056,
+      "pathScore": 0.081,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -2334,16 +2215,16 @@
       "family": "ocean",
       "variant": 2,
       "meanRgb": [
-        51.3,
-        106.0,
-        145.2
+        53.9,
+        105.9,
+        143.1
       ],
-      "stdLum": 9.57,
-      "seam4Sides": 2.54,
-      "seamMosaic2x2": 2.54,
-      "latticeScore": 0.145,
-      "pathScore": 0.091,
-      "objectScore": 0.81,
+      "stdLum": 9.6,
+      "seam4Sides": 2.32,
+      "seamMosaic2x2": 2.32,
+      "latticeScore": 0.081,
+      "pathScore": 0.055,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -2352,16 +2233,16 @@
       "family": "ocean",
       "variant": 3,
       "meanRgb": [
-        52.1,
-        106.1,
-        146.9
+        54.5,
+        105.5,
+        143.8
       ],
       "stdLum": 9.57,
-      "seam4Sides": 2.35,
-      "seamMosaic2x2": 2.35,
+      "seam4Sides": 2.46,
+      "seamMosaic2x2": 2.46,
       "latticeScore": 0.0,
-      "pathScore": 0.093,
-      "objectScore": 0.78,
+      "pathScore": 0.049,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -2370,16 +2251,16 @@
       "family": "ocean",
       "variant": 4,
       "meanRgb": [
-        50.7,
-        106.9,
-        148.5
+        53.3,
+        105.8,
+        144.9
       ],
-      "stdLum": 9.56,
-      "seam4Sides": 2.46,
-      "seamMosaic2x2": 2.46,
-      "latticeScore": 0.328,
-      "pathScore": 0.101,
-      "objectScore": 0.798,
+      "stdLum": 9.57,
+      "seam4Sides": 2.44,
+      "seamMosaic2x2": 2.44,
+      "latticeScore": 0.367,
+      "pathScore": 0.07,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -2388,62 +2269,55 @@
       "family": "plains",
       "variant": 1,
       "meanRgb": [
-        146.0,
-        130.2,
-        83.6
+        145.5,
+        130.4,
+        83.7
       ],
-      "stdLum": 16.54,
-      "seam4Sides": 2.54,
-      "seamMosaic2x2": 2.54,
-      "latticeScore": 0.998,
-      "pathScore": 0.071,
-      "objectScore": 0.653,
-      "clean": false,
-      "reasons": [
-        "lattice (1.00 > 0.45)",
-        "baked objects (0.65 > 0.35)"
-      ]
+      "stdLum": 19.32,
+      "seam4Sides": 2.47,
+      "seamMosaic2x2": 2.47,
+      "latticeScore": 0.04,
+      "pathScore": 0.082,
+      "objectScore": 0.054,
+      "clean": true,
+      "reasons": []
     },
     "plains_m2.webp": {
       "file": "plains_m2.webp",
       "family": "plains",
       "variant": 2,
       "meanRgb": [
-        147.2,
-        129.4,
+        147.3,
+        129.3,
         84.8
       ],
-      "stdLum": 16.14,
-      "seam4Sides": 2.42,
-      "seamMosaic2x2": 2.42,
-      "latticeScore": 0.994,
-      "pathScore": 0.051,
-      "objectScore": 0.651,
-      "clean": false,
-      "reasons": [
-        "lattice (0.99 > 0.45)",
-        "baked objects (0.65 > 0.35)"
-      ]
+      "stdLum": 15.95,
+      "seam4Sides": 2.35,
+      "seamMosaic2x2": 2.35,
+      "latticeScore": 0.293,
+      "pathScore": 0.057,
+      "objectScore": 0.007,
+      "clean": true,
+      "reasons": []
     },
     "plains_m3.webp": {
       "file": "plains_m3.webp",
       "family": "plains",
       "variant": 3,
       "meanRgb": [
-        145.7,
-        130.5,
+        145.1,
+        130.7,
         83.1
       ],
       "stdLum": 22.72,
-      "seam4Sides": 2.73,
-      "seamMosaic2x2": 2.73,
-      "latticeScore": 0.997,
-      "pathScore": 0.084,
-      "objectScore": 0.732,
+      "seam4Sides": 2.56,
+      "seamMosaic2x2": 2.56,
+      "latticeScore": 0.095,
+      "pathScore": 0.083,
+      "objectScore": 0.87,
       "clean": false,
       "reasons": [
-        "lattice (1.00 > 0.45)",
-        "baked objects (0.73 > 0.35)"
+        "baked objects (0.87 > 0.35)"
       ]
     },
     "plains_m4.webp": {
@@ -2451,20 +2325,19 @@
       "family": "plains",
       "variant": 4,
       "meanRgb": [
-        147.9,
+        147.8,
         129.7,
-        81.1
+        81.4
       ],
-      "stdLum": 22.3,
-      "seam4Sides": 2.45,
-      "seamMosaic2x2": 2.45,
-      "latticeScore": 0.998,
-      "pathScore": 0.064,
-      "objectScore": 0.649,
+      "stdLum": 22.62,
+      "seam4Sides": 2.41,
+      "seamMosaic2x2": 2.41,
+      "latticeScore": 0.039,
+      "pathScore": 0.098,
+      "objectScore": 0.404,
       "clean": false,
       "reasons": [
-        "lattice (1.00 > 0.45)",
-        "baked objects (0.65 > 0.35)"
+        "baked objects (0.40 > 0.35)"
       ]
     },
     "poison_pool_m1.webp": {
@@ -2472,16 +2345,16 @@
       "family": "poison_pool",
       "variant": 1,
       "meanRgb": [
-        93.1,
-        130.3,
-        51.2
+        92.2,
+        129.9,
+        50.6
       ],
-      "stdLum": 14.57,
-      "seam4Sides": 2.39,
-      "seamMosaic2x2": 2.39,
-      "latticeScore": 0.547,
-      "pathScore": 0.104,
-      "objectScore": 0.745,
+      "stdLum": 15.0,
+      "seam4Sides": 2.43,
+      "seamMosaic2x2": 2.43,
+      "latticeScore": 0.47,
+      "pathScore": 0.073,
+      "objectScore": 0.004,
       "clean": true,
       "reasons": []
     },
@@ -2490,16 +2363,16 @@
       "family": "poison_pool",
       "variant": 2,
       "meanRgb": [
-        92.1,
-        130.9,
-        49.4
+        91.8,
+        130.5,
+        49.0
       ],
-      "stdLum": 14.57,
-      "seam4Sides": 2.43,
-      "seamMosaic2x2": 2.43,
-      "latticeScore": 0.002,
-      "pathScore": 0.12,
-      "objectScore": 0.788,
+      "stdLum": 15.34,
+      "seam4Sides": 2.49,
+      "seamMosaic2x2": 2.49,
+      "latticeScore": 0.0,
+      "pathScore": 0.087,
+      "objectScore": 0.135,
       "clean": true,
       "reasons": []
     },
@@ -2508,36 +2381,34 @@
       "family": "poison_pool",
       "variant": 3,
       "meanRgb": [
-        89.9,
-        132.2,
-        51.3
+        89.2,
+        131.5,
+        50.6
       ],
-      "stdLum": 14.63,
-      "seam4Sides": 2.55,
-      "seamMosaic2x2": 2.55,
-      "latticeScore": 0.648,
-      "pathScore": 0.089,
-      "objectScore": 0.764,
-      "clean": false,
-      "reasons": [
-        "lattice (0.65 > 0.55)"
-      ]
+      "stdLum": 11.68,
+      "seam4Sides": 2.6,
+      "seamMosaic2x2": 2.6,
+      "latticeScore": 0.026,
+      "pathScore": 0.062,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "poison_pool_m4.webp": {
       "file": "poison_pool_m4.webp",
       "family": "poison_pool",
       "variant": 4,
       "meanRgb": [
-        93.4,
-        130.0,
-        51.8
+        92.8,
+        129.5,
+        51.4
       ],
-      "stdLum": 13.58,
-      "seam4Sides": 2.24,
-      "seamMosaic2x2": 2.24,
-      "latticeScore": 0.0,
-      "pathScore": 0.086,
-      "objectScore": 0.755,
+      "stdLum": 10.48,
+      "seam4Sides": 2.44,
+      "seamMosaic2x2": 2.44,
+      "latticeScore": 0.021,
+      "pathScore": 0.039,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -2546,16 +2417,16 @@
       "family": "river",
       "variant": 1,
       "meanRgb": [
-        78.9,
+        78.8,
         130.5,
-        152.7
+        152.8
       ],
-      "stdLum": 10.64,
-      "seam4Sides": 2.33,
-      "seamMosaic2x2": 2.33,
-      "latticeScore": 0.021,
-      "pathScore": 0.076,
-      "objectScore": 0.675,
+      "stdLum": 10.55,
+      "seam4Sides": 2.47,
+      "seamMosaic2x2": 2.47,
+      "latticeScore": 0.01,
+      "pathScore": 0.048,
+      "objectScore": 0.001,
       "clean": true,
       "reasons": []
     },
@@ -2564,36 +2435,34 @@
       "family": "river",
       "variant": 2,
       "meanRgb": [
-        79.9,
-        130.4,
+        79.8,
+        130.1,
         152.2
       ],
-      "stdLum": 12.84,
-      "seam4Sides": 2.38,
-      "seamMosaic2x2": 2.38,
-      "latticeScore": 0.853,
-      "pathScore": 0.095,
-      "objectScore": 0.742,
-      "clean": false,
-      "reasons": [
-        "lattice (0.85 > 0.55)"
-      ]
+      "stdLum": 9.71,
+      "seam4Sides": 2.64,
+      "seamMosaic2x2": 2.64,
+      "latticeScore": 0.057,
+      "pathScore": 0.055,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "river_m3.webp": {
       "file": "river_m3.webp",
       "family": "river",
       "variant": 3,
       "meanRgb": [
-        79.3,
-        131.0,
-        153.9
+        78.3,
+        130.6,
+        153.7
       ],
-      "stdLum": 10.11,
-      "seam4Sides": 2.27,
-      "seamMosaic2x2": 2.27,
-      "latticeScore": 0.419,
-      "pathScore": 0.066,
-      "objectScore": 0.661,
+      "stdLum": 10.5,
+      "seam4Sides": 2.32,
+      "seamMosaic2x2": 2.32,
+      "latticeScore": 0.396,
+      "pathScore": 0.03,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -2602,19 +2471,19 @@
       "family": "river",
       "variant": 4,
       "meanRgb": [
-        80.8,
-        129.4,
-        153.2
+        80.7,
+        129.5,
+        153.4
       ],
-      "stdLum": 10.91,
-      "seam4Sides": 2.4,
-      "seamMosaic2x2": 2.4,
-      "latticeScore": 0.642,
-      "pathScore": 0.093,
-      "objectScore": 0.693,
+      "stdLum": 10.86,
+      "seam4Sides": 2.34,
+      "seamMosaic2x2": 2.34,
+      "latticeScore": 0.584,
+      "pathScore": 0.054,
+      "objectScore": 0.0,
       "clean": false,
       "reasons": [
-        "lattice (0.64 > 0.55)"
+        "lattice (0.58 > 0.55)"
       ]
     },
     "road_stone_m1.webp": {
@@ -2622,16 +2491,16 @@
       "family": "road_stone",
       "variant": 1,
       "meanRgb": [
-        125.6,
-        119.9,
-        108.8
+        124.7,
+        119.2,
+        108.2
       ],
-      "stdLum": 11.47,
-      "seam4Sides": 2.48,
-      "seamMosaic2x2": 2.48,
-      "latticeScore": 0.323,
-      "pathScore": 0.071,
-      "objectScore": 0.634,
+      "stdLum": 12.44,
+      "seam4Sides": 2.49,
+      "seamMosaic2x2": 2.49,
+      "latticeScore": 0.383,
+      "pathScore": 0.039,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -2640,16 +2509,16 @@
       "family": "road_stone",
       "variant": 2,
       "meanRgb": [
-        125.9,
-        120.5,
-        108.6
+        124.7,
+        119.4,
+        107.4
       ],
-      "stdLum": 12.19,
-      "seam4Sides": 2.4,
-      "seamMosaic2x2": 2.4,
-      "latticeScore": 0.281,
-      "pathScore": 0.098,
-      "objectScore": 0.641,
+      "stdLum": 12.36,
+      "seam4Sides": 2.35,
+      "seamMosaic2x2": 2.35,
+      "latticeScore": 0.217,
+      "pathScore": 0.081,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -2658,16 +2527,16 @@
       "family": "road_stone",
       "variant": 3,
       "meanRgb": [
-        127.2,
-        119.6,
-        106.7
+        126.4,
+        118.8,
+        106.0
       ],
-      "stdLum": 11.43,
-      "seam4Sides": 2.16,
-      "seamMosaic2x2": 2.16,
-      "latticeScore": 0.16,
+      "stdLum": 15.94,
+      "seam4Sides": 2.44,
+      "seamMosaic2x2": 2.44,
+      "latticeScore": 0.071,
       "pathScore": 0.089,
-      "objectScore": 0.708,
+      "objectScore": 0.003,
       "clean": true,
       "reasons": []
     },
@@ -2676,120 +2545,106 @@
       "family": "road_stone",
       "variant": 4,
       "meanRgb": [
-        126.0,
-        119.5,
-        107.2
+        125.6,
+        119.1,
+        106.8
       ],
-      "stdLum": 12.15,
-      "seam4Sides": 2.48,
-      "seamMosaic2x2": 2.48,
-      "latticeScore": 0.626,
-      "pathScore": 0.159,
-      "objectScore": 0.797,
-      "clean": false,
-      "reasons": [
-        "lattice (0.63 > 0.55)"
-      ]
+      "stdLum": 16.11,
+      "seam4Sides": 2.44,
+      "seamMosaic2x2": 2.44,
+      "latticeScore": 0.488,
+      "pathScore": 0.138,
+      "objectScore": 0.025,
+      "clean": true,
+      "reasons": []
     },
     "rock_ground_m1.webp": {
       "file": "rock_ground_m1.webp",
       "family": "rock_ground",
       "variant": 1,
       "meanRgb": [
-        115.8,
-        118.7,
-        119.7
+        115.5,
+        118.4,
+        119.3
       ],
-      "stdLum": 11.6,
-      "seam4Sides": 2.28,
-      "seamMosaic2x2": 2.28,
-      "latticeScore": 0.673,
-      "pathScore": 0.085,
-      "objectScore": 0.756,
-      "clean": false,
-      "reasons": [
-        "lattice (0.67 > 0.45)",
-        "baked objects (0.76 > 0.35)"
-      ]
+      "stdLum": 11.88,
+      "seam4Sides": 2.47,
+      "seamMosaic2x2": 2.47,
+      "latticeScore": 0.0,
+      "pathScore": 0.059,
+      "objectScore": 0.016,
+      "clean": true,
+      "reasons": []
     },
     "rock_ground_m2.webp": {
       "file": "rock_ground_m2.webp",
       "family": "rock_ground",
       "variant": 2,
       "meanRgb": [
-        116.9,
-        119.7,
-        120.3
+        115.3,
+        118.5,
+        119.2
       ],
-      "stdLum": 16.11,
-      "seam4Sides": 2.27,
-      "seamMosaic2x2": 2.27,
-      "latticeScore": 0.596,
-      "pathScore": 0.103,
-      "objectScore": 0.748,
-      "clean": false,
-      "reasons": [
-        "lattice (0.60 > 0.45)",
-        "baked objects (0.75 > 0.35)"
-      ]
+      "stdLum": 13.19,
+      "seam4Sides": 2.21,
+      "seamMosaic2x2": 2.21,
+      "latticeScore": 0.27,
+      "pathScore": 0.077,
+      "objectScore": 0.015,
+      "clean": true,
+      "reasons": []
     },
     "rock_ground_m3.webp": {
       "file": "rock_ground_m3.webp",
       "family": "rock_ground",
       "variant": 3,
       "meanRgb": [
-        117.8,
-        119.0,
-        117.4
+        116.7,
+        118.2,
+        116.8
       ],
-      "stdLum": 11.64,
-      "seam4Sides": 2.04,
-      "seamMosaic2x2": 2.04,
-      "latticeScore": 0.644,
-      "pathScore": 0.059,
-      "objectScore": 0.632,
-      "clean": false,
-      "reasons": [
-        "lattice (0.64 > 0.45)",
-        "baked objects (0.63 > 0.35)"
-      ]
+      "stdLum": 16.41,
+      "seam4Sides": 2.32,
+      "seamMosaic2x2": 2.32,
+      "latticeScore": 0.102,
+      "pathScore": 0.065,
+      "objectScore": 0.008,
+      "clean": true,
+      "reasons": []
     },
     "rock_ground_m4.webp": {
       "file": "rock_ground_m4.webp",
       "family": "rock_ground",
       "variant": 4,
       "meanRgb": [
-        116.2,
-        118.5,
-        118.5
+        115.8,
+        118.3,
+        118.6
       ],
-      "stdLum": 15.33,
-      "seam4Sides": 2.33,
-      "seamMosaic2x2": 2.33,
-      "latticeScore": 0.823,
-      "pathScore": 0.122,
-      "objectScore": 0.827,
-      "clean": false,
-      "reasons": [
-        "lattice (0.82 > 0.45)",
-        "baked objects (0.83 > 0.35)"
-      ]
+      "stdLum": 16.11,
+      "seam4Sides": 2.29,
+      "seamMosaic2x2": 2.29,
+      "latticeScore": 0.171,
+      "pathScore": 0.145,
+      "objectScore": 0.1,
+      "clean": true,
+      "reasons": []
     },
     "ruin_floor_m1.webp": {
       "file": "ruin_floor_m1.webp",
       "family": "ruin_floor",
       "variant": 1,
       "meanRgb": [
-        116.4,
-        113.6,
-        101.0
+        121.6,
+        117.7,
+        106.3
       ],
-      "stdLum": 15.53,
-      "seam4Sides": 2.2,
-      "seamMosaic2x2": 2.2,
-      "latticeScore": 0.389,
-      "pathScore": 0.123,
-      "objectScore": 0.823,
+      "stdLum": 15.91,
+      "seam4Sides": 2.8,
+      "seamMosaic2x2": 2.8,
+      "latticeScore": 0.514,
+      "pathScore": 0.119,
+      "objectScore": 0.012,
       "clean": true,
       "reasons": []
     },
@@ -2798,16 +2653,16 @@
       "family": "ruin_floor",
       "variant": 2,
       "meanRgb": [
-        122.5,
-        118.9,
-        107.3
+        121.5,
+        117.9,
+        106.1
       ],
-      "stdLum": 16.24,
-      "seam4Sides": 2.34,
-      "seamMosaic2x2": 2.34,
-      "latticeScore": 0.432,
-      "pathScore": 0.145,
-      "objectScore": 0.802,
+      "stdLum": 16.25,
+      "seam4Sides": 2.33,
+      "seamMosaic2x2": 2.33,
+      "latticeScore": 0.447,
+      "pathScore": 0.113,
+      "objectScore": 0.029,
       "clean": true,
       "reasons": []
     },
@@ -2816,16 +2671,16 @@
       "family": "ruin_floor",
       "variant": 3,
       "meanRgb": [
-        120.2,
-        116.7,
-        105.8
+        121.4,
+        117.8,
+        106.6
       ],
-      "stdLum": 12.04,
-      "seam4Sides": 2.32,
-      "seamMosaic2x2": 2.32,
-      "latticeScore": 0.271,
-      "pathScore": 0.067,
-      "objectScore": 0.683,
+      "stdLum": 12.32,
+      "seam4Sides": 2.36,
+      "seamMosaic2x2": 2.36,
+      "latticeScore": 0.161,
+      "pathScore": 0.053,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -2834,36 +2689,34 @@
       "family": "ruin_floor",
       "variant": 4,
       "meanRgb": [
-        120.4,
-        116.4,
-        104.6
+        121.8,
+        117.7,
+        105.9
       ],
-      "stdLum": 15.46,
-      "seam4Sides": 2.2,
-      "seamMosaic2x2": 2.2,
-      "latticeScore": 0.629,
-      "pathScore": 0.128,
-      "objectScore": 0.834,
-      "clean": false,
-      "reasons": [
-        "lattice (0.63 > 0.55)"
-      ]
+      "stdLum": 15.7,
+      "seam4Sides": 2.49,
+      "seamMosaic2x2": 2.49,
+      "latticeScore": 0.229,
+      "pathScore": 0.11,
+      "objectScore": 0.029,
+      "clean": true,
+      "reasons": []
     },
     "settlement_floor_m1.webp": {
       "file": "settlement_floor_m1.webp",
       "family": "settlement_floor",
       "variant": 1,
       "meanRgb": [
-        173.1,
-        154.5,
-        109.7
+        172.8,
+        154.3,
+        109.1
       ],
-      "stdLum": 10.49,
-      "seam4Sides": 2.65,
-      "seamMosaic2x2": 2.65,
-      "latticeScore": 0.167,
-      "pathScore": 0.086,
-      "objectScore": 0.786,
+      "stdLum": 10.73,
+      "seam4Sides": 2.55,
+      "seamMosaic2x2": 2.55,
+      "latticeScore": 0.121,
+      "pathScore": 0.094,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -2872,16 +2725,16 @@
       "family": "settlement_floor",
       "variant": 2,
       "meanRgb": [
-        172.6,
-        154.5,
-        110.1
+        172.4,
+        154.3,
+        109.6
       ],
-      "stdLum": 13.28,
-      "seam4Sides": 2.4,
-      "seamMosaic2x2": 2.4,
-      "latticeScore": 0.025,
-      "pathScore": 0.142,
-      "objectScore": 0.776,
+      "stdLum": 11.22,
+      "seam4Sides": 2.58,
+      "seamMosaic2x2": 2.58,
+      "latticeScore": 0.0,
+      "pathScore": 0.08,
+      "objectScore": 0.004,
       "clean": true,
       "reasons": []
     },
@@ -2890,16 +2743,16 @@
       "family": "settlement_floor",
       "variant": 3,
       "meanRgb": [
-        175.1,
-        153.1,
-        109.3
+        175.3,
+        153.0,
+        109.0
       ],
-      "stdLum": 12.31,
-      "seam4Sides": 2.3,
-      "seamMosaic2x2": 2.3,
-      "latticeScore": 0.252,
-      "pathScore": 0.065,
-      "objectScore": 0.71,
+      "stdLum": 13.49,
+      "seam4Sides": 2.71,
+      "seamMosaic2x2": 2.71,
+      "latticeScore": 0.294,
+      "pathScore": 0.055,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -2908,40 +2761,37 @@
       "family": "settlement_floor",
       "variant": 4,
       "meanRgb": [
-        172.1,
-        154.4,
-        111.6
+        171.9,
+        154.2,
+        111.3
       ],
-      "stdLum": 17.29,
-      "seam4Sides": 2.42,
-      "seamMosaic2x2": 2.42,
-      "latticeScore": 0.576,
-      "pathScore": 0.122,
-      "objectScore": 0.654,
-      "clean": false,
-      "reasons": [
-        "lattice (0.58 > 0.55)"
-      ]
+      "stdLum": 13.74,
+      "seam4Sides": 2.44,
+      "seamMosaic2x2": 2.44,
+      "latticeScore": 0.202,
+      "pathScore": 0.112,
+      "objectScore": 0.019,
+      "clean": true,
+      "reasons": []
     },
     "snow_m1.webp": {
       "file": "snow_m1.webp",
       "family": "snow",
       "variant": 1,
       "meanRgb": [
-        227.8,
-        236.4,
-        243.0
+        227.9,
+        236.3,
+        243.2
       ],
-      "stdLum": 9.63,
-      "seam4Sides": 2.63,
-      "seamMosaic2x2": 2.63,
-      "latticeScore": 0.875,
-      "pathScore": 0.112,
-      "objectScore": 0.636,
+      "stdLum": 8.91,
+      "seam4Sides": 2.44,
+      "seamMosaic2x2": 2.44,
+      "latticeScore": 0.567,
+      "pathScore": 0.094,
+      "objectScore": 0.0,
       "clean": false,
       "reasons": [
-        "lattice (0.88 > 0.45)",
-        "baked objects (0.64 > 0.35)"
+        "lattice (0.57 > 0.45)"
       ]
     },
     "snow_m2.webp": {
@@ -2949,123 +2799,109 @@
       "family": "snow",
       "variant": 2,
       "meanRgb": [
-        228.8,
-        236.6,
-        242.4
+        228.4,
+        236.3,
+        242.3
       ],
-      "stdLum": 10.89,
-      "seam4Sides": 2.42,
-      "seamMosaic2x2": 2.42,
-      "latticeScore": 0.385,
-      "pathScore": 0.12,
-      "objectScore": 0.821,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.82 > 0.35)"
-      ]
+      "stdLum": 11.19,
+      "seam4Sides": 2.47,
+      "seamMosaic2x2": 2.47,
+      "latticeScore": 0.389,
+      "pathScore": 0.124,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "snow_m3.webp": {
       "file": "snow_m3.webp",
       "family": "snow",
       "variant": 3,
       "meanRgb": [
-        229.2,
-        237.0,
+        228.2,
+        236.3,
         241.4
       ],
-      "stdLum": 12.84,
-      "seam4Sides": 2.43,
-      "seamMosaic2x2": 2.43,
-      "latticeScore": 0.847,
-      "pathScore": 0.097,
-      "objectScore": 0.719,
-      "clean": false,
-      "reasons": [
-        "lattice (0.85 > 0.45)",
-        "baked objects (0.72 > 0.35)"
-      ]
+      "stdLum": 11.76,
+      "seam4Sides": 2.46,
+      "seamMosaic2x2": 2.46,
+      "latticeScore": 0.352,
+      "pathScore": 0.07,
+      "objectScore": 0.002,
+      "clean": true,
+      "reasons": []
     },
     "snow_m4.webp": {
       "file": "snow_m4.webp",
       "family": "snow",
       "variant": 4,
       "meanRgb": [
-        228.9,
-        235.9,
-        240.5
+        227.9,
+        236.4,
+        242.8
       ],
-      "stdLum": 7.25,
-      "seam4Sides": 2.17,
-      "seamMosaic2x2": 2.17,
-      "latticeScore": 0.0,
-      "pathScore": 0.067,
-      "objectScore": 0.372,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.37 > 0.35)"
-      ]
+      "stdLum": 13.78,
+      "seam4Sides": 2.41,
+      "seamMosaic2x2": 2.41,
+      "latticeScore": 0.163,
+      "pathScore": 0.104,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "swamp_m1.webp": {
       "file": "swamp_m1.webp",
       "family": "swamp",
       "variant": 1,
       "meanRgb": [
-        89.7,
-        104.0,
-        67.9
+        88.6,
+        103.0,
+        67.1
       ],
-      "stdLum": 14.86,
-      "seam4Sides": 2.4,
-      "seamMosaic2x2": 2.4,
-      "latticeScore": 0.544,
-      "pathScore": 0.097,
-      "objectScore": 0.81,
-      "clean": false,
-      "reasons": [
-        "lattice (0.54 > 0.45)",
-        "baked objects (0.81 > 0.35)"
-      ]
+      "stdLum": 14.69,
+      "seam4Sides": 2.51,
+      "seamMosaic2x2": 2.51,
+      "latticeScore": 0.397,
+      "pathScore": 0.056,
+      "objectScore": 0.005,
+      "clean": true,
+      "reasons": []
     },
     "swamp_m2.webp": {
       "file": "swamp_m2.webp",
       "family": "swamp",
       "variant": 2,
       "meanRgb": [
-        88.6,
-        105.8,
-        65.1
+        87.3,
+        104.2,
+        64.2
       ],
-      "stdLum": 14.52,
-      "seam4Sides": 2.47,
-      "seamMosaic2x2": 2.47,
-      "latticeScore": 0.621,
-      "pathScore": 0.097,
-      "objectScore": 0.698,
-      "clean": false,
-      "reasons": [
-        "lattice (0.62 > 0.45)",
-        "baked objects (0.70 > 0.35)"
-      ]
+      "stdLum": 9.74,
+      "seam4Sides": 2.48,
+      "seamMosaic2x2": 2.48,
+      "latticeScore": 0.003,
+      "pathScore": 0.073,
+      "objectScore": 0.003,
+      "clean": true,
+      "reasons": []
     },
     "swamp_m3.webp": {
       "file": "swamp_m3.webp",
       "family": "swamp",
       "variant": 3,
       "meanRgb": [
-        90.5,
-        103.3,
-        69.1
+        88.9,
+        103.0,
+        66.1
       ],
-      "stdLum": 14.88,
-      "seam4Sides": 2.39,
-      "seamMosaic2x2": 2.39,
-      "latticeScore": 0.531,
-      "pathScore": 0.084,
-      "objectScore": 0.757,
+      "stdLum": 12.43,
+      "seam4Sides": 2.49,
+      "seamMosaic2x2": 2.49,
+      "latticeScore": 0.657,
+      "pathScore": 0.042,
+      "objectScore": 0.0,
       "clean": false,
       "reasons": [
-        "lattice (0.53 > 0.45)",
-        "baked objects (0.76 > 0.35)"
+        "lattice (0.66 > 0.45)"
       ]
     },
     "swamp_m4.webp": {
@@ -3073,136 +2909,52 @@
       "family": "swamp",
       "variant": 4,
       "meanRgb": [
-        88.5,
-        103.3,
-        64.7
+        88.8,
+        103.1,
+        66.0
       ],
-      "stdLum": 14.73,
-      "seam4Sides": 2.66,
-      "seamMosaic2x2": 2.66,
-      "latticeScore": 0.436,
-      "pathScore": 0.101,
-      "objectScore": 0.799,
-      "clean": false,
-      "reasons": [
-        "baked objects (0.80 > 0.35)"
-      ]
-    },
-    "test_plains_m1.webp": {
-      "file": "test_plains_m1.webp",
-      "family": "test_plains",
-      "variant": 1,
-      "meanRgb": [
-        140.5,
-        126.6,
-        80.2
-      ],
-      "stdLum": 20.63,
-      "seam4Sides": 2.38,
-      "seamMosaic2x2": 2.38,
-      "latticeScore": 0.996,
-      "pathScore": 0.078,
-      "objectScore": 0.687,
-      "clean": false,
-      "reasons": [
-        "lattice (1.00 > 0.55)"
-      ]
-    },
-    "test_plains_m2.webp": {
-      "file": "test_plains_m2.webp",
-      "family": "test_plains",
-      "variant": 2,
-      "meanRgb": [
-        204.5,
-        170.2,
-        122.9
-      ],
-      "stdLum": 31.45,
-      "seam4Sides": 2.25,
-      "seamMosaic2x2": 2.25,
-      "latticeScore": 0.937,
-      "pathScore": 0.073,
-      "objectScore": 0.707,
-      "clean": false,
-      "reasons": [
-        "lattice (0.94 > 0.55)"
-      ]
-    },
-    "test_plains_m3.webp": {
-      "file": "test_plains_m3.webp",
-      "family": "test_plains",
-      "variant": 3,
-      "meanRgb": [
-        112.0,
-        104.9,
-        73.8
-      ],
-      "stdLum": 18.61,
-      "seam4Sides": 1.81,
-      "seamMosaic2x2": 1.81,
-      "latticeScore": 0.995,
-      "pathScore": 0.085,
-      "objectScore": 0.745,
-      "clean": false,
-      "reasons": [
-        "lattice (1.00 > 0.55)"
-      ]
-    },
-    "test_plains_m4.webp": {
-      "file": "test_plains_m4.webp",
-      "family": "test_plains",
-      "variant": 4,
-      "meanRgb": [
-        186.7,
-        152.7,
-        82.8
-      ],
-      "stdLum": 27.82,
-      "seam4Sides": 2.1,
-      "seamMosaic2x2": 2.1,
-      "latticeScore": 0.995,
-      "pathScore": 0.064,
-      "objectScore": 0.641,
-      "clean": false,
-      "reasons": [
-        "lattice (1.00 > 0.55)"
-      ]
+      "stdLum": 14.69,
+      "seam4Sides": 2.52,
+      "seamMosaic2x2": 2.52,
+      "latticeScore": 0.406,
+      "pathScore": 0.077,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "volcanic_m1.webp": {
       "file": "volcanic_m1.webp",
       "family": "volcanic",
       "variant": 1,
       "meanRgb": [
-        81.3,
-        52.3,
-        40.2
+        81.9,
+        52.1,
+        39.7
       ],
-      "stdLum": 9.85,
-      "seam4Sides": 2.36,
-      "seamMosaic2x2": 2.36,
-      "latticeScore": 0.793,
-      "pathScore": 0.089,
-      "objectScore": 0.807,
-      "clean": false,
-      "reasons": [
-        "lattice (0.79 > 0.55)"
-      ]
+      "stdLum": 9.61,
+      "seam4Sides": 2.43,
+      "seamMosaic2x2": 2.43,
+      "latticeScore": 0.016,
+      "pathScore": 0.085,
+      "objectScore": 0.004,
+      "clean": true,
+      "reasons": []
     },
     "volcanic_m2.webp": {
       "file": "volcanic_m2.webp",
       "family": "volcanic",
       "variant": 2,
       "meanRgb": [
-        81.0,
-        52.2,
-        40.2
+        81.1,
+        52.3,
+        40.3
       ],
-      "stdLum": 9.94,
-      "seam4Sides": 2.45,
-      "seamMosaic2x2": 2.45,
+      "stdLum": 10.1,
+      "seam4Sides": 2.47,
+      "seamMosaic2x2": 2.47,
       "latticeScore": 0.0,
-      "pathScore": 0.087,
-      "objectScore": 0.724,
+      "pathScore": 0.071,
+      "objectScore": 0.0,
       "clean": true,
       "reasons": []
     },
@@ -3211,57 +2963,53 @@
       "family": "volcanic",
       "variant": 3,
       "meanRgb": [
-        80.2,
-        54.0,
-        42.7
+        79.7,
+        52.8,
+        41.5
       ],
-      "stdLum": 11.89,
-      "seam4Sides": 2.28,
-      "seamMosaic2x2": 2.28,
-      "latticeScore": 0.627,
-      "pathScore": 0.069,
-      "objectScore": 0.742,
-      "clean": false,
-      "reasons": [
-        "lattice (0.63 > 0.55)"
-      ]
+      "stdLum": 11.69,
+      "seam4Sides": 2.38,
+      "seamMosaic2x2": 2.38,
+      "latticeScore": 0.506,
+      "pathScore": 0.041,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     },
     "volcanic_m4.webp": {
       "file": "volcanic_m4.webp",
       "family": "volcanic",
       "variant": 4,
       "meanRgb": [
-        81.7,
-        52.3,
-        40.6
+        84.0,
+        51.3,
+        37.9
       ],
-      "stdLum": 9.9,
-      "seam4Sides": 2.41,
-      "seamMosaic2x2": 2.41,
-      "latticeScore": 0.735,
-      "pathScore": 0.129,
-      "objectScore": 0.771,
-      "clean": false,
-      "reasons": [
-        "lattice (0.73 > 0.55)"
-      ]
+      "stdLum": 9.56,
+      "seam4Sides": 2.52,
+      "seamMosaic2x2": 2.52,
+      "latticeScore": 0.341,
+      "pathScore": 0.08,
+      "objectScore": 0.0,
+      "clean": true,
+      "reasons": []
     }
   },
   "gates": {
     "G_GROUND_SEAM_4SIDES": {
       "target": "<= 4.0",
-      "actual": 2.36,
+      "actual": 2.46,
       "pass": true
     },
     "G_GROUND_SEAM_MOSAIC_2X2": {
       "target": "<= 5.0",
-      "actual": 2.36,
+      "actual": 2.46,
       "pass": true
     },
     "G_GROUND_PLAINS_LATTICE": {
       "target": "<= 0.45",
-      "actual": 0.998,
-      "pass": false
+      "actual": 0.293,
+      "pass": true
     },
     "G_GROUND_BAKED_PATHS": {
       "target": "== 0",
@@ -3270,8 +3018,8 @@
     },
     "G_GROUND_CLEAN_ACTIVE": {
       "target": ">= 2 clean per family",
-      "actual": "FAIL",
-      "pass": false
+      "actual": "PASS",
+      "pass": true
     }
   }
 }

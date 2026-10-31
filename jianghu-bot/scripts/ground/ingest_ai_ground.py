@@ -99,41 +99,30 @@ def balance_quadrants(a):
     return res
 
 
-def make_seamless_offset(arr, blend_width=16):
-    """Guarantees perfect edge matching diff <= 0.5 without any 1D stretching or edge-smear.
-    Uses circular roll-crossfade for macro continuity, followed by subtle 16px Hermite micro-feathering."""
-    h, w, c = arr.shape
+def make_seamless_offset(arr, blend_width=32):
+    """Guarantees perfect edge matching diff <= 0.5 without introducing any 512px repeating lattice or 1D stretch.
+    Smooth micro-edge cosine feathering preserves interior art 100% intact."""
     res = arr.copy().astype(np.float32)
-    
-    # 1. Roll-crossfade to eliminate macro discontinuities across boundaries without stretching
-    x = np.linspace(0, 1, w, dtype=np.float32)
-    y = np.linspace(0, 1, h, dtype=np.float32)
-    wx = np.clip(np.sin(np.pi * x), 0.0, 1.0)
-    wy = np.clip(np.sin(np.pi * y), 0.0, 1.0)
-    mask = (np.outer(wy, wx)) ** 0.6
-    mask = mask[..., None]
-    
-    r = np.roll(np.roll(res, h // 2, axis=0), w // 2, axis=1)
-    res = res * mask + r * (1.0 - mask)
-    
-    # Restore variance / contrast lost by crossfade
-    res = (res - res.mean(axis=(0, 1))) * (arr.std(axis=(0, 1)) / (res.std(axis=(0, 1)) + 1e-6)) + arr.mean(axis=(0, 1))
-    
-    # 2. Subtle micro-edge feathering over only 16 pixels (1.5% of tile)
-    ramp_x = (np.cos(np.linspace(0, np.pi, blend_width, dtype=np.float32)) * 0.5 + 0.5).reshape(1, blend_width, 1)
-    left = res[:, :blend_width].copy()
-    right = res[:, -blend_width:].copy()
-    avg_lr = (left + right[:, ::-1]) * 0.5
-    res[:, :blend_width] = ramp_x * avg_lr + (1.0 - ramp_x) * left
-    res[:, -blend_width:] = ramp_x[:, ::-1] * avg_lr[:, ::-1] + (1.0 - ramp_x[:, ::-1]) * right
-    
-    ramp_y = (np.cos(np.linspace(0, np.pi, blend_width, dtype=np.float32)) * 0.5 + 0.5).reshape(blend_width, 1, 1)
-    top = res[:blend_width, :].copy()
-    bot = res[-blend_width:, :].copy()
-    avg_tb = (top + bot[::-1, :]) * 0.5
-    res[:blend_width, :] = ramp_y * avg_tb + (1.0 - ramp_y) * top
-    res[-blend_width:, :] = ramp_y[::-1, :] * avg_tb[::-1, :] + (1.0 - ramp_y[::-1, :]) * bot
-    
+    h, w, c = res.shape
+    B = blend_width
+
+    # Cosine weight: 0.5 at boundary seam (k=0) decaying smoothly to 0.0 at B
+    k_x = np.arange(B, dtype=np.float32)
+    wx = (0.5 * np.cos(np.pi * k_x / (2.0 * B))).reshape(1, B, 1)
+
+    left = res[:, :B].copy()
+    right = res[:, -B:].copy()
+    res[:, :B] = (1.0 - wx) * left + wx * right[:, ::-1]
+    res[:, -B:] = ((1.0 - wx) * right[:, ::-1] + wx * left)[:, ::-1]
+
+    k_y = np.arange(B, dtype=np.float32)
+    wy = (0.5 * np.cos(np.pi * k_y / (2.0 * B))).reshape(B, 1, 1)
+
+    top = res[:B, :].copy()
+    bot = res[-B:, :].copy()
+    res[:B, :] = (1.0 - wy) * top + wy * bot[::-1, :]
+    res[-B:, :] = ((1.0 - wy) * bot[::-1, :] + wy * top)[::-1, :]
+
     return np.clip(res, 0, 255)
 
 def normalize_texture(img_np, family, spec):
@@ -240,9 +229,10 @@ def preprocess_ai_source(im):
     norm = (arr_l - mu) / (sd + 1e-6)
     ac_512_x = float((norm * np.roll(norm, 512, axis=1)).mean())
     ac_512_y = float((norm * np.roll(norm, 512, axis=0)).mean())
+    ac_512_diag = float((norm * np.roll(np.roll(norm, 512, axis=0), 512, axis=1)).mean())
     
-    # Check if this is a 2x2 quad-tiled preview
-    if ac_512_x > 0.60 and ac_512_y > 0.60:
+    # Check if this is a 2x2 quad-tiled preview (high harmonic in X+Y or diagonal)
+    if (ac_512_x > 0.45 and ac_512_y > 0.45) or ac_512_diag > 0.50:
         im = im.crop((0, 0, 512, 512)).resize((1024, 1024), Image.Resampling.LANCZOS)
     elif max(ac_512_x, ac_512_y) > 0.45:
         # Attenuate excessive 512-period harmonic (tiling echo)

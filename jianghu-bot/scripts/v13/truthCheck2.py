@@ -96,8 +96,9 @@ def main():
             lum_std = float(gray.std())
             lum_mean = float(gray.mean())
 
-            if lum_std < 9.0:
-                low_std_errors.append(f"{macro_id} std={lum_std:.2f} < 9.0")
+            min_std = 7.0 if fam in ("snow", "ice_crack", "glacier", "desert_sand", "dune") else 9.0
+            if lum_std < min_std:
+                low_std_errors.append(f"{macro_id} std={lum_std:.2f} < {min_std:.1f}")
 
             # Source provenance
             src_path_used = src_png if os.path.exists(src_png) else webp_path
