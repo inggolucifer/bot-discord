@@ -1853,7 +1853,9 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             }
           }
         }
-            // --- CANYON, CLIFF & GORGE ---
+      }
+
+      // --- CANYON, CLIFF & GORGE ---
       else if (terrain === 'cliff' || terrain === 'canyon_floor' || region.id === 'sword_gorge' || region.id === 'western_gorge_labyrinth') {
         if (roll < 0.45) {
           const gorgeRocks = assetBindings.natureScatters.rocks.filter(r =>
@@ -1886,7 +1888,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- SNOW, GLACIER, ICE CRACK & FROZEN TUNDRA ---
       else if (terrain === 'snow' || terrain === 'glacier' || terrain === 'ice_crack' || region.id === 'northern_desolate') {
-        if (roll < 0.45) {
+        if (roll < 0.52) {
           const frostTrees = assetBindings.natureScatters.trees.filter(t =>
             t.biomes && (t.biomes.includes('northern_desolate') || t.biomes.includes('mountain'))
           );
@@ -2180,15 +2182,14 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
         }
       }
     }
-  }
 
-  // --- V12 P4: Strict Anti-Lattice Constraint & Dominance Enforcement ---
+  // --- V13 P1: Non-Destructive Anti-Lattice Constraint & Dominance Enforcement ---
   // Ensure that no >= 3 objects of the same family share identical x or identical y
   const filteredObjects = [];
   const xOccur = new Map();
   const yOccur = new Map();
   const finalDefCounts = new Map();
-  const maxPerDef = Math.max(1, Math.floor(objects.length * 0.30));
+  const maxPerDef = Math.max(5, Math.floor(maxObjectsBudget * 0.28));
 
   for (const obj of objects) {
     if (!obj || !obj.defId) continue;
@@ -2198,10 +2199,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       continue;
     }
 
-    // Dominance cap: <= 28% per chunk (resolved definition)
+    // Dominance cap: <= 28% of initial target budget (not remaining objects)
     const actualDef = resolveDef(obj.defId) || obj.defId;
     const curCnt = finalDefCounts.get(actualDef) || 0;
-    if (curCnt >= Math.floor(objects.length * 0.28)) {
+    if (curCnt >= maxPerDef) {
       unmarkFootprint(obj, occupiedGrid);
       continue;
     }
@@ -2220,7 +2221,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       continue;
     }
 
-    // Diagonal shift to break collinearity
+    // Diagonal shift to break collinearity (non-destructive)
     const g = GC.getGrid(obj.defId);
     const fw = g ? g.fw : 1;
     const fh = g ? g.fh : 1;
@@ -2255,11 +2256,62 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
         break;
       }
     }
+
+    // Non-destructive fallback: if shift failed, keep original object rather than dropping it
+    if (!shifted) {
+      markFootprintOccupied(obj.x, obj.y, fw, fh, occupiedGrid, obj.id, obj.defId);
+      filteredObjects.push(obj);
+      finalDefCounts.set(actualDef, curCnt + 1);
+    }
   }
 
   // Replace objects array with filteredObjects
   objects.length = 0;
   objects.push(...filteredObjects);
+
+  // --- V13 P1: Target Budget Refill Pass ---
+  // If post-process dropped objects below 85% of budget, refill with valid candidates
+  const minBudgetTarget = Math.floor(maxObjectsBudget * 0.85);
+  if (objects.length < minBudgetTarget) {
+    const refillRand = createPRNG((chunkSeed ^ 0x5a1f893d) >>> 0);
+    const candidatePool = [
+      'nature_wild_mountain_camellia_shrub',
+      'rock_boulder_moss_v1',
+      'rock_boulder_moss_v2',
+      'spirit_tree_2x2',
+      'nature_ancient_scholar_cypress_stone_cairn'
+    ].filter(id => !isDefForbiddenInRegion(id, chunkRegion.id));
+
+    if (candidatePool.length > 0) {
+      for (let attempt = 0; attempt < 100 && objects.length < minBudgetTarget; attempt++) {
+        const rx = startTileX + Math.floor(refillRand() * 32);
+        const ry = startTileY + Math.floor(refillRand() * 32);
+        const rTile = getLocalTile(rx, ry);
+        if (!rTile || WATER_TERRAINS.has(rTile.terrainType) || (rTile.terrainType && rTile.terrainType.includes('road'))) continue;
+
+        const pickDef = candidatePool[Math.floor(refillRand() * candidatePool.length)];
+        const curDefCount = finalDefCounts.get(pickDef) || 0;
+        if (curDefCount >= maxPerDef) continue;
+
+        const col = getCanonCollision(pickDef, 1, 1);
+        if (rx + col.w - 1 > endTileX || ry + col.h - 1 > endTileY) continue;
+
+        if (canPlaceFootprint(rx, ry, col.w, col.h, occupiedGrid, getLocalTile, false, pickDef, objects)) {
+          const objId = `refill_${rx}_${ry}`;
+          markFootprintOccupied(rx, ry, col.w, col.h, occupiedGrid, objId, pickDef);
+          objects.push({
+            id: objId,
+            defId: pickDef,
+            x: rx,
+            y: ry,
+            collision: col.mode || 'soft',
+            tags: ['refill_density', chunkRegion.id]
+          });
+          finalDefCounts.set(pickDef, curDefCount + 1);
+        }
+      }
+    }
+  }
 
   // --- V12 P4: Minimum 8x8 Wilderness Density Pass ---
   // Ensure no 8x8 block in wilderness is completely empty
