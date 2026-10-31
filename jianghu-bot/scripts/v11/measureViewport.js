@@ -18,7 +18,16 @@ const objectScatter = require('../../utils/objectScatter');
 const GC = require('../../utils/gridContract');
 
 const isAfter = process.argv.includes('--after');
-const outFileName = isAfter ? 'v11_density_after.json' : 'v11_density_before.json';
+const isV15 = process.argv.includes('--mode') && process.argv[process.argv.indexOf('--mode') + 1] === 'v15';
+const outArgIdx = process.argv.indexOf('--out');
+
+let outFileName = isAfter ? 'v11_density_after.json' : 'v11_density_before.json';
+if (isV15) {
+  outFileName = 'v15_density.json';
+}
+if (outArgIdx !== -1 && process.argv[outArgIdx + 1]) {
+  outFileName = process.argv[outArgIdx + 1];
+}
 const outPath = path.resolve(__dirname, '../../review', outFileName);
 
 const REGIONS = worldData.getAllRegions();

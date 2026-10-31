@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-10-31T21:32:35.683Z",
+  "totalTests": 9,
+  "passedCount": 9,
+  "allPassed": true,
+  "tests": [
+    {
+      "id": "NEG_ROAD_ABSENT",
+      "target": "roadCoverage < 0.85 and passed == false",
+      "actual": "coverage=0.142, passed=false",
+      "passed": true
+    },
+    {
+      "id": "NEG_ROAD_LADDER",
+      "target": "roadLadderDetected == true",
+      "actual": "detected=true, pass=false",
+      "passed": true
+    },
+    {
+      "id": "POS_ROAD_OK",
+      "target": "roadCoverage >= 0.85 and roadLadderDetected == false",
+      "actual": "coverage=1, ladderDetected=false",
+      "passed": true
+    },
+    {
+      "id": "NEG_BAKED_PATH",
+      "target": "hasBakedPath == true",
+      "actual": "hasBakedPath=true, flaggedCount=2",
+      "passed": true
+    },
+    {
+      "id": "POS_NO_PATH",
+      "target": "hasBakedPath == false",
+      "actual": "hasBakedPath=false",
+      "passed": true
+    },
+    {
+      "id": "NEG_COLOR_AZURE",
+      "target": "groundColorSanity(stone) == false",
+      "actual": "passed=false, reasons=saturation=0.345 > 0.22 (blue saturation); |B-R|=38.0 > 25.0 (cool blue tint imbalance)",
+      "passed": true
+    },
+    {
+      "id": "POS_COLOR_AZURE",
+      "target": "groundColorSanity(stone) == true",
+      "actual": "passed=true, sat=0.033, diff=4",
+      "passed": true
+    },
+    {
+      "id": "NEG_COLOR_PLAINS",
+      "target": "groundColorSanity(grass) == false",
+      "actual": "passed=false, reasons=hue=44.5 deg outside [65..125] (not fresh green); brown_olive_ratio=1.000 > 0.40 (dry straw/mud)",
+      "passed": true
+    },
+    {
+      "id": "POS_COLOR_PLAINS",
+      "target": "groundColorSanity(grass) == true",
+      "actual": "passed=true, hue=82.5, sat=0.434",
+      "passed": true
+    }
+  ]
+}

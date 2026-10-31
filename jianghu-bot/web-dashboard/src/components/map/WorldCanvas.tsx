@@ -216,6 +216,8 @@ export default function WorldCanvas({
       chunkManager.updateCamera(debugCam.x, debugCam.y, debugCam.zoom);
       if (typeof window !== 'undefined') {
         (window as any).__chunksReady = false;
+        (window as any).__debugRoadCells = [];
+        (window as any).__debugViewport = null;
         (window as any).__panCameraTo = (x: number, y: number, zoom?: number) => {
           setCamera(prev => ({ ...prev, x, y, zoom: zoom !== undefined ? zoom : prev.zoom }));
           animatedPlayerPos.current = { x, y };
@@ -2106,6 +2108,59 @@ export default function WorldCanvas({
             }
             hasFiredReadyRef.current = true;
           }
+        }
+      }
+
+      // V15 P0.1: Runtime Debug Hooks (__debugViewport & __debugRoadCells)
+      if (typeof window !== 'undefined') {
+        (window as any).__debugViewport = {
+          x: camera.x,
+          y: camera.y,
+          zoom: camera.zoom,
+          widthPx: width,
+          heightPx: height,
+          camX: camera.x,
+          camY: camera.y,
+          cellsX: Math.ceil(width / currentTileSize),
+          cellsY: Math.ceil(height / currentTileSize),
+          tilePx: currentTileSize
+        };
+
+        const activeRoadCells = [];
+        for (let ty = minTileY; ty <= maxTileY; ty++) {
+          for (let tx = minTileX; tx <= maxTileX; tx++) {
+            const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
+            const tt = tile?.terrainType;
+            if (tt && (tt.includes('road') || tt === 'road_stone')) {
+              const sx = toScreenX(tx);
+              const sy = toScreenY(ty);
+              if (sx + currentTileSize >= 0 && sx <= width && sy + currentTileSize >= 0 && sy <= height) {
+                activeRoadCells.push({
+                  gx: tx,
+                  gy: ty,
+                  px: Math.round(sx),
+                  py: Math.round(sy),
+                  widthPx: Math.round(currentTileSize),
+                  heightPx: Math.round(currentTileSize),
+                  biome: tile?.biome || 'road',
+                  orientation: 'auto'
+                });
+              }
+            }
+          }
+        }
+        (window as any).__debugRoadCells = activeRoadCells;
+
+        // Visual debug overlay when &debugRoad=1 is active
+        if (typeof window !== 'undefined' && window.location && window.location.search && window.location.search.includes('debugRoad=1')) {
+          ctx.save();
+          ctx.strokeStyle = '#00ffff';
+          ctx.lineWidth = 1;
+          for (let i = 0; i < activeRoadCells.length; i++) {
+            const rc = activeRoadCells[i];
+            ctx.strokeRect(rc.px + 0.5, rc.py + 0.5, rc.widthPx - 1, rc.heightPx - 1);
+          }
+          ctx.restore();
         }
       }
 

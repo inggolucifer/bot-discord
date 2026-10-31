@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-10-31T21:32:23.289Z",
+  "commit": "319ddc6",
+  "allDefectsDetected": true,
+  "gates": [
+    {
+      "id": "GATE_BASELINE_ROAD_COVERAGE_XINGCUN",
+      "name": "Road Coverage Xingcun (2050,2650)",
+      "target": ">= 0.85",
+      "actual": 0.142,
+      "status": "FAIL",
+      "expectedBaseline": "FAIL"
+    },
+    {
+      "id": "GATE_BASELINE_ROAD_COVERAGE_XUESHAN",
+      "name": "Road Coverage Xueshan (2500,4400)",
+      "target": ">= 0.85",
+      "actual": 0.247,
+      "status": "FAIL",
+      "expectedBaseline": "FAIL"
+    },
+    {
+      "id": "GATE_BASELINE_AZURE_STONE_COLOR",
+      "name": "Azure Mountain Stone Ground Sanity",
+      "target": "sat <= 0.22, |B-R| <= 25, V in [0.38..0.65]",
+      "actual": "sat=0.245, diff=22.6, V=0.463",
+      "status": "FAIL",
+      "reasons": [
+        "saturation=0.245 > 0.22 (blue saturation)"
+      ],
+      "expectedBaseline": "FAIL"
+    },
+    {
+      "id": "GATE_BASELINE_PLAINS_GRASS_COLOR",
+      "name": "Plains Ground Grass Sanity (2450,2450)",
+      "target": "hue in [65..125], sat in [0.25..0.60], brown/olive <= 0.40",
+      "actual": "hue=64.7, sat=0.364, V=0.48",
+      "status": "FAIL",
+      "reasons": [
+        "hue=64.7 deg outside [65..125] (not fresh green)"
+      ],
+      "expectedBaseline": "FAIL"
+    },
+    {
+      "id": "GATE_BASELINE_BAKED_PATH_PLAINS_M1",
+      "name": "Baked Path on plains_m1.webp",
+      "target": "hasBakedPath == false",
+      "actual": "hasBakedPath=true, flagged=2",
+      "status": "FAIL",
+      "expectedBaseline": "FAIL"
+    }
+  ]
+}

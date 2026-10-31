@@ -186,6 +186,13 @@ server.listen(3001, async () => {
     }
     fs.writeFileSync(filePath, finalBuffer);
 
+    // Save V15 P0.1 Runtime Hook data alongside screenshot
+    const hookData = await page.evaluate(() => ({
+      viewport: window.__debugViewport || null,
+      roadCells: window.__debugRoadCells || []
+    })).catch(() => ({ viewport: null, roadCells: [] }));
+    fs.writeFileSync(path.join(outDir, `${s.name}.json`), JSON.stringify(hookData, null, 2));
+
     // c. SHA-1 verification
     const sha1 = crypto.createHash('sha1').update(finalBuffer).digest('hex');
     console.log(`  SHA-1: ${sha1}`);
