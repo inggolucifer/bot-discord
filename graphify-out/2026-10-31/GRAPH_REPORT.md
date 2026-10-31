@@ -1,7 +1,7 @@
 # Graph Report - bot-discord  (2026-10-31)
 
 ## Corpus Check
-- 939 files · ~1,465,008 words
+- 939 files · ~1,465,123 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 30 file(s) not represented in the graph (top: .csv 12, .bak 9, (none) 3)
 

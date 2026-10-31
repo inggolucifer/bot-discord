@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-10-31T05:29:53.226Z",
+  "timestamp": "2026-10-31T10:11:32.149Z",
   "mode": "V13",
   "totalGates": 26,
-  "passCount": 13,
-  "failCount": 13,
-  "allPass": false,
+  "passCount": 26,
+  "failCount": 0,
+  "allPass": true,
   "gates": [
     {
       "id": "G_DENSITY_CENTRAL_PLAINS",
@@ -61,10 +61,10 @@
       "name": "Total Audited Objects in Grid",
       "command": "node scripts/auditGridV10.js",
       "target": ">= 70000 objects",
-      "value": 74077,
+      "value": 70428,
       "unit": "objects",
       "status": "PASS",
-      "evidence": "review/v10_audit_summary.json -> totalObjects = 74077"
+      "evidence": "review/v10_audit_summary.json -> totalObjects = 70428"
     },
     {
       "id": "G_DENSITY_PER_CHUNK_PLAINS",
@@ -91,90 +91,90 @@
       "name": "Azure Mountain Impassable Barrier Closure",
       "command": "node scripts/v13/checkBarrierClosure.js",
       "target": "== 0 leak corridors",
-      "value": "N/A",
+      "value": 0,
       "unit": "leak corridors",
-      "status": "GAGAL",
-      "evidence": "Source file not found: review/v13_barrier_closure.json"
+      "status": "PASS",
+      "evidence": "review/v13_barrier_closure.json -> unauthorizedLeaks = 0"
     },
     {
       "id": "G_BARRIER_REACHABILITY",
       "name": "Settlement Global Reachability from Xingcun",
       "command": "node scripts/v13/checkBarrierClosure.js",
       "target": "== 31 settlements",
-      "value": "N/A",
+      "value": 31,
       "unit": "settlements",
-      "status": "GAGAL",
-      "evidence": "Source file not found: review/v13_barrier_closure.json"
+      "status": "PASS",
+      "evidence": "review/v13_barrier_closure.json -> reachableSettlements = 31"
     },
     {
       "id": "G_BARRIER_ZERO_HAZARD_SPAWN",
       "name": "Hazard Spawns on Blocked Barrier Cells",
       "command": "node scripts/v13/checkBarrierClosure.js",
       "target": "== 0 hazards",
-      "value": "N/A",
+      "value": 0,
       "unit": "hazards",
-      "status": "GAGAL",
-      "evidence": "Source file not found: review/v13_barrier_closure.json"
+      "status": "PASS",
+      "evidence": "review/v13_barrier_closure.json -> hazardSpawnsOnBarrier = 0"
     },
     {
       "id": "G_SETTLEMENT_WHITE_SQUARE",
       "name": "Pale Straight-Edge Settlement Square Artifacts",
       "command": "python scripts/v13/pixelMetrics.py",
       "target": "== 0 artifacts",
-      "value": "N/A",
+      "value": 0,
       "unit": "artifacts",
-      "status": "GAGAL",
-      "evidence": "Source file not found: review/v13_pixel_metrics.json"
+      "status": "PASS",
+      "evidence": "review/v13_pixel_metrics.json -> summary.whiteSquare = 0"
     },
     {
       "id": "G_SETTLEMENT_LUM_DIFF",
       "name": "Max Settlement vs Surroundings Luminance Delta",
       "command": "python scripts/v13/pixelMetrics.py",
       "target": "<= 22 delta L",
-      "value": "N/A",
+      "value": 3.5,
       "unit": "delta L",
-      "status": "GAGAL",
-      "evidence": "Source file not found: review/v13_pixel_metrics.json"
+      "status": "PASS",
+      "evidence": "review/v13_pixel_metrics.json -> summary.maxLumDiff = 3.5"
     },
     {
       "id": "G_ROAD_LADDER_AUTOCORR",
       "name": "Road Periodic Ladder / Rail Artifacts",
       "command": "python scripts/v13/pixelMetrics.py",
       "target": "== 0 artifacts",
-      "value": "N/A",
+      "value": 0,
       "unit": "artifacts",
-      "status": "GAGAL",
-      "evidence": "Source file not found: review/v13_pixel_metrics.json"
+      "status": "PASS",
+      "evidence": "review/v13_pixel_metrics.json -> summary.roadLadder = 0"
     },
     {
       "id": "G_GROUND_SEAM_4SIDES",
       "name": "Ground Macro 4-Side Seam Mean Diff",
       "command": "python scripts/v13/groundContentAudit.py",
       "target": "<= 4 RGB diff",
-      "value": 2.36,
+      "value": 2.46,
       "unit": "RGB diff",
       "status": "PASS",
-      "evidence": "review/v13_ground_audit.json -> gates.G_GROUND_SEAM_4SIDES.actual = 2.36"
+      "evidence": "review/v13_ground_audit.json -> gates.G_GROUND_SEAM_4SIDES.actual = 2.46"
     },
     {
       "id": "G_GROUND_SEAM_MOSAIC_2X2",
       "name": "Ground Macro 2x2 Mosaic Seam Mean Diff",
       "command": "python scripts/v13/groundContentAudit.py",
       "target": "<= 5 RGB diff",
-      "value": 2.36,
+      "value": 2.46,
       "unit": "RGB diff",
       "status": "PASS",
-      "evidence": "review/v13_ground_audit.json -> gates.G_GROUND_SEAM_MOSAIC_2X2.actual = 2.36"
+      "evidence": "review/v13_ground_audit.json -> gates.G_GROUND_SEAM_MOSAIC_2X2.actual = 2.46"
     },
     {
       "id": "G_GROUND_PLAINS_LATTICE",
       "name": "Plains Macro Mosaic Lag-512 Autocorrelation Peak",
       "command": "python scripts/v13/groundContentAudit.py",
       "target": "<= 0.45 peak corr",
-      "value": 0.998,
+      "value": 0.293,
       "unit": "peak corr",
-      "status": "GAGAL",
-      "evidence": "review/v13_ground_audit.json -> gates.G_GROUND_PLAINS_LATTICE.actual = 0.998"
+      "status": "PASS",
+      "evidence": "review/v13_ground_audit.json -> gates.G_GROUND_PLAINS_LATTICE.actual = 0.293"
     },
     {
       "id": "G_GROUND_BAKED_PATHS",
@@ -191,50 +191,50 @@
       "name": "Active Ground Families Have >= 2 Clean Variants",
       "command": "python scripts/v13/groundContentAudit.py",
       "target": "== PASS status",
-      "value": "FAIL",
+      "value": "PASS",
       "unit": "status",
-      "status": "GAGAL",
-      "evidence": "review/v13_ground_audit.json -> gates.G_GROUND_CLEAN_ACTIVE.actual = \"FAIL\""
+      "status": "PASS",
+      "evidence": "review/v13_ground_audit.json -> gates.G_GROUND_CLEAN_ACTIVE.actual = \"PASS\""
     },
     {
       "id": "G_SMEAR_RATIO",
       "name": "Smear / Edge-Clamped Pixel Stretch Artifacts",
       "command": "python scripts/v13/pixelMetrics.py",
       "target": "== 0 artifacts",
-      "value": "N/A",
+      "value": 0,
       "unit": "artifacts",
-      "status": "GAGAL",
-      "evidence": "Source file not found: review/v13_pixel_metrics.json"
+      "status": "PASS",
+      "evidence": "review/v13_pixel_metrics.json -> summary.smear = 0"
     },
     {
       "id": "G_MOUNTAIN_SIZE_AZURE",
       "name": "Mountain Footprints >= 4x2 in Mountain Regions",
       "command": "node scripts/v13/mountainDistribution.js",
       "target": ">= 50 %",
-      "value": "N/A",
+      "value": 77,
       "unit": "%",
-      "status": "GAGAL",
-      "evidence": "Source file not found: review/v13_mountains.json"
+      "status": "PASS",
+      "evidence": "review/v13_mountains.json -> pctGe4x2 = 77"
     },
     {
       "id": "G_MOUNTAIN_SIZE_XL",
       "name": "Mountain Footprints >= 6x3 in Mountain Regions",
       "command": "node scripts/v13/mountainDistribution.js",
       "target": ">= 15 %",
-      "value": "N/A",
+      "value": 25.14,
       "unit": "%",
-      "status": "GAGAL",
-      "evidence": "Source file not found: review/v13_mountains.json"
+      "status": "PASS",
+      "evidence": "review/v13_mountains.json -> pctGe6x3 = 25.14"
     },
     {
       "id": "G_TINT_RED_SOLID_PIXELS",
       "name": "Solid Red Footprint Tint Fill Blocks",
       "command": "python scripts/v13/pixelMetrics.py",
       "target": "== 0 artifacts",
-      "value": "N/A",
+      "value": 0,
       "unit": "artifacts",
-      "status": "GAGAL",
-      "evidence": "Source file not found: review/v13_pixel_metrics.json"
+      "status": "PASS",
+      "evidence": "review/v13_pixel_metrics.json -> summary.redTint = 0"
     },
     {
       "id": "G_GRID_CONTRACT_AUDIT",
@@ -261,10 +261,10 @@
       "name": "Ground Truth Unique sha256 + phash Hashes",
       "command": "python scripts/v13/truthCheck2.py",
       "target": ">= 144 macros",
-      "value": 141,
+      "value": 144,
       "unit": "macros",
-      "status": "GAGAL",
-      "evidence": "world-data/ground-sources-v13.json -> validCount = 141"
+      "status": "PASS",
+      "evidence": "world-data/ground-sources-v13.json -> validCount = 144"
     }
   ]
 }
