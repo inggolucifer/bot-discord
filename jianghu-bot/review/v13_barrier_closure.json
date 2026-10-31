@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "totalCorridors": 4,
+  "officialPassesConfigured": 4,
+  "officialPassesReached": 4,
+  "missingOfficialPasses": [],
+  "unauthorizedLeaks": 0,
+  "unauthorizedCorridorsCount": 0,
+  "reachableSettlements": 31,
+  "hazardSpawnsOnBarrier": 0,
+  "unauthorizedCorridors": [],
+  "allCorridors": [
+    {
+      "startX": 748,
+      "endX": 751,
+      "center": 749.5,
+      "width": 4
+    },
+    {
+      "startX": 2198,
+      "endX": 2201,
+      "center": 2199.5,
+      "width": 4
+    },
+    {
+      "startX": 2598,
+      "endX": 2601,
+      "center": 2599.5,
+      "width": 4
+    },
+    {
+      "startX": 3098,
+      "endX": 3101,
+      "center": 3099.5,
+      "width": 4
+    }
+  ]
+}
