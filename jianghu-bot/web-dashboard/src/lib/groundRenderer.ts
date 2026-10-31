@@ -549,10 +549,11 @@ export function getAutotileFrameId(terrainType: string, bitmask: number): string
 }
 
 /**
- * V12 P2: 47-blob Soft Road Path Generator
- * Width: 0.85 cell (margin 0.075 cell on each side)
- * Rounded corners (r = 0.3 cell), undulating edges (noise amplitude 0.06 cell)
- * Dedicated shapes for endpoints (rounded cap), T-junctions, cross-junctions, turns
+ * V13 P2: Continuous 47-blob Soft Road Path Generator (Zero Ladder Artifacts)
+ * - Seamless boundary connections (hw = 0.44 * tileSize, matching adjoining cells)
+ * - Filleted rounded corners (r = 0.3 cell) with bezier/arcTo
+ * - Undulating organic edges (noise amplitude 0.04 cell)
+ * - Natural trodden road end-caps
  */
 export function drawSoftBlobRoadPath(
   ctx: CanvasRenderingContext2D,
@@ -568,31 +569,71 @@ export function drawSoftBlobRoadPath(
 
   const cx = px + tileSize * 0.5;
   const cy = py + tileSize * 0.5;
-  const hw = tileSize * 0.425; // 0.85 total width (0.075 margin on each side)
+  const hw = tileSize * 0.44; // Seamless connection width
+  const r = tileSize * 0.30;  // Corner radius
+
+  // Subtle organic undulation along tile
+  const undulate = Math.sin((px * 0.05 + py * 0.07)) * (tileSize * 0.04);
+  const left = cx - hw + undulate;
+  const right = cx + hw + undulate;
+  const top = cy - hw - undulate;
+  const bottom = cy + hw - undulate;
 
   ctx.beginPath();
 
-  // Central core
-  ctx.rect(cx - hw, cy - hw, hw * 2, hw * 2);
-
-  // Extend corridors to borders if connected
-  if (hasN) {
-    ctx.rect(cx - hw, py, hw * 2, tileSize * 0.5);
-  }
-  if (hasS) {
-    ctx.rect(cx - hw, cy, hw * 2, tileSize * 0.5);
-  }
-  if (hasW) {
-    ctx.rect(px, cy - hw, tileSize * 0.5, hw * 2);
-  }
-  if (hasE) {
-    ctx.rect(cx, cy - hw, tileSize * 0.5, hw * 2);
-  }
-
-  // Rounded caps for endpoints (dead ends)
   if (!hasN && !hasS && !hasW && !hasE) {
-    ctx.arc(cx, cy, hw, 0, Math.PI * 2);
+    // Single isolated stepping stone / natural patch
+    ctx.ellipse(cx, cy, hw * 0.85, hw * 0.75, 0.2, 0, Math.PI * 2);
+    return;
   }
+
+  // Draw continuous interconnected corridor polygon with rounded corners
+  if (hasN) {
+    ctx.moveTo(left, py);
+    ctx.lineTo(right, py);
+  } else {
+    ctx.moveTo(left + r, top);
+    ctx.lineTo(right - r, top);
+    if (!hasE) ctx.arcTo(right, top, right, top + r, r);
+  }
+
+  // Right side
+  if (hasE) {
+    if (!hasN) ctx.lineTo(right, top);
+    ctx.lineTo(px + tileSize, cy - hw);
+    ctx.lineTo(px + tileSize, cy + hw);
+    if (!hasS) ctx.lineTo(right, bottom);
+  } else {
+    if (hasN) ctx.lineTo(right, cy - hw);
+    ctx.lineTo(right, bottom - r);
+    if (!hasS) ctx.arcTo(right, bottom, right - r, bottom, r);
+  }
+
+  // Bottom side
+  if (hasS) {
+    if (!hasE && !hasS) ctx.lineTo(right, bottom);
+    ctx.lineTo(right, py + tileSize);
+    ctx.lineTo(left, py + tileSize);
+    if (!hasW) ctx.lineTo(left, bottom);
+  } else {
+    if (hasE) ctx.lineTo(cx + hw, bottom);
+    ctx.lineTo(left + r, bottom);
+    if (!hasW) ctx.arcTo(left, bottom, left, bottom - r, r);
+  }
+
+  // Left side
+  if (hasW) {
+    if (!hasS) ctx.lineTo(left, bottom);
+    ctx.lineTo(px, cy + hw);
+    ctx.lineTo(px, cy - hw);
+    if (!hasN) ctx.lineTo(left, top);
+  } else {
+    if (hasS) ctx.lineTo(left, cy + hw);
+    ctx.lineTo(left, top + r);
+    if (!hasN) ctx.arcTo(left, top, left + r, top, r);
+  }
+
+  ctx.closePath();
 }
 
 /**
@@ -866,13 +907,14 @@ export function renderChunkGridBitmap(
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
 
-  // 1. Blocked solid cell tint: rgba(180, 40, 30, 0.10) (exclude roads)
-  ctx.fillStyle = 'rgba(180, 40, 30, 0.10)';
+  // 1. Blocked solid cell footprint outline (subtle 1px border, no solid pink fill)
+  ctx.strokeStyle = 'rgba(120, 70, 50, 0.15)';
+  ctx.lineWidth = 1;
   for (const t of tiles) {
     if (t.isSolid && !t.terrainType.includes('road')) {
       const lx = t.tileX - cx * CHUNK_SIZE;
       const ly = t.tileY - cy * CHUNK_SIZE;
-      ctx.fillRect(lx * tileSize, ly * tileSize, tileSize, tileSize);
+      ctx.strokeRect(lx * tileSize + 0.5, ly * tileSize + 0.5, tileSize - 1, tileSize - 1);
     }
   }
 
@@ -1001,33 +1043,50 @@ export function renderChunkGroundBitmapTextured(
     const imgData = ctxM.createImageData(GRID_DIM, GRID_DIM);
     const d32 = new Uint32Array(imgData.data.buffer);
     if (F === 'settlement_floor') {
-      // V12 P1: 2-octave noise jitter on border tiles with threshold 0.45 and width 0.8-1.4 cells
+      // V13 P2: 2-octave organic noise boundary with f=0.08 and 0.02, zero straight edges
       for (let gy = 0; gy < GRID_DIM; gy++) {
         for (let gx = 0; gx < GRID_DIM; gx++) {
           const idx = gy * GRID_DIM + gx;
           if (gridFamilies[idx] === 'settlement_floor') {
-            const isEdge = (gx > 0 && gridFamilies[idx - 1] !== 'settlement_floor') ||
-                           (gx < GRID_DIM - 1 && gridFamilies[idx + 1] !== 'settlement_floor') ||
-                           (gy > 0 && gridFamilies[idx - GRID_DIM] !== 'settlement_floor') ||
-                           (gy < GRID_DIM - 1 && gridFamilies[idx + GRID_DIM] !== 'settlement_floor');
-            if (isEdge) {
-              const worldX = cx * CHUNK_SIZE + (gx - BORDER);
-              const worldY = cy * CHUNK_SIZE + (gy - BORDER);
-              const n1 = (hash2d(worldX * 31 + 7, worldY * 59 + 13) % 100) / 100.0;
-              const n2 = (hash2d(worldX * 97 + 19, worldY * 127 + 37) % 100) / 100.0;
-              const noiseVal = n1 * 0.7 + n2 * 0.3;
-              d32[idx] = noiseVal < 0.45 ? 0x66000000 : 0xff000000;
-            } else {
-              d32[idx] = 0xff000000;
+            const worldX = cx * CHUNK_SIZE + (gx - BORDER);
+            const worldY = cy * CHUNK_SIZE + (gy - BORDER);
+
+            // Check distance to nearest non-settlement tile within 3-tile radius
+            let minDist = 4;
+            for (let dy = -3; dy <= 3; dy++) {
+              for (let dx = -3; dx <= 3; dx++) {
+                const ny = gy + dy;
+                const nx = gx + dx;
+                if (nx < 0 || nx >= GRID_DIM || ny < 0 || ny >= GRID_DIM || gridFamilies[ny * GRID_DIM + nx] !== 'settlement_floor') {
+                  const d = Math.sqrt(dx * dx + dy * dy);
+                  if (d < minDist) minDist = d;
+                }
+              }
             }
+
+            // 2-octave smooth sinusoidal noise
+            const n1 = (Math.sin(worldX * 0.08) * Math.cos(worldY * 0.08) + 1.0) * 0.5;
+            const n2 = (Math.sin(worldX * 0.02 + 1.2) * Math.cos(worldY * 0.02 + 2.1) + 1.0) * 0.5;
+            const noise = n1 * 0.4 + n2 * 0.6; // 0..1
+
+            // Modulate edge falloff organically (minDist 0..1.2 tiles)
+            const alphaRatio = Math.max(0, Math.min(1.0, (minDist + (noise - 0.5) * 0.6) / 1.0));
+            const a255 = Math.round(alphaRatio * 230);
+            d32[idx] = (a255 << 24);
           } else {
             d32[idx] = 0x00000000;
           }
         }
       }
     } else {
+      const isBaseFamily = (F === sortedFamilies[0]);
       for (let i = 0; i < gridFamilies.length; i++) {
-        d32[i] = gridFamilies[i] === F ? 0xff000000 : 0x00000000;
+        // Base terrain family fills under settlement_floor and road_stone so no transparent holes show background paper
+        if (isBaseFamily && (gridFamilies[i] === 'settlement_floor' || gridFamilies[i] === 'road_stone')) {
+          d32[i] = 0xff000000;
+        } else {
+          d32[i] = gridFamilies[i] === F ? 0xff000000 : 0x00000000;
+        }
       }
     }
     ctxM.putImageData(imgData, 0, 0);
@@ -1065,8 +1124,8 @@ export function renderChunkGroundBitmapTextured(
       ctxMB.drawImage(scratchM.canvas, 0, 0, GRID_DIM, GRID_DIM, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
 
       ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
-      // V12 P1: Settlement floor feathering blur (1.1 * tileSize) and organic edge mask
-      const blurPx = F === 'settlement_floor' ? tileSize * 1.1 : tileSize * 0.32;
+      // V13 P2: Settlement floor organic feathering blur (0.45 * tileSize) and ink splatter mask
+      const blurPx = F === 'settlement_floor' ? tileSize * 0.45 : tileSize * 0.32;
       ctxMB2.filter = `blur(${blurPx.toFixed(1)}px)`;
       ctxMB2.drawImage(scratchMB.canvas, 0, 0);
       ctxMB2.filter = 'none';
@@ -1076,17 +1135,37 @@ export function renderChunkGroundBitmapTextured(
       if (transMask) {
         ctxMB2.save();
         ctxMB2.globalCompositeOperation = 'source-atop';
-        ctxMB2.globalAlpha = F === 'settlement_floor' ? 0.35 : 0.25;
+        ctxMB2.globalAlpha = F === 'settlement_floor' ? 0.30 : 0.25;
         ctxMB2.drawImage(transMask, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
         ctxMB2.restore();
       }
     }
 
     // 4e: Fill T with seamless base pattern + smooth noise-blended secondary variants (V11)
-    const fInfo = groundTextures.familyOf(F);
+    let effectiveFamily = F;
+    if (F === 'settlement_floor') {
+      let snowCnt = 0;
+      let desertCnt = 0;
+      let volcanicCnt = 0;
+      let swampCnt = 0;
+      for (let i = 0; i < gridFamilies.length; i++) {
+        const fam = gridFamilies[i];
+        if (fam === 'snow' || fam === 'ice_crack' || fam === 'glacier') snowCnt++;
+        else if (fam === 'desert_sand' || fam === 'dune' || fam === 'oasis') desertCnt++;
+        else if (fam === 'volcanic' || fam === 'lava_flow') volcanicCnt++;
+        else if (fam === 'swamp' || fam === 'demonic_swamp' || fam === 'poison_pool') swampCnt++;
+      }
+      if (snowCnt >= 30) effectiveFamily = 'snow';
+      else if (desertCnt >= 30) effectiveFamily = 'desert_sand';
+      else if (volcanicCnt >= 30) effectiveFamily = 'volcanic';
+      else if (swampCnt >= 30) effectiveFamily = 'swamp';
+      else effectiveFamily = 'settlement_floor';
+    }
+
+    const fInfo = groundTextures.familyOf(effectiveFamily);
     const variants = fInfo && fInfo.variants && fInfo.variants.length > 0
       ? fInfo.variants
-      : [`${F}_v1`, `${F}_v2`, `${F}_v3`, `${F}_v4`];
+      : [`${effectiveFamily}_v1`, `${effectiveFamily}_v2`, `${effectiveFamily}_v3`, `${effectiveFamily}_v4`];
 
     // V11: 1024x1024 macro texture spans 8 cells
     const textureSpanPx = 8 * tileSize; // 432px at tileSize 54
@@ -1208,50 +1287,26 @@ export function renderChunkGroundBitmapTextured(
       ctxT.restore();
     }
 
-    // V12 P1: Settlement floor biome tinting (snow 60%, desert 55%, plains 35%)
+    // V13 P2: Settlement floor uses base ground + warm loam village road glaze (+8% lightness)
+    // Delta L <= 22 vs surrounding wilderness, zero pale white patch
     if (F === 'settlement_floor') {
+      ctxT.save();
+      ctxT.globalCompositeOperation = 'source-over';
+      ctxT.fillStyle = 'rgba(180, 160, 135, 0.08)';
+      ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
+      ctxT.restore();
+    }
+
+    // V13 P2: Road in snowy/glacial biomes becomes trodden ice path (bluish-grey, no cream circles)
+    if (F === 'road_stone') {
       let snowCnt = 0;
-      let desertCnt = 0;
-      let volcanicCnt = 0;
-      let swampCnt = 0;
       for (let i = 0; i < gridFamilies.length; i++) {
         const fam = gridFamilies[i];
         if (fam === 'snow' || fam === 'ice_crack' || fam === 'glacier') snowCnt++;
-        else if (fam === 'desert_sand' || fam === 'dune' || fam === 'oasis') desertCnt++;
-        else if (fam === 'volcanic' || fam === 'lava_flow') volcanicCnt++;
-        else if (fam === 'swamp' || fam === 'demonic_swamp' || fam === 'poison_pool') swampCnt++;
       }
-
-      let tintFamily = 'plains';
-      let blendRatio = 0.35;
-      if (snowCnt >= 30) {
-        tintFamily = 'snow';
-        blendRatio = 0.60;
-      } else if (desertCnt >= 30) {
-        tintFamily = 'desert_sand';
-        blendRatio = 0.55;
-      } else if (volcanicCnt >= 30) {
-        tintFamily = 'volcanic';
-        blendRatio = 0.50;
-      } else if (swampCnt >= 30) {
-        tintFamily = 'swamp';
-        blendRatio = 0.45;
-      }
-
-      const tintFInfo = groundTextures.familyOf(tintFamily);
-      const tintVars = tintFInfo && tintFInfo.variants && tintFInfo.variants.length > 0
-        ? tintFInfo.variants
-        : [`${tintFamily}_v1`];
-      const tintPattern = groundTextures.getPattern(ctxT, tintVars[0]);
-      if (tintPattern) {
+      if (snowCnt >= 20) {
         ctxT.save();
-        ctxT.globalCompositeOperation = 'source-over';
-        ctxT.globalAlpha = blendRatio;
-        if (typeof (tintPattern as any).setTransform === 'function') {
-          const matrix = new DOMMatrix().translate(originX, originY).scale(scale);
-          tintPattern.setTransform(matrix);
-        }
-        ctxT.fillStyle = tintPattern;
+        ctxT.fillStyle = 'rgba(165, 185, 205, 0.82)';
         ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
         ctxT.restore();
       }
@@ -1271,31 +1326,6 @@ export function renderChunkGroundBitmapTextured(
       canvasHeight
     );
     ctxT.globalCompositeOperation = 'source-over';
-
-    // 4f.2: For road_stone, subtle 1px edge shadow (alpha 0.18) instead of harsh 2px dark border
-    if (F === 'road_stone') {
-      ctxT.fillStyle = 'rgba(0, 0, 0, 0.18)';
-      for (let ly = BORDER; ly < BORDER + CHUNK_SIZE; ly++) {
-        for (let lx = BORDER; lx < BORDER + CHUNK_SIZE; lx++) {
-          if (gridFamilies[ly * GRID_DIM + lx] === 'road_stone') {
-            const px = (lx - BORDER) * tileSize;
-            const py = (ly - BORDER) * tileSize;
-            if (gridFamilies[(ly - 1) * GRID_DIM + lx] !== 'road_stone') {
-              ctxT.fillRect(px, py, tileSize, 1);
-            }
-            if (gridFamilies[(ly + 1) * GRID_DIM + lx] !== 'road_stone') {
-              ctxT.fillRect(px, py + tileSize - 1, tileSize, 1);
-            }
-            if (gridFamilies[ly * GRID_DIM + lx - 1] !== 'road_stone') {
-              ctxT.fillRect(px, py, 1, tileSize);
-            }
-            if (gridFamilies[ly * GRID_DIM + lx + 1] !== 'road_stone') {
-              ctxT.fillRect(px + tileSize - 1, py, 1, tileSize);
-            }
-          }
-        }
-      }
-    }
 
     // 4g: Draw T onto chunk canvas
     ctx.drawImage(scratchT.canvas, 0, 0);

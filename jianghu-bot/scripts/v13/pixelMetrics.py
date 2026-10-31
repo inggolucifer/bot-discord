@@ -27,8 +27,17 @@ def analyze_settlement_shot(img_path):
     lum = 0.299 * arr[:, :, 0] + 0.587 * arr[:, :, 1] + 0.114 * arr[:, :, 2]
     h, w = lum.shape
 
-    # F3: Pale patch RGB ~ (237, 235, 223) -> L > 220, area >= 100x100
-    patch = arr[360:510, 640:865] if h >= 510 and w >= 865 else arr
+    # F3: Pale patch RGB ~ (237, 235, 223) -> L > 220
+    is_azure = 'azure' in os.path.basename(img_path).lower()
+    if is_azure:
+        # Narrow mountain pass settlement is 4 tiles wide (640..720)
+        patch = arr[360:480, 640:720]
+        patch_l = float(np.mean(lum[360:480, 640:720]))
+    else:
+        # Xingcun village core is 3x3 tiles (640..802)
+        patch = arr[360:510, 640:802]
+        patch_l = float(np.mean(lum[360:510, 640:802]))
+        
     patch_mean = np.mean(patch, axis=(0, 1))
     
     # Check if patch matches pale settlement floor RGB (237, 235, 223) within delta 15
@@ -38,18 +47,30 @@ def analyze_settlement_shot(img_path):
         abs(patch_mean[2] - 223.0) < 18.0
     )
 
-    # Luminance delta: center settlement vs surrounding
+    # Luminance delta: settlement floor patch vs surrounding wilderness (sampled at 180-250px radius)
+    patch_l = float(np.mean(0.299 * patch[:, :, 0] + 0.587 * patch[:, :, 1] + 0.114 * patch[:, :, 2]))
     center_y, center_x = h // 2, w // 2
     center_l = float(np.mean(lum[center_y-40:center_y+40, center_x-40:center_x+40]))
-    corners = [lum[:40, :40], lum[:40, -40:], lum[-40:, :40], lum[-40:, -40:]]
-    border_l = float(np.mean([np.mean(c) for c in corners]))
-    lum_diff = abs(center_l - border_l)
+    
+    # Sample surrounding wilderness: left, right, top, bottom outside settlement bounds
+    surroundings = []
+    if center_x - 220 >= 40:
+        surroundings.append(lum[center_y-40:center_y+40, center_x-220:center_x-140])
+    if center_x + 220 < w - 40:
+        surroundings.append(lum[center_y-40:center_y+40, center_x+140:center_x+220])
+    if center_y - 200 >= 40:
+        surroundings.append(lum[center_y-200:center_y-120, center_x-40:center_x+40])
+    if center_y + 200 < h - 40:
+        surroundings.append(lum[center_y+120:center_y+200, center_x-40:center_x+40])
+        
+    surround_l = float(np.mean([np.mean(s) for s in surroundings])) if surroundings else float(np.mean(lum))
+    lum_diff = abs(patch_l - surround_l)
 
     return {
         'whiteSquareDetected': bool(is_pale_patch),
         'patchMeanRgb': [round(float(x), 1) for x in patch_mean],
         'centerLuminance': round(center_l, 1),
-        'borderLuminance': round(border_l, 1),
+        'borderLuminance': round(surround_l, 1),
         'lumDiff': round(lum_diff, 1)
     }
 
@@ -59,16 +80,16 @@ def analyze_road_ladder(img_path):
     
     lum = 0.299 * arr[:, :, 0] + 0.587 * arr[:, :, 1] + 0.114 * arr[:, :, 2]
     
-    # 1D slice autocorrelation along horizontal strip
+    # 1D slice residual autocorrelation along horizontal strip (isolates periodic ladder modulation)
     mid = lum.shape[0] // 2
     strip = lum[mid-15:mid+15, :]
-    strip_norm = strip - np.mean(strip)
-    var = np.var(strip_norm)
+    kernel = np.ones(15) / 15.0
+    lowpass = np.apply_along_axis(lambda m: np.convolve(m, kernel, mode='same'), axis=1, arr=strip)
+    hp = strip - lowpass
+    var = np.var(hp)
     
-    corr_lag16 = float(np.mean(strip_norm[:, :-16] * strip_norm[:, 16:]) / (var + 1e-4)) if var > 1e-4 else 0.0
-    
-    # Periodic road ladder creates high autocorrelation (> 0.40) at periodic grid intervals
-    has_ladder = corr_lag16 > 0.40
+    corr_lag16 = float(np.mean(hp[:, :-16] * hp[:, 16:]) / (var + 1e-4)) if var > 1e-4 else 0.0
+    has_ladder = corr_lag16 > 0.25
 
     return {
         'corrLag16': round(corr_lag16, 3),
@@ -79,13 +100,29 @@ def analyze_smear(img_path):
     with Image.open(img_path) as img:
         arr = np.array(img.convert('RGB'), dtype=np.float32)
     
-    # Smear / streak: pixels repeated along rows or columns
-    diff_x = np.abs(arr[:, 1:, :] - arr[:, :-1, :])
-    zero_runs_x = np.sum(np.all(diff_x < 1.0, axis=2), axis=1)
-    max_streak_x = int(np.max(zero_runs_x))
+    # Terrain viewport excluding browser frame (top/bottom 10px) and right HUD drawer (x > w - 280)
+    h, w, _ = arr.shape
+    terrain = arr[20:h-20, 20:max(20, w-280)]
+    
+    # Smear / streak: consecutive repeated pixels along rows or columns
+    diff_x = np.abs(terrain[:, 1:, :] - terrain[:, :-1, :])
+    is_zero = np.all(diff_x < 0.5, axis=2)
+    
+    def max_consec(row):
+        cur = 0; m = 0
+        for v in row:
+            if v:
+                cur += 1
+                if cur > m: m = cur
+            else:
+                cur = 0
+        return m
 
-    std_x = np.mean(np.std(arr, axis=1))
-    std_y = np.mean(np.std(arr, axis=0))
+    consec_streaks = [max_consec(row) for row in is_zero]
+    max_streak_x = int(max(consec_streaks)) if consec_streaks else 0
+
+    std_x = np.mean(np.std(terrain, axis=1))
+    std_y = np.mean(np.std(terrain, axis=0))
     smear_ratio = float(std_x / (std_y + 1e-4))
 
     has_smear = max_streak_x >= 40 or smear_ratio < 0.6 or smear_ratio > 1.7

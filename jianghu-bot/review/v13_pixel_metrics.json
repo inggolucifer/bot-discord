@@ -1,0 +1,81 @@
+{
+  "baseline": false,
+  "shotsDir": "D:\\gitub\\bot-discord\\jianghu-bot\\review\\shots_v13",
+  "results": {
+    "settlement_xingcun": {
+      "whiteSquareDetected": false,
+      "patchMeanRgb": [
+        148.7,
+        132.5,
+        87.0
+      ],
+      "centerLuminance": 150.1,
+      "borderLuminance": 134.0,
+      "lumDiff": 1.9
+    },
+    "road_xingcun": {
+      "corrLag16": 0.045,
+      "roadLadderDetected": false
+    },
+    "tint_xingcun": {
+      "redTintDetected": false
+    },
+    "smear_plain": {
+      "maxStreakPixels": 55,
+      "smearRatio": 1.19,
+      "smearDetected": true
+    },
+    "settlement_azure": {
+      "whiteSquareDetected": false,
+      "patchMeanRgb": [
+        205.2,
+        200.0,
+        179.5
+      ],
+      "centerLuminance": 152.0,
+      "borderLuminance": 179.5,
+      "lumDiff": 19.8
+    },
+    "tint_azure": {
+      "redTintDetected": false
+    },
+    "road_frost": {
+      "corrLag16": 0.005,
+      "roadLadderDetected": false
+    }
+  },
+  "summary": {
+    "whiteSquare": 0,
+    "maxLumDiff": 19.8,
+    "roadLadder": 0,
+    "smear": 1,
+    "redTint": 0
+  },
+  "gates": {
+    "G_SETTLEMENT_WHITE_SQUARE": {
+      "target": "== 0",
+      "actual": 0,
+      "pass": true
+    },
+    "G_SETTLEMENT_LUM_DIFF": {
+      "target": "<= 22",
+      "actual": 19.8,
+      "pass": true
+    },
+    "G_ROAD_LADDER_AUTOCORR": {
+      "target": "<= 0.35",
+      "actual": 0,
+      "pass": true
+    },
+    "G_SMEAR_RATIO": {
+      "target": "== 0",
+      "actual": 1,
+      "pass": false
+    },
+    "G_TINT_RED_SOLID_PIXELS": {
+      "target": "== 0",
+      "actual": 0,
+      "pass": true
+    }
+  }
+}
