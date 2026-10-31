@@ -1099,12 +1099,13 @@ export default function WorldCanvas({
               : (canon?.class === 'XS' || (def.footprint.cw <= 1 && def.footprint.ch <= 1 && (def.tags?.includes('flora') || def.tags?.includes('herb') || def.tags?.includes('crop'))));
             if (!isXsObject) {
               const fw = g ? g.fw : (def.footprint?.cw || 1);
+              const fh = g ? g.fh : (def.footprint?.ch || 1);
               const shadowCenterX = footX;
-              const shadowCenterY = footY - 0.18 * currentTileSize;
-              const shadowW = 0.8 * fw * currentTileSize;
-              const shadowH = 0.28 * currentTileSize;
+              const shadowCenterY = footY - Math.min(0.20 * currentTileSize, 0.12 * fh * currentTileSize);
+              const shadowW = Math.min(dw * 0.9, Math.max(fw * 0.75, 1.2) * currentTileSize);
+              const shadowH = Math.min(1.2 * currentTileSize, Math.max(0.28, fh * 0.14) * currentTileSize);
               const isSolid = (g?.mode === 'solid' || def.collision === 'solid' || canon?.collision === 'solid');
-              const shadowAlpha = isSolid ? 0.22 : 0.12;
+              const shadowAlpha = isSolid ? 0.24 : 0.12;
 
               ctx.save();
               ctx.fillStyle = `rgba(10, 14, 20, ${shadowAlpha})`;
