@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-10-31T12:52:18.050Z",
+  "allPass": true,
+  "totalTests": 6,
+  "passedCount": 6,
+  "tests": [
+    {
+      "testId": "NEG_ROAD_LADDER",
+      "file": "ladder_road.png",
+      "type": "negative (flawed input must be detected)",
+      "detected": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "testId": "POS_CLEAN_ROAD",
+      "file": "clean_road.png",
+      "type": "positive (clean input must pass)",
+      "detected": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "testId": "NEG_PLAINS_LATTICE",
+      "file": "diamond_lattice_mosaic.png",
+      "type": "negative (lattice mosaic must be rejected)",
+      "detected": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "testId": "POS_CLEAN_GROUND",
+      "file": "clean_ground.png",
+      "type": "positive (clean texture must pass audit)",
+      "detected": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "testId": "NEG_PALE_FLAT_FLOOR",
+      "file": "pale_flat_floor.png",
+      "type": "negative (flat pale floor must be detected)",
+      "detected": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "testId": "NEG_STRAIGHT_SEAM",
+      "file": "straight_seam.png",
+      "type": "negative (sharp straight seam >=150px must be detected)",
+      "detected": true,
+      "expected": true,
+      "pass": true
+    }
+  ]
+}

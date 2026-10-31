@@ -1,0 +1,133 @@
+{
+  "results": {
+    "white_square_xingcun": {
+      "whiteSquareDetected": false,
+      "patchMeanRgb": [
+        155.9,
+        143.2,
+        102.3
+      ],
+      "centerLuminance": 146.8,
+      "borderLuminance": 133.6,
+      "lumDiff": 8.7
+    },
+    "road_ladder_xingcun": {
+      "maxPeakCorr": 0.423,
+      "periodicBlocksDetected": false,
+      "roadLadderDetected": true
+    },
+    "pale_flat_xingcun": {
+      "paleFlatDetected": false,
+      "minStd": 0.0,
+      "maxPaleLum": 0.0
+    },
+    "straight_seam_xingcun": {
+      "straightSeamDetected": true,
+      "maxVerticalSeamPx": 179,
+      "maxHorizontalSeamPx": 214
+    },
+    "tint_xingcun": {
+      "redTintDetected": false
+    },
+    "smear_plain": {
+      "maxStreakPixels": 34,
+      "smearRatio": 1.17,
+      "smearDetected": false
+    },
+    "pale_flat_plain": {
+      "paleFlatDetected": false,
+      "minStd": 0.0,
+      "maxPaleLum": 0.0
+    },
+    "straight_seam_plain": {
+      "straightSeamDetected": false,
+      "maxVerticalSeamPx": 56,
+      "maxHorizontalSeamPx": 56
+    },
+    "white_square_azure": {
+      "whiteSquareDetected": false,
+      "patchMeanRgb": [
+        144.0,
+        144.8,
+        133.4
+      ],
+      "centerLuminance": 143.0,
+      "borderLuminance": 168.3,
+      "lumDiff": 25.0
+    },
+    "tint_azure": {
+      "redTintDetected": false
+    },
+    "pale_flat_azure": {
+      "paleFlatDetected": false,
+      "minStd": 0.0,
+      "maxPaleLum": 0.0
+    },
+    "straight_seam_azure": {
+      "straightSeamDetected": false,
+      "maxVerticalSeamPx": 56,
+      "maxHorizontalSeamPx": 85
+    },
+    "road_ladder_frost": {
+      "maxPeakCorr": 0.287,
+      "periodicBlocksDetected": false,
+      "roadLadderDetected": false
+    },
+    "pale_flat_frost": {
+      "paleFlatDetected": false,
+      "minStd": 0.0,
+      "maxPaleLum": 0.0
+    },
+    "straight_seam_frost": {
+      "straightSeamDetected": false,
+      "maxVerticalSeamPx": 56,
+      "maxHorizontalSeamPx": 56
+    }
+  },
+  "summary": {
+    "whiteSquare": 0,
+    "maxLumDiff": 25.0,
+    "roadLadder": 1,
+    "paleFlat": 0,
+    "straightSeam": 1,
+    "smear": 0,
+    "redTint": 0
+  },
+  "gates": {
+    "G_SETTLEMENT_WHITE_SQUARE": {
+      "target": "== 0",
+      "actual": 0,
+      "pass": true
+    },
+    "G_SETTLEMENT_LUM_DIFF": {
+      "target": "<= 22.0",
+      "actual": 25.0,
+      "pass": false
+    },
+    "G_ROAD_LADDER_AUTOCORR": {
+      "target": "== 0",
+      "actual": 1,
+      "pass": false
+    },
+    "G_PALE_FLAT_FLOOR": {
+      "target": "== 0",
+      "actual": 0,
+      "pass": true
+    },
+    "G_STRAIGHT_SEAM": {
+      "target": "== 0",
+      "actual": 1,
+      "pass": false
+    },
+    "G_SMEAR_RATIO": {
+      "target": "== 0",
+      "actual": 0,
+      "pass": true
+    },
+    "G_TINT_RED_SOLID_PIXELS": {
+      "target": "== 0",
+      "actual": 0,
+      "pass": true
+    }
+  }
+}

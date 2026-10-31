@@ -1,0 +1,13 @@
+{
+  "measuredAt": "2026-10-31T12:56:10.853Z",
+  "mode": "BASELINE",
+  "totalMountains": 208,
+  "countGe4x2": 130,
+  "countGe6x3": 51,
+  "count1x1": 2,
+  "pctGe4x2": 62.5,
+  "pctGe6x3": 24.5,
+  "pct1x1": 1,
+  "passAzureSize": true,
+  "passXLSize": true
+}
