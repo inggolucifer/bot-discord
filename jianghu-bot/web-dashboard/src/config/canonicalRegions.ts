@@ -107,7 +107,7 @@ export const CANONICAL_REGIONS: (RegionTopology & { bounds: { minX: number; maxX
     "palette": {
       "primary": "#264653",
       "accent": "#2a9d8f",
-      "terrainColor": "#3d5a80"
+      "terrainColor": "#6e7378"
     },
     "description": ""
   },

@@ -1317,11 +1317,11 @@ export function renderChunkGroundBitmapTextured(
       ctxT.restore();
     }
 
-    // V14 P3: Cool slate darkening for Azure Mountains / rock_ground / canyon (H3)
+    // V15 P2: Neutral stone darkening for Azure Mountains / rock_ground / canyon (J2)
     if (F === 'rock_ground' || F === 'canyon_floor') {
       ctxT.save();
       ctxT.globalCompositeOperation = 'multiply';
-      ctxT.fillStyle = 'rgba(95, 110, 125, 0.35)';
+      ctxT.fillStyle = 'rgba(120, 125, 130, 0.18)';
       ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
       ctxT.restore();
     }
@@ -1351,7 +1351,7 @@ export function renderChunkGroundBitmapTextured(
       }
     }
 
-    // V13 P4: Mountain pass in Azure Mountains gets a cool slate tint so it doesn't look like a brown ribbon (F6)
+    // V15 P2: Mountain pass in Azure Mountains gets neutral stone tint (J2)
     if (F === 'mountain_pass') {
       let azureCnt = 0;
       for (let i = 0; i < gridFamilies.length; i++) {
@@ -1360,7 +1360,7 @@ export function renderChunkGroundBitmapTextured(
       }
       if (azureCnt >= 10) {
         ctxT.save();
-        ctxT.fillStyle = 'rgba(90, 105, 120, 0.45)';
+        ctxT.fillStyle = 'rgba(105, 108, 110, 0.22)';
         ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
         ctxT.restore();
       }
