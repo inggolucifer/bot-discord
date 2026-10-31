@@ -399,7 +399,7 @@ export function renderL2BiomeTransitions(
 
 /**
  * Renders lightweight procedural nature decals (grass tufts, wildflowers, pebbles, moss).
- * Appears deterministically on ~28% of tiles.
+ * Appears deterministically on ~16% of tiles with natural Wuxia aesthetics.
  */
 export function renderL3GroundDecal(
   ctx: CanvasRenderingContext2D,
@@ -411,8 +411,8 @@ export function renderL3GroundDecal(
   terrainType: string
 ) {
   const h = hash2d(tx, ty);
-  // ~28% of tiles receive a micro decal
-  if ((h & 0xff) > 72) return;
+  // ~16% of tiles receive a micro decal to avoid visual noise / dust clutter
+  if ((h & 0xff) > 42) return;
 
   const offsetX = sx + (((h >>> 8) & 0x7f) / 127) * (tileSize * 0.5) + tileSize * 0.25;
   const offsetY = sy + (((h >>> 15) & 0x7f) / 127) * (tileSize * 0.5) + tileSize * 0.25;
@@ -423,69 +423,69 @@ export function renderL3GroundDecal(
   if (terrainType.includes('meadow') || terrainType.includes('farmland') || terrainType === 'plains') {
     if (decalKind === 0) {
       // Twin-blade grass arch (ink wash stroke)
-      ctx.strokeStyle = 'rgba(70, 95, 65, 0.45)';
+      ctx.strokeStyle = 'rgba(70, 95, 65, 0.35)';
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(offsetX, offsetY);
-      ctx.quadraticCurveTo(offsetX - 2, offsetY - 6, offsetX - 4, offsetY - 8);
+      ctx.quadraticCurveTo(offsetX - 2, offsetY - 5, offsetX - 3, offsetY - 6);
       ctx.moveTo(offsetX, offsetY);
-      ctx.quadraticCurveTo(offsetX + 2, offsetY - 5, offsetX + 5, offsetY - 7);
+      ctx.quadraticCurveTo(offsetX + 2, offsetY - 4, offsetX + 4, offsetY - 5);
       ctx.stroke();
     } else if (decalKind === 1) {
       // Tiny wild blossom dot (vermilion red or gold petal)
       const petalColor = (h & 1) ? '#D97706' : '#DC2626';
       ctx.fillStyle = petalColor;
-      ctx.globalAlpha = 0.55;
+      ctx.globalAlpha = 0.45;
       ctx.beginPath();
-      ctx.arc(offsetX, offsetY, 1.8, 0, Math.PI * 2);
+      ctx.arc(offsetX, offsetY, 1.5, 0, Math.PI * 2);
       ctx.fill();
     } else if (decalKind === 2) {
       // Delicate clover patch
-      ctx.fillStyle = 'rgba(60, 90, 50, 0.4)';
+      ctx.fillStyle = 'rgba(60, 90, 50, 0.3)';
       ctx.beginPath();
-      ctx.arc(offsetX - 1.5, offsetY - 1.5, 1.5, 0, Math.PI * 2);
-      ctx.arc(offsetX + 1.5, offsetY - 1.5, 1.5, 0, Math.PI * 2);
-      ctx.arc(offsetX, offsetY + 1.5, 1.5, 0, Math.PI * 2);
+      ctx.arc(offsetX - 1.2, offsetY - 1.2, 1.2, 0, Math.PI * 2);
+      ctx.arc(offsetX + 1.2, offsetY - 1.2, 1.2, 0, Math.PI * 2);
+      ctx.arc(offsetX, offsetY + 1.2, 1.2, 0, Math.PI * 2);
       ctx.fill();
     }
   } else if (terrainType.includes('bamboo') || terrainType.includes('forest') || terrainType.includes('wood')) {
     if (decalKind === 0 || decalKind === 1) {
       // Fallen bamboo blade / autumn leaf
-      ctx.fillStyle = 'rgba(140, 110, 60, 0.45)';
+      ctx.fillStyle = 'rgba(140, 110, 60, 0.35)';
       ctx.beginPath();
-      ctx.ellipse(offsetX, offsetY, 3.5, 1.2, Math.PI / 4, 0, Math.PI * 2);
+      ctx.ellipse(offsetX, offsetY, 3, 1, Math.PI / 4, 0, Math.PI * 2);
       ctx.fill();
     } else {
       // Soft moss patch
-      ctx.fillStyle = 'rgba(45, 75, 40, 0.3)';
+      ctx.fillStyle = 'rgba(45, 75, 40, 0.22)';
       ctx.beginPath();
-      ctx.ellipse(offsetX, offsetY, 4, 2.5, 0, 0, Math.PI * 2);
+      ctx.ellipse(offsetX, offsetY, 3.5, 2, 0, 0, Math.PI * 2);
       ctx.fill();
     }
   } else if (terrainType.includes('mountain') || terrainType.includes('rock') || terrainType.includes('cliff') || terrainType.includes('hill')) {
-    // Slate pebble or stone fissure
-    ctx.fillStyle = 'rgba(50, 45, 40, 0.45)';
+    // Subtle slate mineral fleck (cool ink wash, very faint)
+    ctx.fillStyle = 'rgba(80, 95, 110, 0.25)';
     ctx.beginPath();
-    ctx.ellipse(offsetX, offsetY, 3, 1.8, Math.PI / 6, 0, Math.PI * 2);
+    ctx.ellipse(offsetX, offsetY, 2.2, 1.2, (h & 3) * Math.PI / 4, 0, Math.PI * 2);
     ctx.fill();
   } else if (terrainType.includes('desert') || terrainType.includes('sand') || terrainType.includes('dune')) {
-    // Wind-carved sand ripple arch
-    ctx.strokeStyle = 'rgba(180, 150, 110, 0.45)';
-    ctx.lineWidth = 0.9;
+    // Subtle wind-carved sand ripple arch
+    ctx.strokeStyle = 'rgba(210, 185, 140, 0.28)';
+    ctx.lineWidth = 0.8;
     ctx.beginPath();
-    ctx.moveTo(offsetX - 6, offsetY);
-    ctx.quadraticCurveTo(offsetX, offsetY - 2, offsetX + 6, offsetY + 1);
+    ctx.moveTo(offsetX - 4, offsetY);
+    ctx.quadraticCurveTo(offsetX, offsetY - 1.5, offsetX + 4, offsetY + 0.8);
     ctx.stroke();
   } else if (terrainType.includes('snow') || terrainType.includes('ice') || terrainType.includes('glacier')) {
-    // Ice sparkle crystal
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
-    ctx.fillRect(offsetX, offsetY - 2, 1, 5);
-    ctx.fillRect(offsetX - 2, offsetY, 5, 1);
+    // Soft frost sparkle
+    ctx.fillStyle = 'rgba(240, 248, 255, 0.45)';
+    ctx.fillRect(offsetX, offsetY - 1.5, 1, 3);
+    ctx.fillRect(offsetX - 1.5, offsetY, 3, 1);
   } else if (terrainType.includes('swamp') || terrainType.includes('mire') || terrainType.includes('poison')) {
     // Marsh bubble puddle
-    ctx.fillStyle = 'rgba(90, 70, 100, 0.35)';
+    ctx.fillStyle = 'rgba(90, 70, 100, 0.28)';
     ctx.beginPath();
-    ctx.arc(offsetX, offsetY, 3, 0, Math.PI * 2);
+    ctx.arc(offsetX, offsetY, 2.5, 0, Math.PI * 2);
     ctx.fill();
   }
 
