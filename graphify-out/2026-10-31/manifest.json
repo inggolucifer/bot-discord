@@ -2880,9 +2880,9 @@
     "semantic_hash": "74ac0d15785cb7888eb327d8123d656e"
   },
   "jianghu-bot/utils/objectScatter.js": {
-    "mtime": 1793174667.4230196,
-    "seen": 1793178488.0377934,
-    "ast_hash": "32ad7d7c46d1c66b6e5fd45b8893408d",
+    "mtime": 1793440454.6774037,
+    "seen": 1793441704.4938092,
+    "ast_hash": "306e747ef7135bf81ecf20535b197465",
     "semantic_hash": ""
   },
   "jianghu-bot/utils/permissions.js": {
@@ -3816,8 +3816,8 @@
     "semantic_hash": "274966b753f06cd3ad5f0db199149713"
   },
   "jianghu-bot/web-dashboard/src/app/world/page.tsx": {
-    "mtime": 1792796914.6340766,
-    "seen": 1792953492.8937204,
+    "mtime": 1793426002.5211525,
+    "seen": 1793441704.5713143,
     "ast_hash": "a23f5cef543d0a0aa4e31b6e4a107553",
     "semantic_hash": "a23f5cef543d0a0aa4e31b6e4a107553"
   },
@@ -4404,15 +4404,15 @@
     "semantic_hash": "87a8cb1f4fc7a003ef9639a6df055a22"
   },
   "jianghu-bot/web-dashboard/src/lib/groundRenderer.ts": {
-    "mtime": 1793167326.9410613,
-    "seen": 1793178488.1236532,
-    "ast_hash": "cd37b08b44059e9025b30f2cbecbb844",
+    "mtime": 1793440723.7204823,
+    "seen": 1793441704.6039658,
+    "ast_hash": "688d0f11b8b37a96bf98c0f61120bfd3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/src/lib/groundTextures.ts": {
-    "mtime": 1793103280.7764082,
-    "seen": 1793116355.896193,
-    "ast_hash": "660bbf6f21f106a53f285da70db1cf1f",
+    "mtime": 1793434789.0380049,
+    "seen": 1793441704.6039658,
+    "ast_hash": "7f344e427947f1ec6ef78630ff176a42",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/src/lib/kungfu.ts": {
@@ -9618,9 +9618,9 @@
     "semantic_hash": ""
   },
   "jianghu-bot/scripts/auditGridV10.js": {
-    "mtime": 1793021438.3371472,
-    "seen": 1793022531.5831094,
-    "ast_hash": "a2b0c3bb63ac23ca4b810af2f98c1e45",
+    "mtime": 1793421672.38024,
+    "seen": 1793441704.293979,
+    "ast_hash": "32212f320318f542a4b29fddfa25b152",
     "semantic_hash": ""
   },
   "jianghu-bot/scripts/baseline_shots.json": {
@@ -9648,9 +9648,9 @@
     "semantic_hash": ""
   },
   "jianghu-bot/scripts/testGridContract.js": {
-    "mtime": 1793178093.2573504,
-    "seen": 1793178487.9501553,
-    "ast_hash": "b9a75080f2ff78a314821b436db20a3f",
+    "mtime": 1793421639.6462688,
+    "seen": 1793441704.3791704,
+    "ast_hash": "440f996a97db4c46dfcc434f7cedbeea",
     "semantic_hash": ""
   },
   "jianghu-bot/utils/gridContract.js": {
@@ -9924,9 +9924,9 @@
     "semantic_hash": ""
   },
   "jianghu-bot/scripts/ground/ingest_ai_ground.py": {
-    "mtime": 1793417607.967751,
-    "seen": 1793418156.9208772,
-    "ast_hash": "b678aaaaee32e6a4f9a251444d1cd86b",
+    "mtime": 1793433614.7681293,
+    "seen": 1793441704.3320868,
+    "ast_hash": "ede05e5a28ff6debec2e61d6f525be04",
     "semantic_hash": ""
   },
   "jianghu-bot/scripts/ground/validate_ground_v11.py": {
@@ -10626,1971 +10626,1971 @@
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/abyss_edge_detail.png": {
-    "mtime": 1793403332.7263901,
-    "seen": 1793403616.8746758,
-    "ast_hash": "23d34d42023d8c1fbba05d5e3b9a9c4d",
+    "mtime": 1793433899.456893,
+    "seen": 1793441704.9184413,
+    "ast_hash": "ef183ac73e703db8c9272a4374ac9ddf",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/abyss_edge_m1.webp": {
-    "mtime": 1793403326.9456239,
-    "seen": 1793403616.8746758,
-    "ast_hash": "359ca8370b85b22c9e1b6d43aec125b1",
+    "mtime": 1793433892.2116897,
+    "seen": 1793441704.9184413,
+    "ast_hash": "795ed4742a7492a8ecd2f5093df26801",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/abyss_edge_m1_lq.webp": {
-    "mtime": 1793403327.1478558,
-    "seen": 1793403616.8746758,
-    "ast_hash": "bf10602f9fb631819fa409a7d042bc27",
+    "mtime": 1793433892.3098578,
+    "seen": 1793441704.9184413,
+    "ast_hash": "e673a163f9b0c3b17af66c5abe9bd458",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/abyss_edge_m2.webp": {
-    "mtime": 1793403328.9327536,
-    "seen": 1793403616.8746758,
-    "ast_hash": "7e589d3c236e86d6922c56ac0d63262b",
+    "mtime": 1793433895.1854105,
+    "seen": 1793441704.9184413,
+    "ast_hash": "8796594f53db67f19079ef54f30e71e8",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/abyss_edge_m2_lq.webp": {
-    "mtime": 1793403329.038692,
-    "seen": 1793403616.8746758,
-    "ast_hash": "138fb6ac457c7900e488b477898e0a20",
+    "mtime": 1793433895.355954,
+    "seen": 1793441704.9184413,
+    "ast_hash": "450be49928d0fa6875978ee52c293c4d",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/abyss_edge_m3.webp": {
-    "mtime": 1793403330.6737192,
-    "seen": 1793403616.8746758,
-    "ast_hash": "eaffa425263a2baa5d5e59ed8618355d",
+    "mtime": 1793433897.372366,
+    "seen": 1793441704.9184413,
+    "ast_hash": "44ac2c41ee589818d5c4f69c8fa9a0ec",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/abyss_edge_m3_lq.webp": {
-    "mtime": 1793403330.769415,
-    "seen": 1793403616.8746758,
-    "ast_hash": "adbadf45b337a50fc785abf7fef4140c",
+    "mtime": 1793433897.4875462,
+    "seen": 1793441704.9184413,
+    "ast_hash": "278d72d05d07c0a264612990e27468c5",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/abyss_edge_m4.webp": {
-    "mtime": 1793403332.5481548,
-    "seen": 1793403616.8746758,
-    "ast_hash": "2bda94a6b9431461597d33affb2e1722",
+    "mtime": 1793433899.2681863,
+    "seen": 1793441704.9184413,
+    "ast_hash": "855064266c0d5a9f16cb5ef531695710",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/abyss_edge_m4_lq.webp": {
-    "mtime": 1793403332.647965,
-    "seen": 1793403616.8746758,
-    "ast_hash": "7c76125369d4661efe29133c06fa8b6c",
+    "mtime": 1793433899.376962,
+    "seen": 1793441704.9184413,
+    "ast_hash": "98218b1cc4c225725cba96c5afdcc32a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/bamboo_floor_detail.png": {
-    "mtime": 1793373662.2174108,
-    "seen": 1793400093.2502506,
-    "ast_hash": "a50084837d5ef7b59721f694a7720051",
+    "mtime": 1793433682.1529565,
+    "seen": 1793441704.9184413,
+    "ast_hash": "c87aedbf987e410f2575a2e071241828",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/bamboo_floor_m1.webp": {
-    "mtime": 1793373655.9665935,
-    "seen": 1793400093.2502506,
-    "ast_hash": "3aee010f8bfec2defa38741774c53f43",
+    "mtime": 1793433675.1632955,
+    "seen": 1793441704.9184413,
+    "ast_hash": "ce7bdd6961f1977727b52fe42926365f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/bamboo_floor_m1_lq.webp": {
-    "mtime": 1793373656.0744898,
-    "seen": 1793400093.2502506,
-    "ast_hash": "da89a1869cd27f891a7332a89288b36f",
+    "mtime": 1793433675.2831714,
+    "seen": 1793441704.9184413,
+    "ast_hash": "5b483346de0441b8ef38be1f8027ad8b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/bamboo_floor_m2.webp": {
-    "mtime": 1793373657.6706185,
-    "seen": 1793400093.2502506,
-    "ast_hash": "8144b98451676820e655bea118c781d4",
+    "mtime": 1793433677.3560512,
+    "seen": 1793441704.9184413,
+    "ast_hash": "2f7c5e61fa79867c3121ec1b8064cf16",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/bamboo_floor_m2_lq.webp": {
-    "mtime": 1793373657.8327267,
-    "seen": 1793400093.2502506,
-    "ast_hash": "52de13bd271f0333f58f6ee201ecfe5f",
+    "mtime": 1793433677.455195,
+    "seen": 1793441704.9184413,
+    "ast_hash": "a1284fd7a7b95292df7e8c740a2ac259",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/bamboo_floor_m3.webp": {
-    "mtime": 1793373659.8027606,
-    "seen": 1793400093.2502506,
-    "ast_hash": "ed4b87aa83e3b4090f1ed5bb64290d8d",
+    "mtime": 1793433679.428939,
+    "seen": 1793441704.9184413,
+    "ast_hash": "5e065db775d4b52159115b49efb9d808",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/bamboo_floor_m3_lq.webp": {
-    "mtime": 1793373659.9122317,
-    "seen": 1793400093.2502506,
-    "ast_hash": "8ad65729a2ca1f8cb6724cd5a5b2dce7",
+    "mtime": 1793433679.543499,
+    "seen": 1793441704.9184413,
+    "ast_hash": "9361bcfac6b283f0f5b1b4a79f9811c6",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/bamboo_floor_m4.webp": {
-    "mtime": 1793373662.0245268,
-    "seen": 1793400093.2502506,
-    "ast_hash": "11d887de1418c49ccdced1f1b8844e46",
+    "mtime": 1793433681.5561473,
+    "seen": 1793441704.9184413,
+    "ast_hash": "c8c901229fa6221f5f2a916309444cf0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/bamboo_floor_m4_lq.webp": {
-    "mtime": 1793373662.14009,
-    "seen": 1793400093.2502506,
-    "ast_hash": "fc12b12baa1118fa2e2d259bdaee1753",
+    "mtime": 1793433681.9680128,
+    "seen": 1793441704.9184413,
+    "ast_hash": "8ed64d2cc2b6f6c49abdbf37225a7c3e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/battlefield_ash_detail.png": {
-    "mtime": 1793399821.7435913,
-    "seen": 1793400093.2502506,
-    "ast_hash": "f9b1a987d7cab970fd12115402260e12",
+    "mtime": 1793433821.9854307,
+    "seen": 1793441704.9184413,
+    "ast_hash": "9a4bf1ad2197548e997f3ea02b4081cb",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/battlefield_ash_m1.webp": {
-    "mtime": 1793399816.2633176,
-    "seen": 1793400093.2502506,
-    "ast_hash": "45b7f34f14b057f57a310fc32146180d",
+    "mtime": 1793433814.533173,
+    "seen": 1793441704.9184413,
+    "ast_hash": "5837adc6d7bb6f4fdd534eed3b1ea22e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/battlefield_ash_m1_lq.webp": {
-    "mtime": 1793399816.379188,
-    "seen": 1793400093.2502506,
-    "ast_hash": "8b7bd0068d91aa5d57d39440180a2cd0",
+    "mtime": 1793433814.6888244,
+    "seen": 1793441704.9184413,
+    "ast_hash": "bf31ff3e10ad793f92d5c5bf3e7213be",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/battlefield_ash_m2.webp": {
-    "mtime": 1793399817.7609499,
-    "seen": 1793400093.2502506,
-    "ast_hash": "efc35670d069257d44cf77484559f960",
+    "mtime": 1793433816.6599326,
+    "seen": 1793441704.9184413,
+    "ast_hash": "a43199d29e0a330b1b818fa43751be6f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/battlefield_ash_m2_lq.webp": {
-    "mtime": 1793399817.9270673,
-    "seen": 1793400093.2502506,
-    "ast_hash": "e7d0bb45ed2e13d95c11c29b8698b74f",
+    "mtime": 1793433816.813889,
+    "seen": 1793441704.9184413,
+    "ast_hash": "02b7fa5cc862c42fcd364d5886c8de45",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/battlefield_ash_m3.webp": {
-    "mtime": 1793399819.6219447,
-    "seen": 1793400093.2502506,
-    "ast_hash": "dba29f5e270f3ca279855bbf06f3636d",
+    "mtime": 1793433818.7527306,
+    "seen": 1793441704.9184413,
+    "ast_hash": "db2e1753fb97ba3890582ecb48025dfa",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/battlefield_ash_m3_lq.webp": {
-    "mtime": 1793399819.7301192,
-    "seen": 1793400093.2502506,
-    "ast_hash": "b25c6399d5a01ac205c3eef30fdc9e34",
+    "mtime": 1793433818.8823044,
+    "seen": 1793441704.9184413,
+    "ast_hash": "8fe1b108eea2f11d4a38743712e8976f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/battlefield_ash_m4.webp": {
-    "mtime": 1793399821.5624611,
-    "seen": 1793400093.2502506,
-    "ast_hash": "2b4f73f23fc65faf984a05438f76c99a",
+    "mtime": 1793433821.8019204,
+    "seen": 1793441704.9184413,
+    "ast_hash": "39b9f4fcb4a43261068e5691402b39a2",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/battlefield_ash_m4_lq.webp": {
-    "mtime": 1793399821.6636999,
-    "seen": 1793400093.2502506,
-    "ast_hash": "7d6060cde3a1cf773c9065e0c7610592",
+    "mtime": 1793433821.9063044,
+    "seen": 1793441704.9184413,
+    "ast_hash": "c31376d3165d16b56192ab3b4bce3114",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/canyon_floor_detail.png": {
-    "mtime": 1793374332.358102,
-    "seen": 1793400093.2502506,
-    "ast_hash": "7e1ec23da6afa80bb7dd1f4542a365cf",
+    "mtime": 1793433726.2712905,
+    "seen": 1793441704.9184413,
+    "ast_hash": "386f98145b92cbdb02494f8b68552155",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/canyon_floor_m1.webp": {
-    "mtime": 1793374327.3532486,
-    "seen": 1793400093.2502506,
-    "ast_hash": "4e5919bdc739185cea80bcdec88699e2",
+    "mtime": 1793433720.7443104,
+    "seen": 1793441704.9184413,
+    "ast_hash": "7dc44b3dd69042e6f775e3a608eb34cf",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/canyon_floor_m1_lq.webp": {
-    "mtime": 1793374327.4514027,
-    "seen": 1793400093.2502506,
-    "ast_hash": "36f219087299d18fbf769f42b177f5d0",
+    "mtime": 1793433720.853083,
+    "seen": 1793441704.9184413,
+    "ast_hash": "16e11eefec2cde54f01d61d994890d8c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/canyon_floor_m2.webp": {
-    "mtime": 1793374329.0198302,
-    "seen": 1793400093.2502506,
-    "ast_hash": "28fb086c0b03553ff12ee007affa6abb",
+    "mtime": 1793433722.6062734,
+    "seen": 1793441704.9184413,
+    "ast_hash": "9202a5f6b76e1bc7c2d3013fed357a8c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/canyon_floor_m2_lq.webp": {
-    "mtime": 1793374329.1263864,
-    "seen": 1793400093.2502506,
-    "ast_hash": "fb61163e50483c6403100e7da8e15158",
+    "mtime": 1793433722.7620783,
+    "seen": 1793441704.9184413,
+    "ast_hash": "e26f9f8d30fb19aefa75bf11376384ee",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/canyon_floor_m3.webp": {
-    "mtime": 1793374330.5182076,
-    "seen": 1793400093.2502506,
-    "ast_hash": "41153f15a567b6b9552d079fe9f18809",
+    "mtime": 1793433724.305945,
+    "seen": 1793441704.9184413,
+    "ast_hash": "f4fbc13c40884069500aec5f645516f3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/canyon_floor_m3_lq.webp": {
-    "mtime": 1793374330.631477,
-    "seen": 1793400093.2502506,
-    "ast_hash": "067357c6d50874e1180ec6f73c6ab8ab",
+    "mtime": 1793433724.4469604,
+    "seen": 1793441704.9184413,
+    "ast_hash": "834bf21f260fa88463b21e2d3c12ada4",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/canyon_floor_m4.webp": {
-    "mtime": 1793374332.1627324,
-    "seen": 1793400093.2502506,
-    "ast_hash": "e43e86374c861d5e993494ad3ed82463",
+    "mtime": 1793433725.9935937,
+    "seen": 1793441704.9184413,
+    "ast_hash": "7fb0024f691b25c0eaf576595c6cf395",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/canyon_floor_m4_lq.webp": {
-    "mtime": 1793374332.2801723,
-    "seen": 1793400093.2502506,
-    "ast_hash": "3fbee94666e4a48319bb3a2624efc11e",
+    "mtime": 1793433726.1704712,
+    "seen": 1793441704.9184413,
+    "ast_hash": "a892ee130bf8c04516e8ba40dc07046d",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/cliff_detail.png": {
-    "mtime": 1793404500.9122071,
-    "seen": 1793406176.5046902,
-    "ast_hash": "15d32221a408efd640fcf42ddc2e7401",
+    "mtime": 1793433959.070937,
+    "seen": 1793441704.9184413,
+    "ast_hash": "1c8da6e1889e21d99dd81fb43ecc7695",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/cliff_m1.webp": {
-    "mtime": 1793404494.3668709,
-    "seen": 1793406176.5046902,
-    "ast_hash": "8a747075c731290ad15c8d770189931b",
+    "mtime": 1793433953.1972153,
+    "seen": 1793441704.9184413,
+    "ast_hash": "8abcd8f5699ccdfc96d261722894e21c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/cliff_m1_lq.webp": {
-    "mtime": 1793404494.4729753,
-    "seen": 1793406176.5046902,
-    "ast_hash": "9aa45360c9cc96b9f136776c0c4b1eef",
+    "mtime": 1793433953.3274646,
+    "seen": 1793441704.9184413,
+    "ast_hash": "0dfe854052fa1909c1ae88f75b657432",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/cliff_m2.webp": {
-    "mtime": 1793404496.57398,
-    "seen": 1793406176.5046902,
-    "ast_hash": "391cf90d4acaf67d1758fd61a6f3cbd9",
+    "mtime": 1793433955.1654904,
+    "seen": 1793441704.9184413,
+    "ast_hash": "2dc481520f18762a6eed299a6087ebdb",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/cliff_m2_lq.webp": {
-    "mtime": 1793404496.7064252,
-    "seen": 1793406176.5046902,
-    "ast_hash": "0dc22fdec6b6ac2b27f889ce003f066b",
+    "mtime": 1793433955.2793365,
+    "seen": 1793441704.9184413,
+    "ast_hash": "52f93121c430a532a36fa508d119332c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/cliff_m3.webp": {
-    "mtime": 1793404498.7012506,
-    "seen": 1793406176.5046902,
-    "ast_hash": "3a5bd2b748986a270a670cb54cf81a42",
+    "mtime": 1793433957.2941473,
+    "seen": 1793441704.9184413,
+    "ast_hash": "80d457d583d95bd934f172200afbcd22",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/cliff_m3_lq.webp": {
-    "mtime": 1793404498.8026118,
-    "seen": 1793406176.5046902,
-    "ast_hash": "984bac63e0f8ab4ec6a6c55a2e3373c3",
+    "mtime": 1793433957.4194143,
+    "seen": 1793441704.9184413,
+    "ast_hash": "a759ca0cf895204b080d4881d859dc36",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/cliff_m4.webp": {
-    "mtime": 1793404500.7349157,
-    "seen": 1793406176.5046902,
-    "ast_hash": "431f4b6249ac2fdfc8498a840b87f739",
+    "mtime": 1793433958.843944,
+    "seen": 1793441704.9184413,
+    "ast_hash": "bc65eada851bb3e360cd6a0e2ed5dd1e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/cliff_m4_lq.webp": {
-    "mtime": 1793404500.8357992,
-    "seen": 1793406176.5046902,
-    "ast_hash": "47b88f2fe469381672250acf9b9a42d2",
+    "mtime": 1793433958.97375,
+    "seen": 1793441704.9184413,
+    "ast_hash": "b83b4053c33c64b29393725151714459",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/crater_detail.png": {
-    "mtime": 1793400715.9370465,
-    "seen": 1793400967.5358877,
-    "ast_hash": "b2579b0e80c35d24c66c7d5e92bee5be",
+    "mtime": 1793433850.776714,
+    "seen": 1793441704.9184413,
+    "ast_hash": "ce0ef80e288d96909c9bd96833bcb61c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/crater_m1.webp": {
-    "mtime": 1793400710.3457341,
-    "seen": 1793400967.5358877,
-    "ast_hash": "2be5614d5466db6ff137b5dd8efdcc77",
+    "mtime": 1793433844.38349,
+    "seen": 1793441704.9184413,
+    "ast_hash": "79fa11f13226dd9c14b3911e340212d6",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/crater_m1_lq.webp": {
-    "mtime": 1793400710.4473517,
-    "seen": 1793400967.5358877,
-    "ast_hash": "67e48741317acc7fea4e334e7f86b059",
+    "mtime": 1793433844.5559487,
+    "seen": 1793441704.9184413,
+    "ast_hash": "a65c065b6d428d79d67aeba47a570cf0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/crater_m2.webp": {
-    "mtime": 1793400712.122218,
-    "seen": 1793400967.5358877,
-    "ast_hash": "e1c996f87cf1577f4cbb55acb1d0efec",
+    "mtime": 1793433846.801517,
+    "seen": 1793441704.9184413,
+    "ast_hash": "b878bc3bc99f7619e50a81126638e8e1",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/crater_m2_lq.webp": {
-    "mtime": 1793400712.2244709,
-    "seen": 1793400967.5358877,
-    "ast_hash": "826a0137066d2fdcc68ba8934c1fd82e",
+    "mtime": 1793433846.9176903,
+    "seen": 1793441704.9184413,
+    "ast_hash": "c8a7bb3cebb8e8ad73838628939c9a3b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/crater_m3.webp": {
-    "mtime": 1793400714.0122263,
-    "seen": 1793400967.5358877,
-    "ast_hash": "9b2f077a46c45422c682dd4d2cfae4a0",
+    "mtime": 1793433848.7493062,
+    "seen": 1793441704.9184413,
+    "ast_hash": "f64154ee136624e9429da629cf0ba773",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/crater_m3_lq.webp": {
-    "mtime": 1793400714.1148036,
-    "seen": 1793400967.5358877,
-    "ast_hash": "854d372f9a8a2ec1afaa11022343a31b",
+    "mtime": 1793433848.9198804,
+    "seen": 1793441704.9184413,
+    "ast_hash": "c27d84ef017fe1d4b53acce662dc2a40",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/crater_m4.webp": {
-    "mtime": 1793400715.7574387,
-    "seen": 1793400967.5358877,
-    "ast_hash": "2c2a17d506f68e3e343a0c46aafd3cd6",
+    "mtime": 1793433850.559142,
+    "seen": 1793441704.9184413,
+    "ast_hash": "5a7361216e5a054204f47243778a0f14",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/crater_m4_lq.webp": {
-    "mtime": 1793400715.8563478,
-    "seen": 1793400967.5358877,
-    "ast_hash": "25d2bc8864b0eac2dc889409b694fdd9",
+    "mtime": 1793433850.683358,
+    "seen": 1793441704.9184413,
+    "ast_hash": "a893658a1014167ebc3a679b5337e8d3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dead_wood_detail.png": {
-    "mtime": 1793373670.225686,
-    "seen": 1793400093.2552445,
-    "ast_hash": "190c180c56b91940c0f1187df2317c92",
+    "mtime": 1793433690.969944,
+    "seen": 1793441704.9184413,
+    "ast_hash": "31ae0bb2ea64025d3e28cc749943adc0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dead_wood_m1.webp": {
-    "mtime": 1793373664.7564392,
-    "seen": 1793400093.2552445,
-    "ast_hash": "ad82cbce4c6370ab8250d038c8620194",
+    "mtime": 1793433684.9965334,
+    "seen": 1793441704.9184413,
+    "ast_hash": "15f7cebab4e6f558b0852b35e34628bf",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dead_wood_m1_lq.webp": {
-    "mtime": 1793373664.8659544,
-    "seen": 1793400093.2552445,
-    "ast_hash": "1800bf1eacfa662160d353c6955ddff5",
+    "mtime": 1793433685.148188,
+    "seen": 1793441704.9184413,
+    "ast_hash": "d1658cea9ab0520ddbe3b79bc57a287e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dead_wood_m2.webp": {
-    "mtime": 1793373666.279994,
-    "seen": 1793400093.2552445,
-    "ast_hash": "b1ffc559c58c6a533f279b3aee63a510",
+    "mtime": 1793433686.768966,
+    "seen": 1793441704.9184413,
+    "ast_hash": "c4b0ec070fe1bd9113f55b6683d22097",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dead_wood_m2_lq.webp": {
-    "mtime": 1793373666.3872435,
-    "seen": 1793400093.2552445,
-    "ast_hash": "f59a1441f305c6f63649332ab144eb70",
+    "mtime": 1793433686.8791397,
+    "seen": 1793441704.9184413,
+    "ast_hash": "52e4d5237ee55064ed429a5f28209a9b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dead_wood_m3.webp": {
-    "mtime": 1793373668.2256942,
-    "seen": 1793400093.2552445,
-    "ast_hash": "3f58a950e261ef25d1cf1cb700322d8d",
+    "mtime": 1793433688.8727167,
+    "seen": 1793441704.9184413,
+    "ast_hash": "058096a56344511df84f40c9f378d211",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dead_wood_m3_lq.webp": {
-    "mtime": 1793373668.3385139,
-    "seen": 1793400093.2552445,
-    "ast_hash": "00615981aff4cbc5902239e46ff14ae4",
+    "mtime": 1793433688.9930134,
+    "seen": 1793441704.9184413,
+    "ast_hash": "245359986fa84b29094154ba18410fc7",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dead_wood_m4.webp": {
-    "mtime": 1793373670.0374916,
-    "seen": 1793400093.2552445,
-    "ast_hash": "78af5c5c18033ec5a401e46e56c5213e",
+    "mtime": 1793433690.7802663,
+    "seen": 1793441704.9184413,
+    "ast_hash": "8bfe069f07dd0c135896d5998d8f9118",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dead_wood_m4_lq.webp": {
-    "mtime": 1793373670.1422105,
-    "seen": 1793400093.2552445,
-    "ast_hash": "1662c3b682ba7e0224e73bb94f52b3ff",
+    "mtime": 1793433690.8892665,
+    "seen": 1793441704.9184413,
+    "ast_hash": "92ebe4ae47e5af8a8c8594fbc6681b0c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/demonic_swamp_detail.png": {
-    "mtime": 1793399798.8794682,
-    "seen": 1793400093.2552445,
-    "ast_hash": "cd33d655c3beb993be1db7887426d0e6",
+    "mtime": 1793433792.875308,
+    "seen": 1793441704.9184413,
+    "ast_hash": "599189cde99236f85c107e872bc7ae1a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/demonic_swamp_m1.webp": {
-    "mtime": 1793399793.247355,
-    "seen": 1793400093.2552445,
-    "ast_hash": "ba1f9e69b476f58f96c4622d397b53cc",
+    "mtime": 1793433784.411862,
+    "seen": 1793441704.9184413,
+    "ast_hash": "55f02a13322311faf4fc68f9764aac06",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/demonic_swamp_m1_lq.webp": {
-    "mtime": 1793399793.3937075,
-    "seen": 1793400093.2552445,
-    "ast_hash": "52a77f81c0f0f45fd308d48562eef55e",
+    "mtime": 1793433784.5639696,
+    "seen": 1793441704.9194443,
+    "ast_hash": "5962a67e6aa14f8c0f84ced44c06c181",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/demonic_swamp_m2.webp": {
-    "mtime": 1793399795.4313915,
-    "seen": 1793400093.2552445,
-    "ast_hash": "2fc90d1c820b8f111405d4ec6784540f",
+    "mtime": 1793433788.226343,
+    "seen": 1793441704.9194443,
+    "ast_hash": "b0b5907e6582c0cf56ad6e3a0a3cc6b3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/demonic_swamp_m2_lq.webp": {
-    "mtime": 1793399795.5969937,
-    "seen": 1793400093.2552445,
-    "ast_hash": "54db3ec06e577a8f5cd40512ac6baab7",
+    "mtime": 1793433788.38553,
+    "seen": 1793441704.9194443,
+    "ast_hash": "18ca9dd43979aea10bc1d006f1744702",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/demonic_swamp_m3.webp": {
-    "mtime": 1793399797.117273,
-    "seen": 1793400093.2552445,
-    "ast_hash": "d3cd08aa1351a0d74802f556aa4298d0",
+    "mtime": 1793433790.282949,
+    "seen": 1793441704.9194443,
+    "ast_hash": "9a8ea54fbff8772af07ce82b4c9d86a6",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/demonic_swamp_m3_lq.webp": {
-    "mtime": 1793399797.2453654,
-    "seen": 1793400093.2552445,
-    "ast_hash": "5c9a100db8824085f4ba8125b0cdf990",
+    "mtime": 1793433790.4547477,
+    "seen": 1793441704.9194443,
+    "ast_hash": "f20bc2273f9af7774719ef9d1ce5fde8",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/demonic_swamp_m4.webp": {
-    "mtime": 1793399798.6843402,
-    "seen": 1793400093.2552445,
-    "ast_hash": "1cb13e6e7af144c1fee566a4e841b7ef",
+    "mtime": 1793433792.5163276,
+    "seen": 1793441704.9194443,
+    "ast_hash": "cda34c61405fde170c6c8b7420cf7975",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/demonic_swamp_m4_lq.webp": {
-    "mtime": 1793399798.7955544,
-    "seen": 1793400093.2552445,
-    "ast_hash": "3835f5b79ea402bc55a74f56c5197d9f",
+    "mtime": 1793433792.7317915,
+    "seen": 1793441704.9194443,
+    "ast_hash": "5c3ad4bc96ecb3526dcd46f72604b706",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/desert_sand_detail.png": {
-    "mtime": 1793374340.852723,
-    "seen": 1793400093.2552445,
-    "ast_hash": "3083753431d42d64e55ea7573f22dfeb",
+    "mtime": 1793433734.757985,
+    "seen": 1793441704.9194443,
+    "ast_hash": "1b90d2e51a92196432a2d5e183960fa3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/desert_sand_m1.webp": {
-    "mtime": 1793374334.6938832,
-    "seen": 1793400093.2552445,
-    "ast_hash": "f0329ee138f57822472bd545a3f9a485",
+    "mtime": 1793433728.7205517,
+    "seen": 1793441704.9194443,
+    "ast_hash": "6d9485da925ddef73a461008e253efff",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/desert_sand_m1_lq.webp": {
-    "mtime": 1793374334.8251936,
-    "seen": 1793400093.2552445,
-    "ast_hash": "4c0bb8b8d96041dda160d39015b59157",
+    "mtime": 1793433728.8930154,
+    "seen": 1793441704.9194443,
+    "ast_hash": "486bcb2823a806aa4b7e055fdeca8e64",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/desert_sand_m2.webp": {
-    "mtime": 1793374336.5578039,
-    "seen": 1793400093.2552445,
-    "ast_hash": "81551e6d80ce4f78893b80bc5863734f",
+    "mtime": 1793433730.7772694,
+    "seen": 1793441704.9194443,
+    "ast_hash": "7ecf07d65b3e798495e080ab52b78d94",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/desert_sand_m2_lq.webp": {
-    "mtime": 1793374336.6477253,
-    "seen": 1793400093.2552445,
-    "ast_hash": "6435e7dfeaa1c99246ae4e3dde10e6d0",
+    "mtime": 1793433730.9048452,
+    "seen": 1793441704.9194443,
+    "ast_hash": "0922c2b7fc480ab6d570e9fa4c939eeb",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/desert_sand_m3.webp": {
-    "mtime": 1793374338.8590107,
-    "seen": 1793400093.2552445,
-    "ast_hash": "b584a7c8968962e8435309fc467d12e1",
+    "mtime": 1793433732.7626061,
+    "seen": 1793441704.9194443,
+    "ast_hash": "b437c78fa5b1b84478e0a211235a0df4",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/desert_sand_m3_lq.webp": {
-    "mtime": 1793374338.9634235,
-    "seen": 1793400093.2552445,
-    "ast_hash": "6159b98fa19eed1ad9cac34afad5e1e5",
+    "mtime": 1793433732.8820825,
+    "seen": 1793441704.9194443,
+    "ast_hash": "5278db7389c0a877b822a55d5b558fbb",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/desert_sand_m4.webp": {
-    "mtime": 1793374340.6695263,
-    "seen": 1793400093.2552445,
-    "ast_hash": "ee9aeade448fb9d5afa623a794aa69f1",
+    "mtime": 1793433734.5660937,
+    "seen": 1793441704.9194443,
+    "ast_hash": "e2d6a689c5ec572b04c90a48acb159fd",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/desert_sand_m4_lq.webp": {
-    "mtime": 1793374340.7715204,
-    "seen": 1793400093.2552445,
-    "ast_hash": "6997d5c790af701e62c7cd96899ac2a8",
+    "mtime": 1793433734.6707356,
+    "seen": 1793441704.9194443,
+    "ast_hash": "cdc97b860c4546a75d2da78d42191ef9",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dune_detail.png": {
-    "mtime": 1793375392.7426674,
-    "seen": 1793400093.2552445,
-    "ast_hash": "aa1b840ca0e1b5fcea74c580da8b2e73",
+    "mtime": 1793433744.0880628,
+    "seen": 1793441704.9194443,
+    "ast_hash": "cb1b917a647cf2afc5faa5b52c2816bf",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dune_m1.webp": {
-    "mtime": 1793375386.6020088,
-    "seen": 1793400093.2552445,
-    "ast_hash": "b621ced1f698a2a920111e7dcde82346",
+    "mtime": 1793433737.601035,
+    "seen": 1793441704.9194443,
+    "ast_hash": "1b2faf94f086d7e555b3b4f29d21f85d",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dune_m1_lq.webp": {
-    "mtime": 1793375386.7077453,
-    "seen": 1793400093.2552445,
-    "ast_hash": "6993207746983c253b2e4c9c16c7cdb9",
+    "mtime": 1793433737.7414863,
+    "seen": 1793441704.9194443,
+    "ast_hash": "3f90a662730e4aea4b6d64d1066d303f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dune_m2.webp": {
-    "mtime": 1793375388.4282677,
-    "seen": 1793400093.2552445,
-    "ast_hash": "8ec540f37c81cd8c35fc566a9f84e13f",
+    "mtime": 1793433739.5784922,
+    "seen": 1793441704.9194443,
+    "ast_hash": "58c363e41ce5270467f6ab7c13042621",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dune_m2_lq.webp": {
-    "mtime": 1793375388.8167827,
-    "seen": 1793400093.2552445,
-    "ast_hash": "0579ebbb0bcb74f8226356d2639e9123",
+    "mtime": 1793433739.7209196,
+    "seen": 1793441704.9194443,
+    "ast_hash": "7c9610439ffa95b805f7fee7f283116f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dune_m3.webp": {
-    "mtime": 1793375390.421753,
-    "seen": 1793400093.2552445,
-    "ast_hash": "879014a1c4015b9a7da7660ed1cd3853",
+    "mtime": 1793433741.410261,
+    "seen": 1793441704.9194443,
+    "ast_hash": "df7bec92eac7a9a82e30d3525fda6213",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dune_m3_lq.webp": {
-    "mtime": 1793375390.542128,
-    "seen": 1793400093.2552445,
-    "ast_hash": "8cce7abbba47e247816c4403cdd7dfee",
+    "mtime": 1793433741.688547,
+    "seen": 1793441704.9194443,
+    "ast_hash": "888895a7332e2c559caa2d9db5925ee9",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dune_m4.webp": {
-    "mtime": 1793375392.5638967,
-    "seen": 1793400093.2552445,
-    "ast_hash": "dfca4fa3cf41736dcbb905e528b368de",
+    "mtime": 1793433743.9134557,
+    "seen": 1793441704.9194443,
+    "ast_hash": "c75a2f6bb7eced94cdb91ee6616dd72b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/dune_m4_lq.webp": {
-    "mtime": 1793375392.6597967,
-    "seen": 1793400093.2552445,
-    "ast_hash": "3e62ea543ea90bd7b596e416b28f18b4",
+    "mtime": 1793433744.0072844,
+    "seen": 1793441704.9194443,
+    "ast_hash": "578b487d5d2edd7c34e1ae246d66c61b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/farmland_detail.png": {
-    "mtime": 1793373645.1858234,
-    "seen": 1793400093.2552445,
-    "ast_hash": "1391bd87281306c20ce656a74f627ab2",
+    "mtime": 1793433654.8803005,
+    "seen": 1793441704.9194443,
+    "ast_hash": "afebe237c3acaf43145b672086603e6f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/farmland_m1.webp": {
-    "mtime": 1793373639.7451308,
-    "seen": 1793400093.2552445,
-    "ast_hash": "3d143c4e9859ee51713ffa98c0a9087e",
+    "mtime": 1793433648.3293402,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d28c69a569c9681a887f4b75eeb89191",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/farmland_m1_lq.webp": {
-    "mtime": 1793373639.8495283,
-    "seen": 1793400093.2552445,
-    "ast_hash": "c7f8c81260994309b89e735921de9780",
+    "mtime": 1793433648.46322,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d84ce8b4bcbeb1a0107e58b52ebce71a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/farmland_m2.webp": {
-    "mtime": 1793373641.5076053,
-    "seen": 1793400093.2552445,
-    "ast_hash": "bb9c24de49e7aca63345b0ba957b7747",
+    "mtime": 1793433650.263088,
+    "seen": 1793441704.9194443,
+    "ast_hash": "f3147db89825c9df22fc901c6d1ae378",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/farmland_m2_lq.webp": {
-    "mtime": 1793373641.6055145,
-    "seen": 1793400093.2552445,
-    "ast_hash": "f7d9697b8316fbc92da090ace424f856",
+    "mtime": 1793433650.4265952,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d6be1024672d49e63d6319440352dc7f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/farmland_m3.webp": {
-    "mtime": 1793373643.276421,
-    "seen": 1793400093.2552445,
-    "ast_hash": "219f494762291dc3c1744db018e25c7c",
+    "mtime": 1793433652.3295698,
+    "seen": 1793441704.9194443,
+    "ast_hash": "0b7dc361e229de08c5c3d612b7357838",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/farmland_m3_lq.webp": {
-    "mtime": 1793373643.3783252,
-    "seen": 1793400093.2552445,
-    "ast_hash": "b5e6cc8031b0da938e28bd8ccc593157",
+    "mtime": 1793433652.4447348,
+    "seen": 1793441704.9194443,
+    "ast_hash": "a5541fa27d015afe93cc0ea69c5b1dc0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/farmland_m4.webp": {
-    "mtime": 1793373645.0056915,
-    "seen": 1793400093.2552445,
-    "ast_hash": "583fb9587ab4b360340385c247ac4aac",
+    "mtime": 1793433654.5017414,
+    "seen": 1793441704.9194443,
+    "ast_hash": "352d3e8ad79e7765020f784f49f3b60d",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/farmland_m4_lq.webp": {
-    "mtime": 1793373645.1065967,
-    "seen": 1793400093.2552445,
-    "ast_hash": "a20d1616fc97e84156e3954c79756ae7",
+    "mtime": 1793433654.7308614,
+    "seen": 1793441704.9194443,
+    "ast_hash": "b5c5181bc05e2f277e4e7365826c8ff5",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/forest_floor_detail.png": {
-    "mtime": 1793369709.0160139,
-    "seen": 1793370429.0161595,
-    "ast_hash": "1643df0418d30dc448d72cad7dca9632",
+    "mtime": 1793433672.2049062,
+    "seen": 1793441704.9194443,
+    "ast_hash": "7e3ed7375ce0631a94e9dd26aeb76da4",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/forest_floor_m1.webp": {
-    "mtime": 1793369703.2057395,
-    "seen": 1793370429.0161595,
-    "ast_hash": "24ad19f5ee50b4ddfc6777b9c1a822ed",
+    "mtime": 1793433666.9569473,
+    "seen": 1793441704.9194443,
+    "ast_hash": "08a1cb05f861c7c34f55c01cde2e793d",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/forest_floor_m1_lq.webp": {
-    "mtime": 1793369703.3292606,
-    "seen": 1793370429.0161595,
-    "ast_hash": "99c44d85d3afcc5d41b1d771bf371dea",
+    "mtime": 1793433667.0986857,
+    "seen": 1793441704.9194443,
+    "ast_hash": "076e8cc9da864b28a83b78d519ac949d",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/forest_floor_m2.webp": {
-    "mtime": 1793369705.2576077,
-    "seen": 1793370429.0161595,
-    "ast_hash": "8e1946b3b0f9bd6f00ce5e21d8c2137a",
+    "mtime": 1793433668.5768442,
+    "seen": 1793441704.9194443,
+    "ast_hash": "1c6e7b6df9334dc600ae7ab8f2d3e94b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/forest_floor_m2_lq.webp": {
-    "mtime": 1793369705.3616369,
-    "seen": 1793370429.0161595,
-    "ast_hash": "5ffc540565e400096c9831a92f98dcdb",
+    "mtime": 1793433668.7060711,
+    "seen": 1793441704.9194443,
+    "ast_hash": "fbbc3d723405572aa8b75ba5801bc4ea",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/forest_floor_m3.webp": {
-    "mtime": 1793369706.8738892,
-    "seen": 1793370429.0161595,
-    "ast_hash": "71a06f2401f54adab960aa1b15783ead",
+    "mtime": 1793433670.4336932,
+    "seen": 1793441704.9194443,
+    "ast_hash": "474e144601cecf107db4bd533c81c0a9",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/forest_floor_m3_lq.webp": {
-    "mtime": 1793369706.9990077,
-    "seen": 1793370429.0161595,
-    "ast_hash": "8277b21ff5dc121dac72cbafafd4d582",
+    "mtime": 1793433670.5554667,
+    "seen": 1793441704.9194443,
+    "ast_hash": "0a90736860973c95f15e94488b53d1d0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/forest_floor_m4.webp": {
-    "mtime": 1793369708.7650704,
-    "seen": 1793370429.0161595,
-    "ast_hash": "a900bf23f0c47851dc6205d449852120",
+    "mtime": 1793433671.9671688,
+    "seen": 1793441704.9194443,
+    "ast_hash": "95b296276bd5c2ff1b57207fd549ce95",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/forest_floor_m4_lq.webp": {
-    "mtime": 1793369708.9212425,
-    "seen": 1793370429.0161595,
-    "ast_hash": "ab9d7220d2cf3940cb1f033e7b414314",
+    "mtime": 1793433672.0997806,
+    "seen": 1793441704.9194443,
+    "ast_hash": "181c057cf6b77174efdfb2c2c30656d6",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/formation_tile_detail.png": {
-    "mtime": 1793400730.8201609,
-    "seen": 1793400967.5528724,
-    "ast_hash": "f9b824e6b6a55d203711f0b4439d18a4",
+    "mtime": 1793433871.2562287,
+    "seen": 1793441704.9194443,
+    "ast_hash": "686ad96a86ca7ea2f60d0997d50ffc62",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/formation_tile_m1.webp": {
-    "mtime": 1793400725.685647,
-    "seen": 1793400967.5528724,
-    "ast_hash": "f7b72878dfba49edd801718195013bbb",
+    "mtime": 1793433865.2073164,
+    "seen": 1793441704.9194443,
+    "ast_hash": "e9acb7d2a7b59b9ee920f614334427ee",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/formation_tile_m1_lq.webp": {
-    "mtime": 1793400725.8069603,
-    "seen": 1793400967.5528724,
-    "ast_hash": "c9b3af0e46c8101b37e65b7faef83629",
+    "mtime": 1793433865.420928,
+    "seen": 1793441704.9194443,
+    "ast_hash": "1d9f06f459a280c75c021c38d7178308",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/formation_tile_m2.webp": {
-    "mtime": 1793400727.2012165,
-    "seen": 1793400967.5528724,
-    "ast_hash": "ecc509c648f1c301b4d57f7cf2371606",
+    "mtime": 1793433867.1969786,
+    "seen": 1793441704.9194443,
+    "ast_hash": "892f4bc9866a06c680d7b2cba95c2f97",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/formation_tile_m2_lq.webp": {
-    "mtime": 1793400727.3173463,
-    "seen": 1793400967.5528724,
-    "ast_hash": "269e618953bba81a4d3f22ab64567f77",
+    "mtime": 1793433867.325996,
+    "seen": 1793441704.9194443,
+    "ast_hash": "537760f91340f9729717519c1b54b303",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/formation_tile_m3.webp": {
-    "mtime": 1793400728.8000906,
-    "seen": 1793400967.5528724,
-    "ast_hash": "6b1691a092c373e4a847e98979580d94",
+    "mtime": 1793433869.2434325,
+    "seen": 1793441704.9194443,
+    "ast_hash": "33f59ba68749e3cce99a63d846d55e99",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/formation_tile_m3_lq.webp": {
-    "mtime": 1793400729.0032709,
-    "seen": 1793400967.5528724,
-    "ast_hash": "aa5a13f94721ca7b2e4302234cb04154",
+    "mtime": 1793433869.352288,
+    "seen": 1793441704.9194443,
+    "ast_hash": "33245256de1e1120e67c7e694c431ac0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/formation_tile_m4.webp": {
-    "mtime": 1793400730.6236525,
-    "seen": 1793400967.5528724,
-    "ast_hash": "1d5088a8dbe5e4ccac9ace888891c4c2",
+    "mtime": 1793433870.959099,
+    "seen": 1793441704.9194443,
+    "ast_hash": "c367fb8de0abb0798f61dab1f71dd9b4",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/formation_tile_m4_lq.webp": {
-    "mtime": 1793400730.7410672,
-    "seen": 1793400967.5528724,
-    "ast_hash": "91aad792a20746e2b7eb4ed28084f7d7",
+    "mtime": 1793433871.1412244,
+    "seen": 1793441704.9194443,
+    "ast_hash": "9877ba79d2d1c4e8244fb358ba8a4ce9",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/glacier_detail.png": {
-    "mtime": 1793404508.4128475,
-    "seen": 1793406176.5246713,
-    "ast_hash": "6368a225603d882813fe765fc911c652",
+    "mtime": 1793433969.3348882,
+    "seen": 1793441704.9194443,
+    "ast_hash": "37d031b9b2f717a6756bb72cd3cb851c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/glacier_m1.webp": {
-    "mtime": 1793404502.8811655,
-    "seen": 1793406176.5246713,
-    "ast_hash": "c27c8e143fb0bbb35f7a6057a89cd2b8",
+    "mtime": 1793433962.113752,
+    "seen": 1793441704.9194443,
+    "ast_hash": "dca49507171919d466d49a5301c788ca",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/glacier_m1_lq.webp": {
-    "mtime": 1793404503.0379791,
-    "seen": 1793406176.5246713,
-    "ast_hash": "a22a435e46e85f45446029d600d675db",
+    "mtime": 1793433962.2644646,
+    "seen": 1793441704.9194443,
+    "ast_hash": "26a8c240b924798e5bff38bbb4c952b6",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/glacier_m2.webp": {
-    "mtime": 1793404504.8029673,
-    "seen": 1793406176.5246713,
-    "ast_hash": "149a0e9d2e84b208aff6d504d5973f54",
+    "mtime": 1793433964.4083176,
+    "seen": 1793441704.9194443,
+    "ast_hash": "931c360e50568f26389670fc62f43a55",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/glacier_m2_lq.webp": {
-    "mtime": 1793404504.9108796,
-    "seen": 1793406176.5246713,
-    "ast_hash": "d0cf21ef7f224c78c617e81a1d980e6e",
+    "mtime": 1793433964.518764,
+    "seen": 1793441704.9194443,
+    "ast_hash": "f370076b8d3e59534319b3fa6d2bfe1f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/glacier_m3.webp": {
-    "mtime": 1793404506.3938696,
-    "seen": 1793406176.5246713,
-    "ast_hash": "6d8a89fa09ddb95a79dec86c8ee871e9",
+    "mtime": 1793433966.251785,
+    "seen": 1793441704.9194443,
+    "ast_hash": "091fec34c3b72c055479ff5cdb77b208",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/glacier_m3_lq.webp": {
-    "mtime": 1793404506.5145962,
-    "seen": 1793406176.5246713,
-    "ast_hash": "9ecefb2e3f7313678bbf33b40d711267",
+    "mtime": 1793433966.3694785,
+    "seen": 1793441704.9194443,
+    "ast_hash": "dae430b942c61d49bc196468673f74b8",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/glacier_m4.webp": {
-    "mtime": 1793404508.2215924,
-    "seen": 1793406176.5246713,
-    "ast_hash": "39c80eeff4907760ba09958c5badcab2",
+    "mtime": 1793433968.7756011,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d60300b9cb6cfbec02ece890abf75479",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/glacier_m4_lq.webp": {
-    "mtime": 1793404508.3336322,
-    "seen": 1793406176.5246713,
-    "ast_hash": "67e03e798ec20012501ba96057fa7932",
+    "mtime": 1793433969.1790411,
+    "seen": 1793441704.9194443,
+    "ast_hash": "cc341be6cb5f04836df5980529b78c3e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/herb_field_detail.png": {
-    "mtime": 1793373653.5132196,
-    "seen": 1793400093.2632382,
-    "ast_hash": "6af91d42dd3ea73c362ce3284b2391b8",
+    "mtime": 1793433664.263763,
+    "seen": 1793441704.9194443,
+    "ast_hash": "e78c12f211854b8712ad5e5859a2a737",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/herb_field_m1.webp": {
-    "mtime": 1793373648.2215035,
-    "seen": 1793400093.2632382,
-    "ast_hash": "d9768f96d9519dda871f813a864f6bcd",
+    "mtime": 1793433657.7315495,
+    "seen": 1793441704.9194443,
+    "ast_hash": "f687e164da4c7618cf8ee730a96e87d3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/herb_field_m1_lq.webp": {
-    "mtime": 1793373648.341999,
-    "seen": 1793400093.2632382,
-    "ast_hash": "21641de5098bc2e205034a90d8689a44",
+    "mtime": 1793433657.8732693,
+    "seen": 1793441704.9194443,
+    "ast_hash": "f99daf9d9f243a870d73f7cda4509b68",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/herb_field_m2.webp": {
-    "mtime": 1793373649.8350694,
-    "seen": 1793400093.2632382,
-    "ast_hash": "279f5596d6485b44e9c55c8325f69340",
+    "mtime": 1793433659.3958535,
+    "seen": 1793441704.9194443,
+    "ast_hash": "14c4b5e372e7a3cbd9db96dab44e0f15",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/herb_field_m2_lq.webp": {
-    "mtime": 1793373649.9446783,
-    "seen": 1793400093.2632382,
-    "ast_hash": "8209fe7e9063a4395e281a3324b9b43b",
+    "mtime": 1793433659.522897,
+    "seen": 1793441704.9194443,
+    "ast_hash": "26590025eb87d02344986cec2b6d80ba",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/herb_field_m3.webp": {
-    "mtime": 1793373651.7417884,
-    "seen": 1793400093.2632382,
-    "ast_hash": "17154a2711e93c416cd87f65a54505b2",
+    "mtime": 1793433661.429222,
+    "seen": 1793441704.9194443,
+    "ast_hash": "117cd01f5f3bebc339ddc545f3ddc5ab",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/herb_field_m3_lq.webp": {
-    "mtime": 1793373651.8999772,
-    "seen": 1793400093.2632382,
-    "ast_hash": "7b9c57e8d86c8ee5cad9813992400213",
+    "mtime": 1793433661.5656312,
+    "seen": 1793441704.9194443,
+    "ast_hash": "b9f5792e349549945f8c35d195c8902f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/herb_field_m4.webp": {
-    "mtime": 1793373653.325911,
-    "seen": 1793400093.2632382,
-    "ast_hash": "a01b043c020d73d71415fff539a83cca",
+    "mtime": 1793433663.9887662,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d4ec5a69336c3e78e333d1126d0d3e96",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/herb_field_m4_lq.webp": {
-    "mtime": 1793373653.4339678,
-    "seen": 1793400093.2632382,
-    "ast_hash": "fbc88f09e2e70b613216aafa7933a57d",
+    "mtime": 1793433664.1674967,
+    "seen": 1793441704.9194443,
+    "ast_hash": "f5984bf22b4751e8e839e05929a32b56",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/hill_detail.png": {
-    "mtime": 1793374309.5638788,
-    "seen": 1793400093.2632382,
-    "ast_hash": "0f384df54b883e20e299c69a599241bb",
+    "mtime": 1793433700.0773566,
+    "seen": 1793441704.9194443,
+    "ast_hash": "316f7ca80cc815855a75736ecc2394c7",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/hill_m1.webp": {
-    "mtime": 1793374302.8955526,
-    "seen": 1793400093.2632382,
-    "ast_hash": "126b00d4619427441fe59d652eb3fa27",
+    "mtime": 1793433693.930497,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d7582d8b14297c882255658980a19e07",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/hill_m1_lq.webp": {
-    "mtime": 1793374303.0344238,
-    "seen": 1793400093.2632382,
-    "ast_hash": "885a5fd26f07a11f8bb64dbfb92dd54b",
+    "mtime": 1793433694.206204,
+    "seen": 1793441704.9194443,
+    "ast_hash": "cc5702e8a76bdecbf783af90cf76cee8",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/hill_m2.webp": {
-    "mtime": 1793374305.4382734,
-    "seen": 1793400093.2632382,
-    "ast_hash": "43e30ffd8d52ddd2f9cc08bcbc106f1e",
+    "mtime": 1793433696.2187212,
+    "seen": 1793441704.9194443,
+    "ast_hash": "7eff5c0453c2218fd66f592dd8165051",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/hill_m2_lq.webp": {
-    "mtime": 1793374305.5705762,
-    "seen": 1793400093.2632382,
-    "ast_hash": "cc4792c15c0c29fae861c89c4127cc52",
+    "mtime": 1793433696.328064,
+    "seen": 1793441704.9194443,
+    "ast_hash": "dee183fe6c951c3858d9c754ae84828b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/hill_m3.webp": {
-    "mtime": 1793374307.5608635,
-    "seen": 1793400093.2632382,
-    "ast_hash": "845e02a0c5c3771dc0634222b37b36a0",
+    "mtime": 1793433698.286564,
+    "seen": 1793441704.9194443,
+    "ast_hash": "902dd770826e6cae68911f473791783c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/hill_m3_lq.webp": {
-    "mtime": 1793374307.6735659,
-    "seen": 1793400093.2632382,
-    "ast_hash": "b619fab702f996cf7409a4e511fef9f6",
+    "mtime": 1793433698.3965125,
+    "seen": 1793441704.9194443,
+    "ast_hash": "4f69dbbf513b0cb4060f50f271cd88e7",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/hill_m4.webp": {
-    "mtime": 1793374309.3577561,
-    "seen": 1793400093.2632382,
-    "ast_hash": "984d96484222f8c77137a8afd588d423",
+    "mtime": 1793433699.885446,
+    "seen": 1793441704.9194443,
+    "ast_hash": "20893b561cb2a4783cf6479e24982561",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/hill_m4_lq.webp": {
-    "mtime": 1793374309.4648457,
-    "seen": 1793400093.2632382,
-    "ast_hash": "4709310eaed97646229065743ff5c06a",
+    "mtime": 1793433699.997233,
+    "seen": 1793441704.9194443,
+    "ast_hash": "5a0aa3060a319c9a010abbf330468abc",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ice_crack_detail.png": {
-    "mtime": 1793375416.8432455,
-    "seen": 1793400093.2632382,
-    "ast_hash": "e82e7f04f24639a51633dc3df9a8b616",
+    "mtime": 1793433771.315843,
+    "seen": 1793441704.9194443,
+    "ast_hash": "340c5edc7b2333677dd66c6fb150fc5d",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ice_crack_m1.webp": {
-    "mtime": 1793375411.2211292,
-    "seen": 1793400093.2632382,
-    "ast_hash": "bab008c18519e22454aa7a63fde1bbdb",
+    "mtime": 1793433764.700466,
+    "seen": 1793441704.9194443,
+    "ast_hash": "23becc5643a9a5a6db92083c0ca71980",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ice_crack_m1_lq.webp": {
-    "mtime": 1793375411.3455439,
-    "seen": 1793400093.2632382,
-    "ast_hash": "323687e4d5cf895bda7011dfd973202a",
+    "mtime": 1793433764.8035457,
+    "seen": 1793441704.9194443,
+    "ast_hash": "ea5bd6ad377b72eb035e54f98fdc0f31",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ice_crack_m2.webp": {
-    "mtime": 1793375413.160681,
-    "seen": 1793400093.2632382,
-    "ast_hash": "29c640cc8d413367573132e16ea2fdcf",
+    "mtime": 1793433766.2752242,
+    "seen": 1793441704.9194443,
+    "ast_hash": "78076bcdc71f8da689a01970cd87e56e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ice_crack_m2_lq.webp": {
-    "mtime": 1793375413.2739992,
-    "seen": 1793400093.2632382,
-    "ast_hash": "dd091495a478768d903b8475aaf19ff5",
+    "mtime": 1793433766.44586,
+    "seen": 1793441704.9194443,
+    "ast_hash": "2c9d44627316ca3bf7644a404956a9c1",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ice_crack_m3.webp": {
-    "mtime": 1793375415.057735,
-    "seen": 1793400093.2632382,
-    "ast_hash": "da8d1758aabee23bb4da860ee0ee2775",
+    "mtime": 1793433769.0928645,
+    "seen": 1793441704.9194443,
+    "ast_hash": "98e9d693522c51465f49decc9cda300e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ice_crack_m3_lq.webp": {
-    "mtime": 1793375415.1743903,
-    "seen": 1793400093.2632382,
-    "ast_hash": "455d054576c6daf7f08bbaa16869658a",
+    "mtime": 1793433769.2044208,
+    "seen": 1793441704.9194443,
+    "ast_hash": "5a3c1bde8a5b4833358c32e77e16e217",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ice_crack_m4.webp": {
-    "mtime": 1793375416.6422434,
-    "seen": 1793400093.2632382,
-    "ast_hash": "338573423670f2e58868a9414a0898d7",
+    "mtime": 1793433771.0885262,
+    "seen": 1793441704.9194443,
+    "ast_hash": "e37832525de18fd8c99f61b6891af219",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ice_crack_m4_lq.webp": {
-    "mtime": 1793375416.7611334,
-    "seen": 1793400093.2632382,
-    "ast_hash": "8d139f88d54536f408f55b8047246f33",
+    "mtime": 1793433771.2275832,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d0791ac1180f4de1c7ad8d6f6aa8fc51",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/island_reef_detail.png": {
-    "mtime": 1793403324.4382415,
-    "seen": 1793403616.9229228,
-    "ast_hash": "f068dec100d4f27bc48f2d7f31ce50d0",
+    "mtime": 1793433889.654837,
+    "seen": 1793441704.9194443,
+    "ast_hash": "255794c63d649f603e7cb5293af0e679",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/island_reef_m1.webp": {
-    "mtime": 1793403318.990232,
-    "seen": 1793403616.9229228,
-    "ast_hash": "9f3933854ca8662e526ceabf02394af1",
+    "mtime": 1793433883.1245975,
+    "seen": 1793441704.9194443,
+    "ast_hash": "3a29177685357d9acd3f6b8b04d4e43b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/island_reef_m1_lq.webp": {
-    "mtime": 1793403319.1496277,
-    "seen": 1793403616.9229228,
-    "ast_hash": "6f3892b76e2c8f004b7a1aa4f6b42105",
+    "mtime": 1793433883.28027,
+    "seen": 1793441704.9194443,
+    "ast_hash": "a4d0d5dcb3126df346f7d0145597f977",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/island_reef_m2.webp": {
-    "mtime": 1793403320.76188,
-    "seen": 1793403616.9229228,
-    "ast_hash": "79bc75f0435440ad89192830cd43233a",
+    "mtime": 1793433885.0390632,
+    "seen": 1793441704.9194443,
+    "ast_hash": "9961c9c4b683f7e1e1b7ef04aed845c1",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/island_reef_m2_lq.webp": {
-    "mtime": 1793403320.875584,
-    "seen": 1793403616.9229228,
-    "ast_hash": "078fe77901acb5f6a9eaa6eae675abb9",
+    "mtime": 1793433885.1971488,
+    "seen": 1793441704.9194443,
+    "ast_hash": "406e45416f0eecb4ee1c2015319b4dea",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/island_reef_m3.webp": {
-    "mtime": 1793403322.715706,
-    "seen": 1793403616.9229228,
-    "ast_hash": "9ef079a6df1c692411aa55fecb54e6f8",
+    "mtime": 1793433887.481406,
+    "seen": 1793441704.9194443,
+    "ast_hash": "73963b0b3d8f8e6ef51836d94d85d936",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/island_reef_m3_lq.webp": {
-    "mtime": 1793403322.82705,
-    "seen": 1793403616.9229228,
-    "ast_hash": "1f9edd5193c401a3716cc7bfd4370ecf",
+    "mtime": 1793433887.6215155,
+    "seen": 1793441704.9194443,
+    "ast_hash": "3b5c91e40909dd4395fbc0ba141913c9",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/island_reef_m4.webp": {
-    "mtime": 1793403324.233044,
-    "seen": 1793403616.9229228,
-    "ast_hash": "bbcd0a2136ee6a30a6f76a3fbc5af688",
+    "mtime": 1793433889.4212103,
+    "seen": 1793441704.9194443,
+    "ast_hash": "76cba3e3e222ead92ef48697fe707294",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/island_reef_m4_lq.webp": {
-    "mtime": 1793403324.3591025,
-    "seen": 1793403616.9229228,
-    "ast_hash": "b759348ab88bf1e7204bea7bca85eb9b",
+    "mtime": 1793433889.5567398,
+    "seen": 1793441704.9194443,
+    "ast_hash": "6e1dc7dd89b1f01099f8ae5f0da5ed3a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lake_detail.png": {
-    "mtime": 1793405827.7979138,
-    "seen": 1793406176.5346622,
-    "ast_hash": "3bb0c52aa8e973a7b331f412700721db",
+    "mtime": 1793433949.2270944,
+    "seen": 1793441704.9194443,
+    "ast_hash": "172c84c006852cba953857175e7e07d8",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lake_m1.webp": {
-    "mtime": 1793405821.2399828,
-    "seen": 1793406176.5346622,
-    "ast_hash": "001a9922ac1f870fdc9cee05c3af91c5",
+    "mtime": 1793433942.6687763,
+    "seen": 1793441704.9194443,
+    "ast_hash": "44c4dcfc69ed8d1bcd715153f2166dd0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lake_m1_lq.webp": {
-    "mtime": 1793405821.3504782,
-    "seen": 1793406176.5346622,
-    "ast_hash": "25079811d664b41667d982a9480ccc04",
+    "mtime": 1793433942.8444843,
+    "seen": 1793441704.9194443,
+    "ast_hash": "deff5d0bcaaaf66a8132bd36e01ce62a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lake_m2.webp": {
-    "mtime": 1793405823.378435,
-    "seen": 1793406176.5346622,
-    "ast_hash": "0aaf70a76d2b22c753772dbd4fd50658",
+    "mtime": 1793433944.9810462,
+    "seen": 1793441704.9194443,
+    "ast_hash": "fb0db52a56937640f736e6302008ac0f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lake_m2_lq.webp": {
-    "mtime": 1793405823.479015,
-    "seen": 1793406176.5346622,
-    "ast_hash": "92b1afb898c7d8da17a62ceda588f19e",
+    "mtime": 1793433945.0826614,
+    "seen": 1793441704.9194443,
+    "ast_hash": "96670a938d69bd9360f84f602165bd4b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lake_m3.webp": {
-    "mtime": 1793405825.3855078,
-    "seen": 1793406176.5346622,
-    "ast_hash": "f5b4d7c918e775e8364c94694a791734",
+    "mtime": 1793433947.0574336,
+    "seen": 1793441704.9194443,
+    "ast_hash": "ee91f1979d54fb3060165be59545d05b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lake_m3_lq.webp": {
-    "mtime": 1793405825.472451,
-    "seen": 1793406176.5346622,
-    "ast_hash": "ed2e851e665848f01d22d14055ea12a4",
+    "mtime": 1793433947.1809483,
+    "seen": 1793441704.9194443,
+    "ast_hash": "c0d32187a72345afdedb5f4b82cd4e81",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lake_m4.webp": {
-    "mtime": 1793405827.6325977,
-    "seen": 1793406176.5346622,
-    "ast_hash": "75c4fef7830ccb68b09ff6c0bc850361",
+    "mtime": 1793433949.0575614,
+    "seen": 1793441704.9194443,
+    "ast_hash": "bbb53857d81ab957ec0fed949455bc44",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lake_m4_lq.webp": {
-    "mtime": 1793405827.720465,
-    "seen": 1793406176.5346622,
-    "ast_hash": "e4b0ef7868ddd03ed524c8ec0618c8d0",
+    "mtime": 1793433949.1493468,
+    "seen": 1793441704.9194443,
+    "ast_hash": "68e72b972cdc2435a4282cd65c58aa3e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lava_flow_detail.png": {
-    "mtime": 1793400707.9364057,
-    "seen": 1793400967.5688565,
-    "ast_hash": "c3f0dc40bf0022818dca2365973605c2",
+    "mtime": 1793433840.9336636,
+    "seen": 1793441704.9194443,
+    "ast_hash": "f5da679e209fede59e7af2d53f78d00f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lava_flow_m1.webp": {
-    "mtime": 1793400702.2304056,
-    "seen": 1793400967.5688565,
-    "ast_hash": "339f014db9134f90e2501699cd218cee",
+    "mtime": 1793433834.6008148,
+    "seen": 1793441704.9194443,
+    "ast_hash": "40b70f5c2df40719700b674d6152282f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lava_flow_m1_lq.webp": {
-    "mtime": 1793400702.3356824,
-    "seen": 1793400967.5688565,
-    "ast_hash": "d3401d6e70c578ab649ae8aa2a04418c",
+    "mtime": 1793433834.7357762,
+    "seen": 1793441704.9194443,
+    "ast_hash": "c8c045ff0cef5ac12a46367f4107e3ac",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lava_flow_m2.webp": {
-    "mtime": 1793400704.1729114,
-    "seen": 1793400967.5688565,
-    "ast_hash": "dffa50937aa5f8fe23bd305acee617fb",
+    "mtime": 1793433836.6778514,
+    "seen": 1793441704.9194443,
+    "ast_hash": "a9df8bff5164096cb989794b1d5f842e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lava_flow_m2_lq.webp": {
-    "mtime": 1793400704.3428638,
-    "seen": 1793400967.5688565,
-    "ast_hash": "15f55cd46f2a24ca119540d2cff6080b",
+    "mtime": 1793433836.8178039,
+    "seen": 1793441704.9194443,
+    "ast_hash": "a7247685acdc60b415b48fee538878da",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lava_flow_m3.webp": {
-    "mtime": 1793400706.114484,
-    "seen": 1793400967.5688565,
-    "ast_hash": "716cb4c2a016a9e6044e1009c6a293bf",
+    "mtime": 1793433838.4608102,
+    "seen": 1793441704.9194443,
+    "ast_hash": "6c364e4492651c94ee3e73650edfaba6",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lava_flow_m3_lq.webp": {
-    "mtime": 1793400706.2201831,
-    "seen": 1793400967.5688565,
-    "ast_hash": "cecbb603f34ab8dba1deb2b8770b50ce",
+    "mtime": 1793433838.5855095,
+    "seen": 1793441704.9194443,
+    "ast_hash": "2facf3d00332273412a84947afb87f62",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lava_flow_m4.webp": {
-    "mtime": 1793400707.7562873,
-    "seen": 1793400967.5688565,
-    "ast_hash": "613cd596f5e728019d3afc4546dc7fba",
+    "mtime": 1793433840.7564826,
+    "seen": 1793441704.9194443,
+    "ast_hash": "788ba37ebdb27fafce0ac514cce2db33",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lava_flow_m4_lq.webp": {
-    "mtime": 1793400707.8574748,
-    "seen": 1793400967.5688565,
-    "ast_hash": "96e9deac68c0daa37817bf1492b66c73",
+    "mtime": 1793433840.857737,
+    "seen": 1793441704.9194443,
+    "ast_hash": "be7ff1a24425dd259b7a3587e3dfe1ff",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lightning_scar_detail.png": {
-    "mtime": 1793400723.2220225,
-    "seen": 1793400967.5688565,
-    "ast_hash": "d6ae65b6ad90fc50e3c6abdd891854b8",
+    "mtime": 1793433861.2292774,
+    "seen": 1793441704.9194443,
+    "ast_hash": "68f087459611296eae98391744b7620a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lightning_scar_m1.webp": {
-    "mtime": 1793400717.9249094,
-    "seen": 1793400967.5688565,
-    "ast_hash": "00941b32f8b25f159397411d96032ee9",
+    "mtime": 1793433854.047147,
+    "seen": 1793441704.9194443,
+    "ast_hash": "83cfbe41c1f87d3981ee223eac0ceb48",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lightning_scar_m1_lq.webp": {
-    "mtime": 1793400718.0189953,
-    "seen": 1793400967.5688565,
-    "ast_hash": "213da37643a26b0c12354bfdc821ab94",
+    "mtime": 1793433854.2249334,
+    "seen": 1793441704.9194443,
+    "ast_hash": "622271bba5332836e0dd5833ec288a74",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lightning_scar_m2.webp": {
-    "mtime": 1793400719.8480444,
-    "seen": 1793400967.5688565,
-    "ast_hash": "2fb6f7d079eaf5231489229fb555cb7c",
+    "mtime": 1793433856.508941,
+    "seen": 1793441704.9194443,
+    "ast_hash": "4f32e115f332aa5b21eca6217d006bfe",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lightning_scar_m2_lq.webp": {
-    "mtime": 1793400719.9471314,
-    "seen": 1793400967.5688565,
-    "ast_hash": "8284336aeb943cfec4a7fc6fa2b10fcf",
+    "mtime": 1793433856.730697,
+    "seen": 1793441704.9194443,
+    "ast_hash": "74c24fd29ee3a81f10f65a4666409178",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lightning_scar_m3.webp": {
-    "mtime": 1793400721.411585,
-    "seen": 1793400967.5688565,
-    "ast_hash": "ccb318af533caea55d8cf04fac5734ab",
+    "mtime": 1793433858.8619452,
+    "seen": 1793441704.9194443,
+    "ast_hash": "1b2f830a3b6810ac863251c521da8130",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lightning_scar_m3_lq.webp": {
-    "mtime": 1793400721.5165174,
-    "seen": 1793400967.5688565,
-    "ast_hash": "f9066d25bb12942ab00ee7a3c3c21073",
+    "mtime": 1793433859.0731664,
+    "seen": 1793441704.9194443,
+    "ast_hash": "ba7cecb6d84d91d17ec05dfead0957d2",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lightning_scar_m4.webp": {
-    "mtime": 1793400723.035599,
-    "seen": 1793400967.5688565,
-    "ast_hash": "b0db97915f7c0a1eaf85b659ee68a317",
+    "mtime": 1793433860.9413435,
+    "seen": 1793441704.9194443,
+    "ast_hash": "a0faf8db0ef8f9856d286d564034f6ed",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/lightning_scar_m4_lq.webp": {
-    "mtime": 1793400723.1405191,
-    "seen": 1793400967.5688565,
-    "ast_hash": "6195ced604fab41a317e87d6e37d1583",
+    "mtime": 1793433861.1054654,
+    "seen": 1793441704.9194443,
+    "ast_hash": "9e83fb23a22b9069eee33de46567dff8",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/meadow_detail.png": {
-    "mtime": 1793373637.2031074,
-    "seen": 1793400093.273228,
-    "ast_hash": "cb2b58e522ee5f678cf6f5529a1490b0",
+    "mtime": 1793433645.693735,
+    "seen": 1793441704.9194443,
+    "ast_hash": "be7b61e07c893397028d7dccc2f3588d",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/meadow_m1.webp": {
-    "mtime": 1793373630.7564588,
-    "seen": 1793400093.273228,
-    "ast_hash": "d53a41086d6805aea599b0bd8251d26f",
+    "mtime": 1793433639.1079087,
+    "seen": 1793441704.9194443,
+    "ast_hash": "1ba9ce498765d8d9d0d1ccfb59092df9",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/meadow_m1_lq.webp": {
-    "mtime": 1793373630.8780603,
-    "seen": 1793400093.273228,
-    "ast_hash": "38308783286c4ab84af6cc22454f16b1",
+    "mtime": 1793433639.2400644,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d0d1e4786b68ccc13d5f3a5a2170ac75",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/meadow_m2.webp": {
-    "mtime": 1793373632.7835455,
-    "seen": 1793400093.273228,
-    "ast_hash": "7bf93e5bc846313b128119d6d0e7fe73",
+    "mtime": 1793433641.0926483,
+    "seen": 1793441704.9194443,
+    "ast_hash": "9ed97085f3813761cf70f172028814a3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/meadow_m2_lq.webp": {
-    "mtime": 1793373632.944756,
-    "seen": 1793400093.273228,
-    "ast_hash": "675a84d773262a613591fbddc75ff8c1",
+    "mtime": 1793433641.2771332,
+    "seen": 1793441704.9194443,
+    "ast_hash": "a996bca2308a0d147d3299babb761582",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/meadow_m3.webp": {
-    "mtime": 1793373635.0407689,
-    "seen": 1793400093.273228,
-    "ast_hash": "d4910b6a006a700c0499ba1b4b723607",
+    "mtime": 1793433643.1209183,
+    "seen": 1793441704.9194443,
+    "ast_hash": "c8bc7f04c2c934851686e2a016100715",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/meadow_m3_lq.webp": {
-    "mtime": 1793373635.162764,
-    "seen": 1793400093.273228,
-    "ast_hash": "4208925c592f47c295905e9b0dd741d4",
+    "mtime": 1793433643.243961,
+    "seen": 1793441704.9194443,
+    "ast_hash": "c6e5f5cbee763f5f780044dce61d633c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/meadow_m4.webp": {
-    "mtime": 1793373637.0100465,
-    "seen": 1793400093.273228,
-    "ast_hash": "3a28e0b0fba9090b4b25840ac1809410",
+    "mtime": 1793433645.476263,
+    "seen": 1793441704.9194443,
+    "ast_hash": "61a2deaf7f149edcf5d91d0070e37258",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/meadow_m4_lq.webp": {
-    "mtime": 1793373637.119578,
-    "seen": 1793400093.273228,
-    "ast_hash": "0cd62dba16ad2e3c152c0efb76ede57e",
+    "mtime": 1793433645.6072874,
+    "seen": 1793441704.9194443,
+    "ast_hash": "f666693df680d019d75203eb6dea984f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/miasma_waste_detail.png": {
-    "mtime": 1793399813.726259,
-    "seen": 1793400093.273228,
-    "ast_hash": "76a3f4fddb0a73ee69a341d72c8142d3",
+    "mtime": 1793433812.1926396,
+    "seen": 1793441704.9194443,
+    "ast_hash": "65f5d317f80dedafa3a5f48d5a34cc66",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/miasma_waste_m1.webp": {
-    "mtime": 1793399808.3523552,
-    "seen": 1793400093.273228,
-    "ast_hash": "881b059738a4ca8d73b2363389a5781f",
+    "mtime": 1793433806.2014565,
+    "seen": 1793441704.9194443,
+    "ast_hash": "76b3be59f871d13de5c6858514079770",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/miasma_waste_m1_lq.webp": {
-    "mtime": 1793399808.4894314,
-    "seen": 1793400093.273228,
-    "ast_hash": "c56275bb2ba5fa6146c42643977f36f6",
+    "mtime": 1793433806.3122177,
+    "seen": 1793441704.9194443,
+    "ast_hash": "1a999c096df8ea2ebef2aca1af5e524a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/miasma_waste_m2.webp": {
-    "mtime": 1793399810.2411435,
-    "seen": 1793400093.273228,
-    "ast_hash": "95753dac886942f0c54cda5c09c83769",
+    "mtime": 1793433808.1790116,
+    "seen": 1793441704.9194443,
+    "ast_hash": "a94ecebbf9b29123632bb6c47c2d5e90",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/miasma_waste_m2_lq.webp": {
-    "mtime": 1793399810.354357,
-    "seen": 1793400093.273228,
-    "ast_hash": "b6830151d585d5d52bcef26fe983e371",
+    "mtime": 1793433808.3315558,
+    "seen": 1793441704.9194443,
+    "ast_hash": "7c462d903d0940e4807bbacf0fb2c4ec",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/miasma_waste_m3.webp": {
-    "mtime": 1793399811.7887843,
-    "seen": 1793400093.273228,
-    "ast_hash": "02476f27409c226d4e69a158b2a06606",
+    "mtime": 1793433809.9423392,
+    "seen": 1793441704.9194443,
+    "ast_hash": "6f84323b8794ae1dfcf0b6604370f19a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/miasma_waste_m3_lq.webp": {
-    "mtime": 1793399811.9008508,
-    "seen": 1793400093.273228,
-    "ast_hash": "d20c78b58926d0fd74a9dc2ad1051042",
+    "mtime": 1793433810.0747669,
+    "seen": 1793441704.9194443,
+    "ast_hash": "53028f8ee42b47c5e6e495b3ebeabf11",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/miasma_waste_m4.webp": {
-    "mtime": 1793399813.5609677,
-    "seen": 1793400093.273228,
-    "ast_hash": "7f8aae861944a117cd78001bc17e23ec",
+    "mtime": 1793433812.0150537,
+    "seen": 1793441704.9194443,
+    "ast_hash": "b77d04a828542b7d2aa51c8f6fd63972",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/miasma_waste_m4_lq.webp": {
-    "mtime": 1793399813.6491754,
-    "seen": 1793400093.273228,
-    "ast_hash": "36c3f3d0dcb659f85df3002b6c6e96b5",
+    "mtime": 1793433812.1129668,
+    "seen": 1793441704.9194443,
+    "ast_hash": "7ab2c4aed30cb778748312ff188fb8b6",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/mountain_pass_detail.png": {
-    "mtime": 1793374325.142559,
-    "seen": 1793400093.273228,
-    "ast_hash": "3358631afd9ebc5fc2ce6d4a85fc42d4",
+    "mtime": 1793433718.18369,
+    "seen": 1793441704.9194443,
+    "ast_hash": "45dae73f0a79aad798d59206607d0b9d",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/mountain_pass_m1.webp": {
-    "mtime": 1793374319.8742788,
-    "seen": 1793400093.273228,
-    "ast_hash": "33baa509c8aca16720c292f8b89e1f4b",
+    "mtime": 1793433712.4200523,
+    "seen": 1793441704.9194443,
+    "ast_hash": "3337c19097c8ae6cc7a8f7e43eaf8348",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/mountain_pass_m1_lq.webp": {
-    "mtime": 1793374320.0669885,
-    "seen": 1793400093.273228,
-    "ast_hash": "0ea977943fad044ff84e02bdf00a5879",
+    "mtime": 1793433712.5427976,
+    "seen": 1793441704.9194443,
+    "ast_hash": "2f4b8ac8917a7522ee82330cd116d910",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/mountain_pass_m2.webp": {
-    "mtime": 1793374321.8031187,
-    "seen": 1793400093.273228,
-    "ast_hash": "2b8d2c4d3a0bdaab41915f96e86b7abe",
+    "mtime": 1793433714.5190816,
+    "seen": 1793441704.9194443,
+    "ast_hash": "91ace1666d95f1b414807c98deebe3a5",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/mountain_pass_m2_lq.webp": {
-    "mtime": 1793374321.9058855,
-    "seen": 1793400093.273228,
-    "ast_hash": "39432f03c5c786d9352e210651f974f6",
+    "mtime": 1793433714.6362638,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d7735d3bcca42ee450c09914ac328339",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/mountain_pass_m3.webp": {
-    "mtime": 1793374323.475414,
-    "seen": 1793400093.273228,
-    "ast_hash": "9ea59ed13464012c3d565cb8aae51cad",
+    "mtime": 1793433716.2655642,
+    "seen": 1793441704.9194443,
+    "ast_hash": "ebc0dd620e40dd96b80b93331a2fc80e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/mountain_pass_m3_lq.webp": {
-    "mtime": 1793374323.5898097,
-    "seen": 1793400093.273228,
-    "ast_hash": "536ace19b9678c0354b3b8d08814791a",
+    "mtime": 1793433716.4708498,
+    "seen": 1793441704.9194443,
+    "ast_hash": "17a1193f7a0f68d378bebb6065c20916",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/mountain_pass_m4.webp": {
-    "mtime": 1793374324.939503,
-    "seen": 1793400093.273228,
-    "ast_hash": "8b4aa04c92210c64aca5fac72a917f69",
+    "mtime": 1793433717.962504,
+    "seen": 1793441704.9194443,
+    "ast_hash": "7ffb6b0986c1f65cc03d6d6a266b6786",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/mountain_pass_m4_lq.webp": {
-    "mtime": 1793374325.060484,
-    "seen": 1793400093.273228,
-    "ast_hash": "35a133304f089d4e2f382333c73bcaca",
+    "mtime": 1793433718.0960016,
+    "seen": 1793441704.9194443,
+    "ast_hash": "bbb26739dba57045ea8d58962d156e19",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/oasis_detail.png": {
-    "mtime": 1793375690.0870352,
-    "seen": 1793400093.273228,
-    "ast_hash": "cac84d35fbb19bfba42cd8a2527299a7",
+    "mtime": 1793433753.5103247,
+    "seen": 1793441704.9194443,
+    "ast_hash": "70bb3a4775d1605010c989ac5b4c8bb5",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/oasis_m1.webp": {
-    "mtime": 1793375684.491307,
-    "seen": 1793400093.273228,
-    "ast_hash": "ed76c8220dfb745d22b231e7753d2596",
+    "mtime": 1793433746.8382504,
+    "seen": 1793441704.9194443,
+    "ast_hash": "4e66772a1c141a148d8ce4ca57073129",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/oasis_m1_lq.webp": {
-    "mtime": 1793375684.5923052,
-    "seen": 1793400093.273228,
-    "ast_hash": "f28442d04a56183924745c3b11b3e063",
+    "mtime": 1793433746.9879131,
+    "seen": 1793441704.9194443,
+    "ast_hash": "b5f50b4f09d95f496136e5621cf59598",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/oasis_m2.webp": {
-    "mtime": 1793375686.017371,
-    "seen": 1793400093.273228,
-    "ast_hash": "54b33fed99d188d8bc20df6e5a072611",
+    "mtime": 1793433748.9335785,
+    "seen": 1793441704.9194443,
+    "ast_hash": "9fcb37f5a6e4705b4ac5af2b3e992556",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/oasis_m2_lq.webp": {
-    "mtime": 1793375686.1132834,
-    "seen": 1793400093.273228,
-    "ast_hash": "73b3dcb33f988536fdcaa2bd78efa0c5",
+    "mtime": 1793433749.067343,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d83c54af55eb55b6114343023382b13f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/oasis_m3.webp": {
-    "mtime": 1793375688.029546,
-    "seen": 1793400093.273228,
-    "ast_hash": "8af722ae1cfa7d4fe3533cbae1d9153b",
+    "mtime": 1793433750.8735974,
+    "seen": 1793441704.9194443,
+    "ast_hash": "0debe09c168d5f1c11d0f2f16255bec0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/oasis_m3_lq.webp": {
-    "mtime": 1793375688.1324618,
-    "seen": 1793400093.273228,
-    "ast_hash": "5894a49f5b06014e574cc64513056b96",
+    "mtime": 1793433751.0801437,
+    "seen": 1793441704.9194443,
+    "ast_hash": "274759e7f1904f909dc9e6eace693ce6",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/oasis_m4.webp": {
-    "mtime": 1793375689.8921342,
-    "seen": 1793400093.273228,
-    "ast_hash": "2e349e3b1955d560962dc16e1ca6519b",
+    "mtime": 1793433753.3230422,
+    "seen": 1793441704.9194443,
+    "ast_hash": "26a2ccec1bf2b702147fc9b6850649b8",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/oasis_m4_lq.webp": {
-    "mtime": 1793375690.0057378,
-    "seen": 1793400093.273228,
-    "ast_hash": "74b0cbf5bd7d5641a92966be8f5adf97",
+    "mtime": 1793433753.4306457,
+    "seen": 1793441704.9194443,
+    "ast_hash": "31218d27acb3f35347d939e6cbadc151",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ocean_detail.png": {
-    "mtime": 1793403356.651605,
-    "seen": 1793403616.9430664,
-    "ast_hash": "8746f9c12e4a06e8eaea62a40970b2bb",
+    "mtime": 1793433929.815238,
+    "seen": 1793441704.9194443,
+    "ast_hash": "7e111f93ff51a6481a84ec48267ee35e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ocean_m1.webp": {
-    "mtime": 1793403350.890953,
-    "seen": 1793403616.9430664,
-    "ast_hash": "1a8aea05d370814e4dfc369020d5a248",
+    "mtime": 1793433922.0766046,
+    "seen": 1793441704.9194443,
+    "ast_hash": "9f782bf19e577222510ec0a786cfd338",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ocean_m1_lq.webp": {
-    "mtime": 1793403350.9887671,
-    "seen": 1793403616.9430664,
-    "ast_hash": "5efda0aaeb37bfc2a3e17b24b848ba35",
+    "mtime": 1793433922.2083893,
+    "seen": 1793441704.9194443,
+    "ast_hash": "ba431e8b45c52a16666ac13beb17e1f6",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ocean_m2.webp": {
-    "mtime": 1793403352.867164,
-    "seen": 1793403616.9430664,
-    "ast_hash": "6111f3882a0736ca50c0c64c116c1449",
+    "mtime": 1793433924.7034245,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d5f3e2f76d32db8077bb18dbd3ebd044",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ocean_m2_lq.webp": {
-    "mtime": 1793403353.0030909,
-    "seen": 1793403616.9430664,
-    "ast_hash": "5c2991222ca4ca74a4eb577a8e493c50",
+    "mtime": 1793433924.9574583,
+    "seen": 1793441704.9194443,
+    "ast_hash": "33e9824e3077fd649caef8defb77ee2a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ocean_m3.webp": {
-    "mtime": 1793403354.6309738,
-    "seen": 1793403616.9430664,
-    "ast_hash": "7d4945039452461e39e44f5e04e562b0",
+    "mtime": 1793433927.368533,
+    "seen": 1793441704.9194443,
+    "ast_hash": "c2f4373124aa11a9b7c34bc99893a919",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ocean_m3_lq.webp": {
-    "mtime": 1793403354.7379744,
-    "seen": 1793403616.9430664,
-    "ast_hash": "203cdb626d739aa8d02d58ef6f04a290",
+    "mtime": 1793433927.5050664,
+    "seen": 1793441704.9194443,
+    "ast_hash": "e05cfe88574ced2c3b4e9ef1d43c3519",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ocean_m4.webp": {
-    "mtime": 1793403356.4667249,
-    "seen": 1793403616.9430664,
-    "ast_hash": "682dba0bff6f73aa598666d026611415",
+    "mtime": 1793433929.6044004,
+    "seen": 1793441704.9194443,
+    "ast_hash": "da78e469bd14722c7a39aa19404f7c5c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ocean_m4_lq.webp": {
-    "mtime": 1793403356.5671284,
-    "seen": 1793403616.9430664,
-    "ast_hash": "defc2775d98dd600fd15ab7d83306f43",
+    "mtime": 1793433929.730907,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d0174482447a739c9479555e04366cb5",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/plains_detail.png": {
-    "mtime": 1793417643.153211,
-    "seen": 1793418157.6910002,
-    "ast_hash": "35d0a680b8502f9f3ecbe5ea6bafa622",
+    "mtime": 1793433636.1852748,
+    "seen": 1793441704.9194443,
+    "ast_hash": "75a2bb8c8fffd5bdb4ba947bb9de9d03",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/plains_m1.webp": {
-    "mtime": 1793417635.361546,
-    "seen": 1793418157.6910002,
-    "ast_hash": "ac6872fe594675bd3e42ad16eaa33f91",
+    "mtime": 1793433629.4592886,
+    "seen": 1793441704.9194443,
+    "ast_hash": "29350cd1f6f3b4d11c451102957f288c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/plains_m1_lq.webp": {
-    "mtime": 1793417635.5083792,
-    "seen": 1793418157.6910002,
-    "ast_hash": "e0105df6aaf74d950444a1a737216cdb",
+    "mtime": 1793433629.6170764,
+    "seen": 1793441704.9194443,
+    "ast_hash": "4ff12aecd3a41542ded279458fc033ce",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/plains_m2.webp": {
-    "mtime": 1793417638.0149717,
-    "seen": 1793418157.6910002,
-    "ast_hash": "f424859df343fa01f476e2c4761b262a",
+    "mtime": 1793433631.5038712,
+    "seen": 1793441704.9194443,
+    "ast_hash": "ece8c5318ceb02c6edd10d37cb3fba42",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/plains_m2_lq.webp": {
-    "mtime": 1793417638.1895337,
-    "seen": 1793418157.6910002,
-    "ast_hash": "d0054805537f38fdce292265e89c2e03",
+    "mtime": 1793433631.637614,
+    "seen": 1793441704.9194443,
+    "ast_hash": "9833c950183e8ea693c9a8a375b5bd43",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/plains_m3.webp": {
-    "mtime": 1793417640.6291802,
-    "seen": 1793418157.6910002,
-    "ast_hash": "7acb06507ed70c00a9bd9baa9c02bcf5",
+    "mtime": 1793433633.7311187,
+    "seen": 1793441704.9194443,
+    "ast_hash": "6cf83ffe93c051cdf7cb173401923df1",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/plains_m3_lq.webp": {
-    "mtime": 1793417640.7831466,
-    "seen": 1793418157.6910002,
-    "ast_hash": "1931b6e415c1c964f0b5921609203e1c",
+    "mtime": 1793433633.8461516,
+    "seen": 1793441704.9194443,
+    "ast_hash": "77755bd2599cf4a8dc7c42782351ad33",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/plains_m4.webp": {
-    "mtime": 1793417642.9369392,
-    "seen": 1793418157.6910002,
-    "ast_hash": "01c423a7ea29dcf07e0ecaed485cd282",
+    "mtime": 1793433635.9868116,
+    "seen": 1793441704.9194443,
+    "ast_hash": "b76be5e8638762ca472314d3f5349aa5",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/plains_m4_lq.webp": {
-    "mtime": 1793417643.0756378,
-    "seen": 1793418157.6910002,
-    "ast_hash": "e02d6ecce96d31987358e30c7206a1ac",
+    "mtime": 1793433636.1057496,
+    "seen": 1793441704.9194443,
+    "ast_hash": "f7132e77a904f3b1515568c01f3130ae",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/poison_pool_detail.png": {
-    "mtime": 1793399806.3108704,
-    "seen": 1793400093.2782233,
-    "ast_hash": "95970e063b624feb975ee90b9984d3f2",
+    "mtime": 1793433803.789434,
+    "seen": 1793441704.9194443,
+    "ast_hash": "6fd7d2d979836e4f1e29f24db433ed3e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/poison_pool_m1.webp": {
-    "mtime": 1793399801.382648,
-    "seen": 1793400093.2782233,
-    "ast_hash": "3fe088ff7bd1a9e549224e536d730127",
+    "mtime": 1793433795.794134,
+    "seen": 1793441704.9194443,
+    "ast_hash": "2771a458b45d7d3cd9f2c3a1d23da62a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/poison_pool_m1_lq.webp": {
-    "mtime": 1793399801.487501,
-    "seen": 1793400093.2782233,
-    "ast_hash": "41bb336efd00ca7dbefb7c156b0d0ded",
+    "mtime": 1793433795.991012,
+    "seen": 1793441704.9194443,
+    "ast_hash": "c2189346bdee25d3b2fc850b321dfa3f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/poison_pool_m2.webp": {
-    "mtime": 1793399802.957283,
-    "seen": 1793400093.2782233,
-    "ast_hash": "b80f0f11afd408080dcddb7a13ceed18",
+    "mtime": 1793433798.1485522,
+    "seen": 1793441704.9194443,
+    "ast_hash": "1c409994e2214cd51740db7ccb1fb02f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/poison_pool_m2_lq.webp": {
-    "mtime": 1793399803.0679333,
-    "seen": 1793400093.2782233,
-    "ast_hash": "34b5c895bec2d51008dde8622da58cc2",
+    "mtime": 1793433798.5147398,
+    "seen": 1793441704.9194443,
+    "ast_hash": "dfb085d188967942995561c1f97e1881",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/poison_pool_m3.webp": {
-    "mtime": 1793399804.4379647,
-    "seen": 1793400093.2782233,
-    "ast_hash": "13e2a69b01734945956c42eef92f0aad",
+    "mtime": 1793433801.4902623,
+    "seen": 1793441704.9194443,
+    "ast_hash": "963aa34a0eec4aefcce29e56321a26cf",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/poison_pool_m3_lq.webp": {
-    "mtime": 1793399804.5516994,
-    "seen": 1793400093.2782233,
-    "ast_hash": "32d92965463be684040d445cfd7118de",
+    "mtime": 1793433801.5884914,
+    "seen": 1793441704.9194443,
+    "ast_hash": "eed53c1e6d29fd4a398d6f7604b40dd7",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/poison_pool_m4.webp": {
-    "mtime": 1793399806.1319692,
-    "seen": 1793400093.2782233,
-    "ast_hash": "dc971839c3528634feea24bf9c7b2ed4",
+    "mtime": 1793433803.5701919,
+    "seen": 1793441704.9194443,
+    "ast_hash": "238e242e63365ea3d01755d922dd3a12",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/poison_pool_m4_lq.webp": {
-    "mtime": 1793399806.231184,
-    "seen": 1793400093.2782233,
-    "ast_hash": "77119015513af466ef90341d74eb5d9b",
+    "mtime": 1793433803.6932392,
+    "seen": 1793441704.9194443,
+    "ast_hash": "1e5be25101fab9494b008b27d0c99f1a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/river_detail.png": {
-    "mtime": 1793404482.5911357,
-    "seen": 1793406176.5586398,
-    "ast_hash": "bc88286f29066bcde1ee158aeea3efa9",
+    "mtime": 1793433939.6993706,
+    "seen": 1793441704.9194443,
+    "ast_hash": "c56698146f751c35173d600e03cbd0ca",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/river_m1.webp": {
-    "mtime": 1793404476.0369873,
-    "seen": 1793406176.5586398,
-    "ast_hash": "869252afa07eb07dff06b59e9afd214c",
+    "mtime": 1793433933.0350745,
+    "seen": 1793441704.9194443,
+    "ast_hash": "2659074a737c01d7fe7f8379a3cf70c3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/river_m1_lq.webp": {
-    "mtime": 1793404476.1297364,
-    "seen": 1793406176.5586398,
-    "ast_hash": "dc11b6ffa2fa7bbf88bbef858697f6b6",
+    "mtime": 1793433933.260309,
+    "seen": 1793441704.9194443,
+    "ast_hash": "44345c8deeb70e41c30dd96cbc0d87f4",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/river_m2.webp": {
-    "mtime": 1793404477.661727,
-    "seen": 1793406176.5586398,
-    "ast_hash": "95d82721405df4494d0e616f775d3888",
+    "mtime": 1793433935.3887482,
+    "seen": 1793441704.9194443,
+    "ast_hash": "1f3fed2e886b18fdc5e452e5c477df3e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/river_m2_lq.webp": {
-    "mtime": 1793404477.7849207,
-    "seen": 1793406176.5586398,
-    "ast_hash": "103a5d58867905e99fc2bbc4481db180",
+    "mtime": 1793433935.5053184,
+    "seen": 1793441704.9194443,
+    "ast_hash": "c13b51c15f61b8fd36edc0f252f383b4",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/river_m3.webp": {
-    "mtime": 1793404480.086629,
-    "seen": 1793406176.5586398,
-    "ast_hash": "ce163a1ce32a84401b274b06c04a1405",
+    "mtime": 1793433937.5029066,
+    "seen": 1793441704.9194443,
+    "ast_hash": "d4557ee9afda15ff73d64c39f9b672cd",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/river_m3_lq.webp": {
-    "mtime": 1793404480.1941829,
-    "seen": 1793406176.5586398,
-    "ast_hash": "27dc6375b6688de3095bf3a62de409cd",
+    "mtime": 1793433937.646767,
+    "seen": 1793441704.9194443,
+    "ast_hash": "93d5d55719264426600f221a0cebb3d4",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/river_m4.webp": {
-    "mtime": 1793404482.193011,
-    "seen": 1793406176.5586398,
-    "ast_hash": "0992c01c2beea0b6427ebea6dc82dec8",
+    "mtime": 1793433939.5215745,
+    "seen": 1793441704.9194443,
+    "ast_hash": "5e862367842fbd3e7b0919fb2abf4e96",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/river_m4_lq.webp": {
-    "mtime": 1793404482.3485868,
-    "seen": 1793406176.5586398,
-    "ast_hash": "09c8630258f22acf031ed8e3dc26eb7d",
+    "mtime": 1793433939.6216772,
+    "seen": 1793441704.9194443,
+    "ast_hash": "a1f547b223cb2f972124d4d8653c97d5",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/road_stone_detail.png": {
-    "mtime": 1793403348.4295816,
-    "seen": 1793403616.9510639,
-    "ast_hash": "012eebd96fea83a25c9167bb0f369e3a",
+    "mtime": 1793433919.206523,
+    "seen": 1793441704.9194443,
+    "ast_hash": "3869a619103275bfa1fe3fbccb992f49",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/road_stone_m1.webp": {
-    "mtime": 1793403342.7464519,
-    "seen": 1793403616.9510639,
-    "ast_hash": "14ce7dee2f3311da8984e2a4e06120f9",
+    "mtime": 1793433912.1619506,
+    "seen": 1793441704.9194443,
+    "ast_hash": "e144d0a4cb5f214b2eb9d2d2f6144cfc",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/road_stone_m1_lq.webp": {
-    "mtime": 1793403342.8491113,
-    "seen": 1793403616.9510639,
-    "ast_hash": "63b253515c01d68f3e561f7e72837779",
+    "mtime": 1793433912.3308637,
+    "seen": 1793441704.9194443,
+    "ast_hash": "ecb4f4c6b7ac8ec6c7b277b78ca98c9c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/road_stone_m2.webp": {
-    "mtime": 1793403344.6754818,
-    "seen": 1793403616.9510639,
-    "ast_hash": "38e464b5848ba8e7a1377f87e20b7249",
+    "mtime": 1793433915.4388652,
+    "seen": 1793441704.9194443,
+    "ast_hash": "afc69a3ad28bdbd8907064a57ba212a3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/road_stone_m2_lq.webp": {
-    "mtime": 1793403344.7804682,
-    "seen": 1793403616.9510639,
-    "ast_hash": "afcaf35be7030c210d2ad98af6a84d32",
+    "mtime": 1793433915.592219,
+    "seen": 1793441704.9194443,
+    "ast_hash": "c2dfb5aaf44e84a9dd032b479e7f303c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/road_stone_m3.webp": {
-    "mtime": 1793403346.4157872,
-    "seen": 1793403616.9510639,
-    "ast_hash": "df595374519e0c5fda7b769fb34fac53",
+    "mtime": 1793433917.0508268,
+    "seen": 1793441704.9194443,
+    "ast_hash": "2d7877eb15c6c59931e00bdb71597023",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/road_stone_m3_lq.webp": {
-    "mtime": 1793403346.53771,
-    "seen": 1793403616.9510639,
-    "ast_hash": "740d9d572433446b5348b1a158f1dbeb",
+    "mtime": 1793433917.1869876,
+    "seen": 1793441704.9194443,
+    "ast_hash": "ebe22ef03156a0381d81f9a70bb62cdf",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/road_stone_m4.webp": {
-    "mtime": 1793403348.2428873,
-    "seen": 1793403616.9510639,
-    "ast_hash": "6ced069f6ff273ead1192e64ebcd6fd6",
+    "mtime": 1793433918.9689434,
+    "seen": 1793441704.9194443,
+    "ast_hash": "13076d2323d5fd68650f46c53a0a539f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/road_stone_m4_lq.webp": {
-    "mtime": 1793403348.3480382,
-    "seen": 1793403616.9510639,
-    "ast_hash": "141ac7bb8327a72207790eed0c386ac8",
+    "mtime": 1793433919.1090503,
+    "seen": 1793441704.9194443,
+    "ast_hash": "89aedf0b3170e0315f8960f4aa46ac08",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/rock_ground_detail.png": {
-    "mtime": 1793374317.0997083,
-    "seen": 1793400093.2842178,
-    "ast_hash": "dd8770696ed76862f11c86e14b273e4e",
+    "mtime": 1793433709.7166526,
+    "seen": 1793441704.9194443,
+    "ast_hash": "20326e3bade8ebb9a317935459705da0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/rock_ground_m1.webp": {
-    "mtime": 1793374311.9161203,
-    "seen": 1793400093.2842178,
-    "ast_hash": "1ff81d557a9393dd92d142b48f039609",
+    "mtime": 1793433702.7485871,
+    "seen": 1793441704.9194443,
+    "ast_hash": "969e1e600de51de805940cca21f5d167",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/rock_ground_m1_lq.webp": {
-    "mtime": 1793374312.0249786,
-    "seen": 1793400093.2842178,
-    "ast_hash": "77acbe385789e8f251b4a4d1c4f8beec",
+    "mtime": 1793433702.8827727,
+    "seen": 1793441704.9194443,
+    "ast_hash": "28ea66b8929d3e4490a7b7e754afab5e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/rock_ground_m2.webp": {
-    "mtime": 1793374313.5503345,
-    "seen": 1793400093.2842178,
-    "ast_hash": "1a24896023b03addd159d76bf4250a52",
+    "mtime": 1793433705.6362245,
+    "seen": 1793441704.9194443,
+    "ast_hash": "deddcf4d423a4913366d28043b281d17",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/rock_ground_m2_lq.webp": {
-    "mtime": 1793374313.6635334,
-    "seen": 1793400093.2842178,
-    "ast_hash": "8803f1eb81795e2e80ff112ad73c6792",
+    "mtime": 1793433705.743276,
+    "seen": 1793441704.9194443,
+    "ast_hash": "3e4bfd480879b244c3d3f2479bbbf70c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/rock_ground_m3.webp": {
-    "mtime": 1793374315.3282447,
-    "seen": 1793400093.2842178,
-    "ast_hash": "fc50608105c5e2232211e01886200908",
+    "mtime": 1793433707.4728372,
+    "seen": 1793441704.9194443,
+    "ast_hash": "7652468ebe43d1eb10ab7ba526434265",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/rock_ground_m3_lq.webp": {
-    "mtime": 1793374315.4421597,
-    "seen": 1793400093.2842178,
-    "ast_hash": "832decc93d803d7f09932e829cb0e6d3",
+    "mtime": 1793433707.6049297,
+    "seen": 1793441704.9194443,
+    "ast_hash": "986b0ca20da202aa224273ed754968a2",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/rock_ground_m4.webp": {
-    "mtime": 1793374316.908671,
-    "seen": 1793400093.2842178,
-    "ast_hash": "3988546f36e00e1bf5374385911e25ff",
+    "mtime": 1793433709.528614,
+    "seen": 1793441704.9194443,
+    "ast_hash": "df6cc562d99545fd0aa66b980c8a7b3e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/rock_ground_m4_lq.webp": {
-    "mtime": 1793374317.01878,
-    "seen": 1793400093.2842178,
-    "ast_hash": "8c53f7872c1ddc065e0e7e69d5a9c440",
+    "mtime": 1793433709.6374364,
+    "seen": 1793441704.9194443,
+    "ast_hash": "96576192b200d8a99c22b5a25849b449",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ruin_floor_detail.png": {
-    "mtime": 1793400737.8642328,
-    "seen": 1793400967.5969439,
-    "ast_hash": "68770f882e60506ffa002e26339d2442",
+    "mtime": 1793433880.2948344,
+    "seen": 1793441704.9194443,
+    "ast_hash": "5d4534f483d42565e222f3ce7a1cf61a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ruin_floor_m1.webp": {
-    "mtime": 1793400732.8495374,
-    "seen": 1793400967.5969439,
-    "ast_hash": "284f3d2afe90aba40c613945440e84c7",
+    "mtime": 1793433873.5258925,
+    "seen": 1793441704.9194443,
+    "ast_hash": "2d3e388f5727d2ad403c9dbfed8996f0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ruin_floor_m1_lq.webp": {
-    "mtime": 1793400732.9502096,
-    "seen": 1793400967.5969439,
-    "ast_hash": "3980afa76f0e489384ceaa423523dfd1",
+    "mtime": 1793433873.6560218,
+    "seen": 1793441704.9194443,
+    "ast_hash": "e2b5ca0dec6d58507853c589d56ae613",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ruin_floor_m2.webp": {
-    "mtime": 1793400734.2846065,
-    "seen": 1793400967.5969439,
-    "ast_hash": "76474c241b5728e4900fe40fe3c1a8b8",
+    "mtime": 1793433875.2969847,
+    "seen": 1793441704.9194443,
+    "ast_hash": "eab3a16bc47c3f27d97fee0754fb4ac6",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ruin_floor_m2_lq.webp": {
-    "mtime": 1793400734.3897505,
-    "seen": 1793400967.5969439,
-    "ast_hash": "f4ba8d8d8c87d36e486322ef661432c2",
+    "mtime": 1793433875.4157214,
+    "seen": 1793441704.9194443,
+    "ast_hash": "e7dbf1becbdcd6f2b9559d4a3ed54da0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ruin_floor_m3.webp": {
-    "mtime": 1793400736.225346,
-    "seen": 1793400967.5969439,
-    "ast_hash": "19e1bc34ee8b907f9213322677369db5",
+    "mtime": 1793433878.2997532,
+    "seen": 1793441704.9194443,
+    "ast_hash": "6f1d28559c07c669a81bd721c3e2fbb3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ruin_floor_m3_lq.webp": {
-    "mtime": 1793400736.3384514,
-    "seen": 1793400967.5969439,
-    "ast_hash": "503235f2e4e90e45b5956171daa0cb1a",
+    "mtime": 1793433878.457717,
+    "seen": 1793441704.9194443,
+    "ast_hash": "4527415782697778c17c0e5ddf4063b2",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ruin_floor_m4.webp": {
-    "mtime": 1793400737.638617,
-    "seen": 1793400967.5969439,
-    "ast_hash": "fbbf1d065e1b7875d9862253523069f3",
+    "mtime": 1793433880.0470538,
+    "seen": 1793441704.9194443,
+    "ast_hash": "6118a6b1b42247acbcb3763d8b27a758",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/ruin_floor_m4_lq.webp": {
-    "mtime": 1793400737.7554927,
-    "seen": 1793400967.5969439,
-    "ast_hash": "66c1b2f83a06140b5346ed172ec4a8f9",
+    "mtime": 1793433880.1880383,
+    "seen": 1793441704.9194443,
+    "ast_hash": "bee628d12897b673ce3fcd3b65e83752",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/settlement_floor_detail.png": {
-    "mtime": 1793403340.4618397,
-    "seen": 1793403616.9570534,
-    "ast_hash": "2f891c8e61dcb1488d2728d952c626c3",
+    "mtime": 1793433909.500262,
+    "seen": 1793441704.9194443,
+    "ast_hash": "2983094d7aa5364f760a862e7b0a763f",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/settlement_floor_m1.webp": {
-    "mtime": 1793403335.1072843,
-    "seen": 1793403616.9570534,
-    "ast_hash": "c80db27e87022e9d5858423397681db2",
+    "mtime": 1793433902.2732625,
+    "seen": 1793441704.9194443,
+    "ast_hash": "3e4fd507d3e6f922d69740ab7fb13cf3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/settlement_floor_m1_lq.webp": {
-    "mtime": 1793403335.1992002,
-    "seen": 1793403616.9570534,
-    "ast_hash": "d767c55f62541b7dbd806df458f45103",
+    "mtime": 1793433902.3869758,
+    "seen": 1793441704.9194443,
+    "ast_hash": "4c1b98056a3d2f264ce8e53dbbe5106c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/settlement_floor_m2.webp": {
-    "mtime": 1793403336.47488,
-    "seen": 1793403616.9570534,
-    "ast_hash": "a4cc9cc26b2d67067acc45be27a36e3c",
+    "mtime": 1793433905.1207006,
+    "seen": 1793441704.9194443,
+    "ast_hash": "62f9fdefe6dbba4a0f5f474add2ae823",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/settlement_floor_m2_lq.webp": {
-    "mtime": 1793403336.5755086,
-    "seen": 1793403616.9570534,
-    "ast_hash": "4c655da9209e7ece48a15cde776ad2ce",
+    "mtime": 1793433905.225866,
+    "seen": 1793441704.9194443,
+    "ast_hash": "e17ab4cb2304bd1eabab69f92ad37a97",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/settlement_floor_m3.webp": {
-    "mtime": 1793403338.7394109,
-    "seen": 1793403616.9570534,
-    "ast_hash": "93ea34245411da4aae57f95ffe80a8f6",
+    "mtime": 1793433907.1360202,
+    "seen": 1793441704.9194443,
+    "ast_hash": "95d5145c1403771d150e4911a07a624d",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/settlement_floor_m3_lq.webp": {
-    "mtime": 1793403338.8530154,
-    "seen": 1793403616.9570534,
-    "ast_hash": "86111d254e744f55c8df2cb3ca87bb05",
+    "mtime": 1793433907.253653,
+    "seen": 1793441704.9194443,
+    "ast_hash": "04dbc07b56583f07a46b78dd250245f4",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/settlement_floor_m4.webp": {
-    "mtime": 1793403340.2077873,
-    "seen": 1793403616.9570534,
-    "ast_hash": "162b7be1552099f47c75c8ea242c29bb",
+    "mtime": 1793433909.3029282,
+    "seen": 1793441704.9194443,
+    "ast_hash": "cb4352131fafbf16f87413efb27867a7",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/settlement_floor_m4_lq.webp": {
-    "mtime": 1793403340.3529723,
-    "seen": 1793403616.9570534,
-    "ast_hash": "c5d8ea3ced298dbca74f70207a3a3dab",
+    "mtime": 1793433909.4183383,
+    "seen": 1793441704.9194443,
+    "ast_hash": "664e614837248781e4fbc417c4734959",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/snow_detail.png": {
-    "mtime": 1793375408.980628,
-    "seen": 1793400093.2892132,
-    "ast_hash": "859959a1bc65b8b969ae91f7c697d3de",
+    "mtime": 1793433762.2494605,
+    "seen": 1793441704.920438,
+    "ast_hash": "a8cb118736f065359659802dc99f05fc",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/snow_m1.webp": {
-    "mtime": 1793375403.5819678,
-    "seen": 1793400093.2892132,
-    "ast_hash": "732b4a8b26f0e7e0a5d8c328b5d4608e",
+    "mtime": 1793433756.2087083,
+    "seen": 1793441704.920438,
+    "ast_hash": "b32e5b3e6982a8784e0dd8616647ec2b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/snow_m1_lq.webp": {
-    "mtime": 1793375403.6854494,
-    "seen": 1793400093.2892132,
-    "ast_hash": "66158ecf4e070937c119286602a5d040",
+    "mtime": 1793433756.317133,
+    "seen": 1793441704.920438,
+    "ast_hash": "c7a9a023e114d64020466b9a1f11dab3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/snow_m2.webp": {
-    "mtime": 1793375405.3607447,
-    "seen": 1793400093.2892132,
-    "ast_hash": "eac26649004eeb3cbbbaa1ca46cb4fab",
+    "mtime": 1793433758.1738162,
+    "seen": 1793441704.920438,
+    "ast_hash": "60e99df979e0aed853ad26c788603455",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/snow_m2_lq.webp": {
-    "mtime": 1793375405.4622805,
-    "seen": 1793400093.2892132,
-    "ast_hash": "8167753849abf7bbb8c0a6742f3a2e79",
+    "mtime": 1793433758.2919598,
+    "seen": 1793441704.920438,
+    "ast_hash": "e97e5a7e393d9cf2c1008dba3c9ba70b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/snow_m3.webp": {
-    "mtime": 1793375407.2653067,
-    "seen": 1793400093.2892132,
-    "ast_hash": "4fd2605a661991643d217ec6cc45901f",
+    "mtime": 1793433760.0360959,
+    "seen": 1793441704.920438,
+    "ast_hash": "da2c1f7ef17b889c0404e2fa94f810b0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/snow_m3_lq.webp": {
-    "mtime": 1793375407.3741062,
-    "seen": 1793400093.2892132,
-    "ast_hash": "31589665cd111245649657cc6d732fab",
+    "mtime": 1793433760.2148294,
+    "seen": 1793441704.920438,
+    "ast_hash": "d05b15b8a339db4a37475724197a6be5",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/snow_m4.webp": {
-    "mtime": 1793375408.7939882,
-    "seen": 1793400093.2892132,
-    "ast_hash": "55233966f7a47c8eed57999b56d252a6",
+    "mtime": 1793433762.0374515,
+    "seen": 1793441704.920438,
+    "ast_hash": "7bab313e1f5b1137084542436bad5ac4",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/snow_m4_lq.webp": {
-    "mtime": 1793375408.89775,
-    "seen": 1793400093.2892132,
-    "ast_hash": "81482d1f00a11875117e2e926c330956",
+    "mtime": 1793433762.163841,
+    "seen": 1793441704.920438,
+    "ast_hash": "93839c1b0b05f850274e26dfa058606d",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/swamp_detail.png": {
-    "mtime": 1793375424.107691,
-    "seen": 1793400093.2892132,
-    "ast_hash": "8762f8097cd982b448a775fbc0089560",
+    "mtime": 1793433781.1959593,
+    "seen": 1793441704.920438,
+    "ast_hash": "e89d0c3156cc72795516c4885b2e12cd",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/swamp_m1.webp": {
-    "mtime": 1793375419.0853615,
-    "seen": 1793400093.2892132,
-    "ast_hash": "4ee0e0dbb4d2cccd6f5e88764ea117ff",
+    "mtime": 1793433773.6891308,
+    "seen": 1793441704.920438,
+    "ast_hash": "0f5d83271301269f52e089e5e98d306c",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/swamp_m1_lq.webp": {
-    "mtime": 1793375419.2142866,
-    "seen": 1793400093.2892132,
-    "ast_hash": "3dcd51e91477474a053fe8ed0f7996b6",
+    "mtime": 1793433773.815912,
+    "seen": 1793441704.920438,
+    "ast_hash": "eadddfaedff64bd196700b036ba2260a",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/swamp_m2.webp": {
-    "mtime": 1793375420.5662878,
-    "seen": 1793400093.2892132,
-    "ast_hash": "249f8cd05c41c58304c9c730317d5cdf",
+    "mtime": 1793433775.610384,
+    "seen": 1793441704.920438,
+    "ast_hash": "99d6ad3741f190b6ad073787fb58bfcb",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/swamp_m2_lq.webp": {
-    "mtime": 1793375420.6722991,
-    "seen": 1793400093.2892132,
-    "ast_hash": "9a7117f15fc355acce5bb33a3bb3c85e",
+    "mtime": 1793433775.950105,
+    "seen": 1793441704.920438,
+    "ast_hash": "1a72150f293b18f5b133dd6f0ce6a634",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/swamp_m3.webp": {
-    "mtime": 1793375422.4160628,
-    "seen": 1793400093.2892132,
-    "ast_hash": "ec438cbdaddfc2f9d0eec375d368be7c",
+    "mtime": 1793433778.5737147,
+    "seen": 1793441704.920438,
+    "ast_hash": "1f7b6ec94b865af9d279a477095d44ac",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/swamp_m3_lq.webp": {
-    "mtime": 1793375422.5308943,
-    "seen": 1793400093.2892132,
-    "ast_hash": "dfb5ef5e8eb6fa667d75221c0b6ed161",
+    "mtime": 1793433778.6790886,
+    "seen": 1793441704.920438,
+    "ast_hash": "ecedab3f7fe58eefb86ed1609ba2b567",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/swamp_m4.webp": {
-    "mtime": 1793375423.9235988,
-    "seen": 1793400093.2892132,
-    "ast_hash": "fb1c837cc06d3e230cd9020896709b09",
+    "mtime": 1793433780.9205306,
+    "seen": 1793441704.920438,
+    "ast_hash": "b5a33d63a54c4e6efca73952c18dd334",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/swamp_m4_lq.webp": {
-    "mtime": 1793375424.0274389,
-    "seen": 1793400093.2892132,
-    "ast_hash": "43b554def9f8568e5797dee37aa8913c",
+    "mtime": 1793433781.0856693,
+    "seen": 1793441704.920438,
+    "ast_hash": "9cfccb8a98bd65455cf0e18a63479058",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/transition_mask_a.png": {
-    "mtime": 1793417632.0081697,
-    "seen": 1793418157.718149,
+    "mtime": 1793433626.7895017,
+    "seen": 1793441704.920438,
     "ast_hash": "775be3e2176fc3c0f3867c07dfa8566b",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/transition_mask_b.png": {
-    "mtime": 1793417632.0156088,
-    "seen": 1793418157.718149,
+    "mtime": 1793433626.8007264,
+    "seen": 1793441704.920438,
     "ast_hash": "072fa73d59c5289b6f2eb868948cb398",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/transition_mask_c.png": {
-    "mtime": 1793417632.0230498,
-    "seen": 1793418157.718149,
+    "mtime": 1793433626.808897,
+    "seen": 1793441704.920438,
     "ast_hash": "c5fd2f3e372766396201c7af14bd7fab",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/transition_mask_d.png": {
-    "mtime": 1793417632.031924,
-    "seen": 1793418157.718149,
+    "mtime": 1793433626.8198895,
+    "seen": 1793441704.920438,
     "ast_hash": "a0bc140f2e00ed4f8ac6f8ab29b8118e",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/volcanic_detail.png": {
-    "mtime": 1793399829.525492,
-    "seen": 1793400093.2892132,
-    "ast_hash": "720662189e524427ce025200b9bce4cc",
+    "mtime": 1793433831.5456698,
+    "seen": 1793441704.920438,
+    "ast_hash": "52d113e42763f9350f043d4fe0f3b2b0",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/volcanic_m1.webp": {
-    "mtime": 1793399824.3439693,
-    "seen": 1793400093.2892132,
-    "ast_hash": "e4680ea2834e4d4f17b94011d1a3f606",
+    "mtime": 1793433824.8862338,
+    "seen": 1793441704.920438,
+    "ast_hash": "92d76d899d94aa2d414a2e361f8d4097",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/volcanic_m1_lq.webp": {
-    "mtime": 1793399824.468242,
-    "seen": 1793400093.2892132,
-    "ast_hash": "d2ea20d853f3a9e5198c18391092a892",
+    "mtime": 1793433825.0064912,
+    "seen": 1793441704.920438,
+    "ast_hash": "fb958723f99c1301e16b418918f31f54",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/volcanic_m2.webp": {
-    "mtime": 1793399826.1402438,
-    "seen": 1793400093.2892132,
-    "ast_hash": "d4ce89f89884020ac8de64d6615eab0a",
+    "mtime": 1793433826.8405573,
+    "seen": 1793441704.920438,
+    "ast_hash": "ffa268b7307d6fd484a09a2a432a4d02",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/volcanic_m2_lq.webp": {
-    "mtime": 1793399826.241846,
-    "seen": 1793400093.2892132,
-    "ast_hash": "dfdc2021265a2772050e54cad745fe56",
+    "mtime": 1793433827.0328887,
+    "seen": 1793441704.920438,
+    "ast_hash": "f108e7634d396e705284d738b8839c77",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/volcanic_m3.webp": {
-    "mtime": 1793399827.8193076,
-    "seen": 1793400093.2892132,
-    "ast_hash": "0defc43fa3ef559e746be881f8c9b035",
+    "mtime": 1793433828.6002443,
+    "seen": 1793441704.920438,
+    "ast_hash": "2eb2b9a12b1f50e2ace51e94c9185004",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/volcanic_m3_lq.webp": {
-    "mtime": 1793399827.945965,
-    "seen": 1793400093.2892132,
-    "ast_hash": "9646a1617fab291eb70cd956469df952",
+    "mtime": 1793433828.7240622,
+    "seen": 1793441704.920438,
+    "ast_hash": "bb00d0e50451f7a610a7de347682f564",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/volcanic_m4.webp": {
-    "mtime": 1793399829.3280818,
-    "seen": 1793400093.2892132,
-    "ast_hash": "c6676edded02bca60aa22addb1c6a0bd",
+    "mtime": 1793433831.2608986,
+    "seen": 1793441704.920438,
+    "ast_hash": "78a9c27df5ce9ef69e9fb367150f1ee1",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/volcanic_m4_lq.webp": {
-    "mtime": 1793399829.4440348,
-    "seen": 1793400093.2892132,
-    "ast_hash": "28bf1d2696623d941d6512c26813b9b4",
+    "mtime": 1793433831.456601,
+    "seen": 1793441704.920438,
+    "ast_hash": "1fe74fe548ecb945f173149331559241",
     "semantic_hash": ""
   },
   "jianghu-bot/review/v12_atlas_unloaded.json": {
@@ -12678,15 +12678,15 @@
     "semantic_hash": ""
   },
   "jianghu-bot/utils/barrierGenerator.js": {
-    "mtime": 1793170773.3014245,
-    "seen": 1793178488.0268054,
-    "ast_hash": "6d3fec0ddd414418c664b3ff0f73257c",
+    "mtime": 1793439030.2554245,
+    "seen": 1793441704.4758232,
+    "ast_hash": "9fb2ff24a4283a430573face19708bf6",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/assets/ground/v11/sources_manifest.json": {
-    "mtime": 1793417643.160448,
-    "seen": 1793418157.1054482,
-    "ast_hash": "c0c4586fb0de998dd22683a4647fb41f",
+    "mtime": 1793433969.3442714,
+    "seen": 1793441704.5500216,
+    "ast_hash": "a37733d2b136ac5b6b33dd521763e91e",
     "semantic_hash": ""
   },
   "jianghu-bot/world-data/road-style-v12.json": {
@@ -13169,28 +13169,238 @@
     "ast_hash": "fd8aef201a060301a17abac0633f0743",
     "semantic_hash": ""
   },
-  "jianghu-bot/web-dashboard/public/assets/ground/v11/test_plains_m1.webp": {
-    "mtime": 1793417480.3755422,
-    "seen": 1793418157.717148,
-    "ast_hash": "9b365e11fd072844da2e83b005e6c888",
+  "jianghu-bot/review/grid_contract_summary.json": {
+    "mtime": 1793441465.1128762,
+    "seen": 1793441704.2772872,
+    "ast_hash": "47fe16c4e2a4ac48c30f42645913242c",
     "semantic_hash": ""
   },
-  "jianghu-bot/web-dashboard/public/assets/ground/v11/test_plains_m2.webp": {
-    "mtime": 1793417481.9220436,
-    "seen": 1793418157.717148,
-    "ast_hash": "93ac050fea3976bed0dc876455977a46",
+  "jianghu-bot/review/v10_audit_summary.json": {
+    "mtime": 1793441362.68638,
+    "seen": 1793441704.2772872,
+    "ast_hash": "881a1b38c2c7d72d501db50b7244bc87",
     "semantic_hash": ""
   },
-  "jianghu-bot/web-dashboard/public/assets/ground/v11/test_plains_m3.webp": {
-    "mtime": 1793417483.770274,
-    "seen": 1793418157.717148,
-    "ast_hash": "a77af1388744a92113dc63d6f3ba5cdd",
+  "jianghu-bot/review/v13_barrier_closure.json": {
+    "mtime": 1793441411.5693126,
+    "seen": 1793441704.279285,
+    "ast_hash": "fbaae4d855e256b335a98bc187c0d9ea",
     "semantic_hash": ""
   },
-  "jianghu-bot/web-dashboard/public/assets/ground/v11/test_plains_m4.webp": {
-    "mtime": 1793417485.207584,
-    "seen": 1793418157.717148,
-    "ast_hash": "7a89da206403aabdc55782101a045e92",
+  "jianghu-bot/review/v13_baseline_barrier_closure.json": {
+    "mtime": 1793422556.9141266,
+    "seen": 1793441704.279285,
+    "ast_hash": "61f66eade0e149daceab67b5fa9a9b1a",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_baseline_density.json": {
+    "mtime": 1793422636.1608348,
+    "seen": 1793441704.279285,
+    "ast_hash": "e9adfaf1324caf8343fa4c21c5c01d6a",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_baseline_gates.json": {
+    "mtime": 1793422643.9881577,
+    "seen": 1793441704.279285,
+    "ast_hash": "069cd1f80080640a3ab7db25bb2a86e8",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_baseline_ground_audit.json": {
+    "mtime": 1793422164.0958366,
+    "seen": 1793441704.279285,
+    "ast_hash": "6a162853f83b838689b6d45924389c64",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_baseline_mountains.json": {
+    "mtime": 1793422167.0243008,
+    "seen": 1793441704.279285,
+    "ast_hash": "e04a4410ccd998465ae331fd56604a87",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_baseline_pixel_metrics.json": {
+    "mtime": 1793422147.6622107,
+    "seen": 1793441704.279285,
+    "ast_hash": "62768c84b4b2712bc1980822eae4c56b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_density.json": {
+    "mtime": 1793441320.215173,
+    "seen": 1793441704.279285,
+    "ast_hash": "f2c8506492cddd7b111892d87a87c5c6",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_gates.json": {
+    "mtime": 1793441492.1512702,
+    "seen": 1793441704.279285,
+    "ast_hash": "ec688935bb33e78ecbceeb59925ea655",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_ground_audit.json": {
+    "mtime": 1793441435.412715,
+    "seen": 1793441704.279285,
+    "ast_hash": "c7a99c54987e883f24930ce319fc5bf1",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_mountains.json": {
+    "mtime": 1793441440.3833838,
+    "seen": 1793441704.279285,
+    "ast_hash": "7a1a653986d0f87c64a6a4a628d4d907",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_pixel_metrics.json": {
+    "mtime": 1793441413.064438,
+    "seen": 1793441704.279285,
+    "ast_hash": "27058c23c3099176d633c6df8d203877",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v13/audit_shots.json": {
+    "mtime": 1793440907.5711336,
+    "seen": 1793441704.4084785,
+    "ast_hash": "745282d8b654fb48f2df3fe154621b3e",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v13/captureAuditShots.js": {
+    "mtime": 1793425968.3240745,
+    "seen": 1793441704.4084785,
+    "ast_hash": "ba6f5b20974b646047e9ff2e7c00ae87",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v13/checkBarrierClosure.js": {
+    "mtime": 1793422506.9436321,
+    "seen": 1793441704.4084785,
+    "ast_hash": "52885c6dd19625976c7fd6e4c2396ded",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v13/densityDiagnosis.js": {
+    "mtime": 1793422872.6941268,
+    "seen": 1793441704.4084785,
+    "ast_hash": "06b8453dcb40fca7f19619beeacb1cda",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v13/gateRunner.js": {
+    "mtime": 1793422397.2752178,
+    "seen": 1793441704.4084785,
+    "ast_hash": "d49e8283047d7b9ade0dece8dbe06969",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v13/gates.json": {
+    "mtime": 1793422380.6437535,
+    "seen": 1793441704.4084785,
+    "ast_hash": "34685419979079eb9ebc3fd1ac50d671",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v13/generate_art_report.py": {
+    "mtime": 1793434750.3399637,
+    "seen": 1793441704.4084785,
+    "ast_hash": "2e08876d1ad8611c64c6f535ed20ed81",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v13/groundContentAudit.py": {
+    "mtime": 1793434537.0230093,
+    "seen": 1793441704.4084785,
+    "ast_hash": "06aa713a9f441a5864189db51c1cfe42",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v13/measureDensity.js": {
+    "mtime": 1793422357.1303358,
+    "seen": 1793441704.4084785,
+    "ast_hash": "375e2e07d11880b1e96fa399ae39c821",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v13/mountainDistribution.js": {
+    "mtime": 1793421246.7018569,
+    "seen": 1793441704.4084785,
+    "ast_hash": "7f486a790bb7f611c6d3dedf1c3703a5",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v13/pixelMetrics.py": {
+    "mtime": 1793437772.0376859,
+    "seen": 1793441704.4084785,
+    "ast_hash": "471126a3604da7c78d4ee2f9a1151cca",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v13/truthCheck2.py": {
+    "mtime": 1793434644.4435127,
+    "seen": 1793441704.4084785,
+    "ast_hash": "8f4d00de5522052815f39de244b3512e",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/web-dashboard/public/assets/ground/ground-manifest-v13.json": {
+    "mtime": 1793434565.5311816,
+    "seen": 1793441704.5500216,
+    "ast_hash": "6fd68286fc7d87c7aa9d0004b137e5d4",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/world-data/ground-manifest-v13.json": {
+    "mtime": 1793441435.354112,
+    "seen": 1793441704.6129582,
+    "ast_hash": "6fd68286fc7d87c7aa9d0004b137e5d4",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/world-data/ground-sources-v13.json": {
+    "mtime": 1793441492.1054463,
+    "seen": 1793441704.6129582,
+    "ast_hash": "3a544d8debf9f7670e03c1ed0afdaf00",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/report_v13.md": {
+    "mtime": 1793441492.1517954,
+    "seen": 1793441704.6431258,
+    "ast_hash": "82a32bbf356fd8dca403c2bca77a5e0c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/report_v13_baseline.md": {
+    "mtime": 1793422643.9881577,
+    "seen": 1793441704.6431258,
+    "ast_hash": "8bf2a4935b952bed24f960b1c34b4505",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_barrier_closure.md": {
+    "mtime": 1793439205.1325345,
+    "seen": 1793441704.6441245,
+    "ast_hash": "57e83e65457f1bbba63ef3fe09892a2e",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_density_diagnosis.md": {
+    "mtime": 1793424133.9342356,
+    "seen": 1793441704.6441245,
+    "ast_hash": "428204d5576d2f80cc04701c3d7d58a5",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_needs_user_art.md": {
+    "mtime": 1793434758.4692986,
+    "seen": 1793441704.6441245,
+    "ast_hash": "4e42628da377684f3ea15a340939dc33",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v13_render_artifacts_diagnosis.md": {
+    "mtime": 1793435876.9164135,
+    "seen": 1793441704.6441245,
+    "ast_hash": "0f9b522027dcd83396e767c472029743",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v13/shot_v12_audit_a_xingcun_z10.png": {
+    "mtime": 1793440963.6727867,
+    "seen": 1793441704.8773654,
+    "ast_hash": "ac7a2a511f4087538ab4ddd990957533",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v13/shot_v12_audit_c_plain_z10.png": {
+    "mtime": 1793441004.0366106,
+    "seen": 1793441704.8773654,
+    "ast_hash": "b13824d23d6aa3b359cab3a6c6915e69",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v13/shot_v12_audit_e_azure_z10.png": {
+    "mtime": 1793441049.871572,
+    "seen": 1793441704.8773654,
+    "ast_hash": "11480b3dd42aeaa8bc1542a0f2493490",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v13/shot_v12_audit_f_frost_z10.png": {
+    "mtime": 1793441089.808893,
+    "seen": 1793441704.8773654,
+    "ast_hash": "9b0d671e0f8491ffc8d45b5296ee7c25",
     "semantic_hash": ""
   }
 }
