@@ -389,7 +389,7 @@ function matchesTerrain(allowedList, actualTerrain) {
   if (actualTerrain.includes('lake') || actualTerrain.includes('river') || actualTerrain.includes('sea') || actualTerrain.includes('ocean')) {
     if (allowedList.some(t => t.includes('lake') || t.includes('river') || t.includes('sea') || t.includes('ocean') || t.includes('pond') || t.includes('water') || t === 'island_reef' || t === 'sea_reef')) return true;
   }
-  if (actualTerrain.includes('mountain') || actualTerrain.includes('crag') || actualTerrain.includes('peak') || actualTerrain === 'cliff') {
+  if (actualTerrain.includes('mountain') || actualTerrain.includes('crag') || actualTerrain.includes('peak') || actualTerrain === 'cliff' || actualTerrain === 'canyon_floor') {
     if (allowedList.some(t => t.includes('mountain') || t === 'cliff' || t === 'hill' || t === 'canyon_floor')) return true;
   }
   if (actualTerrain.includes('desert') || actualTerrain.includes('sand') || actualTerrain.includes('dune')) {
@@ -1026,8 +1026,13 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
     baseMin = 95;
     baseVar = 20; // 95..115 (Frontier / Danger)
   } else if (dangerTier === 4) {
-    baseMin = 60;
-    baseVar = 20; // 60..80 (Barren / Wasteland / Arktik)
+    if (chunkRegion.id === 'western_gorge_labyrinth' || chunkRegion.id === 'sword_gorge') {
+      baseMin = 88;
+      baseVar = 20; // 75..95 for dramatic rocky canyon labyrinths (V14 P4)
+    } else {
+      baseMin = 60;
+      baseVar = 20; // 60..80 (Barren / Wasteland / Arktik)
+    }
   } else {
     baseMin = 40;
     baseVar = 20; // 40..60 (Death Zone)
@@ -1916,10 +1921,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
                 }
               }
 
-              // Fallback to small crags/rocks only if under quota (max 3 small rocks per chunk in mountain regions)
+              // Fallback to small crags/rocks (V14 P4: max 8 small rocks per chunk in mountain regions)
               if (!mountainCandidate) {
                 const smallRockCount = objects.filter(o => o.isSmallRock).length;
-                if (smallRockCount < 3) {
+                if (smallRockCount < 8) {
                   const smallRocks = assetBindings.natureScatters.rocks.filter(r =>
                     !r.biomes || r.biomes.includes(region.id) || r.biomes.includes('mountain') || r.biomes.includes('ore_teeth_range')
                   );
@@ -1931,10 +1936,12 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
                     }
                   }
                 } else {
-                  // When small rock quota is full, place mountain flora/pine instead of more small rocks
+                  // When small rock quota is full, place mountain flora/shrubs/pine
                   const candidateFlora = [
                     ...assetBindings.natureScatters.trees.filter(t => t.biomes && (t.biomes.includes('mountain') || t.biomes.includes('frost') || t.biomes.includes('ore_teeth_range'))),
-                    ...(assetBindings.natureScatters.shrubs || []).filter(s => s.biomes && (s.biomes.includes('mountain') || s.biomes.includes('ore_teeth_range')))
+                    ...(assetBindings.natureScatters.shrubs || []).filter(s => s.biomes && (s.biomes.includes('mountain') || s.biomes.includes('ore_teeth_range'))),
+                    { defId: 'nature_wild_mountain_camellia_shrub', cw: 1, ch: 1, collision: 'soft' },
+                    { defId: 'nature_wild_mountain_medicinal_wolfberry_bush', cw: 1, ch: 1, collision: 'soft' }
                   ].filter(item => item && !isDefForbiddenInRegion(item.defId, region.id));
 
                   if (candidateFlora.length > 0) {
@@ -1988,7 +1995,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       }
 
       // --- DESERT & ARID DUNES ---
-      else if (terrain.includes('desert') || terrain.includes('sand') || terrain.includes('dune') || terrain === 'oasis' || region.id === 'western_sacred_desert' || region.id === 'western_gorge_labyrinth') {
+      else if (terrain.includes('desert') || terrain.includes('sand') || terrain.includes('dune') || terrain === 'oasis' || region.id === 'western_sacred_desert') {
         if (roll < 0.45) {
           const desertRocks = assetBindings.natureScatters.rocks.filter(r =>
             !r.biomes || r.biomes.includes('western_sacred_desert') || r.biomes.includes('desert')
@@ -2127,26 +2134,35 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
         }
       }
 
-      // --- CANYON, CLIFF & GORGE ---
+      // --- CANYON, CLIFF & GORGE (V14 P4) ---
       else if (terrain === 'cliff' || terrain === 'canyon_floor' || region.id === 'sword_gorge' || region.id === 'western_gorge_labyrinth') {
-        if (roll < 0.45) {
+        if (roll < 0.52) {
           const gorgeFormations = [
             { defId: 'mountain_L', cw: 6, ch: 4, collision: 'solid' },
             { defId: 'mt_rock_4x3', cw: 5, ch: 3, collision: 'solid' },
             { defId: 'mt_rock_3x2', cw: 4, ch: 2, collision: 'solid' },
-            { defId: 'nature_karst_twin_peaks', cw: 4, ch: 2, collision: 'solid' }
+            { defId: 'nature_karst_twin_peaks', cw: 4, ch: 2, collision: 'solid' },
+            { defId: 'nature_limestone_stalagmite_spire', cw: 2, ch: 2, collision: 'solid' },
+            { defId: 'mt_karst_pillar_v1', cw: 2, ch: 2, collision: 'solid' },
+            { defId: 'mt_karst_pillar_v2', cw: 2, ch: 2, collision: 'solid' }
           ];
           const gorgeRocks = assetBindings.natureScatters.rocks.filter(r =>
             r.biomes && (r.biomes.includes('sword_gorge') || r.biomes.includes('western_gorge_labyrinth') || r.biomes.includes('mountain'))
           );
           const gorgeTrees = assetBindings.natureScatters.trees.filter(t =>
-            t.biomes && (t.biomes.includes('sword_gorge') || t.biomes.includes('mountain'))
+            t.biomes && (t.biomes.includes('sword_gorge') || t.biomes.includes('mountain') || (region.id === 'western_gorge_labyrinth' && (t.biomes.includes('desert') || t.defId.startsWith('tree_dead_wood_'))))
           );
+          const gorgeFlora = [
+            { defId: 'nature_wild_mountain_camellia_shrub', cw: 1, ch: 1, collision: 'soft' },
+            { defId: 'nature_wild_mountain_medicinal_wolfberry_bush', cw: 1, ch: 1, collision: 'soft' },
+            { defId: 'nature_ancient_scholar_red_maple_cliff', cw: 3, ch: 2, collision: 'solid' },
+            { defId: 'nature_ancient_scholar_twisted_juniper', cw: 3, ch: 2, collision: 'solid' }
+          ].filter(item => !isDefForbiddenInRegion(item.defId, region.id));
           const smallRockCount = objects.filter(o => o.isSmallRock).length;
-          const allowedRocks = smallRockCount < 3 ? gorgeRocks : [];
-          const pool = [...gorgeFormations, ...gorgeTrees, ...allowedRocks];
+          const allowedRocks = smallRockCount < 10 ? gorgeRocks : [];
+          const pool = [...gorgeFormations, ...gorgeTrees, ...gorgeFlora, ...allowedRocks];
           const startIdx = Math.floor(rand() * pool.length);
-          const maxPoolTries = Math.min(4, pool.length);
+          const maxPoolTries = Math.min(6, pool.length);
           for (let pi = 0; pi < maxPoolTries; pi++) {
             const itemDef = pool[(startIdx + pi) % pool.length];
             if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getLocalTile, false, itemDef.defId, objects)) {
@@ -2560,14 +2576,22 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
     const refillRand = createPRNG((chunkSeed ^ 0x5a1f893d) >>> 0);
     const candidatePool = [
       'nature_wild_mountain_camellia_shrub',
+      'nature_wild_mountain_medicinal_wolfberry_bush',
       'rock_boulder_moss_v1',
       'rock_boulder_moss_v2',
+      'rock_cleft_stone_v1',
+      'rock_cleft_stone_v2',
+      'rock_cleft_stone_v3',
+      'rock_cleft_stone_v4',
+      'mt_karst_pillar_v1',
+      'mt_karst_pillar_v2',
+      'nature_limestone_stalagmite_spire',
       'spirit_tree_2x2',
       'nature_ancient_scholar_cypress_stone_cairn'
     ].filter(id => !isDefForbiddenInRegion(id, chunkRegion.id));
 
     if (candidatePool.length > 0) {
-      for (let attempt = 0; attempt < 100 && objects.length < minBudgetTarget; attempt++) {
+      for (let attempt = 0; attempt < 400 && objects.length < minBudgetTarget; attempt++) {
         const rx = startTileX + Math.floor(refillRand() * 32);
         const ry = startTileY + Math.floor(refillRand() * 32);
         const rTile = getLocalTile(rx, ry);

@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-10-31T13:27:13.311Z",
+  "timestamp": "2026-10-31T13:52:02.560Z",
   "allPass": true,
-  "totalObjects": 70428,
-  "totalPairs": 3195378,
+  "totalObjects": 72602,
+  "totalPairs": 3344690,
   "gates": [
     {
       "Gate": "V1: Entri Grid Canon Hilang",
@@ -48,7 +48,7 @@
     },
     {
       "Gate": "V8: Rasio Pasangan Visual Overlap",
-      "Count": "0.008%",
+      "Count": "0.009%",
       "Target": "<= 0.050%",
       "Status": "PASS"
     },
