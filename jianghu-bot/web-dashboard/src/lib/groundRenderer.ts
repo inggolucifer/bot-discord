@@ -560,7 +560,9 @@ export function drawSoftBlobRoadPath(
   px: number,
   py: number,
   tileSize: number,
-  bitmask: number
+  bitmask: number,
+  worldX?: number,
+  worldY?: number
 ) {
   const hasN = (bitmask & 1) !== 0;
   const hasE = (bitmask & 2) !== 0;
@@ -572,8 +574,10 @@ export function drawSoftBlobRoadPath(
   const hw = tileSize * 0.44; // Seamless connection width
   const r = tileSize * 0.30;  // Corner radius
 
-  // Subtle organic undulation along tile
-  const undulate = Math.sin((px * 0.05 + py * 0.07)) * (tileSize * 0.04);
+  // Subtle organic undulation based on absolute world coordinates
+  const wx = worldX !== undefined ? worldX : px / tileSize;
+  const wy = worldY !== undefined ? worldY : py / tileSize;
+  const undulate = Math.sin(wx * 0.35 + wy * 0.42) * (tileSize * 0.035);
   const left = cx - hw + undulate;
   const right = cx + hw + undulate;
   const top = cy - hw - undulate;
@@ -651,27 +655,19 @@ export function renderL4AutotileGround(
   getNeighborTerrain?: NeighborTerrainFn
 ) {
   const isRiver = terrainType.includes('river') || terrainType.includes('lake') || terrainType.includes('water') || terrainType.includes('sea');
-  const isRoad = terrainType.includes('road');
 
-  if (!isRiver && !isRoad) return;
+  if (!isRiver) return;
 
   const bitmask = calculateAutotileBitmask(tx, ty, terrainType, getNeighborTerrain);
   const frameId = getAutotileFrameId(terrainType, bitmask);
 
-  // Attempt atlas sprite draw
+  // Attempt atlas sprite draw for rivers only
   const drawn = atlasLoader.hasFrame(frameId) && atlasLoader.drawSprite(ctx, frameId, sx, sy, tileSize, tileSize, 0.95);
 
   if (!drawn) {
-    // V12 P2: Vector fallback path with soft blob road (no harsh slabs or cream circles)
     ctx.save();
-    if (isRiver) {
-      ctx.fillStyle = '#8EA8AE';
-      ctx.fillRect(sx, sy, tileSize, tileSize);
-    } else if (isRoad) {
-      ctx.fillStyle = '#7a756b';
-      drawSoftBlobRoadPath(ctx, sx, sy, tileSize, bitmask);
-      ctx.fill();
-    }
+    ctx.fillStyle = '#8EA8AE';
+    ctx.fillRect(sx, sy, tileSize, tileSize);
     ctx.restore();
   }
 
@@ -814,7 +810,7 @@ export function renderChunkGroundBitmap(
     renderL2BiomeTransitions(ctx, sx, sy, tileSize, t.tileX, t.tileY, t.terrainType, chunkNeighborTerrain);
   }
 
-  // Step 3: Render Autotiles for Roads & Static Rivers (G4 Base)
+  // Step 3: Render Autotiles for Static Rivers (G4 Base)
   for (const t of tiles) {
     const lx = t.tileX - cx * CHUNK_SIZE;
     const ly = t.tileY - cy * CHUNK_SIZE;
@@ -822,9 +818,8 @@ export function renderChunkGroundBitmap(
     const sy = ly * tileSize;
 
     const isRiver = t.terrainType.includes('river') || t.terrainType.includes('lake') || t.terrainType.includes('water') || t.terrainType.includes('sea');
-    const isRoad = t.terrainType.includes('road');
 
-    if (isRiver || isRoad) {
+    if (isRiver) {
       const bitmask = calculateAutotileBitmask(t.tileX, t.tileY, t.terrainType, chunkNeighborTerrain);
       const frameId = getAutotileFrameId(t.terrainType, bitmask);
       if (atlasLoader.hasFrame(frameId)) {
@@ -1109,7 +1104,9 @@ export function renderChunkGroundBitmapTextured(
             if (gy < GRID_DIM - 1 && (gridFamilies[idx + GRID_DIM] === 'road_stone' || gridFamilies[idx + GRID_DIM] === 'settlement_floor')) bm |= 4;
             if (gx > 0 && (gridFamilies[idx - 1] === 'road_stone' || gridFamilies[idx - 1] === 'settlement_floor')) bm |= 8;
 
-            drawSoftBlobRoadPath(ctxMB, px, py, tileSize, bm);
+            const wx = cx * CHUNK_SIZE + (gx - BORDER);
+            const wy = cy * CHUNK_SIZE + (gy - BORDER);
+            drawSoftBlobRoadPath(ctxMB, px, py, tileSize, bm, wx, wy);
           }
         }
       }
@@ -1349,29 +1346,7 @@ export function renderChunkGroundBitmapTextured(
     // 4g: Draw T onto chunk canvas
     ctx.drawImage(scratchT.canvas, 0, 0);
 
-    // 4h: Road edge grass decals on neighboring non-road cells (Prompt H2)
-    if (F === 'road_stone') {
-      for (let ly = BORDER; ly < BORDER + CHUNK_SIZE; ly++) {
-        for (let lx = BORDER; lx < BORDER + CHUNK_SIZE; lx++) {
-          const here = gridFamilies[ly * GRID_DIM + lx];
-          if (here !== 'road_stone') {
-            const hasRoadNeighbor = (
-              gridFamilies[(ly - 1) * GRID_DIM + lx] === 'road_stone' ||
-              gridFamilies[(ly + 1) * GRID_DIM + lx] === 'road_stone' ||
-              gridFamilies[ly * GRID_DIM + lx - 1] === 'road_stone' ||
-              gridFamilies[ly * GRID_DIM + lx + 1] === 'road_stone'
-            );
-            if (hasRoadNeighbor) {
-              const wx = cx * CHUNK_SIZE + (lx - BORDER);
-              const wy = cy * CHUNK_SIZE + (ly - BORDER);
-              const px = (lx - BORDER) * tileSize;
-              const py = (ly - BORDER) * tileSize;
-              renderL3GroundDecal(ctx, px, py, tileSize, wx, wy, here);
-            }
-          }
-        }
-      }
-    }
+    // 4h: Road edges blend smoothly into surrounding ground macro (Prompt V14 P1)
   }
 
   // Step 5: Macro radial overlay (anti-repetition)
@@ -1387,7 +1362,7 @@ export function renderChunkGroundBitmapTextured(
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-  // Step 6a: Autotiles for Rivers & Roads (G4 Base)
+  // Step 6a: Autotiles for Rivers (G4 Base)
   for (const t of tiles) {
     const lx = t.tileX - cx * CHUNK_SIZE;
     const ly = t.tileY - cy * CHUNK_SIZE;
@@ -1395,9 +1370,8 @@ export function renderChunkGroundBitmapTextured(
     const sy = ly * tileSize;
 
     const isRiver = t.terrainType.includes('river') || t.terrainType.includes('lake') || t.terrainType.includes('water') || t.terrainType.includes('sea');
-    const isRoad = t.terrainType.includes('road');
 
-    if (isRiver || isRoad) {
+    if (isRiver) {
       const bitmask = calculateAutotileBitmask(t.tileX, t.tileY, t.terrainType, chunkNeighborTerrain);
       const frameId = getAutotileFrameId(t.terrainType, bitmask);
       if (atlasLoader.hasFrame(frameId)) {

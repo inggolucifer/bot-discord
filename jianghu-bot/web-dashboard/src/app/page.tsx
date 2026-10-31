@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useState, useEffect } from 'react';
-import { WorldPageContent } from '@/app/world/page';
+import WorldPageContent from '@/app/world/WorldPageContent';
 import DashboardModal from '@/components/modals/DashboardModal';
 import PlayerStatsModal from '@/components/modals/PlayerStatsModal';
 import NpcInteractionModal from '@/components/modals/NpcInteractionModal';

@@ -752,8 +752,6 @@ export default function WorldCanvas({
           const isWater = tile.terrainType.includes('river') || tile.terrainType.includes('water') || tile.terrainType.includes('lake') || tile.terrainType.includes('sea');
           if (isWater) {
             renderL4AutotileGround(ctx, sx, sy, currentTileSize, tx, ty, tile.terrainType, time, getNeighborTerrain);
-          } else if (!chunkHasBitmap && tile.terrainType.includes('road')) {
-            renderL4AutotileGround(ctx, sx, sy, currentTileSize, tx, ty, tile.terrainType, time, getNeighborTerrain);
           }
 
           // Territory overlay tints
