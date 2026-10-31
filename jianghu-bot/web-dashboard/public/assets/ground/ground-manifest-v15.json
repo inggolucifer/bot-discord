@@ -1,0 +1,342 @@
+{
+  "version": "v15",
+  "generatedAt": "2026-11-01",
+  "totalFiles": 144,
+  "cleanFiles": 125,
+  "rejectedFiles": 19,
+  "cleanFamilies": {
+    "abyss_edge": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "bamboo_floor": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "battlefield_ash": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "canyon_floor": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "cliff": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "crater": [
+      1,
+      2,
+      4
+    ],
+    "dead_wood": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "demonic_swamp": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "desert_sand": [
+      1,
+      3,
+      4
+    ],
+    "dune": [
+      2,
+      3,
+      4
+    ],
+    "farmland": [
+      1,
+      2,
+      4
+    ],
+    "forest_floor": [
+      1,
+      2
+    ],
+    "formation_tile": [
+      2,
+      3,
+      4
+    ],
+    "glacier": [
+      3,
+      4
+    ],
+    "herb_field": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "hill": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "ice_crack": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "island_reef": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "lake": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "lava_flow": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "lightning_scar": [
+      1,
+      2,
+      3
+    ],
+    "meadow": [
+      1,
+      2,
+      4
+    ],
+    "miasma_waste": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "mountain_pass": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "oasis": [
+      1,
+      2
+    ],
+    "ocean": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "plains": [
+      2
+    ],
+    "poison_pool": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "river": [
+      1,
+      2,
+      3
+    ],
+    "road_stone": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "rock_ground": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "ruin_floor": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "settlement_floor": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "snow": [
+      2,
+      3,
+      4
+    ],
+    "swamp": [
+      2,
+      4
+    ],
+    "volcanic": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "rejectedList": [
+    {
+      "file": "crater_m3.webp",
+      "reasons": [
+        "lattice=0.679 > 0.55"
+      ]
+    },
+    {
+      "file": "desert_sand_m2.webp",
+      "reasons": [
+        "lattice=0.739 > 0.45"
+      ]
+    },
+    {
+      "file": "dune_m1.webp",
+      "reasons": [
+        "lattice=0.594 > 0.45"
+      ]
+    },
+    {
+      "file": "farmland_m3.webp",
+      "reasons": [
+        "lattice=0.734 > 0.45"
+      ]
+    },
+    {
+      "file": "forest_floor_m2.webp",
+      "reasons": [
+        "lattice=0.477 > 0.45"
+      ]
+    },
+    {
+      "file": "formation_tile_m1.webp",
+      "reasons": [
+        "lattice=0.621 > 0.55"
+      ]
+    },
+    {
+      "file": "glacier_m1.webp",
+      "reasons": [
+        "baked_objects=0.382 > 0.35"
+      ]
+    },
+    {
+      "file": "glacier_m2.webp",
+      "reasons": [
+        "lattice=0.556 > 0.45"
+      ]
+    },
+    {
+      "file": "lightning_scar_m4.webp",
+      "reasons": [
+        "lattice=0.576 > 0.55"
+      ]
+    },
+    {
+      "file": "meadow_m3.webp",
+      "reasons": [
+        "lattice=0.801 > 0.45"
+      ]
+    },
+    {
+      "file": "oasis_m3.webp",
+      "reasons": [
+        "lattice=0.554 > 0.55"
+      ]
+    },
+    {
+      "file": "oasis_m4.webp",
+      "reasons": [
+        "lattice=0.718 > 0.55"
+      ]
+    },
+    {
+      "file": "plains_m3.webp",
+      "reasons": [
+        "baked_objects=0.870 > 0.35"
+      ]
+    },
+    {
+      "file": "plains_m4.webp",
+      "reasons": [
+        "baked_objects=0.404 > 0.35"
+      ]
+    },
+    {
+      "file": "river_m4.webp",
+      "reasons": [
+        "lattice=0.584 > 0.55"
+      ]
+    },
+    {
+      "file": "snow_m1.webp",
+      "reasons": [
+        "lattice=0.567 > 0.45"
+      ]
+    },
+    {
+      "file": "swamp_m1.webp",
+      "reasons": [
+        "lattice=0.528 > 0.45"
+      ]
+    },
+    {
+      "file": "swamp_m3.webp",
+      "reasons": [
+        "lattice=0.657 > 0.45"
+      ]
+    },
+    {
+      "file": "plains_m1.webp",
+      "reasons": [
+        "baked_path: aspect >= 3.2, length >= 500px, deltaE >= 40"
+      ]
+    }
+  ],
+  "composites": {
+    "plains_v15": {
+      "weights": {
+        "meadow": 0.7,
+        "forest_floor": 0.2,
+        "plains": 0.1
+      },
+      "variants": [
+        "v11/meadow_m1",
+        "v11/meadow_m2",
+        "v11/meadow_m4",
+        "v11/forest_floor_m1",
+        "v11/forest_floor_m2",
+        "v11/meadow_m1",
+        "v11/meadow_m2",
+        "v11/meadow_m4",
+        "v11/meadow_m1",
+        "v11/plains_m2"
+      ]
+    }
+  }
+}

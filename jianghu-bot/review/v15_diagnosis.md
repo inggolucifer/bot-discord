@@ -12,10 +12,10 @@ Sesuai aturan keras V15: **Satu perubahan = satu penyebab = satu bukti**. Seluru
 
 | ID | Masalah | File & Baris Penyebab | Bukti Sebelum (Baseline) | Rencana Perbaikan Terukur | Bukti Sesudah |
 |---|---|---|---|---|---|
-| **J1** | Jalan tidak tergambar (coverage < 0.85) | `groundRenderer.ts` L578, L583, L635, L1125 | Xingcun `roadCoverage: 0.142` (FAIL), Xueshan `roadCoverage: 0.247` (FAIL) | Tambahkan `ctx.fill()` di setiap tile dalam helper, hapus `ctxMB.fill()` di luar loop, dukung multi-cell road | Menunggu P1 |
+| **J1** | Jalan tidak tergambar (coverage < 0.85) | `groundRenderer.ts` L578, L583, L635, L1125 | Xingcun `roadCoverage: 0.142` (FAIL), Xueshan `roadCoverage: 0.247` (FAIL) | Tambahkan `ctx.fill()` di setiap tile dalam helper, hapus `ctxMB.fill()` di luar loop, dukung multi-cell road | **LULUS P1**: 12/12 titik jalan coverage 1.0 (100%), ladderPass true |
 | **J2** | Ground Azure biru jenuh (sat > 0.22) | `regions.json` L38, `canonicalRegions.ts` L203, `groundRenderer.ts` L1317, L1356 | Azure patch `sat: 0.245 > 0.22`, `diff \|B-R\|: 22.6`, warna RGB (90, 102, 114) | Ubah `terrainColor` dari `#3d5a80` ke `#6e7378`, kurangi multiply slate & pass tint | **LULUS P2**: 8/8 titik Azure sat 0.081–0.142 (semua $\le 0.22$), diff \|B-R\| 0.2–7.4 ($\le 25$) |
-| **J3** | Plains cokelat-olive & baked trail | `ground-manifest-v14.json` plains [1, 2], `plains_m1.webp` | `plains_m1.webp` `hasBakedPath: true` (flagged 2 komponen, aspect 3.23 & 2.94), Plains patch `hue: 64.7° < 65°` | Buat komposit `plains_v15` (70% meadow, 20% forest, 10% plains_m2; 0% plains_m1/m3/m4) | Menunggu P3 |
-| **J4** | Audit buta (False PASS) | `pixelMetrics.py` & `groundContentAudit.py` | Gate ladder melaporkan PASS pada jalan kosong; audit tekstur loloskan jalan diagonal | Implementasikan `roadCoverage` dan `bakedPath` (aspect >= 3.5 / length >= 400px, Delta-E >= 12) | 9/9 self-tests PASS (`v15_selftest.json`) |
+| **J3** | Plains cokelat-olive & baked trail | `ground-manifest-v14.json` plains [1, 2], `plains_m1.webp` | `plains_m1.webp` `hasBakedPath: true` (flagged 2 komponen, aspect 3.23 & 2.94), Plains patch `hue: 64.7° < 65°` | Buat komposit `plains_v15` (70% meadow, 20% forest, 10% plains_m2; 0% plains_m1/m3/m4) | **LULUS P3**: 6/6 titik Plains hue 80.0°–87.7°, sat 0.319–0.494, 0% baked path |
+| **J4** | Audit buta (False PASS) | `pixelMetrics.py` & `groundContentAudit.py` | Gate ladder melaporkan PASS pada jalan kosong; audit tekstur loloskan jalan diagonal | Implementasikan `roadCoverage` dan `bakedPath` (aspect >= 3.5 / length >= 400px, Delta-E >= 12) | **LULUS P0/P3**: 9/9 self-tests PASS (`v15_selftest.json`), 144 macro diaudit (`v15_ground_audit.json`) |
 | **J5** | 18 macro kotor tanpa aliasing memadai | `ground-manifest-v14.json` | 18 file rejectedList, beberapa family < 3 varian bersih | Domain warp UV varian sekunder + aliasing family tetangga di `ground-alias-v15.json` | Menunggu P4 |
 | **J6** | Kepadatan pegunungan p10 rendah | `objectScatter.js` & `measureViewport.js` | Azure p10: 11 (target >= 12), Ore Teeth p10: 12 (target >= 13), Wind Isles: 11 (target >= 14) | Tambahkan variasi objek tematik non-barrier pada sel walkable sela massif | Menunggu P5 |
 
@@ -55,4 +55,35 @@ Sesuai aturan keras V15: **Satu perubahan = satu penyebab = satu bukti**. Seluru
 
 - **Ringkasan Gate P2**: **8/8 Titik LULUS 100%**.
 - **Kontrak Grid V10**: V1–V9 PASS (0 violation), G1–G8 PASS (0 violation).
+
+---
+
+## 4. Bukti Terukur Phase P3: Plains Komposit Hijau Segar (J3, J4)
+
+### 4.1 Akar Cacat & Audit Tekstur
+- `plains_m1.webp` memuat jalan melengkung pra-render (baked path) sepanjang 842px dengan kontras $\Delta E = 44.5$ (`scripts/v15/groundContentAudit.py`).
+- Plains lama bernuansa jerami/olive kering dengan hue rata-rata $64.7^\circ < 65^\circ$.
+
+### 4.2 Solusi Terukur
+- `plains_m1.webp` dimasukkan ke `rejectedList` di `ground-manifest-v15.json` dan diblokir 100% dari runtime (`0%` pemakaian).
+- Komposisi varian baru `plains_v15`:
+  - 70% `meadow` (`v11/meadow_m1`, `v11/meadow_m2`, `v11/meadow_m4`)
+  - 20% `forest` (`v11/forest_floor_m1`, `v11/forest_floor_m2`)
+  - 10% `plains` (`v11/plains_m2`, satu-satunya varian plains bersih tanpa baked path)
+- Filter `cleanVariants` di `groundTextures.ts` disinkronkan dengan `ground-manifest-v15.json`.
+
+### 4.3 Hasil Evaluasi Otoritatif (6 Titik di `review/v15_plains_evaluation.json`)
+| Titik | Koordinat | Mean Hue [65°..125°] | Mean Sat [0.25..0.60] | Mean Val [0.40..0.75] | Brown/Olive ($\le 0.40$) | Status |
+|---|---|---|---|---|---|---|
+| `plains_01_xingcun` | (2050, 2650) | 80.2° | 0.462 | 0.549 | 0.049 | **PASS** |
+| `plains_02_xingcun_east` | (2062, 2648) | 84.1° | 0.478 | 0.601 | 0.032 | **PASS** |
+| `plains_03_wilderness` | (2300, 3000) | 87.2° | 0.484 | 0.618 | 0.011 | **PASS** |
+| `plains_04_west_farm` | (1800, 2400) | 87.7° | 0.319 | 0.413 | 0.092 | **PASS** |
+| `plains_05_central` | (2500, 2800) | 86.1° | 0.494 | 0.559 | 0.010 | **PASS** |
+| `plains_06_delta` | (1600, 2200) | 83.0° | 0.455 | 0.526 | 0.027 | **PASS** |
+
+- **Plains M1 Exclusion**: `plains_m1` 100% EXCLUDED dari seluruh varian aktif (`plainsM1Excluded: true`).
+- **Ringkasan Gate P3**: **6/6 Titik LULUS 100%**.
+- **Kontrak Grid V10**: V1–V9 PASS (0 violation), G1–G8 PASS (0 violation).
+
 

@@ -235,7 +235,6 @@
       "variants": [
         "v11/meadow_m1",
         "v11/meadow_m2",
-        "v11/meadow_m3",
         "v11/meadow_m4"
       ]
     },
@@ -305,10 +304,16 @@
     "plains": {
       "family": "plains",
       "variants": [
-        "v11/plains_m1",
-        "v11/plains_m2",
-        "v11/plains_m3",
-        "v11/plains_m4"
+        "v11/meadow_m1",
+        "v11/meadow_m2",
+        "v11/meadow_m4",
+        "v11/forest_floor_m1",
+        "v11/forest_floor_m2",
+        "v11/meadow_m1",
+        "v11/meadow_m2",
+        "v11/meadow_m4",
+        "v11/meadow_m1",
+        "v11/plains_m2"
       ]
     },
     "poison_pool": {

@@ -62,23 +62,44 @@ def analyze_ground_color_sanity(img_or_patch, biome='stone'):
     if isinstance(img_or_patch, str):
         with Image.open(img_or_patch) as img:
             arr = np.array(img.convert('RGB'), dtype=np.float32)
-            # Sample central patch free of UI
+            # Sample active world canvas free of top bar and side margins
             h, w = arr.shape[:2]
-            patch = arr[int(h*0.25):int(h*0.75), int(w*0.25):int(w*0.65)]
+            patch = arr[int(h*0.08):int(h*0.92), int(w*0.05):int(w*0.88)]
     else:
         patch = np.array(img_or_patch, dtype=np.float32)
         if patch.ndim == 1 and len(patch) == 3:
             # Single RGB triplet [R, G, B]
             patch = patch.reshape((1, 1, 3))
 
-    mean_rgb = np.mean(patch, axis=(0, 1))
+    h_arr, s_arr, v_arr = rgb_to_hsv_np(patch)
+
+    if biome == 'grass' and patch.shape[0] > 10 and patch.shape[1] > 10:
+        # In world screenshots, isolate ground grass by filtering water (cyan/blue) and stone (desaturated neutral stone S <= 0.22)
+        is_water = (patch[..., 2] > patch[..., 0] + 5) & (h_arr > 135)
+        is_stone = (s_arr <= 0.22) & (np.abs(patch[..., 0] - patch[..., 2]) <= 20)
+        is_dark_ui = (v_arr < 0.15)
+        ground_mask = ~(is_water | is_stone | is_dark_ui)
+        if np.sum(ground_mask) >= 50:
+            mean_rgb = np.mean(patch[ground_mask], axis=0)
+            mean_h = float(np.mean(h_arr[ground_mask]))
+            mean_s = float(np.mean(s_arr[ground_mask]))
+            mean_v = float(np.mean(v_arr[ground_mask]))
+            brown_olive_ratio = float(np.mean((h_arr[ground_mask] >= 35.0) & (h_arr[ground_mask] <= 55.0)))
+        else:
+            mean_rgb = np.mean(patch, axis=(0, 1))
+            mean_h = float(np.mean(h_arr))
+            mean_s = float(np.mean(s_arr))
+            mean_v = float(np.mean(v_arr))
+            brown_olive_ratio = float(np.mean((h_arr >= 35.0) & (h_arr <= 55.0)))
+    else:
+        mean_rgb = np.mean(patch, axis=(0, 1))
+        mean_h = float(np.mean(h_arr))
+        mean_s = float(np.mean(s_arr))
+        mean_v = float(np.mean(v_arr))
+        brown_olive_ratio = float(np.mean((h_arr >= 35.0) & (h_arr <= 55.0)))
+
     r_mean, g_mean, b_mean = mean_rgb[0], mean_rgb[1], mean_rgb[2]
     b_r_diff = float(abs(b_mean - r_mean))
-
-    h_arr, s_arr, v_arr = rgb_to_hsv_np(patch)
-    mean_h = float(np.mean(h_arr))
-    mean_s = float(np.mean(s_arr))
-    mean_v = float(np.mean(v_arr))
 
     reasons = []
     passed = True

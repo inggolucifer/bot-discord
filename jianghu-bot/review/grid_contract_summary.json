@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-31T23:18:07.224Z",
+  "timestamp": "2026-10-31T23:57:39.125Z",
   "allPass": true,
   "results": {
     "G1": {
@@ -30,7 +30,7 @@
     },
     "G6": {
       "pass": true,
-      "deltaMb": "0.50"
+      "deltaMb": "0.46"
     },
     "G7": {
       "pass": true,

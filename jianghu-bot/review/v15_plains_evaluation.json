@@ -1,0 +1,99 @@
+{
+  "timestamp": "2026-10-31T23:56:22.669Z",
+  "totalPoints": 6,
+  "passedCount": 6,
+  "plainsM1Excluded": true,
+  "allPassed": true,
+  "points": [
+    {
+      "name": "plains_01_xingcun",
+      "coord": "(2050,2650)",
+      "meanRgb": [
+        117,
+        138.4,
+        75.3
+      ],
+      "meanHue": 80.2,
+      "meanSat": 0.462,
+      "meanVal": 0.549,
+      "colorPass": true,
+      "reasons": [],
+      "passed": true
+    },
+    {
+      "name": "plains_02_xingcun_east",
+      "coord": "(2062,2648)",
+      "meanRgb": [
+        123.5,
+        152.3,
+        79.9
+      ],
+      "meanHue": 84.1,
+      "meanSat": 0.478,
+      "meanVal": 0.601,
+      "colorPass": true,
+      "reasons": [],
+      "passed": true
+    },
+    {
+      "name": "plains_03_wilderness",
+      "coord": "(2300,3000)",
+      "meanRgb": [
+        126.8,
+        156.4,
+        81.6
+      ],
+      "meanHue": 87.2,
+      "meanSat": 0.484,
+      "meanVal": 0.618,
+      "colorPass": true,
+      "reasons": [],
+      "passed": true
+    },
+    {
+      "name": "plains_04_west_farm",
+      "coord": "(1800,2400)",
+      "meanRgb": [
+        90.2,
+        104.3,
+        72.3
+      ],
+      "meanHue": 87.7,
+      "meanSat": 0.319,
+      "meanVal": 0.413,
+      "colorPass": true,
+      "reasons": [],
+      "passed": true
+    },
+    {
+      "name": "plains_05_central",
+      "coord": "(2500,2800)",
+      "meanRgb": [
+        114.8,
+        141.5,
+        72.4
+      ],
+      "meanHue": 86.1,
+      "meanSat": 0.494,
+      "meanVal": 0.559,
+      "colorPass": true,
+      "reasons": [],
+      "passed": true
+    },
+    {
+      "name": "plains_06_delta",
+      "coord": "(1600,2200)",
+      "meanRgb": [
+        109.5,
+        133.3,
+        71.9
+      ],
+      "meanHue": 83,
+      "meanSat": 0.455,
+      "meanVal": 0.526,
+      "colorPass": true,
+      "reasons": [],
+      "passed": true
+    }
+  ]
+}

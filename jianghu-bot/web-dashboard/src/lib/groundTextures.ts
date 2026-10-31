@@ -41,14 +41,14 @@ class GroundTextures {
           return;
         }
 
-        // Filter runtime: load clean status audit from v13 manifest and only select clean variants
+        // Filter runtime: load clean status audit from v15 manifest and only select clean variants
         let cleanMap: Record<string, boolean> = {};
         try {
-          const v14Res = await fetch('/assets/ground/ground-manifest-v14.json');
-          if (v14Res.ok) {
-            const v14Data = await v14Res.json();
-            if (v14Data && v14Data.cleanFamilies) {
-              for (const [fam, vars] of Object.entries(v14Data.cleanFamilies)) {
+          const v15Res = await fetch('/assets/ground/ground-manifest-v15.json');
+          if (v15Res.ok) {
+            const v15Data = await v15Res.json();
+            if (v15Data && v15Data.cleanFamilies) {
+              for (const [fam, vars] of Object.entries(v15Data.cleanFamilies)) {
                 if (Array.isArray(vars)) {
                   for (const vNum of vars) {
                     cleanMap[fam + '_m' + vNum + '.webp'] = true;
@@ -56,13 +56,34 @@ class GroundTextures {
                 }
               }
             }
+            if (v15Data && Array.isArray(v15Data.rejectedList)) {
+              for (const item of v15Data.rejectedList) {
+                if (item && item.file) {
+                  cleanMap[item.file] = false;
+                }
+              }
+            }
           } else {
-            const v13Res = await fetch('/assets/ground/ground-manifest-v13.json');
-            if (v13Res.ok) {
-              const v13Data = await v13Res.json();
-              for (const [key, info] of Object.entries(v13Data)) {
-                if (info && typeof (info as any).clean === 'boolean') {
-                  cleanMap[key] = (info as any).clean;
+            const v14Res = await fetch('/assets/ground/ground-manifest-v14.json');
+            if (v14Res.ok) {
+              const v14Data = await v14Res.json();
+              if (v14Data && v14Data.cleanFamilies) {
+                for (const [fam, vars] of Object.entries(v14Data.cleanFamilies)) {
+                  if (Array.isArray(vars)) {
+                    for (const vNum of vars) {
+                      cleanMap[fam + '_m' + vNum + '.webp'] = true;
+                    }
+                  }
+                }
+              }
+            } else {
+              const v13Res = await fetch('/assets/ground/ground-manifest-v13.json');
+              if (v13Res.ok) {
+                const v13Data = await v13Res.json();
+                for (const [key, info] of Object.entries(v13Data)) {
+                  if (info && typeof (info as any).clean === 'boolean') {
+                    cleanMap[key] = (info as any).clean;
+                  }
                 }
               }
             }
@@ -78,7 +99,9 @@ class GroundTextures {
               const fileKey = v.replace(/^v11\//, '') + '.webp';
               return cleanMap[fileKey] !== false;
             });
-            tInfo.variants = cleanVariants.length > 0 ? cleanVariants : [`v11/${tInfo.family}_m1`];
+            tInfo.variants = cleanVariants.length > 0
+              ? cleanVariants
+              : (tInfo.family === 'plains' ? ['v11/meadow_m1'] : [`v11/${tInfo.family}_m1`]);
           }
         }
 
