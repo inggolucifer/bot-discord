@@ -30,9 +30,9 @@ def analyze_settlement_shot(img_path):
     # F3: Pale patch RGB ~ (237, 235, 223) -> L > 220
     is_azure = 'azure' in os.path.basename(img_path).lower()
     if is_azure:
-        # Narrow mountain pass settlement is 4 tiles wide (640..720)
-        patch = arr[360:480, 640:720]
-        patch_l = float(np.mean(lum[360:480, 640:720]))
+        # Narrow mountain pass settlement corridor centered at screen (590..690, 360..460)
+        patch = arr[360:460, 590:690]
+        patch_l = float(np.mean(lum[360:460, 590:690]))
     else:
         # Xingcun village core is 3x3 tiles (640..802)
         patch = arr[360:510, 640:802]
@@ -100,13 +100,21 @@ def analyze_smear(img_path):
     with Image.open(img_path) as img:
         arr = np.array(img.convert('RGB'), dtype=np.float32)
     
-    # Terrain viewport excluding browser frame (top/bottom 10px) and right HUD drawer (x > w - 280)
+    # Terrain viewport excluding top navbar (y < 70), bottom margin (h-40), and right HUD drawer (x > w - 300)
     h, w, _ = arr.shape
-    terrain = arr[20:h-20, 20:max(20, w-280)]
+    terrain = arr[70:h-40, 40:max(40, w-300)]
+    th, tw, _ = terrain.shape
     
     # Smear / streak: consecutive repeated pixels along rows or columns
     diff_x = np.abs(terrain[:, 1:, :] - terrain[:, :-1, :])
     is_zero = np.all(diff_x < 0.5, axis=2)
+
+    # Exclude center player reticle / cursor box (centered at screen x=640, y=360, width 54px)
+    py_start = max(0, 360 - 70 - 10)
+    py_end = min(th, 415 - 70 + 10)
+    px_start = max(0, 640 - 40 - 10)
+    px_end = min(tw, 695 - 40 + 10)
+    is_zero[py_start:py_end, px_start:px_end] = False
     
     def max_consec(row):
         cur = 0; m = 0

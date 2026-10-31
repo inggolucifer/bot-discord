@@ -80,14 +80,14 @@ export function getTerrainWashPalette(terrainType: string): TerrainWashPalette {
     case 'azure_mountain':
     case 'mountain_rock':
     case 'cliff':
-      return { baseColor: '#B2ABA0', accentColor: '#5C5449', mistColor: '#DDD7CF', grainColor: '#433D35', staminaCost: 3.5 };
+      return { baseColor: '#586A7A', accentColor: '#3A4855', mistColor: '#BACBD9', grainColor: '#2C3742', staminaCost: 3.5 };
     case 'mountain_peak':
-      return { baseColor: '#999187', accentColor: '#3D372E', mistColor: '#CECBC5', grainColor: '#2B261F', staminaCost: 4.0 };
+      return { baseColor: '#4A5A69', accentColor: '#2C3843', mistColor: '#A8BDCD', grainColor: '#1E2730', staminaCost: 4.0 };
     case 'canyon_floor':
-      return { baseColor: '#C2B4A3', accentColor: '#7E6F5E', mistColor: '#E8E1D7', grainColor: '#605345', staminaCost: 1.8 };
+      return { baseColor: '#A2603F', accentColor: '#7E4628', mistColor: '#E2BFA8', grainColor: '#60331B', staminaCost: 1.8 };
     case 'mountain_pass':
     case 'sword_gorge_pass':
-      return { baseColor: '#B8AF9F', accentColor: '#706454', mistColor: '#E2DCD2', grainColor: '#53493C', staminaCost: 1.2 };
+      return { baseColor: '#6B7A88', accentColor: '#4A5662', mistColor: '#CBD5DE', grainColor: '#36404A', staminaCost: 1.2 };
 
     // Desert & Sand
     case 'western_desert':
@@ -1081,8 +1081,9 @@ export function renderChunkGroundBitmapTextured(
     } else {
       const isBaseFamily = (F === sortedFamilies[0]);
       for (let i = 0; i < gridFamilies.length; i++) {
-        // Base terrain family fills under settlement_floor and road_stone so no transparent holes show background paper
-        if (isBaseFamily && (gridFamilies[i] === 'settlement_floor' || gridFamilies[i] === 'road_stone')) {
+        // V13 P4: Base terrain family fills 100% under everything to form an uninterrupted solid ink wash base
+        // completely eliminates transparent paper holes at biome boundaries (F7)
+        if (isBaseFamily) {
           d32[i] = 0xff000000;
         } else {
           d32[i] = gridFamilies[i] === F ? 0xff000000 : 0x00000000;
@@ -1148,17 +1149,20 @@ export function renderChunkGroundBitmapTextured(
       let desertCnt = 0;
       let volcanicCnt = 0;
       let swampCnt = 0;
+      let rockCnt = 0;
       for (let i = 0; i < gridFamilies.length; i++) {
         const fam = gridFamilies[i];
         if (fam === 'snow' || fam === 'ice_crack' || fam === 'glacier') snowCnt++;
         else if (fam === 'desert_sand' || fam === 'dune' || fam === 'oasis') desertCnt++;
         else if (fam === 'volcanic' || fam === 'lava_flow') volcanicCnt++;
         else if (fam === 'swamp' || fam === 'demonic_swamp' || fam === 'poison_pool') swampCnt++;
+        else if (fam === 'rock_ground' || fam === 'cliff' || fam === 'mountain_pass') rockCnt++;
       }
       if (snowCnt >= 30) effectiveFamily = 'snow';
       else if (desertCnt >= 30) effectiveFamily = 'desert_sand';
       else if (volcanicCnt >= 30) effectiveFamily = 'volcanic';
       else if (swampCnt >= 30) effectiveFamily = 'swamp';
+      else if (rockCnt >= 30) effectiveFamily = 'rock_ground';
       else effectiveFamily = 'settlement_floor';
     }
 
@@ -1307,6 +1311,21 @@ export function renderChunkGroundBitmapTextured(
       if (snowCnt >= 20) {
         ctxT.save();
         ctxT.fillStyle = 'rgba(165, 185, 205, 0.82)';
+        ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
+        ctxT.restore();
+      }
+    }
+
+    // V13 P4: Mountain pass in Azure Mountains gets a cool slate tint so it doesn't look like a brown ribbon (F6)
+    if (F === 'mountain_pass') {
+      let azureCnt = 0;
+      for (let i = 0; i < gridFamilies.length; i++) {
+        const fam = gridFamilies[i];
+        if (fam === 'rock_ground' || fam === 'cliff') azureCnt++;
+      }
+      if (azureCnt >= 10) {
+        ctxT.save();
+        ctxT.fillStyle = 'rgba(90, 105, 120, 0.45)';
         ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
         ctxT.restore();
       }

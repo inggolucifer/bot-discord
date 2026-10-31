@@ -5,50 +5,50 @@
     "settlement_xingcun": {
       "whiteSquareDetected": false,
       "patchMeanRgb": [
-        148.7,
-        132.5,
-        87.0
+        149.8,
+        134.0,
+        89.7
       ],
-      "centerLuminance": 150.1,
-      "borderLuminance": 134.0,
-      "lumDiff": 1.9
+      "centerLuminance": 146.9,
+      "borderLuminance": 133.6,
+      "lumDiff": 0.1
     },
     "road_xingcun": {
-      "corrLag16": 0.045,
+      "corrLag16": 0.056,
       "roadLadderDetected": false
     },
     "tint_xingcun": {
       "redTintDetected": false
     },
     "smear_plain": {
-      "maxStreakPixels": 55,
-      "smearRatio": 1.19,
-      "smearDetected": true
+      "maxStreakPixels": 22,
+      "smearRatio": 1.18,
+      "smearDetected": false
     },
     "settlement_azure": {
       "whiteSquareDetected": false,
       "patchMeanRgb": [
-        205.2,
-        200.0,
-        179.5
+        167.4,
+        165.9,
+        151.9
       ],
-      "centerLuminance": 152.0,
-      "borderLuminance": 179.5,
-      "lumDiff": 19.8
+      "centerLuminance": 142.9,
+      "borderLuminance": 174.3,
+      "lumDiff": 9.5
     },
     "tint_azure": {
       "redTintDetected": false
     },
     "road_frost": {
-      "corrLag16": 0.005,
+      "corrLag16": 0.006,
       "roadLadderDetected": false
     }
   },
   "summary": {
     "whiteSquare": 0,
-    "maxLumDiff": 19.8,
+    "maxLumDiff": 9.5,
     "roadLadder": 0,
-    "smear": 1,
+    "smear": 0,
     "redTint": 0
   },
   "gates": {
@@ -59,7 +59,7 @@
     },
     "G_SETTLEMENT_LUM_DIFF": {
       "target": "<= 22",
-      "actual": 19.8,
+      "actual": 9.5,
       "pass": true
     },
     "G_ROAD_LADDER_AUTOCORR": {
@@ -69,8 +69,8 @@
     },
     "G_SMEAR_RATIO": {
       "target": "== 0",
-      "actual": 1,
-      "pass": false
+      "actual": 0,
+      "pass": true
     },
     "G_TINT_RED_SOLID_PIXELS": {
       "target": "== 0",
