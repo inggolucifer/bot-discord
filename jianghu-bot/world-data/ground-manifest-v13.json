@@ -1,0 +1,2870 @@
+{
+  "abyss_edge_m1.webp": {
+    "file": "abyss_edge_m1.webp",
+    "family": "abyss_edge",
+    "variant": 1,
+    "meanRgb": [
+      62.5,
+      46.8,
+      71.8
+    ],
+    "stdLum": 9.62,
+    "seam4Sides": 2.37,
+    "seamMosaic2x2": 2.37,
+    "latticeScore": 0.4,
+    "pathScore": 0.112,
+    "objectScore": 0.862,
+    "clean": true,
+    "reasons": []
+  },
+  "abyss_edge_m2.webp": {
+    "file": "abyss_edge_m2.webp",
+    "family": "abyss_edge",
+    "variant": 2,
+    "meanRgb": [
+      63.2,
+      47.4,
+      73.7
+    ],
+    "stdLum": 10.03,
+    "seam4Sides": 2.4,
+    "seamMosaic2x2": 2.4,
+    "latticeScore": 0.827,
+    "pathScore": 0.075,
+    "objectScore": 0.643,
+    "clean": false,
+    "reasons": [
+      "lattice (0.83 > 0.55)"
+    ]
+  },
+  "abyss_edge_m3.webp": {
+    "file": "abyss_edge_m3.webp",
+    "family": "abyss_edge",
+    "variant": 3,
+    "meanRgb": [
+      63.2,
+      47.4,
+      72.9
+    ],
+    "stdLum": 10.68,
+    "seam4Sides": 2.44,
+    "seamMosaic2x2": 2.44,
+    "latticeScore": 0.056,
+    "pathScore": 0.082,
+    "objectScore": 0.645,
+    "clean": true,
+    "reasons": []
+  },
+  "abyss_edge_m4.webp": {
+    "file": "abyss_edge_m4.webp",
+    "family": "abyss_edge",
+    "variant": 4,
+    "meanRgb": [
+      64.0,
+      47.2,
+      72.7
+    ],
+    "stdLum": 12.08,
+    "seam4Sides": 2.45,
+    "seamMosaic2x2": 2.45,
+    "latticeScore": 0.927,
+    "pathScore": 0.057,
+    "objectScore": 0.605,
+    "clean": false,
+    "reasons": [
+      "lattice (0.93 > 0.55)"
+    ]
+  },
+  "bamboo_floor_m1.webp": {
+    "file": "bamboo_floor_m1.webp",
+    "family": "bamboo_floor",
+    "variant": 1,
+    "meanRgb": [
+      127.7,
+      133.7,
+      84.0
+    ],
+    "stdLum": 13.04,
+    "seam4Sides": 2.44,
+    "seamMosaic2x2": 2.44,
+    "latticeScore": 0.0,
+    "pathScore": 0.076,
+    "objectScore": 0.737,
+    "clean": true,
+    "reasons": []
+  },
+  "bamboo_floor_m2.webp": {
+    "file": "bamboo_floor_m2.webp",
+    "family": "bamboo_floor",
+    "variant": 2,
+    "meanRgb": [
+      124.9,
+      132.9,
+      82.4
+    ],
+    "stdLum": 10.68,
+    "seam4Sides": 2.39,
+    "seamMosaic2x2": 2.39,
+    "latticeScore": 0.853,
+    "pathScore": 0.085,
+    "objectScore": 0.736,
+    "clean": false,
+    "reasons": [
+      "lattice (0.85 > 0.55)"
+    ]
+  },
+  "bamboo_floor_m3.webp": {
+    "file": "bamboo_floor_m3.webp",
+    "family": "bamboo_floor",
+    "variant": 3,
+    "meanRgb": [
+      129.6,
+      132.0,
+      82.7
+    ],
+    "stdLum": 11.77,
+    "seam4Sides": 2.28,
+    "seamMosaic2x2": 2.28,
+    "latticeScore": 0.114,
+    "pathScore": 0.093,
+    "objectScore": 0.709,
+    "clean": true,
+    "reasons": []
+  },
+  "bamboo_floor_m4.webp": {
+    "file": "bamboo_floor_m4.webp",
+    "family": "bamboo_floor",
+    "variant": 4,
+    "meanRgb": [
+      130.2,
+      131.0,
+      80.3
+    ],
+    "stdLum": 12.55,
+    "seam4Sides": 2.37,
+    "seamMosaic2x2": 2.37,
+    "latticeScore": 0.204,
+    "pathScore": 0.06,
+    "objectScore": 0.677,
+    "clean": true,
+    "reasons": []
+  },
+  "battlefield_ash_m1.webp": {
+    "file": "battlefield_ash_m1.webp",
+    "family": "battlefield_ash",
+    "variant": 1,
+    "meanRgb": [
+      92.4,
+      85.0,
+      76.7
+    ],
+    "stdLum": 12.25,
+    "seam4Sides": 2.44,
+    "seamMosaic2x2": 2.44,
+    "latticeScore": 0.31,
+    "pathScore": 0.079,
+    "objectScore": 0.74,
+    "clean": true,
+    "reasons": []
+  },
+  "battlefield_ash_m2.webp": {
+    "file": "battlefield_ash_m2.webp",
+    "family": "battlefield_ash",
+    "variant": 2,
+    "meanRgb": [
+      90.2,
+      84.1,
+      76.6
+    ],
+    "stdLum": 14.06,
+    "seam4Sides": 2.44,
+    "seamMosaic2x2": 2.44,
+    "latticeScore": 0.364,
+    "pathScore": 0.13,
+    "objectScore": 0.754,
+    "clean": true,
+    "reasons": []
+  },
+  "battlefield_ash_m3.webp": {
+    "file": "battlefield_ash_m3.webp",
+    "family": "battlefield_ash",
+    "variant": 3,
+    "meanRgb": [
+      91.9,
+      85.2,
+      77.1
+    ],
+    "stdLum": 11.43,
+    "seam4Sides": 2.24,
+    "seamMosaic2x2": 2.24,
+    "latticeScore": 0.798,
+    "pathScore": 0.071,
+    "objectScore": 0.649,
+    "clean": false,
+    "reasons": [
+      "lattice (0.80 > 0.55)"
+    ]
+  },
+  "battlefield_ash_m4.webp": {
+    "file": "battlefield_ash_m4.webp",
+    "family": "battlefield_ash",
+    "variant": 4,
+    "meanRgb": [
+      90.5,
+      84.4,
+      76.9
+    ],
+    "stdLum": 11.89,
+    "seam4Sides": 2.38,
+    "seamMosaic2x2": 2.38,
+    "latticeScore": 0.921,
+    "pathScore": 0.084,
+    "objectScore": 0.646,
+    "clean": false,
+    "reasons": [
+      "lattice (0.92 > 0.55)"
+    ]
+  },
+  "canyon_floor_m1.webp": {
+    "file": "canyon_floor_m1.webp",
+    "family": "canyon_floor",
+    "variant": 1,
+    "meanRgb": [
+      163.5,
+      100.2,
+      65.8
+    ],
+    "stdLum": 14.69,
+    "seam4Sides": 2.47,
+    "seamMosaic2x2": 2.47,
+    "latticeScore": 0.0,
+    "pathScore": 0.116,
+    "objectScore": 0.699,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.70 > 0.35)"
+    ]
+  },
+  "canyon_floor_m2.webp": {
+    "file": "canyon_floor_m2.webp",
+    "family": "canyon_floor",
+    "variant": 2,
+    "meanRgb": [
+      164.0,
+      99.5,
+      64.8
+    ],
+    "stdLum": 10.58,
+    "seam4Sides": 2.49,
+    "seamMosaic2x2": 2.49,
+    "latticeScore": 0.252,
+    "pathScore": 0.1,
+    "objectScore": 0.824,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.82 > 0.35)"
+    ]
+  },
+  "canyon_floor_m3.webp": {
+    "file": "canyon_floor_m3.webp",
+    "family": "canyon_floor",
+    "variant": 3,
+    "meanRgb": [
+      163.8,
+      99.4,
+      65.3
+    ],
+    "stdLum": 15.2,
+    "seam4Sides": 2.34,
+    "seamMosaic2x2": 2.34,
+    "latticeScore": 0.315,
+    "pathScore": 0.117,
+    "objectScore": 0.748,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.75 > 0.35)"
+    ]
+  },
+  "canyon_floor_m4.webp": {
+    "file": "canyon_floor_m4.webp",
+    "family": "canyon_floor",
+    "variant": 4,
+    "meanRgb": [
+      164.2,
+      99.6,
+      65.0
+    ],
+    "stdLum": 14.98,
+    "seam4Sides": 2.38,
+    "seamMosaic2x2": 2.38,
+    "latticeScore": 0.334,
+    "pathScore": 0.083,
+    "objectScore": 0.732,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.73 > 0.35)"
+    ]
+  },
+  "cliff_m1.webp": {
+    "file": "cliff_m1.webp",
+    "family": "cliff",
+    "variant": 1,
+    "meanRgb": [
+      105.7,
+      104.6,
+      101.5
+    ],
+    "stdLum": 10.49,
+    "seam4Sides": 2.23,
+    "seamMosaic2x2": 2.23,
+    "latticeScore": 0.573,
+    "pathScore": 0.074,
+    "objectScore": 0.68,
+    "clean": false,
+    "reasons": [
+      "lattice (0.57 > 0.55)"
+    ]
+  },
+  "cliff_m2.webp": {
+    "file": "cliff_m2.webp",
+    "family": "cliff",
+    "variant": 2,
+    "meanRgb": [
+      106.7,
+      105.2,
+      101.2
+    ],
+    "stdLum": 10.95,
+    "seam4Sides": 2.37,
+    "seamMosaic2x2": 2.37,
+    "latticeScore": 0.646,
+    "pathScore": 0.078,
+    "objectScore": 0.688,
+    "clean": false,
+    "reasons": [
+      "lattice (0.65 > 0.55)"
+    ]
+  },
+  "cliff_m3.webp": {
+    "file": "cliff_m3.webp",
+    "family": "cliff",
+    "variant": 3,
+    "meanRgb": [
+      107.3,
+      105.5,
+      101.2
+    ],
+    "stdLum": 11.23,
+    "seam4Sides": 2.41,
+    "seamMosaic2x2": 2.41,
+    "latticeScore": 0.822,
+    "pathScore": 0.067,
+    "objectScore": 0.714,
+    "clean": false,
+    "reasons": [
+      "lattice (0.82 > 0.55)"
+    ]
+  },
+  "cliff_m4.webp": {
+    "file": "cliff_m4.webp",
+    "family": "cliff",
+    "variant": 4,
+    "meanRgb": [
+      106.6,
+      104.7,
+      100.2
+    ],
+    "stdLum": 11.4,
+    "seam4Sides": 2.25,
+    "seamMosaic2x2": 2.25,
+    "latticeScore": 0.872,
+    "pathScore": 0.077,
+    "objectScore": 0.686,
+    "clean": false,
+    "reasons": [
+      "lattice (0.87 > 0.55)"
+    ]
+  },
+  "crater_m1.webp": {
+    "file": "crater_m1.webp",
+    "family": "crater",
+    "variant": 1,
+    "meanRgb": [
+      100.8,
+      75.8,
+      60.4
+    ],
+    "stdLum": 13.53,
+    "seam4Sides": 2.34,
+    "seamMosaic2x2": 2.34,
+    "latticeScore": 0.821,
+    "pathScore": 0.105,
+    "objectScore": 0.729,
+    "clean": false,
+    "reasons": [
+      "lattice (0.82 > 0.55)"
+    ]
+  },
+  "crater_m2.webp": {
+    "file": "crater_m2.webp",
+    "family": "crater",
+    "variant": 2,
+    "meanRgb": [
+      101.4,
+      76.1,
+      60.1
+    ],
+    "stdLum": 10.89,
+    "seam4Sides": 2.27,
+    "seamMosaic2x2": 2.27,
+    "latticeScore": 0.697,
+    "pathScore": 0.106,
+    "objectScore": 0.654,
+    "clean": false,
+    "reasons": [
+      "lattice (0.70 > 0.55)"
+    ]
+  },
+  "crater_m3.webp": {
+    "file": "crater_m3.webp",
+    "family": "crater",
+    "variant": 3,
+    "meanRgb": [
+      100.9,
+      76.9,
+      60.6
+    ],
+    "stdLum": 10.62,
+    "seam4Sides": 2.31,
+    "seamMosaic2x2": 2.31,
+    "latticeScore": 0.85,
+    "pathScore": 0.087,
+    "objectScore": 0.64,
+    "clean": false,
+    "reasons": [
+      "lattice (0.85 > 0.55)"
+    ]
+  },
+  "crater_m4.webp": {
+    "file": "crater_m4.webp",
+    "family": "crater",
+    "variant": 4,
+    "meanRgb": [
+      99.4,
+      76.8,
+      60.7
+    ],
+    "stdLum": 9.53,
+    "seam4Sides": 2.41,
+    "seamMosaic2x2": 2.41,
+    "latticeScore": 0.826,
+    "pathScore": 0.097,
+    "objectScore": 0.764,
+    "clean": false,
+    "reasons": [
+      "lattice (0.83 > 0.55)"
+    ]
+  },
+  "dead_wood_m1.webp": {
+    "file": "dead_wood_m1.webp",
+    "family": "dead_wood",
+    "variant": 1,
+    "meanRgb": [
+      113.9,
+      109.2,
+      100.2
+    ],
+    "stdLum": 11.64,
+    "seam4Sides": 2.3,
+    "seamMosaic2x2": 2.3,
+    "latticeScore": 0.698,
+    "pathScore": 0.069,
+    "objectScore": 0.682,
+    "clean": false,
+    "reasons": [
+      "lattice (0.70 > 0.55)"
+    ]
+  },
+  "dead_wood_m2.webp": {
+    "file": "dead_wood_m2.webp",
+    "family": "dead_wood",
+    "variant": 2,
+    "meanRgb": [
+      115.4,
+      110.2,
+      100.9
+    ],
+    "stdLum": 15.18,
+    "seam4Sides": 2.33,
+    "seamMosaic2x2": 2.33,
+    "latticeScore": 0.22,
+    "pathScore": 0.084,
+    "objectScore": 0.741,
+    "clean": true,
+    "reasons": []
+  },
+  "dead_wood_m3.webp": {
+    "file": "dead_wood_m3.webp",
+    "family": "dead_wood",
+    "variant": 3,
+    "meanRgb": [
+      114.7,
+      109.6,
+      100.9
+    ],
+    "stdLum": 11.13,
+    "seam4Sides": 2.25,
+    "seamMosaic2x2": 2.25,
+    "latticeScore": 0.207,
+    "pathScore": 0.073,
+    "objectScore": 0.775,
+    "clean": true,
+    "reasons": []
+  },
+  "dead_wood_m4.webp": {
+    "file": "dead_wood_m4.webp",
+    "family": "dead_wood",
+    "variant": 4,
+    "meanRgb": [
+      114.2,
+      109.4,
+      100.5
+    ],
+    "stdLum": 10.77,
+    "seam4Sides": 2.25,
+    "seamMosaic2x2": 2.25,
+    "latticeScore": 0.812,
+    "pathScore": 0.091,
+    "objectScore": 0.721,
+    "clean": false,
+    "reasons": [
+      "lattice (0.81 > 0.55)"
+    ]
+  },
+  "demonic_swamp_m1.webp": {
+    "file": "demonic_swamp_m1.webp",
+    "family": "demonic_swamp",
+    "variant": 1,
+    "meanRgb": [
+      88.3,
+      64.0,
+      99.6
+    ],
+    "stdLum": 13.22,
+    "seam4Sides": 2.5,
+    "seamMosaic2x2": 2.5,
+    "latticeScore": 0.689,
+    "pathScore": 0.102,
+    "objectScore": 0.793,
+    "clean": false,
+    "reasons": [
+      "lattice (0.69 > 0.55)"
+    ]
+  },
+  "demonic_swamp_m2.webp": {
+    "file": "demonic_swamp_m2.webp",
+    "family": "demonic_swamp",
+    "variant": 2,
+    "meanRgb": [
+      89.2,
+      62.6,
+      102.7
+    ],
+    "stdLum": 11.42,
+    "seam4Sides": 2.44,
+    "seamMosaic2x2": 2.44,
+    "latticeScore": 0.313,
+    "pathScore": 0.082,
+    "objectScore": 0.771,
+    "clean": true,
+    "reasons": []
+  },
+  "demonic_swamp_m3.webp": {
+    "file": "demonic_swamp_m3.webp",
+    "family": "demonic_swamp",
+    "variant": 3,
+    "meanRgb": [
+      88.0,
+      63.5,
+      101.3
+    ],
+    "stdLum": 13.21,
+    "seam4Sides": 2.32,
+    "seamMosaic2x2": 2.32,
+    "latticeScore": 0.145,
+    "pathScore": 0.088,
+    "objectScore": 0.705,
+    "clean": true,
+    "reasons": []
+  },
+  "demonic_swamp_m4.webp": {
+    "file": "demonic_swamp_m4.webp",
+    "family": "demonic_swamp",
+    "variant": 4,
+    "meanRgb": [
+      87.7,
+      63.1,
+      100.7
+    ],
+    "stdLum": 13.22,
+    "seam4Sides": 2.61,
+    "seamMosaic2x2": 2.61,
+    "latticeScore": 0.932,
+    "pathScore": 0.136,
+    "objectScore": 0.88,
+    "clean": false,
+    "reasons": [
+      "lattice (0.93 > 0.55)"
+    ]
+  },
+  "desert_sand_m1.webp": {
+    "file": "desert_sand_m1.webp",
+    "family": "desert_sand",
+    "variant": 1,
+    "meanRgb": [
+      205.5,
+      171.5,
+      110.0
+    ],
+    "stdLum": 7.41,
+    "seam4Sides": 2.34,
+    "seamMosaic2x2": 2.34,
+    "latticeScore": 0.0,
+    "pathScore": 0.102,
+    "objectScore": 0.804,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.80 > 0.35)"
+    ]
+  },
+  "desert_sand_m2.webp": {
+    "file": "desert_sand_m2.webp",
+    "family": "desert_sand",
+    "variant": 2,
+    "meanRgb": [
+      205.2,
+      172.5,
+      105.7
+    ],
+    "stdLum": 7.42,
+    "seam4Sides": 2.62,
+    "seamMosaic2x2": 2.62,
+    "latticeScore": 0.628,
+    "pathScore": 0.065,
+    "objectScore": 0.745,
+    "clean": false,
+    "reasons": [
+      "lattice (0.63 > 0.45)",
+      "baked objects (0.75 > 0.35)"
+    ]
+  },
+  "desert_sand_m3.webp": {
+    "file": "desert_sand_m3.webp",
+    "family": "desert_sand",
+    "variant": 3,
+    "meanRgb": [
+      207.3,
+      171.2,
+      109.2
+    ],
+    "stdLum": 11.8,
+    "seam4Sides": 2.39,
+    "seamMosaic2x2": 2.39,
+    "latticeScore": 0.48,
+    "pathScore": 0.075,
+    "objectScore": 0.667,
+    "clean": false,
+    "reasons": [
+      "lattice (0.48 > 0.45)",
+      "baked objects (0.67 > 0.35)"
+    ]
+  },
+  "desert_sand_m4.webp": {
+    "file": "desert_sand_m4.webp",
+    "family": "desert_sand",
+    "variant": 4,
+    "meanRgb": [
+      204.8,
+      172.1,
+      112.6
+    ],
+    "stdLum": 10.98,
+    "seam4Sides": 2.4,
+    "seamMosaic2x2": 2.4,
+    "latticeScore": 0.262,
+    "pathScore": 0.083,
+    "objectScore": 0.676,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.68 > 0.35)"
+    ]
+  },
+  "dune_m1.webp": {
+    "file": "dune_m1.webp",
+    "family": "dune",
+    "variant": 1,
+    "meanRgb": [
+      204.3,
+      165.2,
+      100.5
+    ],
+    "stdLum": 11.38,
+    "seam4Sides": 2.42,
+    "seamMosaic2x2": 2.42,
+    "latticeScore": 0.432,
+    "pathScore": 0.077,
+    "objectScore": 0.761,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.76 > 0.35)"
+    ]
+  },
+  "dune_m2.webp": {
+    "file": "dune_m2.webp",
+    "family": "dune",
+    "variant": 2,
+    "meanRgb": [
+      204.0,
+      166.1,
+      102.6
+    ],
+    "stdLum": 17.09,
+    "seam4Sides": 2.47,
+    "seamMosaic2x2": 2.47,
+    "latticeScore": 0.636,
+    "pathScore": 0.099,
+    "objectScore": 0.714,
+    "clean": false,
+    "reasons": [
+      "lattice (0.64 > 0.45)",
+      "baked objects (0.71 > 0.35)"
+    ]
+  },
+  "dune_m3.webp": {
+    "file": "dune_m3.webp",
+    "family": "dune",
+    "variant": 3,
+    "meanRgb": [
+      205.5,
+      166.1,
+      101.6
+    ],
+    "stdLum": 18.74,
+    "seam4Sides": 2.25,
+    "seamMosaic2x2": 2.25,
+    "latticeScore": 0.227,
+    "pathScore": 0.125,
+    "objectScore": 0.692,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.69 > 0.35)"
+    ]
+  },
+  "dune_m4.webp": {
+    "file": "dune_m4.webp",
+    "family": "dune",
+    "variant": 4,
+    "meanRgb": [
+      204.6,
+      165.3,
+      101.0
+    ],
+    "stdLum": 14.95,
+    "seam4Sides": 2.46,
+    "seamMosaic2x2": 2.46,
+    "latticeScore": 0.45,
+    "pathScore": 0.189,
+    "objectScore": 0.629,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.63 > 0.35)"
+    ]
+  },
+  "farmland_m1.webp": {
+    "file": "farmland_m1.webp",
+    "family": "farmland",
+    "variant": 1,
+    "meanRgb": [
+      128.6,
+      116.4,
+      73.6
+    ],
+    "stdLum": 11.86,
+    "seam4Sides": 2.41,
+    "seamMosaic2x2": 2.41,
+    "latticeScore": 0.683,
+    "pathScore": 0.075,
+    "objectScore": 0.727,
+    "clean": false,
+    "reasons": [
+      "lattice (0.68 > 0.45)",
+      "baked objects (0.73 > 0.35)"
+    ]
+  },
+  "farmland_m2.webp": {
+    "file": "farmland_m2.webp",
+    "family": "farmland",
+    "variant": 2,
+    "meanRgb": [
+      130.3,
+      118.9,
+      75.8
+    ],
+    "stdLum": 13.02,
+    "seam4Sides": 2.42,
+    "seamMosaic2x2": 2.42,
+    "latticeScore": 0.683,
+    "pathScore": 0.094,
+    "objectScore": 0.688,
+    "clean": false,
+    "reasons": [
+      "lattice (0.68 > 0.45)",
+      "baked objects (0.69 > 0.35)"
+    ]
+  },
+  "farmland_m3.webp": {
+    "file": "farmland_m3.webp",
+    "family": "farmland",
+    "variant": 3,
+    "meanRgb": [
+      127.3,
+      116.6,
+      77.1
+    ],
+    "stdLum": 15.62,
+    "seam4Sides": 2.41,
+    "seamMosaic2x2": 2.41,
+    "latticeScore": 0.556,
+    "pathScore": 0.175,
+    "objectScore": 0.803,
+    "clean": false,
+    "reasons": [
+      "lattice (0.56 > 0.45)",
+      "baked objects (0.80 > 0.35)"
+    ]
+  },
+  "farmland_m4.webp": {
+    "file": "farmland_m4.webp",
+    "family": "farmland",
+    "variant": 4,
+    "meanRgb": [
+      129.3,
+      116.8,
+      73.1
+    ],
+    "stdLum": 11.68,
+    "seam4Sides": 2.47,
+    "seamMosaic2x2": 2.47,
+    "latticeScore": 0.072,
+    "pathScore": 0.07,
+    "objectScore": 0.512,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.51 > 0.35)"
+    ]
+  },
+  "forest_floor_m1.webp": {
+    "file": "forest_floor_m1.webp",
+    "family": "forest_floor",
+    "variant": 1,
+    "meanRgb": [
+      79.9,
+      104.5,
+      68.9
+    ],
+    "stdLum": 14.43,
+    "seam4Sides": 2.2,
+    "seamMosaic2x2": 2.2,
+    "latticeScore": 0.529,
+    "pathScore": 0.063,
+    "objectScore": 0.642,
+    "clean": false,
+    "reasons": [
+      "lattice (0.53 > 0.45)",
+      "baked objects (0.64 > 0.35)"
+    ]
+  },
+  "forest_floor_m2.webp": {
+    "file": "forest_floor_m2.webp",
+    "family": "forest_floor",
+    "variant": 2,
+    "meanRgb": [
+      75.4,
+      104.7,
+      67.2
+    ],
+    "stdLum": 13.05,
+    "seam4Sides": 2.47,
+    "seamMosaic2x2": 2.47,
+    "latticeScore": 0.492,
+    "pathScore": 0.107,
+    "objectScore": 0.739,
+    "clean": false,
+    "reasons": [
+      "lattice (0.49 > 0.45)",
+      "baked objects (0.74 > 0.35)"
+    ]
+  },
+  "forest_floor_m3.webp": {
+    "file": "forest_floor_m3.webp",
+    "family": "forest_floor",
+    "variant": 3,
+    "meanRgb": [
+      77.3,
+      103.2,
+      68.9
+    ],
+    "stdLum": 14.23,
+    "seam4Sides": 2.3,
+    "seamMosaic2x2": 2.3,
+    "latticeScore": 0.673,
+    "pathScore": 0.101,
+    "objectScore": 0.653,
+    "clean": false,
+    "reasons": [
+      "lattice (0.67 > 0.45)",
+      "baked objects (0.65 > 0.35)"
+    ]
+  },
+  "forest_floor_m4.webp": {
+    "file": "forest_floor_m4.webp",
+    "family": "forest_floor",
+    "variant": 4,
+    "meanRgb": [
+      80.5,
+      102.7,
+      69.4
+    ],
+    "stdLum": 14.34,
+    "seam4Sides": 2.35,
+    "seamMosaic2x2": 2.35,
+    "latticeScore": 0.354,
+    "pathScore": 0.094,
+    "objectScore": 0.818,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.82 > 0.35)"
+    ]
+  },
+  "formation_tile_m1.webp": {
+    "file": "formation_tile_m1.webp",
+    "family": "formation_tile",
+    "variant": 1,
+    "meanRgb": [
+      108.8,
+      122.0,
+      113.1
+    ],
+    "stdLum": 14.57,
+    "seam4Sides": 2.27,
+    "seamMosaic2x2": 2.27,
+    "latticeScore": 0.235,
+    "pathScore": 0.145,
+    "objectScore": 0.862,
+    "clean": true,
+    "reasons": []
+  },
+  "formation_tile_m2.webp": {
+    "file": "formation_tile_m2.webp",
+    "family": "formation_tile",
+    "variant": 2,
+    "meanRgb": [
+      110.3,
+      123.5,
+      115.4
+    ],
+    "stdLum": 16.34,
+    "seam4Sides": 2.19,
+    "seamMosaic2x2": 2.19,
+    "latticeScore": 0.419,
+    "pathScore": 0.093,
+    "objectScore": 0.761,
+    "clean": true,
+    "reasons": []
+  },
+  "formation_tile_m3.webp": {
+    "file": "formation_tile_m3.webp",
+    "family": "formation_tile",
+    "variant": 3,
+    "meanRgb": [
+      109.0,
+      122.1,
+      115.1
+    ],
+    "stdLum": 15.9,
+    "seam4Sides": 2.34,
+    "seamMosaic2x2": 2.34,
+    "latticeScore": 0.383,
+    "pathScore": 0.105,
+    "objectScore": 0.752,
+    "clean": true,
+    "reasons": []
+  },
+  "formation_tile_m4.webp": {
+    "file": "formation_tile_m4.webp",
+    "family": "formation_tile",
+    "variant": 4,
+    "meanRgb": [
+      113.2,
+      124.7,
+      115.0
+    ],
+    "stdLum": 14.68,
+    "seam4Sides": 2.16,
+    "seamMosaic2x2": 2.16,
+    "latticeScore": 0.361,
+    "pathScore": 0.087,
+    "objectScore": 0.709,
+    "clean": true,
+    "reasons": []
+  },
+  "glacier_m1.webp": {
+    "file": "glacier_m1.webp",
+    "family": "glacier",
+    "variant": 1,
+    "meanRgb": [
+      170.6,
+      201.6,
+      216.6
+    ],
+    "stdLum": 21.11,
+    "seam4Sides": 2.39,
+    "seamMosaic2x2": 2.39,
+    "latticeScore": 0.259,
+    "pathScore": 0.163,
+    "objectScore": 0.707,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.71 > 0.35)"
+    ]
+  },
+  "glacier_m2.webp": {
+    "file": "glacier_m2.webp",
+    "family": "glacier",
+    "variant": 2,
+    "meanRgb": [
+      170.2,
+      202.2,
+      217.3
+    ],
+    "stdLum": 17.33,
+    "seam4Sides": 2.28,
+    "seamMosaic2x2": 2.28,
+    "latticeScore": 0.595,
+    "pathScore": 0.109,
+    "objectScore": 0.806,
+    "clean": false,
+    "reasons": [
+      "lattice (0.60 > 0.45)",
+      "baked objects (0.81 > 0.35)"
+    ]
+  },
+  "glacier_m3.webp": {
+    "file": "glacier_m3.webp",
+    "family": "glacier",
+    "variant": 3,
+    "meanRgb": [
+      171.4,
+      203.0,
+      219.2
+    ],
+    "stdLum": 17.69,
+    "seam4Sides": 2.33,
+    "seamMosaic2x2": 2.33,
+    "latticeScore": 0.214,
+    "pathScore": 0.105,
+    "objectScore": 0.764,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.76 > 0.35)"
+    ]
+  },
+  "glacier_m4.webp": {
+    "file": "glacier_m4.webp",
+    "family": "glacier",
+    "variant": 4,
+    "meanRgb": [
+      170.9,
+      202.1,
+      217.2
+    ],
+    "stdLum": 15.6,
+    "seam4Sides": 2.23,
+    "seamMosaic2x2": 2.23,
+    "latticeScore": 0.166,
+    "pathScore": 0.086,
+    "objectScore": 0.8,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.80 > 0.35)"
+    ]
+  },
+  "herb_field_m1.webp": {
+    "file": "herb_field_m1.webp",
+    "family": "herb_field",
+    "variant": 1,
+    "meanRgb": [
+      85.8,
+      139.7,
+      109.3
+    ],
+    "stdLum": 12.46,
+    "seam4Sides": 2.42,
+    "seamMosaic2x2": 2.42,
+    "latticeScore": 0.366,
+    "pathScore": 0.092,
+    "objectScore": 0.762,
+    "clean": true,
+    "reasons": []
+  },
+  "herb_field_m2.webp": {
+    "file": "herb_field_m2.webp",
+    "family": "herb_field",
+    "variant": 2,
+    "meanRgb": [
+      85.7,
+      139.6,
+      109.0
+    ],
+    "stdLum": 16.29,
+    "seam4Sides": 2.45,
+    "seamMosaic2x2": 2.45,
+    "latticeScore": 0.843,
+    "pathScore": 0.115,
+    "objectScore": 0.697,
+    "clean": false,
+    "reasons": [
+      "lattice (0.84 > 0.55)"
+    ]
+  },
+  "herb_field_m3.webp": {
+    "file": "herb_field_m3.webp",
+    "family": "herb_field",
+    "variant": 3,
+    "meanRgb": [
+      87.5,
+      138.5,
+      108.3
+    ],
+    "stdLum": 12.4,
+    "seam4Sides": 2.14,
+    "seamMosaic2x2": 2.14,
+    "latticeScore": 0.518,
+    "pathScore": 0.075,
+    "objectScore": 0.656,
+    "clean": true,
+    "reasons": []
+  },
+  "herb_field_m4.webp": {
+    "file": "herb_field_m4.webp",
+    "family": "herb_field",
+    "variant": 4,
+    "meanRgb": [
+      88.1,
+      138.4,
+      110.3
+    ],
+    "stdLum": 15.47,
+    "seam4Sides": 2.34,
+    "seamMosaic2x2": 2.34,
+    "latticeScore": 0.848,
+    "pathScore": 0.1,
+    "objectScore": 0.731,
+    "clean": false,
+    "reasons": [
+      "lattice (0.85 > 0.55)"
+    ]
+  },
+  "hill_m1.webp": {
+    "file": "hill_m1.webp",
+    "family": "hill",
+    "variant": 1,
+    "meanRgb": [
+      133.1,
+      136.3,
+      111.4
+    ],
+    "stdLum": 16.95,
+    "seam4Sides": 2.09,
+    "seamMosaic2x2": 2.09,
+    "latticeScore": 0.781,
+    "pathScore": 0.109,
+    "objectScore": 0.737,
+    "clean": false,
+    "reasons": [
+      "lattice (0.78 > 0.55)"
+    ]
+  },
+  "hill_m2.webp": {
+    "file": "hill_m2.webp",
+    "family": "hill",
+    "variant": 2,
+    "meanRgb": [
+      135.2,
+      135.7,
+      107.0
+    ],
+    "stdLum": 15.21,
+    "seam4Sides": 2.27,
+    "seamMosaic2x2": 2.27,
+    "latticeScore": 0.881,
+    "pathScore": 0.056,
+    "objectScore": 0.636,
+    "clean": false,
+    "reasons": [
+      "lattice (0.88 > 0.55)"
+    ]
+  },
+  "hill_m3.webp": {
+    "file": "hill_m3.webp",
+    "family": "hill",
+    "variant": 3,
+    "meanRgb": [
+      133.8,
+      136.5,
+      109.4
+    ],
+    "stdLum": 14.67,
+    "seam4Sides": 2.22,
+    "seamMosaic2x2": 2.22,
+    "latticeScore": 0.807,
+    "pathScore": 0.072,
+    "objectScore": 0.681,
+    "clean": false,
+    "reasons": [
+      "lattice (0.81 > 0.55)"
+    ]
+  },
+  "hill_m4.webp": {
+    "file": "hill_m4.webp",
+    "family": "hill",
+    "variant": 4,
+    "meanRgb": [
+      130.9,
+      136.1,
+      115.3
+    ],
+    "stdLum": 10.69,
+    "seam4Sides": 2.32,
+    "seamMosaic2x2": 2.32,
+    "latticeScore": 0.71,
+    "pathScore": 0.107,
+    "objectScore": 0.745,
+    "clean": false,
+    "reasons": [
+      "lattice (0.71 > 0.55)"
+    ]
+  },
+  "ice_crack_m1.webp": {
+    "file": "ice_crack_m1.webp",
+    "family": "ice_crack",
+    "variant": 1,
+    "meanRgb": [
+      183.9,
+      212.5,
+      226.8
+    ],
+    "stdLum": 13.75,
+    "seam4Sides": 2.52,
+    "seamMosaic2x2": 2.52,
+    "latticeScore": 0.081,
+    "pathScore": 0.128,
+    "objectScore": 0.79,
+    "clean": true,
+    "reasons": []
+  },
+  "ice_crack_m2.webp": {
+    "file": "ice_crack_m2.webp",
+    "family": "ice_crack",
+    "variant": 2,
+    "meanRgb": [
+      183.1,
+      211.7,
+      225.7
+    ],
+    "stdLum": 9.78,
+    "seam4Sides": 2.47,
+    "seamMosaic2x2": 2.47,
+    "latticeScore": 0.066,
+    "pathScore": 0.081,
+    "objectScore": 0.761,
+    "clean": true,
+    "reasons": []
+  },
+  "ice_crack_m3.webp": {
+    "file": "ice_crack_m3.webp",
+    "family": "ice_crack",
+    "variant": 3,
+    "meanRgb": [
+      184.3,
+      213.2,
+      227.8
+    ],
+    "stdLum": 23.48,
+    "seam4Sides": 2.14,
+    "seamMosaic2x2": 2.14,
+    "latticeScore": 0.173,
+    "pathScore": 0.117,
+    "objectScore": 0.829,
+    "clean": true,
+    "reasons": []
+  },
+  "ice_crack_m4.webp": {
+    "file": "ice_crack_m4.webp",
+    "family": "ice_crack",
+    "variant": 4,
+    "meanRgb": [
+      183.7,
+      211.0,
+      221.9
+    ],
+    "stdLum": 21.95,
+    "seam4Sides": 2.17,
+    "seamMosaic2x2": 2.17,
+    "latticeScore": 0.07,
+    "pathScore": 0.119,
+    "objectScore": 0.738,
+    "clean": true,
+    "reasons": []
+  },
+  "island_reef_m1.webp": {
+    "file": "island_reef_m1.webp",
+    "family": "island_reef",
+    "variant": 1,
+    "meanRgb": [
+      120.2,
+      186.3,
+      171.9
+    ],
+    "stdLum": 19.71,
+    "seam4Sides": 2.34,
+    "seamMosaic2x2": 2.34,
+    "latticeScore": 0.383,
+    "pathScore": 0.095,
+    "objectScore": 0.74,
+    "clean": true,
+    "reasons": []
+  },
+  "island_reef_m2.webp": {
+    "file": "island_reef_m2.webp",
+    "family": "island_reef",
+    "variant": 2,
+    "meanRgb": [
+      117.7,
+      186.2,
+      172.7
+    ],
+    "stdLum": 22.27,
+    "seam4Sides": 2.18,
+    "seamMosaic2x2": 2.18,
+    "latticeScore": 0.003,
+    "pathScore": 0.096,
+    "objectScore": 0.726,
+    "clean": true,
+    "reasons": []
+  },
+  "island_reef_m3.webp": {
+    "file": "island_reef_m3.webp",
+    "family": "island_reef",
+    "variant": 3,
+    "meanRgb": [
+      120.2,
+      185.7,
+      170.1
+    ],
+    "stdLum": 14.99,
+    "seam4Sides": 2.11,
+    "seamMosaic2x2": 2.11,
+    "latticeScore": 0.0,
+    "pathScore": 0.103,
+    "objectScore": 0.736,
+    "clean": true,
+    "reasons": []
+  },
+  "island_reef_m4.webp": {
+    "file": "island_reef_m4.webp",
+    "family": "island_reef",
+    "variant": 4,
+    "meanRgb": [
+      122.7,
+      185.9,
+      169.9
+    ],
+    "stdLum": 20.49,
+    "seam4Sides": 2.45,
+    "seamMosaic2x2": 2.45,
+    "latticeScore": 0.839,
+    "pathScore": 0.099,
+    "objectScore": 0.794,
+    "clean": false,
+    "reasons": [
+      "lattice (0.84 > 0.55)"
+    ]
+  },
+  "lake_m1.webp": {
+    "file": "lake_m1.webp",
+    "family": "lake",
+    "variant": 1,
+    "meanRgb": [
+      67.8,
+      129.0,
+      139.6
+    ],
+    "stdLum": 11.38,
+    "seam4Sides": 2.37,
+    "seamMosaic2x2": 2.37,
+    "latticeScore": 0.814,
+    "pathScore": 0.087,
+    "objectScore": 0.711,
+    "clean": false,
+    "reasons": [
+      "lattice (0.81 > 0.55)"
+    ]
+  },
+  "lake_m2.webp": {
+    "file": "lake_m2.webp",
+    "family": "lake",
+    "variant": 2,
+    "meanRgb": [
+      67.9,
+      129.1,
+      142.2
+    ],
+    "stdLum": 9.58,
+    "seam4Sides": 2.29,
+    "seamMosaic2x2": 2.29,
+    "latticeScore": 0.239,
+    "pathScore": 0.07,
+    "objectScore": 0.668,
+    "clean": true,
+    "reasons": []
+  },
+  "lake_m3.webp": {
+    "file": "lake_m3.webp",
+    "family": "lake",
+    "variant": 3,
+    "meanRgb": [
+      69.8,
+      128.7,
+      140.8
+    ],
+    "stdLum": 10.04,
+    "seam4Sides": 2.68,
+    "seamMosaic2x2": 2.68,
+    "latticeScore": 0.329,
+    "pathScore": 0.062,
+    "objectScore": 0.558,
+    "clean": true,
+    "reasons": []
+  },
+  "lake_m4.webp": {
+    "file": "lake_m4.webp",
+    "family": "lake",
+    "variant": 4,
+    "meanRgb": [
+      72.5,
+      125.9,
+      136.2
+    ],
+    "stdLum": 10.27,
+    "seam4Sides": 2.49,
+    "seamMosaic2x2": 2.49,
+    "latticeScore": 0.97,
+    "pathScore": 0.076,
+    "objectScore": 0.669,
+    "clean": false,
+    "reasons": [
+      "lattice (0.97 > 0.55)"
+    ]
+  },
+  "lava_flow_m1.webp": {
+    "file": "lava_flow_m1.webp",
+    "family": "lava_flow",
+    "variant": 1,
+    "meanRgb": [
+      129.0,
+      65.0,
+      26.0
+    ],
+    "stdLum": 11.16,
+    "seam4Sides": 2.39,
+    "seamMosaic2x2": 2.39,
+    "latticeScore": 0.077,
+    "pathScore": 0.123,
+    "objectScore": 0.917,
+    "clean": true,
+    "reasons": []
+  },
+  "lava_flow_m2.webp": {
+    "file": "lava_flow_m2.webp",
+    "family": "lava_flow",
+    "variant": 2,
+    "meanRgb": [
+      128.9,
+      65.2,
+      26.3
+    ],
+    "stdLum": 10.76,
+    "seam4Sides": 2.53,
+    "seamMosaic2x2": 2.53,
+    "latticeScore": 0.093,
+    "pathScore": 0.107,
+    "objectScore": 0.726,
+    "clean": true,
+    "reasons": []
+  },
+  "lava_flow_m3.webp": {
+    "file": "lava_flow_m3.webp",
+    "family": "lava_flow",
+    "variant": 3,
+    "meanRgb": [
+      129.1,
+      67.3,
+      28.7
+    ],
+    "stdLum": 14.28,
+    "seam4Sides": 2.26,
+    "seamMosaic2x2": 2.26,
+    "latticeScore": 0.749,
+    "pathScore": 0.057,
+    "objectScore": 0.688,
+    "clean": false,
+    "reasons": [
+      "lattice (0.75 > 0.55)"
+    ]
+  },
+  "lava_flow_m4.webp": {
+    "file": "lava_flow_m4.webp",
+    "family": "lava_flow",
+    "variant": 4,
+    "meanRgb": [
+      127.3,
+      65.1,
+      27.0
+    ],
+    "stdLum": 13.97,
+    "seam4Sides": 2.44,
+    "seamMosaic2x2": 2.44,
+    "latticeScore": 0.074,
+    "pathScore": 0.103,
+    "objectScore": 0.948,
+    "clean": true,
+    "reasons": []
+  },
+  "lightning_scar_m1.webp": {
+    "file": "lightning_scar_m1.webp",
+    "family": "lightning_scar",
+    "variant": 1,
+    "meanRgb": [
+      73.1,
+      86.1,
+      105.9
+    ],
+    "stdLum": 13.99,
+    "seam4Sides": 2.38,
+    "seamMosaic2x2": 2.38,
+    "latticeScore": 0.216,
+    "pathScore": 0.234,
+    "objectScore": 0.856,
+    "clean": true,
+    "reasons": []
+  },
+  "lightning_scar_m2.webp": {
+    "file": "lightning_scar_m2.webp",
+    "family": "lightning_scar",
+    "variant": 2,
+    "meanRgb": [
+      73.9,
+      85.8,
+      103.7
+    ],
+    "stdLum": 13.95,
+    "seam4Sides": 2.43,
+    "seamMosaic2x2": 2.43,
+    "latticeScore": 0.221,
+    "pathScore": 0.22,
+    "objectScore": 0.747,
+    "clean": true,
+    "reasons": []
+  },
+  "lightning_scar_m3.webp": {
+    "file": "lightning_scar_m3.webp",
+    "family": "lightning_scar",
+    "variant": 3,
+    "meanRgb": [
+      74.9,
+      86.3,
+      104.3
+    ],
+    "stdLum": 14.09,
+    "seam4Sides": 2.31,
+    "seamMosaic2x2": 2.31,
+    "latticeScore": 0.881,
+    "pathScore": 0.075,
+    "objectScore": 0.721,
+    "clean": false,
+    "reasons": [
+      "lattice (0.88 > 0.55)"
+    ]
+  },
+  "lightning_scar_m4.webp": {
+    "file": "lightning_scar_m4.webp",
+    "family": "lightning_scar",
+    "variant": 4,
+    "meanRgb": [
+      75.6,
+      87.2,
+      104.7
+    ],
+    "stdLum": 14.22,
+    "seam4Sides": 2.23,
+    "seamMosaic2x2": 2.23,
+    "latticeScore": 0.516,
+    "pathScore": 0.17,
+    "objectScore": 0.744,
+    "clean": true,
+    "reasons": []
+  },
+  "meadow_m1.webp": {
+    "file": "meadow_m1.webp",
+    "family": "meadow",
+    "variant": 1,
+    "meanRgb": [
+      140.5,
+      166.9,
+      94.2
+    ],
+    "stdLum": 14.35,
+    "seam4Sides": 2.2,
+    "seamMosaic2x2": 2.2,
+    "latticeScore": 0.175,
+    "pathScore": 0.054,
+    "objectScore": 0.662,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.66 > 0.35)"
+    ]
+  },
+  "meadow_m2.webp": {
+    "file": "meadow_m2.webp",
+    "family": "meadow",
+    "variant": 2,
+    "meanRgb": [
+      139.2,
+      167.0,
+      95.2
+    ],
+    "stdLum": 14.62,
+    "seam4Sides": 2.1,
+    "seamMosaic2x2": 2.1,
+    "latticeScore": 0.0,
+    "pathScore": 0.06,
+    "objectScore": 0.642,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.64 > 0.35)"
+    ]
+  },
+  "meadow_m3.webp": {
+    "file": "meadow_m3.webp",
+    "family": "meadow",
+    "variant": 3,
+    "meanRgb": [
+      140.5,
+      166.6,
+      94.6
+    ],
+    "stdLum": 14.73,
+    "seam4Sides": 2.1,
+    "seamMosaic2x2": 2.1,
+    "latticeScore": 0.682,
+    "pathScore": 0.066,
+    "objectScore": 0.661,
+    "clean": false,
+    "reasons": [
+      "lattice (0.68 > 0.45)",
+      "baked objects (0.66 > 0.35)"
+    ]
+  },
+  "meadow_m4.webp": {
+    "file": "meadow_m4.webp",
+    "family": "meadow",
+    "variant": 4,
+    "meanRgb": [
+      141.1,
+      164.3,
+      99.0
+    ],
+    "stdLum": 12.57,
+    "seam4Sides": 2.37,
+    "seamMosaic2x2": 2.37,
+    "latticeScore": 0.055,
+    "pathScore": 0.097,
+    "objectScore": 0.71,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.71 > 0.35)"
+    ]
+  },
+  "miasma_waste_m1.webp": {
+    "file": "miasma_waste_m1.webp",
+    "family": "miasma_waste",
+    "variant": 1,
+    "meanRgb": [
+      104.4,
+      95.5,
+      108.1
+    ],
+    "stdLum": 13.28,
+    "seam4Sides": 2.39,
+    "seamMosaic2x2": 2.39,
+    "latticeScore": 0.418,
+    "pathScore": 0.129,
+    "objectScore": 0.802,
+    "clean": true,
+    "reasons": []
+  },
+  "miasma_waste_m2.webp": {
+    "file": "miasma_waste_m2.webp",
+    "family": "miasma_waste",
+    "variant": 2,
+    "meanRgb": [
+      104.6,
+      96.1,
+      110.8
+    ],
+    "stdLum": 10.41,
+    "seam4Sides": 2.46,
+    "seamMosaic2x2": 2.46,
+    "latticeScore": 0.3,
+    "pathScore": 0.116,
+    "objectScore": 0.71,
+    "clean": true,
+    "reasons": []
+  },
+  "miasma_waste_m3.webp": {
+    "file": "miasma_waste_m3.webp",
+    "family": "miasma_waste",
+    "variant": 3,
+    "meanRgb": [
+      104.2,
+      95.4,
+      110.1
+    ],
+    "stdLum": 13.96,
+    "seam4Sides": 2.34,
+    "seamMosaic2x2": 2.34,
+    "latticeScore": 0.831,
+    "pathScore": 0.078,
+    "objectScore": 0.643,
+    "clean": false,
+    "reasons": [
+      "lattice (0.83 > 0.55)"
+    ]
+  },
+  "miasma_waste_m4.webp": {
+    "file": "miasma_waste_m4.webp",
+    "family": "miasma_waste",
+    "variant": 4,
+    "meanRgb": [
+      104.4,
+      95.7,
+      110.5
+    ],
+    "stdLum": 9.56,
+    "seam4Sides": 2.28,
+    "seamMosaic2x2": 2.28,
+    "latticeScore": 0.758,
+    "pathScore": 0.089,
+    "objectScore": 0.743,
+    "clean": false,
+    "reasons": [
+      "lattice (0.76 > 0.55)"
+    ]
+  },
+  "mountain_pass_m1.webp": {
+    "file": "mountain_pass_m1.webp",
+    "family": "mountain_pass",
+    "variant": 1,
+    "meanRgb": [
+      127.4,
+      121.8,
+      110.1
+    ],
+    "stdLum": 13.57,
+    "seam4Sides": 2.43,
+    "seamMosaic2x2": 2.43,
+    "latticeScore": 0.397,
+    "pathScore": 0.072,
+    "objectScore": 0.768,
+    "clean": true,
+    "reasons": []
+  },
+  "mountain_pass_m2.webp": {
+    "file": "mountain_pass_m2.webp",
+    "family": "mountain_pass",
+    "variant": 2,
+    "meanRgb": [
+      127.1,
+      121.2,
+      109.1
+    ],
+    "stdLum": 13.81,
+    "seam4Sides": 2.33,
+    "seamMosaic2x2": 2.33,
+    "latticeScore": 0.925,
+    "pathScore": 0.127,
+    "objectScore": 0.762,
+    "clean": false,
+    "reasons": [
+      "lattice (0.92 > 0.55)"
+    ]
+  },
+  "mountain_pass_m3.webp": {
+    "file": "mountain_pass_m3.webp",
+    "family": "mountain_pass",
+    "variant": 3,
+    "meanRgb": [
+      127.0,
+      122.2,
+      110.7
+    ],
+    "stdLum": 16.74,
+    "seam4Sides": 2.07,
+    "seamMosaic2x2": 2.07,
+    "latticeScore": 0.746,
+    "pathScore": 0.074,
+    "objectScore": 0.684,
+    "clean": false,
+    "reasons": [
+      "lattice (0.75 > 0.55)"
+    ]
+  },
+  "mountain_pass_m4.webp": {
+    "file": "mountain_pass_m4.webp",
+    "family": "mountain_pass",
+    "variant": 4,
+    "meanRgb": [
+      125.9,
+      121.0,
+      110.0
+    ],
+    "stdLum": 15.99,
+    "seam4Sides": 2.26,
+    "seamMosaic2x2": 2.26,
+    "latticeScore": 0.053,
+    "pathScore": 0.109,
+    "objectScore": 0.777,
+    "clean": true,
+    "reasons": []
+  },
+  "oasis_m1.webp": {
+    "file": "oasis_m1.webp",
+    "family": "oasis",
+    "variant": 1,
+    "meanRgb": [
+      151.6,
+      155.5,
+      102.0
+    ],
+    "stdLum": 16.17,
+    "seam4Sides": 2.5,
+    "seamMosaic2x2": 2.5,
+    "latticeScore": 0.046,
+    "pathScore": 0.16,
+    "objectScore": 0.956,
+    "clean": true,
+    "reasons": []
+  },
+  "oasis_m2.webp": {
+    "file": "oasis_m2.webp",
+    "family": "oasis",
+    "variant": 2,
+    "meanRgb": [
+      151.7,
+      155.3,
+      100.8
+    ],
+    "stdLum": 18.99,
+    "seam4Sides": 2.43,
+    "seamMosaic2x2": 2.43,
+    "latticeScore": 0.105,
+    "pathScore": 0.149,
+    "objectScore": 0.792,
+    "clean": true,
+    "reasons": []
+  },
+  "oasis_m3.webp": {
+    "file": "oasis_m3.webp",
+    "family": "oasis",
+    "variant": 3,
+    "meanRgb": [
+      150.4,
+      155.1,
+      102.9
+    ],
+    "stdLum": 13.67,
+    "seam4Sides": 2.41,
+    "seamMosaic2x2": 2.41,
+    "latticeScore": 0.537,
+    "pathScore": 0.08,
+    "objectScore": 0.785,
+    "clean": true,
+    "reasons": []
+  },
+  "oasis_m4.webp": {
+    "file": "oasis_m4.webp",
+    "family": "oasis",
+    "variant": 4,
+    "meanRgb": [
+      152.4,
+      155.9,
+      100.2
+    ],
+    "stdLum": 14.19,
+    "seam4Sides": 2.35,
+    "seamMosaic2x2": 2.35,
+    "latticeScore": 0.697,
+    "pathScore": 0.065,
+    "objectScore": 0.669,
+    "clean": false,
+    "reasons": [
+      "lattice (0.70 > 0.55)"
+    ]
+  },
+  "ocean_m1.webp": {
+    "file": "ocean_m1.webp",
+    "family": "ocean",
+    "variant": 1,
+    "meanRgb": [
+      52.7,
+      106.3,
+      145.8
+    ],
+    "stdLum": 9.54,
+    "seam4Sides": 2.37,
+    "seamMosaic2x2": 2.37,
+    "latticeScore": 0.0,
+    "pathScore": 0.099,
+    "objectScore": 0.827,
+    "clean": true,
+    "reasons": []
+  },
+  "ocean_m2.webp": {
+    "file": "ocean_m2.webp",
+    "family": "ocean",
+    "variant": 2,
+    "meanRgb": [
+      51.3,
+      106.0,
+      145.2
+    ],
+    "stdLum": 9.57,
+    "seam4Sides": 2.54,
+    "seamMosaic2x2": 2.54,
+    "latticeScore": 0.145,
+    "pathScore": 0.091,
+    "objectScore": 0.81,
+    "clean": true,
+    "reasons": []
+  },
+  "ocean_m3.webp": {
+    "file": "ocean_m3.webp",
+    "family": "ocean",
+    "variant": 3,
+    "meanRgb": [
+      52.1,
+      106.1,
+      146.9
+    ],
+    "stdLum": 9.57,
+    "seam4Sides": 2.35,
+    "seamMosaic2x2": 2.35,
+    "latticeScore": 0.0,
+    "pathScore": 0.093,
+    "objectScore": 0.78,
+    "clean": true,
+    "reasons": []
+  },
+  "ocean_m4.webp": {
+    "file": "ocean_m4.webp",
+    "family": "ocean",
+    "variant": 4,
+    "meanRgb": [
+      50.7,
+      106.9,
+      148.5
+    ],
+    "stdLum": 9.56,
+    "seam4Sides": 2.46,
+    "seamMosaic2x2": 2.46,
+    "latticeScore": 0.328,
+    "pathScore": 0.101,
+    "objectScore": 0.798,
+    "clean": true,
+    "reasons": []
+  },
+  "plains_m1.webp": {
+    "file": "plains_m1.webp",
+    "family": "plains",
+    "variant": 1,
+    "meanRgb": [
+      146.0,
+      130.2,
+      83.6
+    ],
+    "stdLum": 16.54,
+    "seam4Sides": 2.54,
+    "seamMosaic2x2": 2.54,
+    "latticeScore": 0.998,
+    "pathScore": 0.071,
+    "objectScore": 0.653,
+    "clean": false,
+    "reasons": [
+      "lattice (1.00 > 0.45)",
+      "baked objects (0.65 > 0.35)"
+    ]
+  },
+  "plains_m2.webp": {
+    "file": "plains_m2.webp",
+    "family": "plains",
+    "variant": 2,
+    "meanRgb": [
+      147.2,
+      129.4,
+      84.8
+    ],
+    "stdLum": 16.14,
+    "seam4Sides": 2.42,
+    "seamMosaic2x2": 2.42,
+    "latticeScore": 0.994,
+    "pathScore": 0.051,
+    "objectScore": 0.651,
+    "clean": false,
+    "reasons": [
+      "lattice (0.99 > 0.45)",
+      "baked objects (0.65 > 0.35)"
+    ]
+  },
+  "plains_m3.webp": {
+    "file": "plains_m3.webp",
+    "family": "plains",
+    "variant": 3,
+    "meanRgb": [
+      145.7,
+      130.5,
+      83.1
+    ],
+    "stdLum": 22.72,
+    "seam4Sides": 2.73,
+    "seamMosaic2x2": 2.73,
+    "latticeScore": 0.997,
+    "pathScore": 0.084,
+    "objectScore": 0.732,
+    "clean": false,
+    "reasons": [
+      "lattice (1.00 > 0.45)",
+      "baked objects (0.73 > 0.35)"
+    ]
+  },
+  "plains_m4.webp": {
+    "file": "plains_m4.webp",
+    "family": "plains",
+    "variant": 4,
+    "meanRgb": [
+      147.9,
+      129.7,
+      81.1
+    ],
+    "stdLum": 22.3,
+    "seam4Sides": 2.45,
+    "seamMosaic2x2": 2.45,
+    "latticeScore": 0.998,
+    "pathScore": 0.064,
+    "objectScore": 0.649,
+    "clean": false,
+    "reasons": [
+      "lattice (1.00 > 0.45)",
+      "baked objects (0.65 > 0.35)"
+    ]
+  },
+  "poison_pool_m1.webp": {
+    "file": "poison_pool_m1.webp",
+    "family": "poison_pool",
+    "variant": 1,
+    "meanRgb": [
+      93.1,
+      130.3,
+      51.2
+    ],
+    "stdLum": 14.57,
+    "seam4Sides": 2.39,
+    "seamMosaic2x2": 2.39,
+    "latticeScore": 0.547,
+    "pathScore": 0.104,
+    "objectScore": 0.745,
+    "clean": true,
+    "reasons": []
+  },
+  "poison_pool_m2.webp": {
+    "file": "poison_pool_m2.webp",
+    "family": "poison_pool",
+    "variant": 2,
+    "meanRgb": [
+      92.1,
+      130.9,
+      49.4
+    ],
+    "stdLum": 14.57,
+    "seam4Sides": 2.43,
+    "seamMosaic2x2": 2.43,
+    "latticeScore": 0.002,
+    "pathScore": 0.12,
+    "objectScore": 0.788,
+    "clean": true,
+    "reasons": []
+  },
+  "poison_pool_m3.webp": {
+    "file": "poison_pool_m3.webp",
+    "family": "poison_pool",
+    "variant": 3,
+    "meanRgb": [
+      89.9,
+      132.2,
+      51.3
+    ],
+    "stdLum": 14.63,
+    "seam4Sides": 2.55,
+    "seamMosaic2x2": 2.55,
+    "latticeScore": 0.648,
+    "pathScore": 0.089,
+    "objectScore": 0.764,
+    "clean": false,
+    "reasons": [
+      "lattice (0.65 > 0.55)"
+    ]
+  },
+  "poison_pool_m4.webp": {
+    "file": "poison_pool_m4.webp",
+    "family": "poison_pool",
+    "variant": 4,
+    "meanRgb": [
+      93.4,
+      130.0,
+      51.8
+    ],
+    "stdLum": 13.58,
+    "seam4Sides": 2.24,
+    "seamMosaic2x2": 2.24,
+    "latticeScore": 0.0,
+    "pathScore": 0.086,
+    "objectScore": 0.755,
+    "clean": true,
+    "reasons": []
+  },
+  "river_m1.webp": {
+    "file": "river_m1.webp",
+    "family": "river",
+    "variant": 1,
+    "meanRgb": [
+      78.9,
+      130.5,
+      152.7
+    ],
+    "stdLum": 10.64,
+    "seam4Sides": 2.33,
+    "seamMosaic2x2": 2.33,
+    "latticeScore": 0.021,
+    "pathScore": 0.076,
+    "objectScore": 0.675,
+    "clean": true,
+    "reasons": []
+  },
+  "river_m2.webp": {
+    "file": "river_m2.webp",
+    "family": "river",
+    "variant": 2,
+    "meanRgb": [
+      79.9,
+      130.4,
+      152.2
+    ],
+    "stdLum": 12.84,
+    "seam4Sides": 2.38,
+    "seamMosaic2x2": 2.38,
+    "latticeScore": 0.853,
+    "pathScore": 0.095,
+    "objectScore": 0.742,
+    "clean": false,
+    "reasons": [
+      "lattice (0.85 > 0.55)"
+    ]
+  },
+  "river_m3.webp": {
+    "file": "river_m3.webp",
+    "family": "river",
+    "variant": 3,
+    "meanRgb": [
+      79.3,
+      131.0,
+      153.9
+    ],
+    "stdLum": 10.11,
+    "seam4Sides": 2.27,
+    "seamMosaic2x2": 2.27,
+    "latticeScore": 0.419,
+    "pathScore": 0.066,
+    "objectScore": 0.661,
+    "clean": true,
+    "reasons": []
+  },
+  "river_m4.webp": {
+    "file": "river_m4.webp",
+    "family": "river",
+    "variant": 4,
+    "meanRgb": [
+      80.8,
+      129.4,
+      153.2
+    ],
+    "stdLum": 10.91,
+    "seam4Sides": 2.4,
+    "seamMosaic2x2": 2.4,
+    "latticeScore": 0.642,
+    "pathScore": 0.093,
+    "objectScore": 0.693,
+    "clean": false,
+    "reasons": [
+      "lattice (0.64 > 0.55)"
+    ]
+  },
+  "road_stone_m1.webp": {
+    "file": "road_stone_m1.webp",
+    "family": "road_stone",
+    "variant": 1,
+    "meanRgb": [
+      125.6,
+      119.9,
+      108.8
+    ],
+    "stdLum": 11.47,
+    "seam4Sides": 2.48,
+    "seamMosaic2x2": 2.48,
+    "latticeScore": 0.323,
+    "pathScore": 0.071,
+    "objectScore": 0.634,
+    "clean": true,
+    "reasons": []
+  },
+  "road_stone_m2.webp": {
+    "file": "road_stone_m2.webp",
+    "family": "road_stone",
+    "variant": 2,
+    "meanRgb": [
+      125.9,
+      120.5,
+      108.6
+    ],
+    "stdLum": 12.19,
+    "seam4Sides": 2.4,
+    "seamMosaic2x2": 2.4,
+    "latticeScore": 0.281,
+    "pathScore": 0.098,
+    "objectScore": 0.641,
+    "clean": true,
+    "reasons": []
+  },
+  "road_stone_m3.webp": {
+    "file": "road_stone_m3.webp",
+    "family": "road_stone",
+    "variant": 3,
+    "meanRgb": [
+      127.2,
+      119.6,
+      106.7
+    ],
+    "stdLum": 11.43,
+    "seam4Sides": 2.16,
+    "seamMosaic2x2": 2.16,
+    "latticeScore": 0.16,
+    "pathScore": 0.089,
+    "objectScore": 0.708,
+    "clean": true,
+    "reasons": []
+  },
+  "road_stone_m4.webp": {
+    "file": "road_stone_m4.webp",
+    "family": "road_stone",
+    "variant": 4,
+    "meanRgb": [
+      126.0,
+      119.5,
+      107.2
+    ],
+    "stdLum": 12.15,
+    "seam4Sides": 2.48,
+    "seamMosaic2x2": 2.48,
+    "latticeScore": 0.626,
+    "pathScore": 0.159,
+    "objectScore": 0.797,
+    "clean": false,
+    "reasons": [
+      "lattice (0.63 > 0.55)"
+    ]
+  },
+  "rock_ground_m1.webp": {
+    "file": "rock_ground_m1.webp",
+    "family": "rock_ground",
+    "variant": 1,
+    "meanRgb": [
+      115.8,
+      118.7,
+      119.7
+    ],
+    "stdLum": 11.6,
+    "seam4Sides": 2.28,
+    "seamMosaic2x2": 2.28,
+    "latticeScore": 0.673,
+    "pathScore": 0.085,
+    "objectScore": 0.756,
+    "clean": false,
+    "reasons": [
+      "lattice (0.67 > 0.45)",
+      "baked objects (0.76 > 0.35)"
+    ]
+  },
+  "rock_ground_m2.webp": {
+    "file": "rock_ground_m2.webp",
+    "family": "rock_ground",
+    "variant": 2,
+    "meanRgb": [
+      116.9,
+      119.7,
+      120.3
+    ],
+    "stdLum": 16.11,
+    "seam4Sides": 2.27,
+    "seamMosaic2x2": 2.27,
+    "latticeScore": 0.596,
+    "pathScore": 0.103,
+    "objectScore": 0.748,
+    "clean": false,
+    "reasons": [
+      "lattice (0.60 > 0.45)",
+      "baked objects (0.75 > 0.35)"
+    ]
+  },
+  "rock_ground_m3.webp": {
+    "file": "rock_ground_m3.webp",
+    "family": "rock_ground",
+    "variant": 3,
+    "meanRgb": [
+      117.8,
+      119.0,
+      117.4
+    ],
+    "stdLum": 11.64,
+    "seam4Sides": 2.04,
+    "seamMosaic2x2": 2.04,
+    "latticeScore": 0.644,
+    "pathScore": 0.059,
+    "objectScore": 0.632,
+    "clean": false,
+    "reasons": [
+      "lattice (0.64 > 0.45)",
+      "baked objects (0.63 > 0.35)"
+    ]
+  },
+  "rock_ground_m4.webp": {
+    "file": "rock_ground_m4.webp",
+    "family": "rock_ground",
+    "variant": 4,
+    "meanRgb": [
+      116.2,
+      118.5,
+      118.5
+    ],
+    "stdLum": 15.33,
+    "seam4Sides": 2.33,
+    "seamMosaic2x2": 2.33,
+    "latticeScore": 0.823,
+    "pathScore": 0.122,
+    "objectScore": 0.827,
+    "clean": false,
+    "reasons": [
+      "lattice (0.82 > 0.45)",
+      "baked objects (0.83 > 0.35)"
+    ]
+  },
+  "ruin_floor_m1.webp": {
+    "file": "ruin_floor_m1.webp",
+    "family": "ruin_floor",
+    "variant": 1,
+    "meanRgb": [
+      116.4,
+      113.6,
+      101.0
+    ],
+    "stdLum": 15.53,
+    "seam4Sides": 2.2,
+    "seamMosaic2x2": 2.2,
+    "latticeScore": 0.389,
+    "pathScore": 0.123,
+    "objectScore": 0.823,
+    "clean": true,
+    "reasons": []
+  },
+  "ruin_floor_m2.webp": {
+    "file": "ruin_floor_m2.webp",
+    "family": "ruin_floor",
+    "variant": 2,
+    "meanRgb": [
+      122.5,
+      118.9,
+      107.3
+    ],
+    "stdLum": 16.24,
+    "seam4Sides": 2.34,
+    "seamMosaic2x2": 2.34,
+    "latticeScore": 0.432,
+    "pathScore": 0.145,
+    "objectScore": 0.802,
+    "clean": true,
+    "reasons": []
+  },
+  "ruin_floor_m3.webp": {
+    "file": "ruin_floor_m3.webp",
+    "family": "ruin_floor",
+    "variant": 3,
+    "meanRgb": [
+      120.2,
+      116.7,
+      105.8
+    ],
+    "stdLum": 12.04,
+    "seam4Sides": 2.32,
+    "seamMosaic2x2": 2.32,
+    "latticeScore": 0.271,
+    "pathScore": 0.067,
+    "objectScore": 0.683,
+    "clean": true,
+    "reasons": []
+  },
+  "ruin_floor_m4.webp": {
+    "file": "ruin_floor_m4.webp",
+    "family": "ruin_floor",
+    "variant": 4,
+    "meanRgb": [
+      120.4,
+      116.4,
+      104.6
+    ],
+    "stdLum": 15.46,
+    "seam4Sides": 2.2,
+    "seamMosaic2x2": 2.2,
+    "latticeScore": 0.629,
+    "pathScore": 0.128,
+    "objectScore": 0.834,
+    "clean": false,
+    "reasons": [
+      "lattice (0.63 > 0.55)"
+    ]
+  },
+  "settlement_floor_m1.webp": {
+    "file": "settlement_floor_m1.webp",
+    "family": "settlement_floor",
+    "variant": 1,
+    "meanRgb": [
+      173.1,
+      154.5,
+      109.7
+    ],
+    "stdLum": 10.49,
+    "seam4Sides": 2.65,
+    "seamMosaic2x2": 2.65,
+    "latticeScore": 0.167,
+    "pathScore": 0.086,
+    "objectScore": 0.786,
+    "clean": true,
+    "reasons": []
+  },
+  "settlement_floor_m2.webp": {
+    "file": "settlement_floor_m2.webp",
+    "family": "settlement_floor",
+    "variant": 2,
+    "meanRgb": [
+      172.6,
+      154.5,
+      110.1
+    ],
+    "stdLum": 13.28,
+    "seam4Sides": 2.4,
+    "seamMosaic2x2": 2.4,
+    "latticeScore": 0.025,
+    "pathScore": 0.142,
+    "objectScore": 0.776,
+    "clean": true,
+    "reasons": []
+  },
+  "settlement_floor_m3.webp": {
+    "file": "settlement_floor_m3.webp",
+    "family": "settlement_floor",
+    "variant": 3,
+    "meanRgb": [
+      175.1,
+      153.1,
+      109.3
+    ],
+    "stdLum": 12.31,
+    "seam4Sides": 2.3,
+    "seamMosaic2x2": 2.3,
+    "latticeScore": 0.252,
+    "pathScore": 0.065,
+    "objectScore": 0.71,
+    "clean": true,
+    "reasons": []
+  },
+  "settlement_floor_m4.webp": {
+    "file": "settlement_floor_m4.webp",
+    "family": "settlement_floor",
+    "variant": 4,
+    "meanRgb": [
+      172.1,
+      154.4,
+      111.6
+    ],
+    "stdLum": 17.29,
+    "seam4Sides": 2.42,
+    "seamMosaic2x2": 2.42,
+    "latticeScore": 0.576,
+    "pathScore": 0.122,
+    "objectScore": 0.654,
+    "clean": false,
+    "reasons": [
+      "lattice (0.58 > 0.55)"
+    ]
+  },
+  "snow_m1.webp": {
+    "file": "snow_m1.webp",
+    "family": "snow",
+    "variant": 1,
+    "meanRgb": [
+      227.8,
+      236.4,
+      243.0
+    ],
+    "stdLum": 9.63,
+    "seam4Sides": 2.63,
+    "seamMosaic2x2": 2.63,
+    "latticeScore": 0.875,
+    "pathScore": 0.112,
+    "objectScore": 0.636,
+    "clean": false,
+    "reasons": [
+      "lattice (0.88 > 0.45)",
+      "baked objects (0.64 > 0.35)"
+    ]
+  },
+  "snow_m2.webp": {
+    "file": "snow_m2.webp",
+    "family": "snow",
+    "variant": 2,
+    "meanRgb": [
+      228.8,
+      236.6,
+      242.4
+    ],
+    "stdLum": 10.89,
+    "seam4Sides": 2.42,
+    "seamMosaic2x2": 2.42,
+    "latticeScore": 0.385,
+    "pathScore": 0.12,
+    "objectScore": 0.821,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.82 > 0.35)"
+    ]
+  },
+  "snow_m3.webp": {
+    "file": "snow_m3.webp",
+    "family": "snow",
+    "variant": 3,
+    "meanRgb": [
+      229.2,
+      237.0,
+      241.4
+    ],
+    "stdLum": 12.84,
+    "seam4Sides": 2.43,
+    "seamMosaic2x2": 2.43,
+    "latticeScore": 0.847,
+    "pathScore": 0.097,
+    "objectScore": 0.719,
+    "clean": false,
+    "reasons": [
+      "lattice (0.85 > 0.45)",
+      "baked objects (0.72 > 0.35)"
+    ]
+  },
+  "snow_m4.webp": {
+    "file": "snow_m4.webp",
+    "family": "snow",
+    "variant": 4,
+    "meanRgb": [
+      228.9,
+      235.9,
+      240.5
+    ],
+    "stdLum": 7.25,
+    "seam4Sides": 2.17,
+    "seamMosaic2x2": 2.17,
+    "latticeScore": 0.0,
+    "pathScore": 0.067,
+    "objectScore": 0.372,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.37 > 0.35)"
+    ]
+  },
+  "swamp_m1.webp": {
+    "file": "swamp_m1.webp",
+    "family": "swamp",
+    "variant": 1,
+    "meanRgb": [
+      89.7,
+      104.0,
+      67.9
+    ],
+    "stdLum": 14.86,
+    "seam4Sides": 2.4,
+    "seamMosaic2x2": 2.4,
+    "latticeScore": 0.544,
+    "pathScore": 0.097,
+    "objectScore": 0.81,
+    "clean": false,
+    "reasons": [
+      "lattice (0.54 > 0.45)",
+      "baked objects (0.81 > 0.35)"
+    ]
+  },
+  "swamp_m2.webp": {
+    "file": "swamp_m2.webp",
+    "family": "swamp",
+    "variant": 2,
+    "meanRgb": [
+      88.6,
+      105.8,
+      65.1
+    ],
+    "stdLum": 14.52,
+    "seam4Sides": 2.47,
+    "seamMosaic2x2": 2.47,
+    "latticeScore": 0.621,
+    "pathScore": 0.097,
+    "objectScore": 0.698,
+    "clean": false,
+    "reasons": [
+      "lattice (0.62 > 0.45)",
+      "baked objects (0.70 > 0.35)"
+    ]
+  },
+  "swamp_m3.webp": {
+    "file": "swamp_m3.webp",
+    "family": "swamp",
+    "variant": 3,
+    "meanRgb": [
+      90.5,
+      103.3,
+      69.1
+    ],
+    "stdLum": 14.88,
+    "seam4Sides": 2.39,
+    "seamMosaic2x2": 2.39,
+    "latticeScore": 0.531,
+    "pathScore": 0.084,
+    "objectScore": 0.757,
+    "clean": false,
+    "reasons": [
+      "lattice (0.53 > 0.45)",
+      "baked objects (0.76 > 0.35)"
+    ]
+  },
+  "swamp_m4.webp": {
+    "file": "swamp_m4.webp",
+    "family": "swamp",
+    "variant": 4,
+    "meanRgb": [
+      88.5,
+      103.3,
+      64.7
+    ],
+    "stdLum": 14.73,
+    "seam4Sides": 2.66,
+    "seamMosaic2x2": 2.66,
+    "latticeScore": 0.436,
+    "pathScore": 0.101,
+    "objectScore": 0.799,
+    "clean": false,
+    "reasons": [
+      "baked objects (0.80 > 0.35)"
+    ]
+  },
+  "test_plains_m1.webp": {
+    "file": "test_plains_m1.webp",
+    "family": "test_plains",
+    "variant": 1,
+    "meanRgb": [
+      140.5,
+      126.6,
+      80.2
+    ],
+    "stdLum": 20.63,
+    "seam4Sides": 2.38,
+    "seamMosaic2x2": 2.38,
+    "latticeScore": 0.996,
+    "pathScore": 0.078,
+    "objectScore": 0.687,
+    "clean": false,
+    "reasons": [
+      "lattice (1.00 > 0.55)"
+    ]
+  },
+  "test_plains_m2.webp": {
+    "file": "test_plains_m2.webp",
+    "family": "test_plains",
+    "variant": 2,
+    "meanRgb": [
+      204.5,
+      170.2,
+      122.9
+    ],
+    "stdLum": 31.45,
+    "seam4Sides": 2.25,
+    "seamMosaic2x2": 2.25,
+    "latticeScore": 0.937,
+    "pathScore": 0.073,
+    "objectScore": 0.707,
+    "clean": false,
+    "reasons": [
+      "lattice (0.94 > 0.55)"
+    ]
+  },
+  "test_plains_m3.webp": {
+    "file": "test_plains_m3.webp",
+    "family": "test_plains",
+    "variant": 3,
+    "meanRgb": [
+      112.0,
+      104.9,
+      73.8
+    ],
+    "stdLum": 18.61,
+    "seam4Sides": 1.81,
+    "seamMosaic2x2": 1.81,
+    "latticeScore": 0.995,
+    "pathScore": 0.085,
+    "objectScore": 0.745,
+    "clean": false,
+    "reasons": [
+      "lattice (1.00 > 0.55)"
+    ]
+  },
+  "test_plains_m4.webp": {
+    "file": "test_plains_m4.webp",
+    "family": "test_plains",
+    "variant": 4,
+    "meanRgb": [
+      186.7,
+      152.7,
+      82.8
+    ],
+    "stdLum": 27.82,
+    "seam4Sides": 2.1,
+    "seamMosaic2x2": 2.1,
+    "latticeScore": 0.995,
+    "pathScore": 0.064,
+    "objectScore": 0.641,
+    "clean": false,
+    "reasons": [
+      "lattice (1.00 > 0.55)"
+    ]
+  },
+  "volcanic_m1.webp": {
+    "file": "volcanic_m1.webp",
+    "family": "volcanic",
+    "variant": 1,
+    "meanRgb": [
+      81.3,
+      52.3,
+      40.2
+    ],
+    "stdLum": 9.85,
+    "seam4Sides": 2.36,
+    "seamMosaic2x2": 2.36,
+    "latticeScore": 0.793,
+    "pathScore": 0.089,
+    "objectScore": 0.807,
+    "clean": false,
+    "reasons": [
+      "lattice (0.79 > 0.55)"
+    ]
+  },
+  "volcanic_m2.webp": {
+    "file": "volcanic_m2.webp",
+    "family": "volcanic",
+    "variant": 2,
+    "meanRgb": [
+      81.0,
+      52.2,
+      40.2
+    ],
+    "stdLum": 9.94,
+    "seam4Sides": 2.45,
+    "seamMosaic2x2": 2.45,
+    "latticeScore": 0.0,
+    "pathScore": 0.087,
+    "objectScore": 0.724,
+    "clean": true,
+    "reasons": []
+  },
+  "volcanic_m3.webp": {
+    "file": "volcanic_m3.webp",
+    "family": "volcanic",
+    "variant": 3,
+    "meanRgb": [
+      80.2,
+      54.0,
+      42.7
+    ],
+    "stdLum": 11.89,
+    "seam4Sides": 2.28,
+    "seamMosaic2x2": 2.28,
+    "latticeScore": 0.627,
+    "pathScore": 0.069,
+    "objectScore": 0.742,
+    "clean": false,
+    "reasons": [
+      "lattice (0.63 > 0.55)"
+    ]
+  },
+  "volcanic_m4.webp": {
+    "file": "volcanic_m4.webp",
+    "family": "volcanic",
+    "variant": 4,
+    "meanRgb": [
+      81.7,
+      52.3,
+      40.6
+    ],
+    "stdLum": 9.9,
+    "seam4Sides": 2.41,
+    "seamMosaic2x2": 2.41,
+    "latticeScore": 0.735,
+    "pathScore": 0.129,
+    "objectScore": 0.771,
+    "clean": false,
+    "reasons": [
+      "lattice (0.73 > 0.55)"
+    ]
+  }
+}

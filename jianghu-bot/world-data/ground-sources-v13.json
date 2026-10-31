@@ -1,0 +1,1448 @@
+{
+  "version": "v13",
+  "total_macros": 144,
+  "macros": {
+    "plains_m1": {
+      "family": "plains",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1694282,
+      "source_sha256": "1f6e34af227ce2be7fed78b535c22767cd30ed8f852d291d6802b795ecdb6d57",
+      "phash_64": "aef08992af73ce51",
+      "luminance_mean": 129.62,
+      "luminance_std": 16.54
+    },
+    "plains_m2": {
+      "family": "plains",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1877211,
+      "source_sha256": "acb44149bde924671c3fa3b5e22556324dcfc1af6dc010b926e26b821d07cdec",
+      "phash_64": "afc1bcf4a66c94d7",
+      "luminance_mean": 129.64,
+      "luminance_std": 16.14
+    },
+    "plains_m3": {
+      "family": "plains",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2073937,
+      "source_sha256": "870c66337d81487c0a2135ac7dd375db285998b424e6be3e6233a9d415422a2e",
+      "phash_64": "a8053607d85b1674",
+      "luminance_mean": 129.61,
+      "luminance_std": 22.72
+    },
+    "plains_m4": {
+      "family": "plains",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1958988,
+      "source_sha256": "712b932b8cbf7b6b8070be47a3a6f6febbca57c3317ed33042473fff70fa3aa2",
+      "phash_64": "afb6bcc2aa52dd70",
+      "luminance_mean": 129.62,
+      "luminance_std": 22.3
+    },
+    "meadow_m1": {
+      "family": "meadow",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 2384416,
+      "source_sha256": "ceb19fc33cdcb765d1e83b36895946663d77e72c7a9196bb362fe87aa541acd5",
+      "phash_64": "8e046eebae38ee40",
+      "luminance_mean": 150.72,
+      "luminance_std": 14.35
+    },
+    "meadow_m2": {
+      "family": "meadow",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 2526871,
+      "source_sha256": "f9dab6bb185581597a4a44e87c5394466cda6a76fb9adc2b549781d8e5b8d1d8",
+      "phash_64": "cb940babeb11ea6a",
+      "luminance_mean": 150.5,
+      "luminance_std": 14.62
+    },
+    "meadow_m3": {
+      "family": "meadow",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2354327,
+      "source_sha256": "8b97cf4521fabfe9e0d8672c7cf8e1a67c33835071d1cc631c7ac0e9ce49c57e",
+      "phash_64": "ae659bcaf815e330",
+      "luminance_mean": 150.58,
+      "luminance_std": 14.73
+    },
+    "meadow_m4": {
+      "family": "meadow",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1571532,
+      "source_sha256": "cd2c40a4b5936685af1ca8d040ac0aaa5987d7831df8f6ee5d204d379c923ae3",
+      "phash_64": "da104b2fedeaa6c8",
+      "luminance_mean": 149.94,
+      "luminance_std": 12.57
+    },
+    "farmland_m1": {
+      "family": "farmland",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1489980,
+      "source_sha256": "11eda79a12b8dbdbb6389f0a29a0e7938850cfe1271bd56c9ccdeb658028173d",
+      "phash_64": "ae848ba1be1d9b6b",
+      "luminance_mean": 115.18,
+      "luminance_std": 11.86
+    },
+    "farmland_m2": {
+      "family": "farmland",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1486596,
+      "source_sha256": "d3c52823156bf048c4790525387b6a46adc80fdca3be4ba9aaddfc9b1941d883",
+      "phash_64": "bab2b950b8dc917e",
+      "luminance_mean": 117.36,
+      "luminance_std": 13.02
+    },
+    "farmland_m3": {
+      "family": "farmland",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2025005,
+      "source_sha256": "cb53da792e21d5c672a40aaba2a878781f0702b2dff652b3c22cf2ab80fac971",
+      "phash_64": "faaeec8dfa728c18",
+      "luminance_mean": 115.27,
+      "luminance_std": 15.62
+    },
+    "farmland_m4": {
+      "family": "farmland",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1646373,
+      "source_sha256": "48d6e62cf99a6f3918086ef2be6dfa4806370467ba9ec44692ec82aaa3024e15",
+      "phash_64": "afd4eebbe415c443",
+      "luminance_mean": 115.58,
+      "luminance_std": 11.68
+    },
+    "herb_field_m1": {
+      "family": "herb_field",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1297732,
+      "source_sha256": "b64bb7b114cb71871f8f761635c0300676352d1eaf412dc7203bc325dafa7a67",
+      "phash_64": "f2c5f4f0051ed61d",
+      "luminance_mean": 120.1,
+      "luminance_std": 12.46
+    },
+    "herb_field_m2": {
+      "family": "herb_field",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1244857,
+      "source_sha256": "9623e5f387fcec30b29901543abf93c2a81cdf6689195204e89ca81530207e7a",
+      "phash_64": "fbd046f2062fce2e",
+      "luminance_mean": 120.01,
+      "luminance_std": 16.29
+    },
+    "herb_field_m3": {
+      "family": "herb_field",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2270995,
+      "source_sha256": "9adc357f41159c99619138d042000536d17a8419c390ae62a70a491bfba31553",
+      "phash_64": "f2d9b4ae406fc41b",
+      "luminance_mean": 119.81,
+      "luminance_std": 12.4
+    },
+    "herb_field_m4": {
+      "family": "herb_field",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1594419,
+      "source_sha256": "63c476ceb33a741a6d0a5520b8026e98c7aa18cf6885098386c0103540158b73",
+      "phash_64": "aa10cb678b6aae9c",
+      "luminance_mean": 120.19,
+      "luminance_std": 15.47
+    },
+    "forest_floor_m1": {
+      "family": "forest_floor",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 2445644,
+      "source_sha256": "c82f647b7dce57754f82227603211a45f014da63831e928af108b96b4e9e610e",
+      "phash_64": "afa4ae52af49ac8f",
+      "luminance_mean": 93.09,
+      "luminance_std": 14.43
+    },
+    "forest_floor_m2": {
+      "family": "forest_floor",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1329412,
+      "source_sha256": "7035fd6dc1a72aafadb4ac19a51df6a805fa8892b170cec05c0de0dd0ffa00d0",
+      "phash_64": "fa9fcaf9c444e2ae",
+      "luminance_mean": 91.66,
+      "luminance_std": 13.05
+    },
+    "forest_floor_m3": {
+      "family": "forest_floor",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2042358,
+      "source_sha256": "ed3e225f7e5de65cd1778afe78e8793b6b26d9cfb4ac1a1e1a0f2dfb8567e03f",
+      "phash_64": "f90fd831f9e8419e",
+      "luminance_mean": 91.55,
+      "luminance_std": 14.23
+    },
+    "forest_floor_m4": {
+      "family": "forest_floor",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 2007745,
+      "source_sha256": "560e32e462d0f9e0dcd1eeb47d0272343b64096f8c0558dc1c8105adccd5338f",
+      "phash_64": "f29e99b91364fe02",
+      "luminance_mean": 92.28,
+      "luminance_std": 14.34
+    },
+    "bamboo_floor_m1": {
+      "family": "bamboo_floor",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1161840,
+      "source_sha256": "a3c004a14606c7185376c37cd0d03b757d962d1fb196c2b39b1f737f5f8f9ef5",
+      "phash_64": "be96cab8a63bbc68",
+      "luminance_mean": 126.27,
+      "luminance_std": 13.04
+    },
+    "bamboo_floor_m2": {
+      "family": "bamboo_floor",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1234392,
+      "source_sha256": "2d71fcf15e3555f05e42bb0fab33c07b75d70981c80441ae5ec50cda8d76a0e1",
+      "phash_64": "a7a996ce1e40bf16",
+      "luminance_mean": 124.77,
+      "luminance_std": 10.68
+    },
+    "bamboo_floor_m3": {
+      "family": "bamboo_floor",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2121059,
+      "source_sha256": "8a499cd68b5f1953beb586a4ffaaf7851d9dccc35c0c03a90d9b1f6f44b43e3e",
+      "phash_64": "fb8f96e1ca32fa8e",
+      "luminance_mean": 125.67,
+      "luminance_std": 11.77
+    },
+    "bamboo_floor_m4": {
+      "family": "bamboo_floor",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 2296983,
+      "source_sha256": "80082565f6441120ff78e20dc19fcb10dd6d6c2a918760a82337549ff1e9a8d6",
+      "phash_64": "8ddc1c11f91515cb",
+      "luminance_mean": 125.0,
+      "luminance_std": 12.55
+    },
+    "dead_wood_m1": {
+      "family": "dead_wood",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1506674,
+      "source_sha256": "965a12dd29b083d76f25dabe5ca83ae83e80ecf52bbabd1aaaaceeb7c8b4a885",
+      "phash_64": "85b45a8f4d3b2540",
+      "luminance_mean": 109.57,
+      "luminance_std": 11.64
+    },
+    "dead_wood_m2": {
+      "family": "dead_wood",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1553201,
+      "source_sha256": "b293b1cd359c0fafd05176b30baacd32587ac6259b8fca4e56850ce5df5ccbed",
+      "phash_64": "be1eeee3ee99b400",
+      "luminance_mean": 110.69,
+      "luminance_std": 15.18
+    },
+    "dead_wood_m3": {
+      "family": "dead_wood",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2124308,
+      "source_sha256": "bdf186a0a34e1cf77475825b9abb745d9e6400f5139820d518f6488902a3a2d6",
+      "phash_64": "8cf86ab2b805cfaa",
+      "luminance_mean": 110.15,
+      "luminance_std": 11.13
+    },
+    "dead_wood_m4": {
+      "family": "dead_wood",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1675280,
+      "source_sha256": "0a802ffe961d8fc5f5d70d56353fdfbb9d68364a3480566fd520fa54703c7549",
+      "phash_64": "f2b9bf8f2c42e584",
+      "luminance_mean": 109.77,
+      "luminance_std": 10.77
+    },
+    "hill_m1": {
+      "family": "hill",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 2059405,
+      "source_sha256": "85c5c62d8836dba5f215561816f7b105159b17165eb49a0a66eabb0814122ab7",
+      "phash_64": "afcc9e8ffa11c16a",
+      "luminance_mean": 132.53,
+      "luminance_std": 16.95
+    },
+    "hill_m2": {
+      "family": "hill",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 2234239,
+      "source_sha256": "2c209ede938c8c2c75134e11fede0e6b164e9dc0c987784a7a9d8c2b97cc43d8",
+      "phash_64": "ba8c9ee9fa30e946",
+      "luminance_mean": 132.27,
+      "luminance_std": 15.21
+    },
+    "hill_m3": {
+      "family": "hill",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2041946,
+      "source_sha256": "9d0f64a610e9a8ca90a9a656a5eac439e0b32637db6fa076d4800f3b24059062",
+      "phash_64": "aedc96b59e06e847",
+      "luminance_mean": 132.58,
+      "luminance_std": 14.67
+    },
+    "hill_m4": {
+      "family": "hill",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1455887,
+      "source_sha256": "7a9e4720fb6a0ff50a327aad66a5a78069094c5a19428fa0ab624643c6d31f16",
+      "phash_64": "f601cabe786bee10",
+      "luminance_mean": 132.13,
+      "luminance_std": 10.69
+    },
+    "rock_ground_m1": {
+      "family": "rock_ground",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1155783,
+      "source_sha256": "2d8712fbacc0d0081809c96fed641eb80a2c096dd5b640677b88eba110dd6522",
+      "phash_64": "ac148e73f8bf61c0",
+      "luminance_mean": 117.94,
+      "luminance_std": 11.6
+    },
+    "rock_ground_m2": {
+      "family": "rock_ground",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1285218,
+      "source_sha256": "1214b317344c960b1bf6186f80845209518eb9690e731d411e01f1e93f037619",
+      "phash_64": "fa0594afbf98b06b",
+      "luminance_mean": 118.92,
+      "luminance_std": 16.11
+    },
+    "rock_ground_m3": {
+      "family": "rock_ground",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2261282,
+      "source_sha256": "dadb65dcb76ae61d0592512d2245867aabfd0a5d6801fbaf05ead2898bfa0f96",
+      "phash_64": "ea41ccfeeee2cc14",
+      "luminance_mean": 118.46,
+      "luminance_std": 11.64
+    },
+    "rock_ground_m4": {
+      "family": "rock_ground",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1709523,
+      "source_sha256": "7fd263d4b4ebe49c6c58ef798daccb67432349c76b3cdd3689321644cf56e219",
+      "phash_64": "f84bfc2c8db2ccd8",
+      "luminance_mean": 117.8,
+      "luminance_std": 15.33
+    },
+    "mountain_pass_m1": {
+      "family": "mountain_pass",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1370435,
+      "source_sha256": "c824dcf04808ff93921789ac31c488fe0d4984c708063507e59d99344751ef8e",
+      "phash_64": "ec8dace2ea1f18ba",
+      "luminance_mean": 122.11,
+      "luminance_std": 13.57
+    },
+    "mountain_pass_m2": {
+      "family": "mountain_pass",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1681388,
+      "source_sha256": "5b4d3868875cda099ec77448bfe1e3c22624f03c0cd0376d9ac4cad6fcbf4064",
+      "phash_64": "8aa91ccaaf53cb30",
+      "luminance_mean": 121.57,
+      "luminance_std": 13.81
+    },
+    "mountain_pass_m3": {
+      "family": "mountain_pass",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2228665,
+      "source_sha256": "6306f97550ed8c98ee17b360232ad1948f37055426afd3dc95e5ffe60828d118",
+      "phash_64": "aa3ce14dabd393b0",
+      "luminance_mean": 122.3,
+      "luminance_std": 16.74
+    },
+    "mountain_pass_m4": {
+      "family": "mountain_pass",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1488253,
+      "source_sha256": "953b91bbb16de74f96abbb14e554bace80ca6cf5e5e45126a622914ddeeef9ab",
+      "phash_64": "a74b9a623f9c1215",
+      "luminance_mean": 121.22,
+      "luminance_std": 15.99
+    },
+    "canyon_floor_m1": {
+      "family": "canyon_floor",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1203571,
+      "source_sha256": "54710e16f0e803ee4efd3affb2b88d9151cd90188a7a988684aedc622ca8f22f",
+      "phash_64": "beecedda10b7cc41",
+      "luminance_mean": 115.22,
+      "luminance_std": 14.69
+    },
+    "canyon_floor_m2": {
+      "family": "canyon_floor",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1168250,
+      "source_sha256": "f370f4a975fc84906e031fea4b04a570bb6e46c732642872c1e6add357cf58f6",
+      "phash_64": "9d94bce3a4afbe48",
+      "luminance_mean": 114.82,
+      "luminance_std": 10.58
+    },
+    "canyon_floor_m3": {
+      "family": "canyon_floor",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2038919,
+      "source_sha256": "aa438e14101758fd6d8f6d7fc4dc52f37e9dc656f13aec9a55c95747005fea9c",
+      "phash_64": "f824ad1efbc192da",
+      "luminance_mean": 114.76,
+      "luminance_std": 15.2
+    },
+    "canyon_floor_m4": {
+      "family": "canyon_floor",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1983358,
+      "source_sha256": "6755956029d12dd3f17285897a1a19e9886b17d968863bde1c652bb399d0953a",
+      "phash_64": "dab63ec4ec49b40e",
+      "luminance_mean": 114.99,
+      "luminance_std": 14.98
+    },
+    "desert_sand_m1": {
+      "family": "desert_sand",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1242063,
+      "source_sha256": "75fab905b57b79fd14400160e3f878105ad8506014f9378ae1920a3ed88ad104",
+      "phash_64": "f883fbc9ed522524",
+      "luminance_mean": 174.6,
+      "luminance_std": 7.41
+    },
+    "desert_sand_m2": {
+      "family": "desert_sand",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1114131,
+      "source_sha256": "5ec90546eb9616d1518afc7c19b85aab902f7bb03e6522e8ba7f25a1ae682882",
+      "phash_64": "a71cb9272cc09bfa",
+      "luminance_mean": 174.57,
+      "luminance_std": 7.42
+    },
+    "desert_sand_m3": {
+      "family": "desert_sand",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1305536,
+      "source_sha256": "dbcffab20200e737a688c381e967215e59448685dcb5fb1e6c8bb159c06ac34c",
+      "phash_64": "da046b01fabaabec",
+      "luminance_mean": 174.92,
+      "luminance_std": 11.8
+    },
+    "desert_sand_m4": {
+      "family": "desert_sand",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1251197,
+      "source_sha256": "905cb05cc25d7b2c901f6cbeeb242e6e501cbaef3dce087d5c53fd84ca04bf48",
+      "phash_64": "afd9e93cac4393b2",
+      "luminance_mean": 175.07,
+      "luminance_std": 10.98
+    },
+    "dune_m1": {
+      "family": "dune",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1273137,
+      "source_sha256": "c342f4c5de6cd6185f54b5a485952ac03d0098a22b23db16a0d679315bc77b42",
+      "phash_64": "d23466cb5226ee06",
+      "luminance_mean": 169.5,
+      "luminance_std": 11.38
+    },
+    "dune_m2": {
+      "family": "dune",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1179044,
+      "source_sha256": "81cc0fa3fb338ac58848c8763624fa6e76b350c1105a9ef9347429bcf22884c1",
+      "phash_64": "fbc199f2a32fabca",
+      "luminance_mean": 170.22,
+      "luminance_std": 17.09
+    },
+    "dune_m3": {
+      "family": "dune",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1423903,
+      "source_sha256": "fc503eb24896327c817247ea60ad2c894b43cc3a18474eb000383d213b73514a",
+      "phash_64": "dbebd4a4ec91e9f2",
+      "luminance_mean": 170.51,
+      "luminance_std": 18.74
+    },
+    "dune_m4": {
+      "family": "dune",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 748590,
+      "source_sha256": "630556a6ef5933464a82cca268a6a95693ae1fb373f77f4900766ca60ec1ad84",
+      "phash_64": "afa39fe8e61ab816",
+      "luminance_mean": 169.7,
+      "luminance_std": 14.95
+    },
+    "oasis_m1": {
+      "family": "oasis",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1323054,
+      "source_sha256": "6c73a7d8a31ffc35645c6f374679a373773e329d097ff5754b27061cbb878396",
+      "phash_64": "86d69595c06bf8a7",
+      "luminance_mean": 148.25,
+      "luminance_std": 16.17
+    },
+    "oasis_m2": {
+      "family": "oasis",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1326524,
+      "source_sha256": "f5069c1e6b9d92dad473d1c49c0203a05f02ba82f076e5afd147926dfce25927",
+      "phash_64": "af41950e9fbd4a70",
+      "luminance_mean": 148.01,
+      "luminance_std": 18.99
+    },
+    "oasis_m3": {
+      "family": "oasis",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1820451,
+      "source_sha256": "1934dfa915f8808b9acb16c1cef48a173a58e257300d8c89df662aa637e3323b",
+      "phash_64": "dab43c8be933c26a",
+      "luminance_mean": 147.69,
+      "luminance_std": 13.67
+    },
+    "oasis_m4": {
+      "family": "oasis",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 2217028,
+      "source_sha256": "db870b59f3be5dbb77919d1cc3b777ef37df5862566791b7e30bd985a3a000c0",
+      "phash_64": "afa69caffa509e22",
+      "luminance_mean": 148.53,
+      "luminance_std": 14.19
+    },
+    "snow_m1": {
+      "family": "snow",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 856002,
+      "source_sha256": "18575f312bec7f95816bcbc8eef8f83c82af3b011850f1c9bc27d48cab49fbcb",
+      "phash_64": "8c6b1f44adc834b4",
+      "luminance_mean": 234.58,
+      "luminance_std": 9.63
+    },
+    "snow_m2": {
+      "family": "snow",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1019594,
+      "source_sha256": "759d2645a47cca3dc9e29a9b84cc66df170141a374ec5c027b7dafbb405a0f18",
+      "phash_64": "fb2eb541d99295ed",
+      "luminance_mean": 234.93,
+      "luminance_std": 10.89
+    },
+    "snow_m3": {
+      "family": "snow",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1140190,
+      "source_sha256": "08089f7849308041eb53e650a033a7eecae89ba7a809f32e13ccadb0d4185c79",
+      "phash_64": "d89c1b29ad336348",
+      "luminance_mean": 235.14,
+      "luminance_std": 12.84
+    },
+    "snow_m4": {
+      "family": "snow",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 916343,
+      "source_sha256": "969eae22d7fb04dfc38603b49df240d228ae6457cb81b7d95fcb19b00aa2572e",
+      "phash_64": "84fb41bf51ae4110",
+      "luminance_mean": 234.32,
+      "luminance_std": 7.25
+    },
+    "ice_crack_m1": {
+      "family": "ice_crack",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1173002,
+      "source_sha256": "4c6c60274a1b82dc58ced0f9344e847885a5179ce7545468197a694ddec85c6f",
+      "phash_64": "fb439233b3bbb2cc",
+      "luminance_mean": 205.57,
+      "luminance_std": 13.75
+    },
+    "ice_crack_m2": {
+      "family": "ice_crack",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1170858,
+      "source_sha256": "4f769b062f4a51f480a12504447e0049241e35ce769688258b134ecb2f6e6f1c",
+      "phash_64": "be2c9a51b9bae24e",
+      "luminance_mean": 204.75,
+      "luminance_std": 9.78
+    },
+    "ice_crack_m3": {
+      "family": "ice_crack",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1824388,
+      "source_sha256": "abd8f2984665a5cd82afca536516bfffc8bf8d150c69f9cee984b83b466c0d35",
+      "phash_64": "fabbccbea9c3c41c",
+      "luminance_mean": 206.19,
+      "luminance_std": 23.48
+    },
+    "ice_crack_m4": {
+      "family": "ice_crack",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1693520,
+      "source_sha256": "3dfa739936e852e1de900a2fc9c4f56a02087796a409f6840dcc746b2f70cd28",
+      "phash_64": "f0d0ca38cd0fb7e4",
+      "luminance_mean": 204.07,
+      "luminance_std": 21.95
+    },
+    "swamp_m1": {
+      "family": "swamp",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1162711,
+      "source_sha256": "61259050b786089a5a72408d6964ac96ac3baed423d6bc9d372e6ba1dc621831",
+      "phash_64": "cb7b4045ef968eb0",
+      "luminance_mean": 95.64,
+      "luminance_std": 14.86
+    },
+    "swamp_m2": {
+      "family": "swamp",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1140688,
+      "source_sha256": "9f0be171d5cfe955f1bcc019ffc419a34f022442fcb012bb0d46bce45f0fab1d",
+      "phash_64": "af169b61ae70eb12",
+      "luminance_mean": 95.99,
+      "luminance_std": 14.52
+    },
+    "swamp_m3": {
+      "family": "swamp",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1695663,
+      "source_sha256": "971af2ecbc0a8c6b4910d7d5715d369a9c168f10d6770c0dbd77963f77fcc81e",
+      "phash_64": "afcbcebaae05e862",
+      "luminance_mean": 95.61,
+      "luminance_std": 14.88
+    },
+    "swamp_m4": {
+      "family": "swamp",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1400576,
+      "source_sha256": "9c58a94701e500b8b57cddad52b0e2d2f73e31e1b6f96b373d2d795b1e2935b5",
+      "phash_64": "c0529e7ab1ad4704",
+      "luminance_mean": 94.49,
+      "luminance_std": 14.73
+    },
+    "demonic_swamp_m1": {
+      "family": "demonic_swamp",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1192587,
+      "source_sha256": "21d2cf04773cac7b14e9617d13cb33b3a6d268e39da7f65d78f71883e37df7f7",
+      "phash_64": "ea32441aecc5edad",
+      "luminance_mean": 75.32,
+      "luminance_std": 13.22
+    },
+    "demonic_swamp_m2": {
+      "family": "demonic_swamp",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 990817,
+      "source_sha256": "1620851cfe29f03c4ce1ab222441d4f74fa2f8f5e0875cc05ad9167f050e1a92",
+      "phash_64": "af389c07afea8ecc",
+      "luminance_mean": 75.12,
+      "luminance_std": 11.42
+    },
+    "demonic_swamp_m3": {
+      "family": "demonic_swamp",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1610943,
+      "source_sha256": "8b21585eff73bcc45be129c4a66215df4fa9b0a6a24d2d81f96d15d92b6efd47",
+      "phash_64": "af709942eebbb905",
+      "luminance_mean": 75.11,
+      "luminance_std": 13.21
+    },
+    "demonic_swamp_m4": {
+      "family": "demonic_swamp",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1046587,
+      "source_sha256": "839e48aa78ad443e938db2ecb3df17081507399f271428f884ed617a559dc623",
+      "phash_64": "a761441705babfd8",
+      "luminance_mean": 74.76,
+      "luminance_std": 13.22
+    },
+    "poison_pool_m1": {
+      "family": "poison_pool",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1492917,
+      "source_sha256": "ef63e147dbde90d9262ea8d66305be4628dd8b15fb6ee6b45e6668fd6b7a885d",
+      "phash_64": "8fa71c11e9f88eda",
+      "luminance_mean": 110.14,
+      "luminance_std": 14.57
+    },
+    "poison_pool_m2": {
+      "family": "poison_pool",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1565837,
+      "source_sha256": "1fc8c677aebcc30c48a9dd4fc35789593c0641dd5a36441250e205e47d6241a6",
+      "phash_64": "be319dcae5cca71a",
+      "luminance_mean": 110.01,
+      "luminance_std": 14.57
+    },
+    "poison_pool_m3": {
+      "family": "poison_pool",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1895133,
+      "source_sha256": "73d95baae1a53d3268ce3cfd0c15248b01fc654bda52c30e2813f7c806ead246",
+      "phash_64": "a7e58915ad48b1fe",
+      "luminance_mean": 110.32,
+      "luminance_std": 14.63
+    },
+    "poison_pool_m4": {
+      "family": "poison_pool",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 2106850,
+      "source_sha256": "ece7c681c468c926580d05a757174efaa59514ac6368920d88dc3b802208778f",
+      "phash_64": "85073d102de80bfa",
+      "luminance_mean": 110.15,
+      "luminance_std": 13.58
+    },
+    "miasma_waste_m1": {
+      "family": "miasma_waste",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 993397,
+      "source_sha256": "a23373ccb562b4424fd47497b634d56e216aa1b5fd371ef056e2778175d5b7f2",
+      "phash_64": "8fe515be9c11139b",
+      "luminance_mean": 99.57,
+      "luminance_std": 13.28
+    },
+    "miasma_waste_m2": {
+      "family": "miasma_waste",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 955946,
+      "source_sha256": "550136736f62f25b6fbb41268819472df5d340fdd7181677fbc3e6bd1e6abd49",
+      "phash_64": "da922ea5e369b968",
+      "luminance_mean": 100.35,
+      "luminance_std": 10.41
+    },
+    "miasma_waste_m3": {
+      "family": "miasma_waste",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1291722,
+      "source_sha256": "652181c8f5f1547babbb41a3313a5eea6bd86aa8201197c22dd9cb0deff0be98",
+      "phash_64": "f04dc63a25b736c0",
+      "luminance_mean": 99.68,
+      "luminance_std": 13.96
+    },
+    "miasma_waste_m4": {
+      "family": "miasma_waste",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 922303,
+      "source_sha256": "4c119e3d5a53c95bb23e10070e08850950bab3cc4803a66413d71c48510fc1cb",
+      "phash_64": "e4cdc8766c2541da",
+      "luminance_mean": 100.01,
+      "luminance_std": 9.56
+    },
+    "battlefield_ash_m1": {
+      "family": "battlefield_ash",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1300081,
+      "source_sha256": "05da651b9f400581d34751c9b5446ba3b228ead7c0bc6a08ac7d0852d8ca047b",
+      "phash_64": "be72c53496eb9e50",
+      "luminance_mean": 86.24,
+      "luminance_std": 12.25
+    },
+    "battlefield_ash_m2": {
+      "family": "battlefield_ash",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1047974,
+      "source_sha256": "b5ee9066ccb2582907c870082102e304a5e8cb70a7d466e87b0c9250a3cea8a1",
+      "phash_64": "ceb3699cf06accf0",
+      "luminance_mean": 85.05,
+      "luminance_std": 14.06
+    },
+    "battlefield_ash_m3": {
+      "family": "battlefield_ash",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1902221,
+      "source_sha256": "17aca07df5f6474e54b9ffe481c68338b47388959da9dfd8be2f25aea99a3c81",
+      "phash_64": "aefe94f9c8149547",
+      "luminance_mean": 86.23,
+      "luminance_std": 11.43
+    },
+    "battlefield_ash_m4": {
+      "family": "battlefield_ash",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1657797,
+      "source_sha256": "72339b91ff49156b420ec2f02f366f76628649dc56380a568f54daff52562508",
+      "phash_64": "fa4ec13585be95e9",
+      "luminance_mean": 85.35,
+      "luminance_std": 11.89
+    },
+    "volcanic_m1": {
+      "family": "volcanic",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1007824,
+      "source_sha256": "88a29cdef0e0700f4f47bdf2a0dfccf6a0592b750876d3cdb5b8020273800b03",
+      "phash_64": "f394c33f19a2b1af",
+      "luminance_mean": 59.59,
+      "luminance_std": 9.85
+    },
+    "volcanic_m2": {
+      "family": "volcanic",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1014931,
+      "source_sha256": "5392b41d5c1347aa90c3a084889ec3380d832e4e040b6d97b9bb038a7a22f438",
+      "phash_64": "f274b059149fc4eb",
+      "luminance_mean": 59.46,
+      "luminance_std": 9.94
+    },
+    "volcanic_m3": {
+      "family": "volcanic",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1857122,
+      "source_sha256": "2e1b3af9ffb6ae0f2da458fdcd908f03954975b76ba3cc7f0f16fe87d2881b6b",
+      "phash_64": "ae11c4ebeefc4425",
+      "luminance_mean": 60.54,
+      "luminance_std": 11.89
+    },
+    "volcanic_m4": {
+      "family": "volcanic",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1507904,
+      "source_sha256": "553bf1550c4ba9e803fb3410d0f03522d1fb2d9fafbfeed20b7c753050753616",
+      "phash_64": "a62ffa850478ba19",
+      "luminance_mean": 59.75,
+      "luminance_std": 9.9
+    },
+    "lava_flow_m1": {
+      "family": "lava_flow",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1517499,
+      "source_sha256": "7764e7cc4c945facc3602021eb9985580be6e531de3e7001d377564d7fa246da",
+      "phash_64": "c3ae3e297811b1e2",
+      "luminance_mean": 79.68,
+      "luminance_std": 11.16
+    },
+    "lava_flow_m2": {
+      "family": "lava_flow",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1137096,
+      "source_sha256": "4913006f3565307bd15648ed54e41edced1f5564ee1d2e406b366c67afded834",
+      "phash_64": "f3beb0e51b90d82f",
+      "luminance_mean": 79.78,
+      "luminance_std": 10.76
+    },
+    "lava_flow_m3": {
+      "family": "lava_flow",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2133841,
+      "source_sha256": "46ed9f5d83947ed4b108ba3e1439ff26bda55bf10b3fb94cd2a6cf167595eea4",
+      "phash_64": "fa8999affb409c2e",
+      "luminance_mean": 81.38,
+      "luminance_std": 14.28
+    },
+    "lava_flow_m4": {
+      "family": "lava_flow",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1831963,
+      "source_sha256": "2b44d80899afbb6b1ccae2b249ae5d0aeffed845ac3e7735207171f4dea48a89",
+      "phash_64": "87f4070e69d91387",
+      "luminance_mean": 79.32,
+      "luminance_std": 13.97
+    },
+    "crater_m1": {
+      "family": "crater",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1404511,
+      "source_sha256": "4e0199e52abe2369bd9a8e94fad34552679ddd523b5def9c3a5b21fca309629d",
+      "phash_64": "ac9c3beaaf40c436",
+      "luminance_mean": 81.53,
+      "luminance_std": 13.53
+    },
+    "crater_m2": {
+      "family": "crater",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1285457,
+      "source_sha256": "dcd791db6076e106ac71898980c1a721fcdd74ea43ecc380a4fa32daa23a2c47",
+      "phash_64": "e229dc5e7a82c9a5",
+      "luminance_mean": 81.79,
+      "luminance_std": 10.89
+    },
+    "crater_m3": {
+      "family": "crater",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2237457,
+      "source_sha256": "f96358d0ab1035fc4ec71d5f759299b675d3d189237e4e3dcb6e21c753b4374d",
+      "phash_64": "ef13d684d269ee3a",
+      "luminance_mean": 82.24,
+      "luminance_std": 10.62
+    },
+    "crater_m4": {
+      "family": "crater",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1982305,
+      "source_sha256": "2881ce69268f724795e16f3dabbaaeba02648d2d440abdb721135080db8da150",
+      "phash_64": "8ffe50d9c115964b",
+      "luminance_mean": 81.71,
+      "luminance_std": 9.53
+    },
+    "lightning_scar_m1": {
+      "family": "lightning_scar",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1183801,
+      "source_sha256": "2adf25d72e3918dca89ca3b0219f4fe81c7ae89f728c3c5bf3c7e8452b7fe498",
+      "phash_64": "96f224656d33c29a",
+      "luminance_mean": 84.5,
+      "luminance_std": 13.99
+    },
+    "lightning_scar_m2": {
+      "family": "lightning_scar",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1205242,
+      "source_sha256": "bcbabe9f819cba278b8a94dd5d69ba2ea59ba5f3fca20c63e9a9234f847d384d",
+      "phash_64": "a6f0b1ed6b31c314",
+      "luminance_mean": 84.33,
+      "luminance_std": 13.95
+    },
+    "lightning_scar_m3": {
+      "family": "lightning_scar",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1671710,
+      "source_sha256": "39ec4a69ed55374e3065d54ac230b925cf755c250279dfbf12a1937caf7f021d",
+      "phash_64": "8fcbc0bcd231be72",
+      "luminance_mean": 84.97,
+      "luminance_std": 14.09
+    },
+    "lightning_scar_m4": {
+      "family": "lightning_scar",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1944897,
+      "source_sha256": "ec546127f2c00531944fb08047f5a95d9e5fb8eb0f87569c1f73b1e7078e1f49",
+      "phash_64": "ab5ed805afb3ce40",
+      "luminance_mean": 85.75,
+      "luminance_std": 14.22
+    },
+    "formation_tile_m1": {
+      "family": "formation_tile",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1598727,
+      "source_sha256": "462f4f3e4045388c950b700311b1a9169d5691633621edcb67697465f9cdebd9",
+      "phash_64": "d05350bc4f451a13",
+      "luminance_mean": 117.06,
+      "luminance_std": 14.57
+    },
+    "formation_tile_m2": {
+      "family": "formation_tile",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1667462,
+      "source_sha256": "de8bb93a30c8fdb5b6f32083325e9d4cc1418d3e10135ac335843c2834771a9f",
+      "phash_64": "81203e073af81f03",
+      "luminance_mean": 118.6,
+      "luminance_std": 16.34
+    },
+    "formation_tile_m3": {
+      "family": "formation_tile",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1465028,
+      "source_sha256": "6060cd3174d40a2a68136208220b44396eb11fa1e070c4412c03c83f71522324",
+      "phash_64": "85142d8bbbb90f11",
+      "luminance_mean": 117.39,
+      "luminance_std": 15.9
+    },
+    "formation_tile_m4": {
+      "family": "formation_tile",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 2017004,
+      "source_sha256": "a0091a3f3b28e164ad5db221da3f1f68dda5ae5529946b59ba27c0d2d489c288",
+      "phash_64": "9ead70ee3a11bb40",
+      "luminance_mean": 120.16,
+      "luminance_std": 14.68
+    },
+    "ruin_floor_m1": {
+      "family": "ruin_floor",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1727353,
+      "source_sha256": "cf99b25da40a83993c3745dff61cc9afa55c7cc8f8cd0cedea68cfdf4eb49673",
+      "phash_64": "88a12e8d365a5a1a",
+      "luminance_mean": 113.02,
+      "luminance_std": 15.53
+    },
+    "ruin_floor_m2": {
+      "family": "ruin_floor",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1816696,
+      "source_sha256": "d78f7b5a47b582424ba7f910fc4b21d66f9c5f1836ba4bd567743ccbd451414d",
+      "phash_64": "ffab87ff9045d614",
+      "luminance_mean": 118.62,
+      "luminance_std": 16.24
+    },
+    "ruin_floor_m3": {
+      "family": "ruin_floor",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2003917,
+      "source_sha256": "1d9008b0f35c785bab702813995de2c26613f7d947f822d94a344afde0bbc28e",
+      "phash_64": "e14ea56a05976750",
+      "luminance_mean": 116.48,
+      "luminance_std": 12.04
+    },
+    "ruin_floor_m4": {
+      "family": "ruin_floor",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1768699,
+      "source_sha256": "69867778a09e1f6bdae611c10a3e47797b2842807668bc12a383da411637d0f6",
+      "phash_64": "d9fa6ec1b021319f",
+      "luminance_mean": 116.24,
+      "luminance_std": 15.46
+    },
+    "island_reef_m1": {
+      "family": "island_reef",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1781898,
+      "source_sha256": "055952822b8b4c12f633b01024982204964862271a702b2721d5dfb84ccf9012",
+      "phash_64": "923642fa0e46af89",
+      "luminance_mean": 164.9,
+      "luminance_std": 19.71
+    },
+    "island_reef_m2": {
+      "family": "island_reef",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1882791,
+      "source_sha256": "ef0694184659cd719b6eaba0d13e219f3e74add714b6247e58c6ea82ac01fdc6",
+      "phash_64": "b4adc8bae1068fed",
+      "luminance_mean": 164.21,
+      "luminance_std": 22.27
+    },
+    "island_reef_m3": {
+      "family": "island_reef",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1829538,
+      "source_sha256": "51c43de30bd2f340d5b501e8e4e2d71196719a269a64346815c487737f4765bb",
+      "phash_64": "90c613db1c313163",
+      "luminance_mean": 164.35,
+      "luminance_std": 14.99
+    },
+    "island_reef_m4": {
+      "family": "island_reef",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1486772,
+      "source_sha256": "01e1283d6577e39107d76fb6c0ad06619036ce308082495fa8b9264371d41b2e",
+      "phash_64": "8fb69ec55a10b63a",
+      "luminance_mean": 165.2,
+      "luminance_std": 20.49
+    },
+    "abyss_edge_m1": {
+      "family": "abyss_edge",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1234577,
+      "source_sha256": "5c8148dfc17f13d395883cd1175e0174e3eb5ee0bd6c6b997dbb50642b769897",
+      "phash_64": "847b6c8c71674011",
+      "luminance_mean": 54.37,
+      "luminance_std": 9.62
+    },
+    "abyss_edge_m2": {
+      "family": "abyss_edge",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1065807,
+      "source_sha256": "1411ce17d3d05eb4a6118e9853aa8efcb592c2746aedf8c2e6975c74f9032914",
+      "phash_64": "f916eea2f83be148",
+      "luminance_mean": 55.13,
+      "luminance_std": 10.03
+    },
+    "abyss_edge_m3": {
+      "family": "abyss_edge",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1210920,
+      "source_sha256": "e646360942392e9ac296e5b74dacc7510fad57dd428ee8133c9820248de9f06b",
+      "phash_64": "fb8e93e89b10bb3e",
+      "luminance_mean": 55.0,
+      "luminance_std": 10.68
+    },
+    "abyss_edge_m4": {
+      "family": "abyss_edge",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1179772,
+      "source_sha256": "c8e499c00a2bd5a9861e3addfdb9d957bc8ccf398427f70ce58d8c1fa006e5e7",
+      "phash_64": "af499dfebae0c994",
+      "luminance_mean": 55.15,
+      "luminance_std": 12.08
+    },
+    "settlement_floor_m1": {
+      "family": "settlement_floor",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1205387,
+      "source_sha256": "f9a64766f853640bc794278f757bfa9b9880bd9ce519dde43ab2e24c92cfb6ea",
+      "phash_64": "8b040be0abbbbe6a",
+      "luminance_mean": 154.97,
+      "luminance_std": 10.49
+    },
+    "settlement_floor_m2": {
+      "family": "settlement_floor",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1086540,
+      "source_sha256": "569f3594996a1cc94e3a39a538ec0896b06a31526661e65686ed53592fbc9e70",
+      "phash_64": "8fbc4a90eb13ea2d",
+      "luminance_mean": 154.88,
+      "luminance_std": 13.28
+    },
+    "settlement_floor_m3": {
+      "family": "settlement_floor",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1975649,
+      "source_sha256": "23712809bbb8d46791bb817ace53f4b2b94d8627af2f6499436053bac2c0e92f",
+      "phash_64": "c1e161fb4458442f",
+      "luminance_mean": 154.68,
+      "luminance_std": 12.31
+    },
+    "settlement_floor_m4": {
+      "family": "settlement_floor",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1908763,
+      "source_sha256": "d20bc3ada25f683b4820675e083eeb98f0a31fcac717e59b4fa3c20d9a4fce0f",
+      "phash_64": "ad412d3bada44daa",
+      "luminance_mean": 154.8,
+      "luminance_std": 17.29
+    },
+    "road_stone_m1": {
+      "family": "road_stone",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1682330,
+      "source_sha256": "e95a4f6a62cb5caf74a248deaaaf009de0aeaed93778fee74b34a45bab4313a1",
+      "phash_64": "eab68fbcb805e352",
+      "luminance_mean": 120.35,
+      "luminance_std": 11.47
+    },
+    "road_stone_m2": {
+      "family": "road_stone",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1828642,
+      "source_sha256": "4d3ee3e9d5b893d5456754ff4d7347c0b982f6c6ee2a16cccdf91e250b3b6c73",
+      "phash_64": "aed4ecb7a60d8d43",
+      "luminance_mean": 120.74,
+      "luminance_std": 12.19
+    },
+    "road_stone_m3": {
+      "family": "road_stone",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1763588,
+      "source_sha256": "9409d8b173de0a72dae6e0e4beb2e8b965ce771f3278ded0c33fa75be8748c4e",
+      "phash_64": "ae3abe05aeaabe40",
+      "luminance_mean": 120.39,
+      "luminance_std": 11.43
+    },
+    "road_stone_m4": {
+      "family": "road_stone",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1554627,
+      "source_sha256": "87d72a325568092dedcb931e611dc4163a7b277514675112408645e27868519a",
+      "phash_64": "ae8bc4f8cf54ccb6",
+      "luminance_mean": 120.03,
+      "luminance_std": 12.15
+    },
+    "ocean_m1": {
+      "family": "ocean",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1623183,
+      "source_sha256": "1ff2d692550ea28e832559d6528b08e4a486af65968687b912db6eb3b89a78d9",
+      "phash_64": "f691ecbe6a6aca14",
+      "luminance_mean": 94.8,
+      "luminance_std": 9.54
+    },
+    "ocean_m2": {
+      "family": "ocean",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1917139,
+      "source_sha256": "7e0932b2ce33c0fce5b94082920eff02f5b5bbc3f4edee9250664312af72331b",
+      "phash_64": "963e168c47a1ab53",
+      "luminance_mean": 94.09,
+      "luminance_std": 9.57
+    },
+    "ocean_m3": {
+      "family": "ocean",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1917431,
+      "source_sha256": "e486c78f7bd8c3fc1f45c64db1cf63e64e1089c7760a81fd73f05e0cbe115207",
+      "phash_64": "b67ea71114b3a661",
+      "luminance_mean": 94.62,
+      "luminance_std": 9.57
+    },
+    "ocean_m4": {
+      "family": "ocean",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1751480,
+      "source_sha256": "95fc31491554271cbd84b85736130edd41259f0b5163798db57926fa1ea245d2",
+      "phash_64": "d390172f5be0e8ec",
+      "luminance_mean": 94.81,
+      "luminance_std": 9.56
+    },
+    "river_m1": {
+      "family": "river",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1535664,
+      "source_sha256": "349767eb56e292e895f4cd159a79d69b585a3e8b790c0d323ad57175a2be80c4",
+      "phash_64": "ac50ec0bf8fe4047",
+      "luminance_mean": 117.58,
+      "luminance_std": 10.64
+    },
+    "river_m2": {
+      "family": "river",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1772029,
+      "source_sha256": "dd99e8d843dac62a75f4c859dd263cf7794de35891e728c6a5ae680c39a8c2f2",
+      "phash_64": "aa43143cd3f4eac9",
+      "luminance_mean": 117.8,
+      "luminance_std": 12.84
+    },
+    "river_m3": {
+      "family": "river",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1911811,
+      "source_sha256": "ea90fa592cd781e9baf16c6ed2284f449a5a88fa29daab3cb195a8ce7f25bcea",
+      "phash_64": "fb3ae4468de1c73a",
+      "luminance_mean": 118.17,
+      "luminance_std": 10.11
+    },
+    "river_m4": {
+      "family": "river",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1702089,
+      "source_sha256": "5b214b4ef4c281401418bb7d81d807a1eca78e2278ee38b4d037ba70337ef79d",
+      "phash_64": "fabb95849e68993e",
+      "luminance_mean": 117.59,
+      "luminance_std": 10.91
+    },
+    "lake_m1": {
+      "family": "lake",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1240248,
+      "source_sha256": "65e8850d6a0317e42f58817883f059bbfc51c45ba76e2dc87e609e3012962f98",
+      "phash_64": "8f851a7abc34f394",
+      "luminance_mean": 111.88,
+      "luminance_std": 11.38
+    },
+    "lake_m2": {
+      "family": "lake",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1327796,
+      "source_sha256": "b1a0386dd3a48a0086bb716c9c3ad652aead4fda40cf5dded20d028006bf220b",
+      "phash_64": "f29aebaf6b40a644",
+      "luminance_mean": 112.27,
+      "luminance_std": 9.58
+    },
+    "lake_m3": {
+      "family": "lake",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 990498,
+      "source_sha256": "a924e6106ca1376826d7f83a04f38e63bbb30df0d0adde537a6554f253b051c0",
+      "phash_64": "d3db13be0145e0f5",
+      "luminance_mean": 112.46,
+      "luminance_std": 10.04
+    },
+    "lake_m4": {
+      "family": "lake",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1128724,
+      "source_sha256": "d7c63717aa216285ba8f3e7530f5cdbac7394ca1ed3fa00f94d1a061f21d0dcd",
+      "phash_64": "85141e237ba8788e",
+      "luminance_mean": 111.07,
+      "luminance_std": 10.27
+    },
+    "cliff_m1": {
+      "family": "cliff",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1709590,
+      "source_sha256": "1dc155f1fb3147daa1ac0154832f87afd425352f09408c734dda3d8237cbb71e",
+      "phash_64": "85f63490583d1359",
+      "luminance_mean": 104.59,
+      "luminance_std": 10.49
+    },
+    "cliff_m2": {
+      "family": "cliff",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1717473,
+      "source_sha256": "91ca0023bdc633590c3a297b2eb063202702a55a267de960e68acbbce49e970d",
+      "phash_64": "fad0e8fbf127ce04",
+      "luminance_mean": 105.21,
+      "luminance_std": 10.95
+    },
+    "cliff_m3": {
+      "family": "cliff",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 2044499,
+      "source_sha256": "84a763327323d6a57d61f67cc28db842fa016e006c85f92d4ec35aaefad0209f",
+      "phash_64": "fb5cca0bfb939960",
+      "luminance_mean": 105.54,
+      "luminance_std": 11.23
+    },
+    "cliff_m4": {
+      "family": "cliff",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 2132555,
+      "source_sha256": "722aba1cad0f6c478f5d9cbd9eda17a16db31025d05cb7b52509a6fd2633e356",
+      "phash_64": "8ddc44bb8d1515e3",
+      "luminance_mean": 104.76,
+      "luminance_std": 11.4
+    },
+    "glacier_m1": {
+      "family": "glacier",
+      "variant": 1,
+      "source_type": "art_input",
+      "source_size_bytes": 1582275,
+      "source_sha256": "129015450111ee1f990739a02b99d1b96cf408682e8af904b13243aa86528ba5",
+      "phash_64": "ad8f9b25eb528dc4",
+      "luminance_mean": 194.06,
+      "luminance_std": 21.11
+    },
+    "glacier_m2": {
+      "family": "glacier",
+      "variant": 2,
+      "source_type": "art_input",
+      "source_size_bytes": 1681517,
+      "source_sha256": "6b707b55462b3a56a2fabf1d0147d94ad6240f02caf884c0b1810509c0058068",
+      "phash_64": "af6f9378c590b1b6",
+      "luminance_mean": 194.36,
+      "luminance_std": 17.33
+    },
+    "glacier_m3": {
+      "family": "glacier",
+      "variant": 3,
+      "source_type": "art_input",
+      "source_size_bytes": 1535012,
+      "source_sha256": "c1acc1a6fdcef57b6ac5beb135fcd2912b3ca4d9d2c56700dedfdc075d4de6c5",
+      "phash_64": "fa1e9db5e9c4e948",
+      "luminance_mean": 195.36,
+      "luminance_std": 17.69
+    },
+    "glacier_m4": {
+      "family": "glacier",
+      "variant": 4,
+      "source_type": "art_input",
+      "source_size_bytes": 1864168,
+      "source_sha256": "19e726034a8b20785a52a4c34d3dccf5e0996d60f3b9caf0695ff1bcf583856e",
+      "phash_64": "afc699e8ef169954",
+      "luminance_mean": 194.48,
+      "luminance_std": 15.6
+    }
+  },
+  "validCount": 141,
+  "totalCount": 144
+}

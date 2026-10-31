@@ -1,0 +1,270 @@
+{
+  "timestamp": "2026-10-31T04:57:23.986Z",
+  "mode": "BASELINE",
+  "totalGates": 26,
+  "passCount": 9,
+  "failCount": 17,
+  "allPass": false,
+  "gates": [
+    {
+      "id": "G_DENSITY_CENTRAL_PLAINS",
+      "name": "Central Plains Viewport Density",
+      "command": "node scripts/v13/measureDensity.js --baseline",
+      "target": ">= 28 sprites/viewport",
+      "value": 7,
+      "unit": "sprites/viewport",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_density.json -> central_plains.sprites.median = 7"
+    },
+    {
+      "id": "G_DENSITY_NINE_SPRINGS",
+      "name": "Nine Springs Delta Viewport Density",
+      "command": "node scripts/v13/measureDensity.js --baseline",
+      "target": ">= 28 sprites/viewport",
+      "value": 5,
+      "unit": "sprites/viewport",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_density.json -> nine_springs_delta.sprites.median = 5"
+    },
+    {
+      "id": "G_DENSITY_NORTHERN_DESOLATE",
+      "name": "Northern Desolate Viewport Density",
+      "command": "node scripts/v13/measureDensity.js --baseline",
+      "target": ">= 16 sprites/viewport",
+      "value": 2,
+      "unit": "sprites/viewport",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_density.json -> northern_desolate.sprites.median = 2"
+    },
+    {
+      "id": "G_DENSITY_THUNDERSTEPPE",
+      "name": "Thundersteppe Viewport Density",
+      "command": "node scripts/v13/measureDensity.js --baseline",
+      "target": ">= 16 sprites/viewport",
+      "value": 2,
+      "unit": "sprites/viewport",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_density.json -> thundersteppe.sprites.median = 2"
+    },
+    {
+      "id": "G_DENSITY_BEAST_PRAIRIES",
+      "name": "Beast Prairies Viewport Density",
+      "command": "node scripts/v13/measureDensity.js --baseline",
+      "target": ">= 20 sprites/viewport",
+      "value": 8,
+      "unit": "sprites/viewport",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_density.json -> beast_prairies.sprites.median = 8"
+    },
+    {
+      "id": "G_DENSITY_TOTAL_OBJECTS",
+      "name": "Total Audited Objects in Grid",
+      "command": "node scripts/auditGridV10.js --baseline",
+      "target": ">= 70000 objects",
+      "value": 47173,
+      "unit": "objects",
+      "status": "GAGAL",
+      "evidence": "review/v10_audit_summary.json -> totalObjects = 47173"
+    },
+    {
+      "id": "G_DENSITY_PER_CHUNK_PLAINS",
+      "name": "Central Plains Per-Chunk Objects",
+      "command": "node scripts/v13/measureDensity.js --baseline",
+      "target": ">= 55 objects/chunk",
+      "value": 30,
+      "unit": "objects/chunk",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_density.json -> central_plains.perChunkObjects.median = 30"
+    },
+    {
+      "id": "G_DENSITY_COLLINEAR_LATTICE",
+      "name": "Strict Collinear Lattice Instances",
+      "command": "node scripts/v13/measureDensity.js --baseline",
+      "target": "== 0 instances",
+      "value": 0,
+      "unit": "instances",
+      "status": "PASS",
+      "evidence": "review/v13_baseline_density.json -> _summary.collinearLatticeCount = 0"
+    },
+    {
+      "id": "G_BARRIER_AZURE_CLOSURE",
+      "name": "Azure Mountain Impassable Barrier Closure",
+      "command": "node scripts/v13/checkBarrierClosure.js --baseline",
+      "target": "== 0 leak corridors",
+      "value": 380,
+      "unit": "leak corridors",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_barrier_closure.json -> unauthorizedLeaks = 380"
+    },
+    {
+      "id": "G_BARRIER_REACHABILITY",
+      "name": "Settlement Global Reachability from Xingcun",
+      "command": "node scripts/v13/checkBarrierClosure.js --baseline",
+      "target": "== 31 settlements",
+      "value": 31,
+      "unit": "settlements",
+      "status": "PASS",
+      "evidence": "review/v13_baseline_barrier_closure.json -> reachableSettlements = 31"
+    },
+    {
+      "id": "G_BARRIER_ZERO_HAZARD_SPAWN",
+      "name": "Hazard Spawns on Blocked Barrier Cells",
+      "command": "node scripts/v13/checkBarrierClosure.js --baseline",
+      "target": "== 0 hazards",
+      "value": 0,
+      "unit": "hazards",
+      "status": "PASS",
+      "evidence": "review/v13_baseline_barrier_closure.json -> hazardSpawnsOnBarrier = 0"
+    },
+    {
+      "id": "G_SETTLEMENT_WHITE_SQUARE",
+      "name": "Pale Straight-Edge Settlement Square Artifacts",
+      "command": "python scripts/v13/pixelMetrics.py --baseline",
+      "target": "== 0 artifacts",
+      "value": 1,
+      "unit": "artifacts",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_pixel_metrics.json -> summary.whiteSquare = 1"
+    },
+    {
+      "id": "G_SETTLEMENT_LUM_DIFF",
+      "name": "Max Settlement vs Surroundings Luminance Delta",
+      "command": "python scripts/v13/pixelMetrics.py --baseline",
+      "target": "<= 22 delta L",
+      "value": 29.3,
+      "unit": "delta L",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_pixel_metrics.json -> summary.maxLumDiff = 29.3"
+    },
+    {
+      "id": "G_ROAD_LADDER_AUTOCORR",
+      "name": "Road Periodic Ladder / Rail Artifacts",
+      "command": "python scripts/v13/pixelMetrics.py --baseline",
+      "target": "== 0 artifacts",
+      "value": 0,
+      "unit": "artifacts",
+      "status": "PASS",
+      "evidence": "review/v13_baseline_pixel_metrics.json -> summary.roadLadder = 0"
+    },
+    {
+      "id": "G_GROUND_SEAM_4SIDES",
+      "name": "Ground Macro 4-Side Seam Mean Diff",
+      "command": "python scripts/v13/groundContentAudit.py --baseline",
+      "target": "<= 4 RGB diff",
+      "value": 2.36,
+      "unit": "RGB diff",
+      "status": "PASS",
+      "evidence": "review/v13_baseline_ground_audit.json -> gates.G_GROUND_SEAM_4SIDES.actual = 2.36"
+    },
+    {
+      "id": "G_GROUND_SEAM_MOSAIC_2X2",
+      "name": "Ground Macro 2x2 Mosaic Seam Mean Diff",
+      "command": "python scripts/v13/groundContentAudit.py --baseline",
+      "target": "<= 5 RGB diff",
+      "value": 2.36,
+      "unit": "RGB diff",
+      "status": "PASS",
+      "evidence": "review/v13_baseline_ground_audit.json -> gates.G_GROUND_SEAM_MOSAIC_2X2.actual = 2.36"
+    },
+    {
+      "id": "G_GROUND_PLAINS_LATTICE",
+      "name": "Plains Macro Mosaic Lag-512 Autocorrelation Peak",
+      "command": "python scripts/v13/groundContentAudit.py --baseline",
+      "target": "<= 0.45 peak corr",
+      "value": 0.998,
+      "unit": "peak corr",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_ground_audit.json -> gates.G_GROUND_PLAINS_LATTICE.actual = 0.998"
+    },
+    {
+      "id": "G_GROUND_BAKED_PATHS",
+      "name": "Base Biome Ground Macros with Baked Paths",
+      "command": "python scripts/v13/groundContentAudit.py --baseline",
+      "target": "== 0 macros",
+      "value": 0,
+      "unit": "macros",
+      "status": "PASS",
+      "evidence": "review/v13_baseline_ground_audit.json -> gates.G_GROUND_BAKED_PATHS.actual = 0"
+    },
+    {
+      "id": "G_GROUND_CLEAN_ACTIVE",
+      "name": "Active Ground Families Have >= 2 Clean Variants",
+      "command": "python scripts/v13/groundContentAudit.py --baseline",
+      "target": "== PASS status",
+      "value": "FAIL",
+      "unit": "status",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_ground_audit.json -> gates.G_GROUND_CLEAN_ACTIVE.actual = \"FAIL\""
+    },
+    {
+      "id": "G_SMEAR_RATIO",
+      "name": "Smear / Edge-Clamped Pixel Stretch Artifacts",
+      "command": "python scripts/v13/pixelMetrics.py --baseline",
+      "target": "== 0 artifacts",
+      "value": 1,
+      "unit": "artifacts",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_pixel_metrics.json -> summary.smear = 1"
+    },
+    {
+      "id": "G_MOUNTAIN_SIZE_AZURE",
+      "name": "Mountain Footprints >= 4x2 in Mountain Regions",
+      "command": "node scripts/v13/mountainDistribution.js --baseline",
+      "target": ">= 50 %",
+      "value": 0.57,
+      "unit": "%",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_mountains.json -> pctGe4x2 = 0.57"
+    },
+    {
+      "id": "G_MOUNTAIN_SIZE_XL",
+      "name": "Mountain Footprints >= 6x3 in Mountain Regions",
+      "command": "node scripts/v13/mountainDistribution.js --baseline",
+      "target": ">= 15 %",
+      "value": 0.57,
+      "unit": "%",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_mountains.json -> pctGe6x3 = 0.57"
+    },
+    {
+      "id": "G_TINT_RED_SOLID_PIXELS",
+      "name": "Solid Red Footprint Tint Fill Blocks",
+      "command": "python scripts/v13/pixelMetrics.py --baseline",
+      "target": "== 0 artifacts",
+      "value": 1,
+      "unit": "artifacts",
+      "status": "GAGAL",
+      "evidence": "review/v13_baseline_pixel_metrics.json -> summary.redTint = 1"
+    },
+    {
+      "id": "G_GRID_CONTRACT_AUDIT",
+      "name": "Grid Contract V10 Integrity Check (G1-G8)",
+      "command": "node scripts/testGridContract.js --baseline",
+      "target": "== true boolean",
+      "value": true,
+      "unit": "boolean",
+      "status": "PASS",
+      "evidence": "review/grid_contract_summary.json -> allPass = true"
+    },
+    {
+      "id": "G_AUDIT_GRID_V10",
+      "name": "Master Grid Contract & Collision Auditor (V1-V9)",
+      "command": "node scripts/auditGridV10.js --baseline",
+      "target": "== true boolean",
+      "value": true,
+      "unit": "boolean",
+      "status": "PASS",
+      "evidence": "review/v10_audit_summary.json -> allPass = true"
+    },
+    {
+      "id": "G_TRUTH_CHECK_HASHES",
+      "name": "Ground Truth Unique sha256 + phash Hashes",
+      "command": "python scripts/v13/truthCheck2.py --baseline",
+      "target": ">= 144 macros",
+      "value": 141,
+      "unit": "macros",
+      "status": "GAGAL",
+      "evidence": "world-data/ground-sources-v13.json -> validCount = 141"
+    }
+  ]
+}

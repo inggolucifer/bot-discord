@@ -1,0 +1,262 @@
+[
+  {
+    "id": "G_DENSITY_CENTRAL_PLAINS",
+    "name": "Central Plains Viewport Density",
+    "command": "node scripts/v13/measureDensity.js",
+    "sourceFile": "review/v13_density.json",
+    "jsonPath": "central_plains.sprites.median",
+    "operator": ">=",
+    "target": 28,
+    "unit": "sprites/viewport"
+  },
+  {
+    "id": "G_DENSITY_NINE_SPRINGS",
+    "name": "Nine Springs Delta Viewport Density",
+    "command": "node scripts/v13/measureDensity.js",
+    "sourceFile": "review/v13_density.json",
+    "jsonPath": "nine_springs_delta.sprites.median",
+    "operator": ">=",
+    "target": 28,
+    "unit": "sprites/viewport"
+  },
+  {
+    "id": "G_DENSITY_NORTHERN_DESOLATE",
+    "name": "Northern Desolate Viewport Density",
+    "command": "node scripts/v13/measureDensity.js",
+    "sourceFile": "review/v13_density.json",
+    "jsonPath": "northern_desolate.sprites.median",
+    "operator": ">=",
+    "target": 16,
+    "unit": "sprites/viewport"
+  },
+  {
+    "id": "G_DENSITY_THUNDERSTEPPE",
+    "name": "Thundersteppe Viewport Density",
+    "command": "node scripts/v13/measureDensity.js",
+    "sourceFile": "review/v13_density.json",
+    "jsonPath": "thundersteppe.sprites.median",
+    "operator": ">=",
+    "target": 16,
+    "unit": "sprites/viewport"
+  },
+  {
+    "id": "G_DENSITY_BEAST_PRAIRIES",
+    "name": "Beast Prairies Viewport Density",
+    "command": "node scripts/v13/measureDensity.js",
+    "sourceFile": "review/v13_density.json",
+    "jsonPath": "beast_prairies.sprites.median",
+    "operator": ">=",
+    "target": 20,
+    "unit": "sprites/viewport"
+  },
+  {
+    "id": "G_DENSITY_TOTAL_OBJECTS",
+    "name": "Total Audited Objects in Grid",
+    "command": "node scripts/auditGridV10.js",
+    "sourceFile": "review/v10_audit_summary.json",
+    "jsonPath": "totalObjects",
+    "operator": ">=",
+    "target": 70000,
+    "unit": "objects"
+  },
+  {
+    "id": "G_DENSITY_PER_CHUNK_PLAINS",
+    "name": "Central Plains Per-Chunk Objects",
+    "command": "node scripts/v13/measureDensity.js",
+    "sourceFile": "review/v13_density.json",
+    "jsonPath": "central_plains.perChunkObjects.median",
+    "operator": ">=",
+    "target": 55,
+    "unit": "objects/chunk"
+  },
+  {
+    "id": "G_DENSITY_COLLINEAR_LATTICE",
+    "name": "Strict Collinear Lattice Instances",
+    "command": "node scripts/v13/measureDensity.js",
+    "sourceFile": "review/v13_density.json",
+    "jsonPath": "_summary.collinearLatticeCount",
+    "operator": "==",
+    "target": 0,
+    "unit": "instances"
+  },
+  {
+    "id": "G_BARRIER_AZURE_CLOSURE",
+    "name": "Azure Mountain Impassable Barrier Closure",
+    "command": "node scripts/v13/checkBarrierClosure.js",
+    "sourceFile": "review/v13_barrier_closure.json",
+    "jsonPath": "unauthorizedLeaks",
+    "operator": "==",
+    "target": 0,
+    "unit": "leak corridors"
+  },
+  {
+    "id": "G_BARRIER_REACHABILITY",
+    "name": "Settlement Global Reachability from Xingcun",
+    "command": "node scripts/v13/checkBarrierClosure.js",
+    "sourceFile": "review/v13_barrier_closure.json",
+    "jsonPath": "reachableSettlements",
+    "operator": "==",
+    "target": 31,
+    "unit": "settlements"
+  },
+  {
+    "id": "G_BARRIER_ZERO_HAZARD_SPAWN",
+    "name": "Hazard Spawns on Blocked Barrier Cells",
+    "command": "node scripts/v13/checkBarrierClosure.js",
+    "sourceFile": "review/v13_barrier_closure.json",
+    "jsonPath": "hazardSpawnsOnBarrier",
+    "operator": "==",
+    "target": 0,
+    "unit": "hazards"
+  },
+  {
+    "id": "G_SETTLEMENT_WHITE_SQUARE",
+    "name": "Pale Straight-Edge Settlement Square Artifacts",
+    "command": "python scripts/v13/pixelMetrics.py",
+    "sourceFile": "review/v13_pixel_metrics.json",
+    "jsonPath": "summary.whiteSquare",
+    "operator": "==",
+    "target": 0,
+    "unit": "artifacts"
+  },
+  {
+    "id": "G_SETTLEMENT_LUM_DIFF",
+    "name": "Max Settlement vs Surroundings Luminance Delta",
+    "command": "python scripts/v13/pixelMetrics.py",
+    "sourceFile": "review/v13_pixel_metrics.json",
+    "jsonPath": "summary.maxLumDiff",
+    "operator": "<=",
+    "target": 22.0,
+    "unit": "delta L"
+  },
+  {
+    "id": "G_ROAD_LADDER_AUTOCORR",
+    "name": "Road Periodic Ladder / Rail Artifacts",
+    "command": "python scripts/v13/pixelMetrics.py",
+    "sourceFile": "review/v13_pixel_metrics.json",
+    "jsonPath": "summary.roadLadder",
+    "operator": "==",
+    "target": 0,
+    "unit": "artifacts"
+  },
+  {
+    "id": "G_GROUND_SEAM_4SIDES",
+    "name": "Ground Macro 4-Side Seam Mean Diff",
+    "command": "python scripts/v13/groundContentAudit.py",
+    "sourceFile": "review/v13_ground_audit.json",
+    "jsonPath": "gates.G_GROUND_SEAM_4SIDES.actual",
+    "operator": "<=",
+    "target": 4.0,
+    "unit": "RGB diff"
+  },
+  {
+    "id": "G_GROUND_SEAM_MOSAIC_2X2",
+    "name": "Ground Macro 2x2 Mosaic Seam Mean Diff",
+    "command": "python scripts/v13/groundContentAudit.py",
+    "sourceFile": "review/v13_ground_audit.json",
+    "jsonPath": "gates.G_GROUND_SEAM_MOSAIC_2X2.actual",
+    "operator": "<=",
+    "target": 5.0,
+    "unit": "RGB diff"
+  },
+  {
+    "id": "G_GROUND_PLAINS_LATTICE",
+    "name": "Plains Macro Mosaic Lag-512 Autocorrelation Peak",
+    "command": "python scripts/v13/groundContentAudit.py",
+    "sourceFile": "review/v13_ground_audit.json",
+    "jsonPath": "gates.G_GROUND_PLAINS_LATTICE.actual",
+    "operator": "<=",
+    "target": 0.45,
+    "unit": "peak corr"
+  },
+  {
+    "id": "G_GROUND_BAKED_PATHS",
+    "name": "Base Biome Ground Macros with Baked Paths",
+    "command": "python scripts/v13/groundContentAudit.py",
+    "sourceFile": "review/v13_ground_audit.json",
+    "jsonPath": "gates.G_GROUND_BAKED_PATHS.actual",
+    "operator": "==",
+    "target": 0,
+    "unit": "macros"
+  },
+  {
+    "id": "G_GROUND_CLEAN_ACTIVE",
+    "name": "Active Ground Families Have >= 2 Clean Variants",
+    "command": "python scripts/v13/groundContentAudit.py",
+    "sourceFile": "review/v13_ground_audit.json",
+    "jsonPath": "gates.G_GROUND_CLEAN_ACTIVE.actual",
+    "operator": "==",
+    "target": "PASS",
+    "unit": "status"
+  },
+  {
+    "id": "G_SMEAR_RATIO",
+    "name": "Smear / Edge-Clamped Pixel Stretch Artifacts",
+    "command": "python scripts/v13/pixelMetrics.py",
+    "sourceFile": "review/v13_pixel_metrics.json",
+    "jsonPath": "summary.smear",
+    "operator": "==",
+    "target": 0,
+    "unit": "artifacts"
+  },
+  {
+    "id": "G_MOUNTAIN_SIZE_AZURE",
+    "name": "Mountain Footprints >= 4x2 in Mountain Regions",
+    "command": "node scripts/v13/mountainDistribution.js",
+    "sourceFile": "review/v13_mountains.json",
+    "jsonPath": "pctGe4x2",
+    "operator": ">=",
+    "target": 50.0,
+    "unit": "%"
+  },
+  {
+    "id": "G_MOUNTAIN_SIZE_XL",
+    "name": "Mountain Footprints >= 6x3 in Mountain Regions",
+    "command": "node scripts/v13/mountainDistribution.js",
+    "sourceFile": "review/v13_mountains.json",
+    "jsonPath": "pctGe6x3",
+    "operator": ">=",
+    "target": 15.0,
+    "unit": "%"
+  },
+  {
+    "id": "G_TINT_RED_SOLID_PIXELS",
+    "name": "Solid Red Footprint Tint Fill Blocks",
+    "command": "python scripts/v13/pixelMetrics.py",
+    "sourceFile": "review/v13_pixel_metrics.json",
+    "jsonPath": "summary.redTint",
+    "operator": "==",
+    "target": 0,
+    "unit": "artifacts"
+  },
+  {
+    "id": "G_GRID_CONTRACT_AUDIT",
+    "name": "Grid Contract V10 Integrity Check (G1-G8)",
+    "command": "node scripts/testGridContract.js",
+    "sourceFile": "review/grid_contract_summary.json",
+    "jsonPath": "allPass",
+    "operator": "==",
+    "target": true,
+    "unit": "boolean"
+  },
+  {
+    "id": "G_AUDIT_GRID_V10",
+    "name": "Master Grid Contract & Collision Auditor (V1-V9)",
+    "command": "node scripts/auditGridV10.js",
+    "sourceFile": "review/v10_audit_summary.json",
+    "jsonPath": "allPass",
+    "operator": "==",
+    "target": true,
+    "unit": "boolean"
+  },
+  {
+    "id": "G_TRUTH_CHECK_HASHES",
+    "name": "Ground Truth Unique sha256 + phash Hashes",
+    "command": "python scripts/v13/truthCheck2.py",
+    "sourceFile": "world-data/ground-sources-v13.json",
+    "jsonPath": "validCount",
+    "operator": ">=",
+    "target": 144,
+    "unit": "macros"
+  }
+]

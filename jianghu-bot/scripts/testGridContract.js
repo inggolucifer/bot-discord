@@ -306,6 +306,15 @@ console.log(`RINGKASAN AUDIT GRID CONTRACT V10: ${allPassed ? '[SEMUA LULUS]' : 
 console.log('================================================================');
 console.log(JSON.stringify(results, null, 2));
 
+const summaryPayload = {
+  timestamp: new Date().toISOString(),
+  allPass: allPassed,
+  results
+};
+const summaryPath = path.resolve(__dirname, '../review/grid_contract_summary.json');
+fs.mkdirSync(path.dirname(summaryPath), { recursive: true });
+fs.writeFileSync(summaryPath, JSON.stringify(summaryPayload, null, 2), 'utf8');
+
 if (allPassed) {
   console.log('\n[PASS] SELURUH GERBANG G1-G8 LULUS DENGAN SEMPURNA!\n');
   process.exit(0);

@@ -213,6 +213,17 @@ console.log(`Total Pasangan Objek: ${totalPairs}`);
 
 const hasFails = tableData.some(r => r.Status === 'FAIL');
 
+const auditSummary = {
+  timestamp: new Date().toISOString(),
+  allPass: !hasFails,
+  totalObjects,
+  totalPairs,
+  gates: tableData
+};
+const summaryPath = path.resolve(__dirname, '../review/v10_audit_summary.json');
+fs.mkdirSync(path.dirname(summaryPath), { recursive: true });
+fs.writeFileSync(summaryPath, JSON.stringify(auditSummary, null, 2), 'utf8');
+
 if (hasFails && !isBaseline) {
   console.error('\n[GAGAL] Terdapat pelanggaran Kontrak Grid V10!');
   process.exit(1);
