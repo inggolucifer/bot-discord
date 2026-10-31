@@ -1,0 +1,36 @@
+{
+  "version": "v15",
+  "description": "Authoritative Road Styling Configuration by Region/Biome Class",
+  "styles": {
+    "t1_settlement": {
+      "family": "road_stone",
+      "baseMacro": "road_stone",
+      "tint": "rgba(180, 160, 135, 0.08)",
+      "minDeltaE": 12.0
+    },
+    "wilderness_soil": {
+      "family": "road_stone",
+      "baseMacro": "road_stone",
+      "tint": "rgba(145, 125, 100, 0.15)",
+      "minDeltaE": 10.0
+    },
+    "t4_snow_glacier": {
+      "family": "road_stone",
+      "baseMacro": "road_stone",
+      "tint": "rgba(165, 185, 205, 0.82)",
+      "minDeltaE": 18.0
+    },
+    "desert_sand": {
+      "family": "road_stone",
+      "baseMacro": "road_stone",
+      "tint": "rgba(210, 180, 130, 0.25)",
+      "minDeltaE": 10.0
+    },
+    "azure_mountain_pass": {
+      "family": "road_stone",
+      "baseMacro": "mountain_pass",
+      "tint": "rgba(135, 128, 120, 0.20)",
+      "minDeltaE": 12.0
+    }
+  }
+}

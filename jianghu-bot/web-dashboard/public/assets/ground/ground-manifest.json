@@ -436,6 +436,15 @@
         "v11/volcanic_m3",
         "v11/volcanic_m4"
       ]
+    },
+    "road_dirt": {
+      "family": "road_stone",
+      "variants": [
+        "v11/road_stone_m1",
+        "v11/road_stone_m2",
+        "v11/road_stone_m3",
+        "v11/road_stone_m4"
+      ]
     }
   },
   "families": {

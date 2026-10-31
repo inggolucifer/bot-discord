@@ -562,7 +562,8 @@ export function drawSoftBlobRoadPath(
   tileSize: number,
   bitmask: number,
   worldX?: number,
-  worldY?: number
+  worldY?: number,
+  neighborsExtended?: { isDoubleWide?: boolean }
 ) {
   const hasN = (bitmask & 1) !== 0;
   const hasE = (bitmask & 2) !== 0;
@@ -571,7 +572,8 @@ export function drawSoftBlobRoadPath(
 
   const cx = px + tileSize * 0.5;
   const cy = py + tileSize * 0.5;
-  const hw = tileSize * 0.44; // Seamless connection width
+  const isWide = neighborsExtended?.isDoubleWide || ((hasE && hasW) && (hasN || hasS)) || ((hasN && hasS) && (hasE || hasW));
+  const hw = isWide ? tileSize * 0.50 : tileSize * 0.44; // Seamless connection width
   const r = tileSize * 0.30;  // Corner radius
 
   // Subtle organic undulation based on absolute world coordinates
@@ -588,6 +590,8 @@ export function drawSoftBlobRoadPath(
   if (!hasN && !hasS && !hasW && !hasE) {
     // Single isolated stepping stone / natural patch
     ctx.ellipse(cx, cy, hw * 0.85, hw * 0.75, 0.2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
     return;
   }
 
@@ -638,6 +642,7 @@ export function drawSoftBlobRoadPath(
   }
 
   ctx.closePath();
+  ctx.fill();
 }
 
 /**
@@ -1018,7 +1023,10 @@ export function renderChunkGroundBitmapTextured(
       const gy = cy * CHUNK_SIZE + dy;
       const terrain = chunkNeighborTerrain(gx, gy) || 'plains';
       const fInfo = groundTextures.familyOf(terrain);
-      const fam = fInfo ? fInfo.family : 'plains';
+      let fam = fInfo ? fInfo.family : 'plains';
+      if (terrain.includes('road') && fam === 'plains') {
+        fam = 'road_stone';
+      }
       const idx = (dy + BORDER) * GRID_DIM + (dx + BORDER);
       gridFamilies[idx] = fam;
       presentFamilies.add(fam);
@@ -1122,7 +1130,6 @@ export function renderChunkGroundBitmapTextured(
           }
         }
       }
-      ctxMB.fill();
 
       ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
       ctxMB2.filter = 'blur(1.2px)';

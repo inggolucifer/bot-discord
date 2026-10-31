@@ -2131,7 +2131,7 @@ export default function WorldCanvas({
           for (let tx = minTileX; tx <= maxTileX; tx++) {
             const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
             const tt = tile?.terrainType;
-            if (tt && (tt.includes('road') || tt === 'road_stone')) {
+            if (tt && (tt.includes('road') || tt === 'road_stone' || tt.includes('pass'))) {
               const sx = toScreenX(tx);
               const sy = toScreenY(ty);
               if (sx + currentTileSize >= 0 && sx <= width && sy + currentTileSize >= 0 && sy <= height) {
@@ -2142,7 +2142,7 @@ export default function WorldCanvas({
                   py: Math.round(sy),
                   widthPx: Math.round(currentTileSize),
                   heightPx: Math.round(currentTileSize),
-                  biome: tile?.biome || 'road',
+                  biome: (tile as any)?.biome || 'road',
                   orientation: 'auto'
                 });
               }

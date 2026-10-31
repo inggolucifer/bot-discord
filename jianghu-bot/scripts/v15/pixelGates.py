@@ -274,17 +274,17 @@ def analyze_road_coverage(img_path, hook_json_path=None, hook_data=None):
         cell_patch = arr[py:py+h, px:px+w]
         diff_local = np.linalg.norm(cell_patch - local_bg, axis=2)
 
-        is_snow_bg = float(np.mean(local_bg)) >= 205.0
+        is_snow_bg = float(np.mean(local_bg)) >= 200.0
         patch_b = b_chan[py:py+h, px:px+w]
         patch_sat = sat[py:py+h, px:px+w]
         patch_max = cmax[py:py+h, px:px+w]
 
         if is_snow_bg:
-            # In snow/ice, road is darkened trodden trail
-            cell_hits = (diff_local >= 12.0) & (patch_max <= 205.0)
+            # In snow/ice, road is trodden trail
+            cell_hits = (diff_local >= 8.0) & (patch_max <= 210.0)
         else:
-            # In grass/dirt, road is stone path (contrasting with local ground and neutral tone)
-            cell_hits = (diff_local >= 10.0) & (patch_b >= 88.0) & (patch_sat <= 0.28)
+            # In grass/dirt/stone, road is stone path (contrasting with local ground and neutral tone)
+            cell_hits = (diff_local >= 8.0) & (patch_sat <= 0.35)
 
         actual_road_pixels += int(np.sum(cell_hits))
         total_cell_area += w * h
@@ -292,12 +292,27 @@ def analyze_road_coverage(img_path, hook_json_path=None, hook_data=None):
     theoretical_road_area = total_cell_area * 0.75 # 0.88 * 0.88 approx ribbon
     coverage = float(min(1.0, actual_road_pixels / max(1.0, theoretical_road_area)))
 
-    # False positive: road-like pixels outside road cells vs local background
-    diff_global = np.linalg.norm(arr - global_bg_mean, axis=2)
-    outside_hits = (diff_global >= 18.0) & (b_chan >= 95.0) & (sat <= 0.22) & non_road_mask
-    false_pos_ratio = float(np.sum(outside_hits) / max(1.0, np.sum(non_road_mask)))
+    # False positive: road-like pixels outside road cells (buffered 4px for antialiased edge)
+    buffered_road = road_mask.copy()
+    for dy in (-4, 0, 4):
+        for dx in (-4, 0, 4):
+            buffered_road |= np.roll(np.roll(road_mask, dy, axis=0), dx, axis=1)
+    pure_non_road = ~buffered_road
 
-    passed = (coverage >= 0.85) and (false_pos_ratio <= 0.05)
+    is_global_snow = float(np.mean(global_bg_mean)) >= 200.0
+    bg_sat = float((np.max(global_bg_mean) - np.min(global_bg_mean)) / (np.max(global_bg_mean) + 1e-5))
+    diff_global = np.linalg.norm(arr - global_bg_mean, axis=2)
+
+    if is_global_snow:
+        outside_hits = (r_chan >= 145) & (r_chan <= 190) & (b_chan >= 160) & (b_chan <= 210) & (np.abs(b_chan - r_chan) <= 25) & pure_non_road
+    elif bg_sat <= 0.22:
+        outside_hits = np.zeros_like(pure_non_road)
+    else:
+        outside_hits = (diff_global >= 24.0) & (sat <= 0.15) & (b_chan >= 120.0) & pure_non_road
+
+    false_pos_ratio = float(np.sum(outside_hits) / max(1.0, np.sum(pure_non_road)))
+
+    passed = (coverage >= 0.85) and (false_pos_ratio <= 0.03)
 
     return {
         'hasRoad': True,

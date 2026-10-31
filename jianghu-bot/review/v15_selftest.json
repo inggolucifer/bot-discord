@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-31T21:32:35.683Z",
+  "timestamp": "2026-10-31T22:18:53.143Z",
   "totalTests": 9,
   "passedCount": 9,
   "allPassed": true,
@@ -7,7 +7,7 @@
     {
       "id": "NEG_ROAD_ABSENT",
       "target": "roadCoverage < 0.85 and passed == false",
-      "actual": "coverage=0.142, passed=false",
+      "actual": "coverage=0.381, passed=false",
       "passed": true
     },
     {
