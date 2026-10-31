@@ -216,9 +216,10 @@ export default function WorldCanvas({
       chunkManager.updateCamera(debugCam.x, debugCam.y, debugCam.zoom);
       if (typeof window !== 'undefined') {
         (window as any).__chunksReady = false;
-        (window as any).__panCameraTo = (x: number, y: number) => {
-          setCamera(prev => ({ ...prev, x, y }));
+        (window as any).__panCameraTo = (x: number, y: number, zoom?: number) => {
+          setCamera(prev => ({ ...prev, x, y, zoom: zoom !== undefined ? zoom : prev.zoom }));
           animatedPlayerPos.current = { x, y };
+          chunkManager.updateCamera(x, y, zoom !== undefined ? zoom : 1.3);
         };
         (window as any).__dbg = {
           getChunkBitmap: (cx: number, cy: number) => chunkManager.getChunkBitmap(cx, cy, 54)
@@ -275,6 +276,9 @@ export default function WorldCanvas({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).atlasReady = false;
+      (window as any).chunkManager = chunkManager;
+      (window as any).groundTextures = groundTextures;
+      (window as any).atlasLoader = atlasLoader;
     }
     atlasLoader.preloadCoreAtlases().then(() => {
       if (typeof window !== 'undefined') {

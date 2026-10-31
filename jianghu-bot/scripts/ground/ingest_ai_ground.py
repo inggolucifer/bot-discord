@@ -20,7 +20,7 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 from procedural_ground_generator import make_procedural_variant
 
 FAMILY_SPECS = {
-    "plains":           {"base": "#7f9a5a", "accent": "#8a8f55", "lum": 145, "max_rms": 0.12},
+    "plains":           {"base": "#8c7e50", "accent": "#cdaa79", "lum": 130, "max_rms": 0.16},
     "meadow":           {"base": "#6fa05a", "accent": "#c9b86a", "lum": 150, "max_rms": 0.12},
     "farmland":         {"base": "#7a6444", "accent": "#88a05a", "lum": 115, "max_rms": 0.12},
     "herb_field":       {"base": "#4f7d5c", "accent": "#5fb3a0", "lum": 120, "max_rms": 0.12},
@@ -99,30 +99,40 @@ def balance_quadrants(a):
     return res
 
 
-def make_seamless_offset(arr, blend_width=128):
-    """Guarantees perfect edge matching diff <= 0.5 between opposing boundaries."""
+def make_seamless_offset(arr, blend_width=16):
+    """Guarantees perfect edge matching diff <= 0.5 without any 1D stretching or edge-smear.
+    Uses circular roll-crossfade for macro continuity, followed by subtle 16px Hermite micro-feathering."""
     h, w, c = arr.shape
     res = arr.copy().astype(np.float32)
     
-    # Horizontal seam
+    # 1. Roll-crossfade to eliminate macro discontinuities across boundaries without stretching
+    x = np.linspace(0, 1, w, dtype=np.float32)
+    y = np.linspace(0, 1, h, dtype=np.float32)
+    wx = np.clip(np.sin(np.pi * x), 0.0, 1.0)
+    wy = np.clip(np.sin(np.pi * y), 0.0, 1.0)
+    mask = (np.outer(wy, wx)) ** 0.6
+    mask = mask[..., None]
+    
+    r = np.roll(np.roll(res, h // 2, axis=0), w // 2, axis=1)
+    res = res * mask + r * (1.0 - mask)
+    
+    # Restore variance / contrast lost by crossfade
+    res = (res - res.mean(axis=(0, 1))) * (arr.std(axis=(0, 1)) / (res.std(axis=(0, 1)) + 1e-6)) + arr.mean(axis=(0, 1))
+    
+    # 2. Subtle micro-edge feathering over only 16 pixels (1.5% of tile)
     ramp_x = (np.cos(np.linspace(0, np.pi, blend_width, dtype=np.float32)) * 0.5 + 0.5).reshape(1, blend_width, 1)
     left = res[:, :blend_width].copy()
     right = res[:, -blend_width:].copy()
-    boundary_h = (left[:, :1] + right[:, -1:]) * 0.5
+    avg_lr = (left + right[:, ::-1]) * 0.5
+    res[:, :blend_width] = ramp_x * avg_lr + (1.0 - ramp_x) * left
+    res[:, -blend_width:] = ramp_x[:, ::-1] * avg_lr[:, ::-1] + (1.0 - ramp_x[:, ::-1]) * right
     
-    res[:, :blend_width] = ramp_x * boundary_h + (1.0 - ramp_x) * left
-    ramp_x_rev = np.flip(ramp_x, axis=1)
-    res[:, -blend_width:] = ramp_x_rev * boundary_h + (1.0 - ramp_x_rev) * right
-    
-    # Vertical seam
     ramp_y = (np.cos(np.linspace(0, np.pi, blend_width, dtype=np.float32)) * 0.5 + 0.5).reshape(blend_width, 1, 1)
     top = res[:blend_width, :].copy()
-    bottom = res[-blend_width:, :].copy()
-    boundary_v = (top[:1, :] + bottom[-1:, :]) * 0.5
-    
-    res[:blend_width, :] = ramp_y * boundary_v + (1.0 - ramp_y) * top
-    ramp_y_rev = np.flip(ramp_y, axis=0)
-    res[-blend_width:, :] = ramp_y_rev * boundary_v + (1.0 - ramp_y_rev) * bottom
+    bot = res[-blend_width:, :].copy()
+    avg_tb = (top + bot[::-1, :]) * 0.5
+    res[:blend_width, :] = ramp_y * avg_tb + (1.0 - ramp_y) * top
+    res[-blend_width:, :] = ramp_y[::-1, :] * avg_tb[::-1, :] + (1.0 - ramp_y[::-1, :]) * bot
     
     return np.clip(res, 0, 255)
 
@@ -342,12 +352,12 @@ def main():
             arr = normalize_texture(arr, family, spec)
             
             # 3. Seamless guarantee on macro boundaries
-            arr = make_seamless_offset(arr, blend_width=128)
+            arr = make_seamless_offset(arr, blend_width=16)
             
             # 4. Anti-banding variance balance check
             arr = balance_variance(arr)
             arr = balance_quadrants(arr)
-            arr = make_seamless_offset(arr, blend_width=128)
+            arr = make_seamless_offset(arr, blend_width=16)
             
             # 5. Seamless high-frequency micro-decorrelation grain (guarantees lag-1 < 0.88 & sobel >= 3.5)
             rng_seed = ((hash(family) * 10007) + (m_idx + 1) * 31337) & 0x7FFFFFFF

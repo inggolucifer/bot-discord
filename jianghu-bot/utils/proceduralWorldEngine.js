@@ -792,7 +792,7 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
         terrainType = (elevation > 0.45) ? 'forest' : 'bamboo_forest';
         isSolid = false;
         label = terrainType === 'forest' ? 'Hutan Rimbun Kuno' : 'Hutan Bambu Hijau';
-      } else if (moisture > 0.40) {
+      } else if (moisture > 0.58 && elevation < 0.38) {
         terrainType = 'meadow';
         isSolid = false;
         label = 'Padang Bunga Aprikot';
