@@ -620,6 +620,22 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
     if (!GC.isFree(startX, startY, g, occupiedGrid)) {
       return false;
     }
+
+    // V8: Visual rect overlap prevention
+    if (objects && objects.length > 0) {
+      const vrCandidate = GC.visualRect(startX, startY, g);
+      for (let i = objects.length - 1; i >= 0; i--) {
+        const obj = objects[i];
+        if (Math.abs(startX - obj.x) > 16 || Math.abs(startY - obj.y) > 16) continue;
+        const og = GC.getGrid(obj.defId);
+        if (og) {
+          const ovr = GC.visualRect(obj.x, obj.y, og);
+          const xo = Math.max(0, Math.min(vrCandidate.x1, ovr.x1) - Math.max(vrCandidate.x0, ovr.x0));
+          const yo = Math.max(0, Math.min(vrCandidate.y1, ovr.y1) - Math.max(vrCandidate.y0, ovr.y0));
+          if (xo * yo > 0.05) return false;
+        }
+      }
+    }
   }
 
   // Validate terrain for ALL footprint cells (V5)
@@ -844,6 +860,156 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       if (g && GC.isFree(bObj.x, bObj.y, g, occupiedGrid)) {
         GC.mark(bObj.x, bObj.y, g, occupiedGrid, bObj.id);
         objects.push(bObj);
+      }
+    }
+  }
+
+  // 0b. Mountainous Region Natural Massifs & Prominent Ranges (Prompt V13 P6: F9)
+  const MOUNTAIN_REGION_IDS = new Set([
+    'azure_mountain_range',
+    'godthunder_peaks',
+    'western_gorge_labyrinth',
+    'hermit_highlands',
+    'lava_spine',
+    'sword_gorge',
+    'ore_teeth_range'
+  ]);
+
+  if (MOUNTAIN_REGION_IDS.has(chunkRegion.id)) {
+    const chunkMinX = chunkX * 32;
+    const chunkMinY = chunkY * 32;
+    const mtSeed = ((worldSeed ^ (chunkX * 1664525) ^ (chunkY * 1013904223)) >>> 0);
+    const mtRand = createPRNG(mtSeed);
+
+    // 1. Guaranteed Colossal / Large Mountain Peaks (>= 6x3)
+    const largeMacroPeaks = [
+      { defId: 'mountain_XL', fw: 10, fh: 6, ra: 3 },
+      { defId: 'mountain_L', fw: 6, fh: 4, ra: 2 },
+      { defId: 'mountain_XXL', fw: 16, fh: 10, ra: 4 }
+    ];
+    const targetLarge = 3 + Math.floor(mtRand() * 2); // 3..4 large mountains
+    for (let attempt = 0; attempt < 16 && objects.filter(o => o.isLargeMountain).length < targetLarge; attempt++) {
+      const pDef = largeMacroPeaks[Math.floor(mtRand() * largeMacroPeaks.length)];
+      const g = GC.getGrid(pDef.defId);
+      if (!g) continue;
+      const maxLx = 32 - g.fw;
+      const minLy = g.rowsAbove;
+      const maxLy = 32 - g.fh;
+      if (maxLx <= 0 || maxLy < minLy) continue;
+      const lx = Math.floor(mtRand() * (maxLx + 1));
+      const ly = minLy + Math.floor(mtRand() * (maxLy - minLy + 1));
+      const wx = chunkMinX + lx, wy = chunkMinY + ly;
+
+      let valid = true;
+      for (let dy = 0; dy < g.fh && valid; dy++) {
+        for (let dx = 0; dx < g.fw && valid; dx++) {
+          const tile = getTileAt(wx + dx, wy + dy);
+          if (!tile || tile.isWater || tile.isRoad || tile.isSettlementCore || tile.terrainType === 'mountain_pass' || tile.terrainType === 'sword_gorge_pass') {
+            valid = false;
+          }
+        }
+      }
+      if (!valid) continue;
+
+      // Ensure no visual overlap with already placed objects
+      const vrCandidate = GC.visualRect(wx, wy, g);
+      let visualConflict = false;
+      for (const obj of objects) {
+        if (Math.max(Math.abs(wx - obj.x), Math.abs(wy - obj.y)) > 16) continue;
+        const og = GC.getGrid(obj.defId);
+        if (og) {
+          const ovr = GC.visualRect(obj.x, obj.y, og);
+          const xo = Math.max(0, Math.min(vrCandidate.x1, ovr.x1) - Math.max(vrCandidate.x0, ovr.x0));
+          const yo = Math.max(0, Math.min(vrCandidate.y1, ovr.y1) - Math.max(vrCandidate.y0, ovr.y0));
+          if (xo * yo > 0.05) {
+            visualConflict = true;
+            break;
+          }
+        }
+      }
+      if (visualConflict) continue;
+
+      if (GC.isFree(wx, wy, g, occupiedGrid)) {
+        const objId = `mt_large_${chunkX}_${chunkY}_${attempt}`;
+        GC.mark(wx, wy, g, occupiedGrid, objId);
+        objects.push({
+          id: objId,
+          defId: pDef.defId,
+          x: wx,
+          y: wy,
+          cw: g.fw,
+          ch: g.fh,
+          collision: 'solid',
+          isMountainPeak: true,
+          isLargeMountain: true,
+          tags: ['mountain', 'peak', chunkRegion.id]
+        });
+      }
+    }
+
+    // 2. Guaranteed Medium Mountain Formations (>= 4x2)
+    const medMacroPeaks = [
+      { defId: 'nature_karst_twin_peaks', fw: 4, fh: 2, ra: 2 },
+      { defId: 'mt_rock_4x3', fw: 5, fh: 3, ra: 1 },
+      { defId: 'mt_rock_3x2', fw: 4, fh: 2, ra: 3 }
+    ];
+    const targetMedium = 6 + Math.floor(mtRand() * 3); // 6..8 medium mountains
+    for (let attempt = 0; attempt < 20 && objects.filter(o => o.isMedMountain).length < targetMedium; attempt++) {
+      const pDef = medMacroPeaks[Math.floor(mtRand() * medMacroPeaks.length)];
+      const g = GC.getGrid(pDef.defId);
+      if (!g) continue;
+      const maxLx = 32 - g.fw;
+      const minLy = g.rowsAbove;
+      const maxLy = 32 - g.fh;
+      if (maxLx <= 0 || maxLy < minLy) continue;
+      const lx = Math.floor(mtRand() * (maxLx + 1));
+      const ly = minLy + Math.floor(mtRand() * (maxLy - minLy + 1));
+      const wx = chunkMinX + lx, wy = chunkMinY + ly;
+
+      let valid = true;
+      for (let dy = 0; dy < g.fh && valid; dy++) {
+        for (let dx = 0; dx < g.fw && valid; dx++) {
+          const tile = getTileAt(wx + dx, wy + dy);
+          if (!tile || tile.isWater || tile.isRoad || tile.isSettlementCore || tile.terrainType === 'mountain_pass' || tile.terrainType === 'sword_gorge_pass') {
+            valid = false;
+          }
+        }
+      }
+      if (!valid) continue;
+
+      // Ensure no visual overlap with already placed objects
+      const vrCandidate = GC.visualRect(wx, wy, g);
+      let visualConflict = false;
+      for (const obj of objects) {
+        if (Math.max(Math.abs(wx - obj.x), Math.abs(wy - obj.y)) > 16) continue;
+        const og = GC.getGrid(obj.defId);
+        if (og) {
+          const ovr = GC.visualRect(obj.x, obj.y, og);
+          const xo = Math.max(0, Math.min(vrCandidate.x1, ovr.x1) - Math.max(vrCandidate.x0, ovr.x0));
+          const yo = Math.max(0, Math.min(vrCandidate.y1, ovr.y1) - Math.max(vrCandidate.y0, ovr.y0));
+          if (xo * yo > 0.05) {
+            visualConflict = true;
+            break;
+          }
+        }
+      }
+      if (visualConflict) continue;
+
+      if (GC.isFree(wx, wy, g, occupiedGrid)) {
+        const objId = `mt_med_${chunkX}_${chunkY}_${attempt}`;
+        GC.mark(wx, wy, g, occupiedGrid, objId);
+        objects.push({
+          id: objId,
+          defId: pDef.defId,
+          x: wx,
+          y: wy,
+          cw: g.fw,
+          ch: g.fh,
+          collision: 'solid',
+          isMountainPeak: true,
+          isMedMountain: true,
+          tags: ['mountain', 'peak', chunkRegion.id]
+        });
       }
     }
   }
@@ -1684,32 +1850,138 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       // --- MOUNTAIN, ROCK, PEAK, CRAG, HILL & CLIFF SCATTER ---
       else if (terrain === 'azure_mountain' || terrain.includes('mountain') || terrain.includes('crag') || terrain.includes('peak') || terrain === 'cliff' || terrain === 'hill' || terrain.includes('canyon') || region.id === 'ore_teeth_range') {
         if (roll < 0.45) {
-          const candidateRocks = assetBindings.natureScatters.rocks.filter(r =>
-            !r.biomes || r.biomes.includes(region.id) || r.biomes.includes('mountain') || r.biomes.includes('ore_teeth_range')
-          );
-          const candidateFlora = [
-            assetBindings.natureScatters.trees.find(t => t.defId.includes('pine_ancient')) || assetBindings.natureScatters.trees[2],
-            assetBindings.natureScatters.trees.find(t => t.defId.includes('twisted_juniper')) || assetBindings.natureScatters.trees[1],
-            ...assetBindings.natureScatters.trees.filter(t => t.defId.startsWith('tree_dead_wood_')),
-            ...(assetBindings.natureScatters.shrubs || []).filter(s => s.biomes && (s.biomes.includes('mountain') || s.biomes.includes('ore_teeth_range')))
-          ].filter(item => item && !isDefForbiddenInRegion(item.defId, region.id));
-          const pool = [...candidateRocks, ...candidateFlora];
-          const startIdx = Math.floor(rand() * pool.length);
-          const maxPoolTries = Math.min(3, pool.length);
-          for (let ri = 0; ri < maxPoolTries; ri++) {
-            const rDef = pool[(startIdx + ri) % pool.length];
-            if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getLocalTile, false, rDef.defId, objects)) {
+          const isMountainRegion = [
+            'azure_mountain_range',
+            'godthunder_peaks',
+            'western_gorge_labyrinth',
+            'hermit_highlands',
+            'lava_spine',
+            'sword_gorge',
+            'ore_teeth_range'
+          ].includes(region.id) || terrain === 'azure_mountain' || terrain.includes('mountain') || terrain.includes('peak') || terrain === 'cliff';
+
+          // Separate flora scatter from true mountain/rock scatter
+          const floraRoll = rand();
+          if (floraRoll < 0.20) {
+            // 20% natural flora in mountains (trees, alpine shrubs)
+            const candidateFlora = [
+              assetBindings.natureScatters.trees.find(t => t.defId.includes('pine_ancient')) || assetBindings.natureScatters.trees[2],
+              assetBindings.natureScatters.trees.find(t => t.defId.includes('twisted_juniper')) || assetBindings.natureScatters.trees[1],
+              ...assetBindings.natureScatters.trees.filter(t => t.defId.startsWith('tree_dead_wood_')),
+              ...(assetBindings.natureScatters.shrubs || []).filter(s => s.biomes && (s.biomes.includes('mountain') || s.biomes.includes('ore_teeth_range')))
+            ].filter(item => item && !isDefForbiddenInRegion(item.defId, region.id));
+
+            if (candidateFlora.length > 0) {
+              const fDef = candidateFlora[Math.floor(rand() * candidateFlora.length)];
+              if (canPlaceFootprint(x, y, fDef.cw, fDef.ch, occupiedGrid, getLocalTile, false, fDef.defId, objects)) {
+                const objId = `flora_${x}_${y}`;
+                markFootprintOccupied(x, y, fDef.cw, fDef.ch, occupiedGrid, objId, fDef.defId);
+                objects.push({
+                  id: objId,
+                  defId: fDef.defId,
+                  x,
+                  y,
+                  collision: fDef.collision,
+                  tags: ['flora', 'tree', region.id]
+                });
+              }
+            }
+          } else {
+            // 80% true mountain formations with Wuxia scale hierarchy (F9: >=50% >=4x2, >=15% >=6x3)
+            let mountainCandidate = null;
+            if (isMountainRegion) {
+              const sizeRoll = rand();
+              if (sizeRoll < 0.28) {
+                // Tier 1: Colossal & Large Mountains (>= 6x3)
+                const largePool = [
+                  { defId: 'mountain_L', cw: 6, ch: 4, collision: 'solid' },
+                  { defId: 'mountain_XL', cw: 10, ch: 6, collision: 'solid' },
+                  { defId: 'mountain_XXL', cw: 16, ch: 10, collision: 'solid' },
+                  { defId: 'mountain_range', cw: 24, ch: 8, collision: 'solid' }
+                ];
+                const candidate = largePool[Math.floor(rand() * largePool.length)];
+                if (canPlaceFootprint(x, y, candidate.cw, candidate.ch, occupiedGrid, getLocalTile, false, candidate.defId, objects)) {
+                  mountainCandidate = candidate;
+                }
+              } else if (sizeRoll < 0.78) {
+                // Tier 2: Medium Mountains (>= 4x2)
+                const medPool = [
+                  { defId: 'nature_karst_twin_peaks', cw: 4, ch: 2, collision: 'solid' },
+                  { defId: 'mt_rock_3x2', cw: 4, ch: 2, collision: 'solid' },
+                  { defId: 'mt_rock_4x3', cw: 5, ch: 3, collision: 'solid' }
+                ];
+                const candidate = medPool[Math.floor(rand() * medPool.length)];
+                if (canPlaceFootprint(x, y, candidate.cw, candidate.ch, occupiedGrid, getLocalTile, false, candidate.defId, objects)) {
+                  mountainCandidate = candidate;
+                }
+              }
+
+              // Fallback to small crags/rocks only if under quota (max 3 small rocks per chunk in mountain regions)
+              if (!mountainCandidate) {
+                const smallRockCount = objects.filter(o => o.isSmallRock).length;
+                if (smallRockCount < 3) {
+                  const smallRocks = assetBindings.natureScatters.rocks.filter(r =>
+                    !r.biomes || r.biomes.includes(region.id) || r.biomes.includes('mountain') || r.biomes.includes('ore_teeth_range')
+                  );
+                  if (smallRocks.length > 0) {
+                    const candidate = smallRocks[Math.floor(rand() * smallRocks.length)];
+                    if (canPlaceFootprint(x, y, candidate.cw, candidate.ch, occupiedGrid, getLocalTile, false, candidate.defId, objects)) {
+                      mountainCandidate = candidate;
+                      mountainCandidate.isSmall = true;
+                    }
+                  }
+                } else {
+                  // When small rock quota is full, place mountain flora/pine instead of more small rocks
+                  const candidateFlora = [
+                    ...assetBindings.natureScatters.trees.filter(t => t.biomes && (t.biomes.includes('mountain') || t.biomes.includes('frost') || t.biomes.includes('ore_teeth_range'))),
+                    ...(assetBindings.natureScatters.shrubs || []).filter(s => s.biomes && (s.biomes.includes('mountain') || s.biomes.includes('ore_teeth_range')))
+                  ].filter(item => item && !isDefForbiddenInRegion(item.defId, region.id));
+
+                  if (candidateFlora.length > 0) {
+                    const fDef = candidateFlora[Math.floor(rand() * candidateFlora.length)];
+                    if (canPlaceFootprint(x, y, fDef.cw, fDef.ch, occupiedGrid, getLocalTile, false, fDef.defId, objects)) {
+                      const objId = `flora_${x}_${y}`;
+                      markFootprintOccupied(x, y, fDef.cw, fDef.ch, occupiedGrid, objId, fDef.defId);
+                      objects.push({
+                        id: objId,
+                        defId: fDef.defId,
+                        x,
+                        y,
+                        collision: fDef.collision,
+                        tags: ['flora', 'tree', region.id]
+                      });
+                    }
+                  }
+                }
+              }
+            } else {
+              // Non-mountain regions: small crags only
+              const candidateRocks = assetBindings.natureScatters.rocks.filter(r =>
+                !r.biomes || r.biomes.includes(region.id) || r.biomes.includes('mountain') || r.biomes.includes('ore_teeth_range')
+              );
+              if (candidateRocks.length > 0) {
+                const candidate = candidateRocks[Math.floor(rand() * candidateRocks.length)];
+                if (canPlaceFootprint(x, y, candidate.cw, candidate.ch, occupiedGrid, getLocalTile, false, candidate.defId, objects)) {
+                  mountainCandidate = candidate;
+                }
+              }
+            }
+
+            if (mountainCandidate) {
+              const isSmall = mountainCandidate.isSmall || (mountainCandidate.cw < 4 && mountainCandidate.ch < 2);
               const objId = `mountain_${x}_${y}`;
-              markFootprintOccupied(x, y, rDef.cw, rDef.ch, occupiedGrid, objId, rDef.defId);
+              markFootprintOccupied(x, y, mountainCandidate.cw, mountainCandidate.ch, occupiedGrid, objId, mountainCandidate.defId);
               objects.push({
                 id: objId,
-                defId: rDef.defId,
+                defId: mountainCandidate.defId,
                 x,
                 y,
-                collision: rDef.collision,
-                tags: ['mountain', 'barrier', region.id]
+                cw: mountainCandidate.cw,
+                ch: mountainCandidate.ch,
+                collision: mountainCandidate.collision || 'solid',
+                isSmallRock: isSmall,
+                tags: isSmall ? ['rock', region.id] : ['mountain', 'barrier', region.id]
               });
-              break;
             }
           }
         }
@@ -1858,18 +2130,27 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       // --- CANYON, CLIFF & GORGE ---
       else if (terrain === 'cliff' || terrain === 'canyon_floor' || region.id === 'sword_gorge' || region.id === 'western_gorge_labyrinth') {
         if (roll < 0.45) {
+          const gorgeFormations = [
+            { defId: 'mountain_L', cw: 6, ch: 4, collision: 'solid' },
+            { defId: 'mt_rock_4x3', cw: 5, ch: 3, collision: 'solid' },
+            { defId: 'mt_rock_3x2', cw: 4, ch: 2, collision: 'solid' },
+            { defId: 'nature_karst_twin_peaks', cw: 4, ch: 2, collision: 'solid' }
+          ];
           const gorgeRocks = assetBindings.natureScatters.rocks.filter(r =>
             r.biomes && (r.biomes.includes('sword_gorge') || r.biomes.includes('western_gorge_labyrinth') || r.biomes.includes('mountain'))
           );
           const gorgeTrees = assetBindings.natureScatters.trees.filter(t =>
             t.biomes && (t.biomes.includes('sword_gorge') || t.biomes.includes('mountain'))
           );
-          const pool = [...gorgeRocks, ...gorgeTrees];
+          const smallRockCount = objects.filter(o => o.isSmallRock).length;
+          const allowedRocks = smallRockCount < 3 ? gorgeRocks : [];
+          const pool = [...gorgeFormations, ...gorgeTrees, ...allowedRocks];
           const startIdx = Math.floor(rand() * pool.length);
-          const maxPoolTries = Math.min(3, pool.length);
+          const maxPoolTries = Math.min(4, pool.length);
           for (let pi = 0; pi < maxPoolTries; pi++) {
             const itemDef = pool[(startIdx + pi) % pool.length];
             if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getLocalTile, false, itemDef.defId, objects)) {
+              const isSmall = itemDef.cw < 4 && itemDef.ch < 2;
               const objId = `gorge_${x}_${y}`;
               markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
               objects.push({
@@ -1877,7 +2158,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
                 defId: itemDef.defId,
                 x,
                 y,
+                cw: itemDef.cw,
+                ch: itemDef.ch,
                 collision: itemDef.collision,
+                isSmallRock: isSmall,
                 tags: ['gorge', 'cliff', region.id]
               });
               break;

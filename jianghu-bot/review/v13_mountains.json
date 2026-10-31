@@ -1,0 +1,36 @@
+{
+  "totalMountains": 1587,
+  "sampleChunksCount": 107,
+  "countGe4x2": 1222,
+  "countGe6x3": 399,
+  "count1x1": 41,
+  "pctGe4x2": 77,
+  "pctGe6x3": 25.14,
+  "pct1x1": 2.58,
+  "sizeHistogram": {
+    "6x4": 206,
+    "16x10": 47,
+    "5x3": 266,
+    "4x2": 546,
+    "2x1": 189,
+    "10x6": 130,
+    "3x2": 53,
+    "1x1": 41,
+    "2x2": 70,
+    "24x8": 16,
+    "4x3": 11,
+    "4x1": 12
+  },
+  "gates": {
+    "G_MOUNTAIN_SIZE_AZURE": {
+      "target": ">= 50.0%",
+      "actual": "77.00%",
+      "pass": true
+    },
+    "G_MOUNTAIN_SIZE_XL": {
+      "target": ">= 15.0%",
+      "actual": "25.14%",
+      "pass": true
+    }
+  }
+}
