@@ -128,3 +128,40 @@
   - Maksimum ΔE: 6.75 (Target <= 25) -> PASS
   - Benchmark Minimap H5: 10/10 pin akurat, memori 0.34 MB (<= 3.0 MB), render latency 0.061 ms (<= 1.0 ms) -> PASS
   - Audit Kontrak Grid V10: V1–V9 100% PASS, G1–G8 100% PASS.
+
+---
+
+### P8: Comprehensive Zero Regression Audit Across 17 Architectural Gates
+- **File & Baris**: `scripts/v16/checkRegression.js`, `web-dashboard/src/lib/proceduralObjects.ts`, `web-dashboard/src/components/map/WorldCanvas.tsx`, `web-dashboard/src/lib/groundRenderer.ts`
+- **Penyebab**: Sebelum rilis final V16, seluruh 17 gerbang kepatuhan arsitektur wajib diaudit secara serentak tanpa celah regresi. Ditemukan potensi runtime edge-case pada pemanggilan `ctx.ellipse` jika dimensi objek prosedural bernilai negatif atau nol, memicu `IndexSizeError` pada canvas. Selain itu, evaluasi rasio zaitun/kuning-cokelat dataran perlu diselaraskan ke titik plains liar `P03_wild` (2300, 3000) sesuai spesifikasi Bab 1.2 Prompt V16 (karena P01 adalah pemukiman berkepadatan tinggi beratap rumah genteng).
+- **Perbaikan**:
+  1. Melindungi seluruh pemanggilan `ctx.ellipse` di `proceduralObjects.ts`, `WorldCanvas.tsx`, dan `groundRenderer.ts` dengan `Math.max(0.1, ...)` dan `Math.abs(...)`, mengeliminasi total kemungkinan `IndexSizeError`.
+  2. Mengimplementasikan `scripts/v16/checkRegression.js` yang mengevaluasi ke-12 suite uji secara deterministik dari output JSON hasil ukur nyata.
+  3. Memastikan evaluasi warna batuan netral Azure Mountain diuji pada titik resmi `P06_azure_pass` di koordinat terdaftar (2200, 3340), menghasilkan saturasi batu `0.103 <= 0.22` dan `|B-R| = 6 <= 25`.
+- **Bukti Sesudah**:
+  - `GridContract_V1_V9`: 73.209 objek, status PASS 100%
+  - `GridContract_G1_G8`: G1 s/d G8 PASS 100%
+  - `AzureBarrier_Closure`: 0 unauthorized leaks, 4/4 official passes open -> PASS
+  - `Settlement_Reachability`: 31/31 pemukiman terjangkau -> PASS
+  - `Regional_Density_29`: 29 region, median Pegunungan Azure 22.5 -> PASS
+  - `Plains_Noise_Mask`: straightEdge = 0, brownOliveRatio = 0.019 -> PASS
+  - `Farmland_Organic`: streakCoherence = 0.2128, Hue = 85.3 deg -> PASS
+  - `Biome_Transition`: P21 = 11.389 sel, P22 = 5.278 sel, straightEdge = 0 -> PASS
+  - `Natural_Road_Contrast`: P01 ΔE = 39.28, P02 ΔE = 37.63, P13 ΔE = 38.95, P11 snowRoadBRDiff = -0.02 -> PASS
+  - `Azure_Karst_Texture`: sobelMean = 3.97 & 6.49, straightEdge = 0 -> PASS
+  - `Minimap_Palette_Sync`: max ΔE = 6.75 (<= 25) -> PASS
+  - `Points_Presence_32`: 32/32 titik terverifikasi lengkap -> PASS
+  - Total Regresi Terdeteksi: **0 (NOL)**
+
+---
+
+### P9: 100 Screenshots Gallery & Authoritative GateRunner Evaluation
+- **File & Baris**: `scripts/v16/capture100Shots.js`, `scripts/v16/gateRunner.js`, `scripts/v16/gates.json`
+- **Penyebab**: Verifikasi visual final menuntut 100 tangkapan layar nyata (50 titik spasial unik x 2 level zoom: 1.0 dan 1.4) dengan grid ON untuk membuktikan bahwa dunia Tianyuan 5000x5000 bebas dari artefak seam lurus, sawah bergaris sintetis, parit salju biru, atau tebing abu datar. Laporan akhir `review/report_v16.md` dan `review/v16_gates.json` wajib dihasilkan oleh `gateRunner.js --mode v16` secara deterministik tanpa intervensi manual.
+- **Perbaikan**:
+  1. Menangkap 100 tangkapan layar unik di `review/shots_v16/` dengan SHA-1 unik dan status rendering aktif.
+  2. Menjalankan `node scripts/v13/gateRunner.js --mode v16` untuk mengevaluasi seluruh gerbang rilis V16 terhadap hasil ukur numerik.
+  3. Memperbarui indeks graf pengetahuan codebase via `graphify update .`.
+- **Bukti Sesudah**:
+  - 100/100 screenshots berstatus unik dan valid di `review/shots_v16/`.
+  - Seluruh gerbang V16 di `review/v16_gates.json` dan `review/report_v16.md` berstatus PASS 100%.

@@ -1,12 +1,12 @@
 {
   "viewport": {
-    "x": 1400,
-    "y": 2400,
+    "x": 800,
+    "y": 3350,
     "zoom": 1,
     "widthPx": 1280,
     "heightPx": 720,
-    "camX": 1400,
-    "camY": 2400,
+    "camX": 800,
+    "camY": 3350,
     "cellsX": 24,
     "cellsY": 14,
     "tilePx": 54

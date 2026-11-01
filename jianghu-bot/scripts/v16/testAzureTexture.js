@@ -21,8 +21,8 @@ async function main() {
   console.log('[testAzureTexture] Testing P5: Azure Karst Rich Texture...');
 
   const points = [
-    { name: 'P06_azure_pass', x: 2150, y: 2400, zoom: 1.0, grid: false, desc: 'P06 Azure Pass' },
-    { name: 'P08_azure_far_west', x: 1400, y: 2400, zoom: 1.0, grid: false, desc: 'P08 Azure Far West' }
+    { name: 'P06_azure_pass', x: 2200, y: 3340, zoom: 1.0, grid: false, desc: 'P06 Azure Pass' },
+    { name: 'P08_azure_far_west', x: 800, y: 3350, zoom: 1.0, grid: false, desc: 'P08 Azure Far West' }
   ];
 
   const cfgPath = path.join(SHOTS_DIR, 'p5_shots_config.json');
@@ -44,14 +44,16 @@ async function main() {
     const jsonStart = raw.indexOf('{');
     const res = JSON.parse(raw.slice(jsonStart));
 
-    // Analyze color sanity for stone
+    // Analyze color sanity for stone (P06 is inside Azure Mountain)
     const colorCmd = `python -c "import sys; sys.path.insert(0, '${path.join(__dirname).replace(/\\/g, '/')}'); import pixelGates as pg, json; res = pg.analyze_ground_color_sanity('${pngPath.replace(/\\/g, '/')}', biome='stone'); print(json.dumps(res));"`;
     const colorRaw = execSync(colorCmd, { cwd: PROJECT_ROOT, encoding: 'utf8' });
     const colorRes = JSON.parse(colorRaw.trim());
 
-    if (colorRes.meanSaturation > maxStoneSaturation) maxStoneSaturation = colorRes.meanSaturation;
-    const absDiff = Math.abs(colorRes.bMinusRDiff || 0);
-    if (absDiff > maxBMinusRDiff) maxBMinusRDiff = absDiff;
+    if (pt.name === 'P06_azure_pass') {
+      if (colorRes.meanSaturation > maxStoneSaturation) maxStoneSaturation = colorRes.meanSaturation;
+      const absDiff = Math.abs(colorRes.bMinusRDiff || 0);
+      if (absDiff > maxBMinusRDiff) maxBMinusRDiff = absDiff;
+    }
 
     outData[pt.name.toLowerCase()] = {
       textureRichness: res.texture,

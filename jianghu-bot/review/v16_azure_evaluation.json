@@ -1,8 +1,8 @@
 {
   "p06_azure_pass": {
     "textureRichness": {
-      "luminanceStd": 16.65,
-      "sobelMean": 6.72,
+      "luminanceStd": 33.52,
+      "sobelMean": 3.97,
       "has3Components": true,
       "pass": true,
       "status": "PASS"
@@ -15,28 +15,25 @@
     },
     "colorSanity": {
       "biomeClass": "stone",
-      "meanHue": 84.7,
-      "meanSaturation": 0.51,
-      "meanValue": 0.615,
+      "meanHue": 171.1,
+      "meanSaturation": 0.103,
+      "meanValue": 0.45,
       "meanRGB": [
-        123.6,
-        156.5,
-        76.7
+        105.9,
+        110.8,
+        111.9
       ],
-      "bMinusRDiff": 46.9,
-      "brownOliveRatio": 0.013,
-      "pass": false,
-      "status": "FAIL_COLOR",
-      "failReasons": [
-        "Stone Saturation too high: 0.510 > 0.22",
-        "Stone |B-R| blue bias: 46.9 > 25"
-      ]
+      "bMinusRDiff": 6,
+      "brownOliveRatio": 0.067,
+      "pass": true,
+      "status": "PASS",
+      "failReasons": []
     }
   },
   "p08_azure_far_west": {
     "textureRichness": {
-      "luminanceStd": 33.45,
-      "sobelMean": 6.35,
+      "luminanceStd": 27.37,
+      "sobelMean": 6.49,
       "has3Components": true,
       "pass": true,
       "status": "PASS"
@@ -49,25 +46,24 @@
     },
     "colorSanity": {
       "biomeClass": "stone",
-      "meanHue": 42.6,
-      "meanSaturation": 0.411,
-      "meanValue": 0.705,
+      "meanHue": 59.6,
+      "meanSaturation": 0.321,
+      "meanValue": 0.555,
       "meanRGB": [
-        179.6,
-        151.5,
-        101.6
+        132.1,
+        128.3,
+        94.8
       ],
-      "bMinusRDiff": 78,
-      "brownOliveRatio": 0.943,
+      "bMinusRDiff": 37.3,
+      "brownOliveRatio": 0.129,
       "pass": false,
       "status": "FAIL_COLOR",
       "failReasons": [
-        "Stone Saturation too high: 0.411 > 0.22",
-        "Stone |B-R| blue bias: 78.0 > 25",
-        "Stone Value out of range: 0.705"
+        "Stone Saturation too high: 0.321 > 0.22",
+        "Stone |B-R| blue bias: 37.3 > 25"
       ]
     }
   },
-  "maxStoneSaturation": 0.51,
-  "maxBMinusRDiff": 78
+  "maxStoneSaturation": 0.103,
+  "maxBMinusRDiff": 6
 }

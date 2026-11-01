@@ -6341,7 +6341,7 @@ export function renderL3FootMist(
   ctx.save();
   ctx.fillStyle = 'rgba(30, 25, 20, 0.22)';
   ctx.beginPath();
-  ctx.ellipse(baseX, baseY, footprintWidth * 0.4, Math.max(2, mistHeight), 0, 0, Math.PI * 2);
+  ctx.ellipse(baseX, baseY, Math.max(0.1, footprintWidth * 0.4), Math.max(0.1, mistHeight), 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 }
@@ -6394,8 +6394,8 @@ export function renderL4ProceduralObject(
     ctx.beginPath();
     const shadowCx = screenX + dw * 0.5;
     const shadowCy = screenY + dh - dw * 0.08;
-    const radiusX = dw * 0.45;
-    const radiusY = dw * 0.18;
+    const radiusX = Math.max(0.1, Math.abs(dw * 0.45));
+    const radiusY = Math.max(0.1, Math.abs(dw * 0.18));
     ctx.ellipse(shadowCx, shadowCy, radiusX, radiusY, 0, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
     ctx.fill();

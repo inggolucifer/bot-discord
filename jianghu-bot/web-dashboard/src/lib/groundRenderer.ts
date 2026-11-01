@@ -625,7 +625,7 @@ export function drawSoftBlobRoadPath(
 
   if (!hasN && !hasS && !hasW && !hasE) {
     // Single isolated stepping stone / natural patch
-    ctx.ellipse(cx + undulateX, cy + undulateY, hw * 0.85, hw * 0.75, 0.2, 0, Math.PI * 2);
+    ctx.ellipse(cx + undulateX, cy + undulateY, Math.max(0.1, hw * 0.85), Math.max(0.1, hw * 0.75), 0.2, 0, Math.PI * 2);
     ctx.closePath();
     ctx.fill();
     return;
@@ -1582,7 +1582,7 @@ function compositeAzureKarst(
     const isMoss = (seed % 3 === 0);
     ctx.fillStyle = isMoss ? 'rgba(72, 105, 68, 0.22)' : 'rgba(125, 95, 75, 0.18)';
     ctx.beginPath();
-    ctx.ellipse(px, py, rw, rh, 0.2, 0, Math.PI * 2);
+    ctx.ellipse(px, py, Math.max(0.1, rw), Math.max(0.1, rh), 0.2, 0, Math.PI * 2);
     ctx.fill();
   }
 

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-01T11:18:00.509Z",
+  "timestamp": "2026-11-01T11:31:50.805Z",
   "regressionsCount": 0,
   "regressions": [],
   "checks": {
@@ -58,8 +58,8 @@
     },
     "Azure_Karst_Texture": {
       "pass": true,
-      "p06_sobelMean": 6.72,
-      "p08_sobelMean": 6.35,
+      "p06_sobelMean": 3.97,
+      "p08_sobelMean": 6.49,
       "p06_straightEdgeCount": 0,
       "p08_straightEdgeCount": 0
     },

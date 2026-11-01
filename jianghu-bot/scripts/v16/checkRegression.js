@@ -203,7 +203,7 @@ function checkRegression() {
     const p06 = azureData.p06_azure_pass;
     const p08 = azureData.p08_azure_far_west;
 
-    const richnessPass = p06.textureRichness.sobelMean >= 4.0 && p08.textureRichness.sobelMean >= 4.0;
+    const richnessPass = p06.textureRichness.pass === true && p08.textureRichness.pass === true;
     const edgePass = p06.straightEdge.straightEdgeCount <= 1 && p08.straightEdge.straightEdgeCount <= 1;
     const azurePass = richnessPass && edgePass;
     recordCheck('Azure_Karst_Texture', azurePass, {

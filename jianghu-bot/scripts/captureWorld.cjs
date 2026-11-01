@@ -109,7 +109,7 @@ server.listen(3001, async () => {
 
     const page = await br.newPage({ viewport: { width: 1280, height: 720 } });
     page.on('pageerror', (err) => {
-      console.error('  [pageerror]', err.message);
+      console.error('  [pageerror]', err.message, err.stack);
     });
     page.on('console', (m) => {
       const t = m.text();

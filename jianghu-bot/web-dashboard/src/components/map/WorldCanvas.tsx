@@ -1112,7 +1112,7 @@ export default function WorldCanvas({
               ctx.save();
               ctx.fillStyle = `rgba(10, 14, 20, ${shadowAlpha})`;
               ctx.beginPath();
-              ctx.ellipse(shadowCenterX, shadowCenterY, shadowW / 2, shadowH / 2, 0, 0, Math.PI * 2);
+              ctx.ellipse(shadowCenterX, shadowCenterY, Math.max(0.1, shadowW / 2), Math.max(0.1, shadowH / 2), 0, 0, Math.PI * 2);
               ctx.fill();
               ctx.restore();
             }
@@ -1215,7 +1215,7 @@ export default function WorldCanvas({
           // Player Footprint Shadow
           ctx.fillStyle = 'rgba(10, 14, 20, 0.25)';
           ctx.beginPath();
-          ctx.ellipse(footX, footY - currentTileSize * 0.08, pw * 0.45, currentTileSize * 0.12, 0, 0, Math.PI * 2);
+          ctx.ellipse(footX, footY - currentTileSize * 0.08, Math.max(0.1, pw * 0.45), Math.max(0.1, currentTileSize * 0.12), 0, 0, Math.PI * 2);
           ctx.fill();
 
           if (loadedImages.sprites?.player_default) {
@@ -2015,7 +2015,7 @@ export default function WorldCanvas({
             ctx.save();
             ctx.translate(p.x, p.y);
             ctx.rotate(p.rot);
-            ctx.ellipse(0, 0, p.size * 1.5, p.size * 0.75, 0, 0, Math.PI * 2);
+            ctx.ellipse(0, 0, Math.max(0.1, p.size * 1.5), Math.max(0.1, p.size * 0.75), 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
           }

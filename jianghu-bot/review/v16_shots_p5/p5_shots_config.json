@@ -1,16 +1,16 @@
 [
   {
     "name": "P06_azure_pass",
-    "x": 2150,
-    "y": 2400,
+    "x": 2200,
+    "y": 3340,
     "zoom": 1,
     "grid": false,
     "desc": "P06 Azure Pass"
   },
   {
     "name": "P08_azure_far_west",
-    "x": 1400,
-    "y": 2400,
+    "x": 800,
+    "y": 3350,
     "zoom": 1,
     "grid": false,
     "desc": "P08 Azure Far West"

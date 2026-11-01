@@ -1,0 +1,436 @@
+{
+  "viewport": {
+    "x": 2199,
+    "y": 3328,
+    "zoom": 1,
+    "widthPx": 1280,
+    "heightPx": 720,
+    "camX": 2199,
+    "camY": 3328,
+    "cellsX": 24,
+    "cellsY": 14,
+    "tilePx": 54
+  },
+  "roadCells": [
+    {
+      "gx": 2199,
+      "gy": 3321,
+      "px": 640,
+      "py": -18,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3321,
+      "px": 694,
+      "py": -18,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3321,
+      "px": 748,
+      "py": -18,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3322,
+      "px": 640,
+      "py": 36,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3322,
+      "px": 694,
+      "py": 36,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3322,
+      "px": 748,
+      "py": 36,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3323,
+      "px": 640,
+      "py": 90,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3323,
+      "px": 694,
+      "py": 90,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3323,
+      "px": 748,
+      "py": 90,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3324,
+      "px": 640,
+      "py": 144,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3324,
+      "px": 694,
+      "py": 144,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3324,
+      "px": 748,
+      "py": 144,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3325,
+      "px": 640,
+      "py": 198,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3325,
+      "px": 694,
+      "py": 198,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3325,
+      "px": 748,
+      "py": 198,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3326,
+      "px": 640,
+      "py": 252,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3326,
+      "px": 694,
+      "py": 252,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3326,
+      "px": 748,
+      "py": 252,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3327,
+      "px": 640,
+      "py": 306,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3327,
+      "px": 694,
+      "py": 306,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3327,
+      "px": 748,
+      "py": 306,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3328,
+      "px": 640,
+      "py": 360,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3328,
+      "px": 694,
+      "py": 360,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3328,
+      "px": 748,
+      "py": 360,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3329,
+      "px": 640,
+      "py": 414,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3329,
+      "px": 694,
+      "py": 414,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3329,
+      "px": 748,
+      "py": 414,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3330,
+      "px": 640,
+      "py": 468,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3330,
+      "px": 694,
+      "py": 468,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3330,
+      "px": 748,
+      "py": 468,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3331,
+      "px": 640,
+      "py": 522,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3331,
+      "px": 694,
+      "py": 522,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3331,
+      "px": 748,
+      "py": 522,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3332,
+      "px": 640,
+      "py": 576,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3332,
+      "px": 694,
+      "py": 576,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3332,
+      "px": 748,
+      "py": 576,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3333,
+      "px": 640,
+      "py": 630,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3333,
+      "px": 694,
+      "py": 630,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3333,
+      "px": 748,
+      "py": 630,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2199,
+      "gy": 3334,
+      "px": 640,
+      "py": 684,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2200,
+      "gy": 3334,
+      "px": 694,
+      "py": 684,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    },
+    {
+      "gx": 2201,
+      "gy": 3334,
+      "px": 748,
+      "py": 684,
+      "widthPx": 54,
+      "heightPx": 54,
+      "biome": "road",
+      "orientation": "auto"
+    }
+  ]
+}
