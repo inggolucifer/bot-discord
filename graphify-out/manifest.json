@@ -2880,9 +2880,9 @@
     "semantic_hash": "74ac0d15785cb7888eb327d8123d656e"
   },
   "jianghu-bot/utils/objectScatter.js": {
-    "mtime": 1793456650.8051283,
-    "seen": 1793457066.7329152,
-    "ast_hash": "75cf00fd725e9746e61d5d8eb1564cb5",
+    "mtime": 1793491966.2521265,
+    "seen": 1793496480.9958687,
+    "ast_hash": "212d55c32dc0b2160e71be9d167cd170",
     "semantic_hash": ""
   },
   "jianghu-bot/utils/permissions.js": {
@@ -3534,9 +3534,9 @@
     "semantic_hash": "ede6cf79c1f6c5e5f764453985b62ac7"
   },
   "jianghu-bot/web-dashboard/public/assets/ground/ground-manifest.json": {
-    "mtime": 1793102143.7931862,
-    "seen": 1793116355.8552263,
-    "ast_hash": "c75953e6ba558f97d73f493ce46b0d61",
+    "mtime": 1793491231.5472555,
+    "seen": 1793496481.050817,
+    "ast_hash": "e51523c1cded49fa3b9959346f481de3",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/public/manifest.json": {
@@ -4080,9 +4080,9 @@
     "semantic_hash": "2a6fb49994376fa1e06d7dca57b4ca3e"
   },
   "jianghu-bot/web-dashboard/src/components/map/WorldCanvas.tsx": {
-    "mtime": 1793454888.0947747,
-    "seen": 1793457066.8144193,
-    "ast_hash": "ce495b43e1c63466f2c03b1fc6a972d7",
+    "mtime": 1793485169.5313601,
+    "seen": 1793496481.0958972,
+    "ast_hash": "d1a9a1f670add9c210d8602c40a79411",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/src/components/map/WorldMapLoadingScreen.tsx": {
@@ -4344,10 +4344,10 @@
     "semantic_hash": "1961ab052c9613a36c139c8f82d3fbcc"
   },
   "jianghu-bot/web-dashboard/src/config/canonicalRegions.ts": {
-    "mtime": 1791529710.108675,
-    "seen": 1792953492.8937204,
-    "ast_hash": "fd90cfeda4cafb694b297b7a8b9248d7",
-    "semantic_hash": "fd90cfeda4cafb694b297b7a8b9248d7"
+    "mtime": 1793487190.4059992,
+    "seen": 1793496481.1200995,
+    "ast_hash": "53d19dd1765319614cb87f884dc4c473",
+    "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/src/config/globalAssets.ts": {
     "mtime": 1792577993.6010041,
@@ -4404,15 +4404,15 @@
     "semantic_hash": "87a8cb1f4fc7a003ef9639a6df055a22"
   },
   "jianghu-bot/web-dashboard/src/lib/groundRenderer.ts": {
-    "mtime": 1793453127.081515,
-    "seen": 1793457066.8413947,
-    "ast_hash": "29bdd7003e417a9637f0a86572d77204",
+    "mtime": 1793491188.5320413,
+    "seen": 1793496481.126196,
+    "ast_hash": "a2269f3d9afe63400ab84741b1ea5ae4",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/src/lib/groundTextures.ts": {
-    "mtime": 1793452486.6482382,
-    "seen": 1793457066.8413947,
-    "ast_hash": "71123e6a7b77bc08e0fed1dffb4a44cd",
+    "mtime": 1793491177.5872154,
+    "seen": 1793496481.126196,
+    "ast_hash": "701b5fc6f9cefc7b060b8f744e8708b4",
     "semantic_hash": ""
   },
   "jianghu-bot/web-dashboard/src/lib/kungfu.ts": {
@@ -4770,9 +4770,9 @@
     "semantic_hash": "5056aa0265d0478f1a097f415c2e14fe"
   },
   "jianghu-bot/world-data/regions.json": {
-    "mtime": 1793103905.4157069,
-    "seen": 1793116355.914172,
-    "ast_hash": "6c1bdd50c673f8b096b981e19981d754",
+    "mtime": 1793487185.563295,
+    "seen": 1793496481.1906042,
+    "ast_hash": "487d89469af5640bf0eee41e3676ddf4",
     "semantic_hash": ""
   },
   "jianghu-bot/world-data/road-donghai.json": {
@@ -9630,9 +9630,9 @@
     "semantic_hash": ""
   },
   "jianghu-bot/scripts/captureWorld.cjs": {
-    "mtime": 1793176242.5974839,
-    "seen": 1793178487.9025238,
-    "ast_hash": "39bbd700ffa5b349d6ddffb87b29b9d1",
+    "mtime": 1793493219.0527487,
+    "seen": 1793496480.818211,
+    "ast_hash": "16132a9b6a06e915f031098d999eba82",
     "semantic_hash": ""
   },
   "jianghu-bot/scripts/computeBBox.py": {
@@ -9972,9 +9972,9 @@
     "semantic_hash": ""
   },
   "jianghu-bot/scripts/v11/measureViewport.js": {
-    "mtime": 1793115801.3091009,
-    "seen": 1793116355.775304,
-    "ast_hash": "3ed37f72a12b47e14b4bf1d88eeabfb5",
+    "mtime": 1793482367.2099347,
+    "seen": 1793496480.9260204,
+    "ast_hash": "ed5dfb38af9e111f667dee775b2ad489",
     "semantic_hash": ""
   },
   "jianghu-bot/scripts/v11/probeSpriteDiscs.py": {
@@ -13170,15 +13170,15 @@
     "semantic_hash": ""
   },
   "jianghu-bot/review/grid_contract_summary.json": {
-    "mtime": 1793456622.750855,
-    "seen": 1793457066.5316732,
-    "ast_hash": "e02f6a1ffb8faacc8d61720712cd6e89",
+    "mtime": 1793492419.8233473,
+    "seen": 1793496480.7518551,
+    "ast_hash": "796a448d5d456d148dd9c445b59808d2",
     "semantic_hash": ""
   },
   "jianghu-bot/review/v10_audit_summary.json": {
-    "mtime": 1793456706.598346,
-    "seen": 1793457066.5326705,
-    "ast_hash": "6998a1319a005c99f69fdedbd0fc6d04",
+    "mtime": 1793492388.4786158,
+    "seen": 1793496480.7528548,
+    "ast_hash": "6fd397251b4ab22e85ac33b361893f68",
     "semantic_hash": ""
   },
   "jianghu-bot/review/v13_barrier_closure.json": {
@@ -13278,9 +13278,9 @@
     "semantic_hash": ""
   },
   "jianghu-bot/scripts/v13/gateRunner.js": {
-    "mtime": 1793422397.2752178,
-    "seen": 1793441704.4084785,
-    "ast_hash": "d49e8283047d7b9ade0dece8dbe06969",
+    "mtime": 1793492761.5226643,
+    "seen": 1793496480.9310157,
+    "ast_hash": "3b92a69525af0adbd7b2da60d9fc2b97",
     "semantic_hash": ""
   },
   "jianghu-bot/scripts/v13/gates.json": {
@@ -13404,8 +13404,8 @@
     "semantic_hash": ""
   },
   "jianghu-bot/review/v14_barrier_closure.json": {
-    "mtime": 1793456684.5465207,
-    "seen": 1793457066.5396643,
+    "mtime": 1793492259.3672955,
+    "seen": 1793496480.7638445,
     "ast_hash": "fbaae4d855e256b335a98bc187c0d9ea",
     "semantic_hash": ""
   },
@@ -13677,6 +13677,1506 @@
     "mtime": 1793450458.444087,
     "seen": 1793457067.2058082,
     "ast_hash": "15d047a267712c196ab193f005b41dbf",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_01_caravan_z10.json": {
+    "mtime": 1793493698.513765,
+    "seen": 1793496480.7518551,
+    "ast_hash": "79d5ec3c4bf4291f68815c420090ed58",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_01_caravan_z14.json": {
+    "mtime": 1793493735.677491,
+    "seen": 1793496480.7518551,
+    "ast_hash": "79d5ec3c4bf4291f68815c420090ed58",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_02_west_barrier_z10.json": {
+    "mtime": 1793493760.8501885,
+    "seen": 1793496480.7518551,
+    "ast_hash": "1a91fce47968a231d603411c61f91760",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_02_west_barrier_z14.json": {
+    "mtime": 1793493791.5887997,
+    "seen": 1793496480.7518551,
+    "ast_hash": "1a91fce47968a231d603411c61f91760",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_03_north_pass_z10.json": {
+    "mtime": 1793493817.6247215,
+    "seen": 1793496480.7518551,
+    "ast_hash": "3ea880ce578bbd94c82f53ed4578aab7",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_03_north_pass_z14.json": {
+    "mtime": 1793493843.3374398,
+    "seen": 1793496480.7518551,
+    "ast_hash": "3ea880ce578bbd94c82f53ed4578aab7",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_04_mist_pass_z10.json": {
+    "mtime": 1793493869.4040105,
+    "seen": 1793496480.7518551,
+    "ast_hash": "9499ae181d01129fd6fb199edf447075",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_04_mist_pass_z14.json": {
+    "mtime": 1793493894.6912699,
+    "seen": 1793496480.7518551,
+    "ast_hash": "9499ae181d01129fd6fb199edf447075",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_05_sword_pass_z10.json": {
+    "mtime": 1793493920.1164832,
+    "seen": 1793496480.7518551,
+    "ast_hash": "970566da023115c3524f35d29465b0ac",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_05_sword_pass_z14.json": {
+    "mtime": 1793493944.0631888,
+    "seen": 1793496480.7518551,
+    "ast_hash": "970566da023115c3524f35d29465b0ac",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_01_plains_delta_z10.json": {
+    "mtime": 1793494300.217793,
+    "seen": 1793496480.7518551,
+    "ast_hash": "4d98b9a2e555a124454266ae140f6126",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_01_plains_delta_z14.json": {
+    "mtime": 1793494337.5040526,
+    "seen": 1793496480.7518551,
+    "ast_hash": "4d98b9a2e555a124454266ae140f6126",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_02_plains_prairies_z10.json": {
+    "mtime": 1793494377.3946464,
+    "seen": 1793496480.7518551,
+    "ast_hash": "0999ca073bc2f11a337c3b0911f3ce17",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_02_plains_prairies_z14.json": {
+    "mtime": 1793494416.8714728,
+    "seen": 1793496480.7518551,
+    "ast_hash": "0999ca073bc2f11a337c3b0911f3ce17",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_03_desert_steppe_z10.json": {
+    "mtime": 1793494439.8502505,
+    "seen": 1793496480.7518551,
+    "ast_hash": "796f5756825600472702eea88f1d7f9a",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_03_desert_steppe_z14.json": {
+    "mtime": 1793494462.604246,
+    "seen": 1793496480.7518551,
+    "ast_hash": "796f5756825600472702eea88f1d7f9a",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_04_azure_highlands_z10.json": {
+    "mtime": 1793494482.8043876,
+    "seen": 1793496480.7518551,
+    "ast_hash": "e966fa2c58e14ecca2e7db19101ff49c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_04_azure_highlands_z14.json": {
+    "mtime": 1793494505.304659,
+    "seen": 1793496480.7518551,
+    "ast_hash": "e966fa2c58e14ecca2e7db19101ff49c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_05_frost_tundra_z10.json": {
+    "mtime": 1793494530.9699419,
+    "seen": 1793496480.7518551,
+    "ast_hash": "60fe5e406079fb2fae888f1ccf2a90c0",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_05_frost_tundra_z14.json": {
+    "mtime": 1793494559.7333612,
+    "seen": 1793496480.7518551,
+    "ast_hash": "60fe5e406079fb2fae888f1ccf2a90c0",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_06_coast_sea_z10.json": {
+    "mtime": 1793494606.3696733,
+    "seen": 1793496480.7518551,
+    "ast_hash": "c7172961faa38065e6638720c5f3a009",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_06_coast_sea_z14.json": {
+    "mtime": 1793494643.9771054,
+    "seen": 1793496480.7518551,
+    "ast_hash": "c7172961faa38065e6638720c5f3a009",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_01_xingcun_z10.json": {
+    "mtime": 1793492718.068771,
+    "seen": 1793496480.7518551,
+    "ast_hash": "4314025480d73cbd510cc71b68a7e09c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_01_xingcun_z14.json": {
+    "mtime": 1793492756.742664,
+    "seen": 1793496480.7518551,
+    "ast_hash": "4314025480d73cbd510cc71b68a7e09c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_02_xingcun_east_z10.json": {
+    "mtime": 1793492785.9567175,
+    "seen": 1793496480.7518551,
+    "ast_hash": "dbbc1628c6f5460ce89ce4cfbd02fc87",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_02_xingcun_east_z14.json": {
+    "mtime": 1793492812.6962147,
+    "seen": 1793496480.7518551,
+    "ast_hash": "dbbc1628c6f5460ce89ce4cfbd02fc87",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_03_wilderness_z10.json": {
+    "mtime": 1793492848.2390494,
+    "seen": 1793496480.7528548,
+    "ast_hash": "e059bbf4b349674a421fdfd4e1705910",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_03_wilderness_z14.json": {
+    "mtime": 1793492994.8993459,
+    "seen": 1793496480.7528548,
+    "ast_hash": "e059bbf4b349674a421fdfd4e1705910",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_04_xueshan_z10.json": {
+    "mtime": 1793493257.246628,
+    "seen": 1793496480.7528548,
+    "ast_hash": "cd55bcd34a3914491dc9e7081e16f869",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_04_xueshan_z14.json": {
+    "mtime": 1793493285.629633,
+    "seen": 1793496480.7528548,
+    "ast_hash": "cd55bcd34a3914491dc9e7081e16f869",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_05_azure_pass_z10.json": {
+    "mtime": 1793493334.6058047,
+    "seen": 1793496480.7528548,
+    "ast_hash": "0b7a84b2f8b1462a9ca025ec5184a11b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_05_azure_pass_z14.json": {
+    "mtime": 1793493376.887353,
+    "seen": 1793496480.7528548,
+    "ast_hash": "0b7a84b2f8b1462a9ca025ec5184a11b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_06_hanhai_z10.json": {
+    "mtime": 1793493420.2664876,
+    "seen": 1793496480.7528548,
+    "ast_hash": "784900c02133e828bc76edde8ca7adca",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_06_hanhai_z14.json": {
+    "mtime": 1793493494.2723732,
+    "seen": 1793496480.7528548,
+    "ast_hash": "784900c02133e828bc76edde8ca7adca",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_07_donghai_z10.json": {
+    "mtime": 1793493575.477391,
+    "seen": 1793496480.7528548,
+    "ast_hash": "6e8f898af12a95293be902dec2b9d6b4",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_07_donghai_z14.json": {
+    "mtime": 1793493649.6895697,
+    "seen": 1793496480.7528548,
+    "ast_hash": "6e8f898af12a95293be902dec2b9d6b4",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_01_xitong_city_z10.json": {
+    "mtime": 1793494685.1701715,
+    "seen": 1793496480.7528548,
+    "ast_hash": "1bde712a5e25df7c21bcb0459b9c582c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_01_xitong_city_z14.json": {
+    "mtime": 1793494724.0138817,
+    "seen": 1793496480.7528548,
+    "ast_hash": "1bde712a5e25df7c21bcb0459b9c582c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_02_fengyang_city_z10.json": {
+    "mtime": 1793494757.4391077,
+    "seen": 1793496480.7528548,
+    "ast_hash": "a8b4c0417c5daa9996e06bca20b583a9",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_02_fengyang_city_z14.json": {
+    "mtime": 1793494798.7346885,
+    "seen": 1793496480.7528548,
+    "ast_hash": "a8b4c0417c5daa9996e06bca20b583a9",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_03_jinling_city_z10.json": {
+    "mtime": 1793494834.9396055,
+    "seen": 1793496480.7528548,
+    "ast_hash": "f71fc904c024ff76520a09053a4cf122",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_03_jinling_city_z14.json": {
+    "mtime": 1793494873.119394,
+    "seen": 1793496480.7528548,
+    "ast_hash": "f71fc904c024ff76520a09053a4cf122",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_04_leiyin_town_z10.json": {
+    "mtime": 1793494933.0021386,
+    "seen": 1793496480.7528548,
+    "ast_hash": "371c067289934591c8ed494267a90f10",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_04_leiyin_town_z14.json": {
+    "mtime": 1793494975.4893687,
+    "seen": 1793496480.7528548,
+    "ast_hash": "371c067289934591c8ed494267a90f10",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_05_canghai_town_z10.json": {
+    "mtime": 1793495020.3335462,
+    "seen": 1793496480.7528548,
+    "ast_hash": "e65dfe2277542b149b34917b49a3a6e0",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_05_canghai_town_z14.json": {
+    "mtime": 1793495056.1448047,
+    "seen": 1793496480.7528548,
+    "ast_hash": "e65dfe2277542b149b34917b49a3a6e0",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_06_bamboo_village_z10.json": {
+    "mtime": 1793495081.6169388,
+    "seen": 1793496480.7528548,
+    "ast_hash": "c463a16476966b5acc84e60288786d14",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_06_bamboo_village_z14.json": {
+    "mtime": 1793495106.6121173,
+    "seen": 1793496480.7528548,
+    "ast_hash": "c463a16476966b5acc84e60288786d14",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_07_peach_orchard_z10.json": {
+    "mtime": 1793495153.1248095,
+    "seen": 1793496480.7528548,
+    "ast_hash": "f99f1b4a15f08a24ee94343bfbaef08e",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_07_peach_orchard_z14.json": {
+    "mtime": 1793495196.8893697,
+    "seen": 1793496480.7528548,
+    "ast_hash": "f99f1b4a15f08a24ee94343bfbaef08e",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_08_shadi_oasis_z10.json": {
+    "mtime": 1793495231.5764327,
+    "seen": 1793496480.7528548,
+    "ast_hash": "f11668e608bcbf07500e0ce5dfe17280",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_08_shadi_oasis_z14.json": {
+    "mtime": 1793495271.3453803,
+    "seen": 1793496480.7528548,
+    "ast_hash": "f11668e608bcbf07500e0ce5dfe17280",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_09_heiyan_village_z10.json": {
+    "mtime": 1793495310.752404,
+    "seen": 1793496480.7528548,
+    "ast_hash": "2b19a2df61fe800e049c23af1e167c10",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_09_heiyan_village_z14.json": {
+    "mtime": 1793495355.532642,
+    "seen": 1793496480.7528548,
+    "ast_hash": "2b19a2df61fe800e049c23af1e167c10",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_10_spirit_wood_sea_z10.json": {
+    "mtime": 1793495393.5555167,
+    "seen": 1793496480.7528548,
+    "ast_hash": "f2ee5ca1e1429e74ed04e66f30d78388",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_10_spirit_wood_sea_z14.json": {
+    "mtime": 1793495429.861155,
+    "seen": 1793496480.7528548,
+    "ast_hash": "f2ee5ca1e1429e74ed04e66f30d78388",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_11_godthunder_peaks_z10.json": {
+    "mtime": 1793495467.2377734,
+    "seen": 1793496480.7528548,
+    "ast_hash": "712936dc1cd4d7545fdfcde7ff1c209f",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_11_godthunder_peaks_z14.json": {
+    "mtime": 1793495509.624303,
+    "seen": 1793496480.7528548,
+    "ast_hash": "712936dc1cd4d7545fdfcde7ff1c209f",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_12_lava_spine_z10.json": {
+    "mtime": 1793495530.1900654,
+    "seen": 1793496480.7528548,
+    "ast_hash": "20f7f3d576c6b7f8caf5f0a7d8916aab",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_12_lava_spine_z14.json": {
+    "mtime": 1793495566.1636062,
+    "seen": 1793496480.7528548,
+    "ast_hash": "20f7f3d576c6b7f8caf5f0a7d8916aab",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_13_abyssal_scar_z10.json": {
+    "mtime": 1793495665.388271,
+    "seen": 1793496480.7528548,
+    "ast_hash": "0c5f671bc36cfd5c0e22c551dab90710",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_13_abyssal_scar_z14.json": {
+    "mtime": 1793495739.9946306,
+    "seen": 1793496480.7528548,
+    "ast_hash": "0c5f671bc36cfd5c0e22c551dab90710",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_14_tiedao_village_z10.json": {
+    "mtime": 1793495803.39441,
+    "seen": 1793496480.7528548,
+    "ast_hash": "a3ca8b7fe990512b4d53a5579ff7e115",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_14_tiedao_village_z14.json": {
+    "mtime": 1793495863.728297,
+    "seen": 1793496480.7528548,
+    "ast_hash": "a3ca8b7fe990512b4d53a5579ff7e115",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_15_binghu_town_z10.json": {
+    "mtime": 1793495930.40125,
+    "seen": 1793496480.7528548,
+    "ast_hash": "44d693a35707573798a28caf7b5d3d83",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_15_binghu_town_z14.json": {
+    "mtime": 1793496006.4836757,
+    "seen": 1793496480.7528548,
+    "ast_hash": "44d693a35707573798a28caf7b5d3d83",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_16_moyun_town_z10.json": {
+    "mtime": 1793496075.1384594,
+    "seen": 1793496480.7528548,
+    "ast_hash": "2b412223ca2628998105c799e7252cdb",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_16_moyun_town_z14.json": {
+    "mtime": 1793496132.6474202,
+    "seen": 1793496480.7528548,
+    "ast_hash": "2b412223ca2628998105c799e7252cdb",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_01_azure_high_peak_z10.json": {
+    "mtime": 1793493972.2477455,
+    "seen": 1793496480.7528548,
+    "ast_hash": "eb9f416bc9570cceea57a6cc84ab553e",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_01_azure_high_peak_z14.json": {
+    "mtime": 1793493993.0351112,
+    "seen": 1793496480.7528548,
+    "ast_hash": "eb9f416bc9570cceea57a6cc84ab553e",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_02_ore_teeth_z10.json": {
+    "mtime": 1793494017.8333719,
+    "seen": 1793496480.7528548,
+    "ast_hash": "2f8b99daaa35d6ee7858dc458ee2e40b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_02_ore_teeth_z14.json": {
+    "mtime": 1793494042.327869,
+    "seen": 1793496480.7528548,
+    "ast_hash": "2f8b99daaa35d6ee7858dc458ee2e40b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_03_hermit_highlands_z10.json": {
+    "mtime": 1793494069.198365,
+    "seen": 1793496480.7528548,
+    "ast_hash": "8857fc4fa74d8213b3f072302d8b38c7",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_03_hermit_highlands_z14.json": {
+    "mtime": 1793494100.735314,
+    "seen": 1793496480.7528548,
+    "ast_hash": "8857fc4fa74d8213b3f072302d8b38c7",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_04_wind_isles_z10.json": {
+    "mtime": 1793494126.5620182,
+    "seen": 1793496480.7528548,
+    "ast_hash": "6419ba35c5f64e81a534880627ed599b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_04_wind_isles_z14.json": {
+    "mtime": 1793494154.0125496,
+    "seen": 1793496480.7528548,
+    "ast_hash": "6419ba35c5f64e81a534880627ed599b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_05_western_gorge_z10.json": {
+    "mtime": 1793494180.8274453,
+    "seen": 1793496480.7528548,
+    "ast_hash": "aaf62120c960c2d4992f87197f37225f",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_05_western_gorge_z14.json": {
+    "mtime": 1793494213.1389542,
+    "seen": 1793496480.7528548,
+    "ast_hash": "aaf62120c960c2d4992f87197f37225f",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_06_sword_gorge_z10.json": {
+    "mtime": 1793494238.712144,
+    "seen": 1793496480.7528548,
+    "ast_hash": "41deb0f188dcf03e8dacce21e6e7c116",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_06_sword_gorge_z14.json": {
+    "mtime": 1793494265.6324713,
+    "seen": 1793496480.7528548,
+    "ast_hash": "41deb0f188dcf03e8dacce21e6e7c116",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_01_pass_north.json": {
+    "mtime": 1793487375.4356477,
+    "seen": 1793496480.7528548,
+    "ast_hash": "0b7a84b2f8b1462a9ca025ec5184a11b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_02_ridge_west.json": {
+    "mtime": 1793487422.1077216,
+    "seen": 1793496480.7528548,
+    "ast_hash": "1a91fce47968a231d603411c61f91760",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_03_high_peak.json": {
+    "mtime": 1793487466.2966108,
+    "seen": 1793496480.7528548,
+    "ast_hash": "eb9f416bc9570cceea57a6cc84ab553e",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_04_pass_south.json": {
+    "mtime": 1793487634.8703506,
+    "seen": 1793496480.7528548,
+    "ast_hash": "9499ae181d01129fd6fb199edf447075",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_05_mid_ridge.json": {
+    "mtime": 1793487895.0874982,
+    "seen": 1793496480.7528548,
+    "ast_hash": "aba3cf979908b5e60e5affce25ce27fb",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_06_inner_valley.json": {
+    "mtime": 1793488130.9367607,
+    "seen": 1793496480.7528548,
+    "ast_hash": "4b7e4f6e37fe6203fd3b60f062f4d33f",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_07_east_bastion.json": {
+    "mtime": 1793488359.493201,
+    "seen": 1793496480.7528548,
+    "ast_hash": "c88f1e4c89b15d1117457150b4389ad2",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_08_cliff_edge.json": {
+    "mtime": 1793488520.3110423,
+    "seen": 1793496480.7528548,
+    "ast_hash": "ace3818ae34d5aaf898e6068d8650232",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_plains/plains_01_xingcun.json": {
+    "mtime": 1793489244.5147831,
+    "seen": 1793496480.7528548,
+    "ast_hash": "4314025480d73cbd510cc71b68a7e09c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_plains/plains_02_xingcun_east.json": {
+    "mtime": 1793489374.6316235,
+    "seen": 1793496480.7528548,
+    "ast_hash": "dbbc1628c6f5460ce89ce4cfbd02fc87",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_plains/plains_03_wilderness.json": {
+    "mtime": 1793489666.6639578,
+    "seen": 1793496480.7528548,
+    "ast_hash": "e059bbf4b349674a421fdfd4e1705910",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_plains/plains_04_west_farm.json": {
+    "mtime": 1793489977.338241,
+    "seen": 1793496480.7528548,
+    "ast_hash": "4e9ba397d8771dfa2fc0b690a9ac0478",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_plains/plains_05_central.json": {
+    "mtime": 1793490252.8991191,
+    "seen": 1793496480.7528548,
+    "ast_hash": "47fde94116975f623b6d7702e909a529",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_plains/plains_06_delta.json": {
+    "mtime": 1793490570.1934288,
+    "seen": 1793496480.7528548,
+    "ast_hash": "3d121b7a583ebfaae677a972c1c8250d",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_01_xingcun_horiz.json": {
+    "mtime": 1793485356.9389977,
+    "seen": 1793496480.7528548,
+    "ast_hash": "436cb3bb6ad1bfed425d31b7ee794471",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_02_xingcun_cross.json": {
+    "mtime": 1793485404.309975,
+    "seen": 1793496480.7528548,
+    "ast_hash": "dbbc1628c6f5460ce89ce4cfbd02fc87",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_03_xingcun_vert.json": {
+    "mtime": 1793485457.7756832,
+    "seen": 1793496480.7528548,
+    "ast_hash": "545a710600b5253a82b47e1d0bbe675d",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_04_xueshan_pass.json": {
+    "mtime": 1793485508.8816311,
+    "seen": 1793496480.7528548,
+    "ast_hash": "d3b34939c0974660ae4ae1558c520942",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_05_azure_pass.json": {
+    "mtime": 1793485581.3523438,
+    "seen": 1793496480.7528548,
+    "ast_hash": "0b7a84b2f8b1462a9ca025ec5184a11b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_06_central_plains.json": {
+    "mtime": 1793485710.2932255,
+    "seen": 1793496480.7528548,
+    "ast_hash": "fdc5c25bb50f246f411c3d05f31c97a1",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_07_jiangnan.json": {
+    "mtime": 1793485953.3033626,
+    "seen": 1793496480.7528548,
+    "ast_hash": "6e27bbdfc38f7bb0e168a024e38d2331",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_08_nine_springs.json": {
+    "mtime": 1793486191.0489247,
+    "seen": 1793496480.7528548,
+    "ast_hash": "5f9f80df3d8f7dcbc1b4797e0584576b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_09_northern_road.json": {
+    "mtime": 1793486427.966244,
+    "seen": 1793496480.7528548,
+    "ast_hash": "b0db05111070837d302fd0f0cce15947",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_10_donghai_causeway.json": {
+    "mtime": 1793486596.949764,
+    "seen": 1793496480.7528548,
+    "ast_hash": "df4966c110338bc3bba56162a9734cc8",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_11_western_gorge.json": {
+    "mtime": 1793486787.1980877,
+    "seen": 1793496480.7528548,
+    "ast_hash": "321cddeee821de474ab944c0d9bc4018",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_12_south_frost.json": {
+    "mtime": 1793486992.218136,
+    "seen": 1793496480.7528548,
+    "ast_hash": "72ec72e98f2b9b96cfdf5a0c236f71a6",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v15_aliasing_evaluation.json": {
+    "mtime": 1793491236.1473577,
+    "seen": 1793496480.7688391,
+    "ast_hash": "7072f5d6dd3d2b5dedd9bcb19217a37f",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v15_azure_evaluation.json": {
+    "mtime": 1793488598.992808,
+    "seen": 1793496480.7688391,
+    "ast_hash": "9084d573d5b208fb3374f2fe2d8abac7",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v15_baseline_gates.json": {
+    "mtime": 1793482343.291176,
+    "seen": 1793496480.7688391,
+    "ast_hash": "12ace73c4e651e7527869dfddd8a810e",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v15_density.json": {
+    "mtime": 1793492176.4136448,
+    "seen": 1793496480.7688391,
+    "ast_hash": "5b081c7692af46845555b47957ca662b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v15_gates.json": {
+    "mtime": 1793496175.8589945,
+    "seen": 1793496480.7688391,
+    "ast_hash": "f16c5a6aa0ee40431832583d23296eb3",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v15_ground_audit.json": {
+    "mtime": 1793488938.7724323,
+    "seen": 1793496480.7688391,
+    "ast_hash": "4371fffcb1abe2d2fa7e3c185c9f1acf",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v15_plains_evaluation.json": {
+    "mtime": 1793490982.6710782,
+    "seen": 1793496480.7688391,
+    "ast_hash": "d4e6b81012f258c6c80cf80786bcdbc5",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v15_regression.json": {
+    "mtime": 1793492586.7916653,
+    "seen": 1793496480.7688391,
+    "ast_hash": "aa86181ea056bcda6b3c93f9795ca074",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v15_road_evaluation.json": {
+    "mtime": 1793487018.7658567,
+    "seen": 1793496480.7688391,
+    "ast_hash": "2af0d405e74a235fba74a8bb12a54f3c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v15_selftest.json": {
+    "mtime": 1793490968.9461856,
+    "seen": 1793496480.7688391,
+    "ast_hash": "04bf09df837dfcb63ce99411b1188fce",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/azure_shots.json": {
+    "mtime": 1793488590.4527588,
+    "seen": 1793496480.9360113,
+    "ast_hash": "5f86c00420ca8c7c0ed52fc5a401d345",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/capture80Shots.js": {
+    "mtime": 1793492668.606068,
+    "seen": 1793496480.9360113,
+    "ast_hash": "c7af68f8469243e33afdf642640b31f4",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/checkRegression.js": {
+    "mtime": 1793492582.553875,
+    "seen": 1793496480.9360113,
+    "ast_hash": "a3c071cbefa5245da43df321a654c3f3",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/gateRunner.js": {
+    "mtime": 1793492749.656354,
+    "seen": 1793496480.9360113,
+    "ast_hash": "c4ee0732b3d6f80374f3ec9bf683e40c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/gateSelfTest.js": {
+    "mtime": 1793482048.3474262,
+    "seen": 1793496480.9360113,
+    "ast_hash": "c6ab6651d7bab279fa6687ccb0b84f1b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/gates.json": {
+    "mtime": 1793496164.7005303,
+    "seen": 1793496480.9360113,
+    "ast_hash": "d2048e4a633d004efc79a4fe3fcacfe9",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/generateAliasV15.py": {
+    "mtime": 1793491161.1541238,
+    "seen": 1793496480.9360113,
+    "ast_hash": "a190f8b47d87108dd42f4ef7a98b4863",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/generateManifestV15.py": {
+    "mtime": 1793489028.7987914,
+    "seen": 1793496480.9360113,
+    "ast_hash": "a6d9c324b9f0333e10be943d7acec09d",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/groundContentAudit.py": {
+    "mtime": 1793488826.560394,
+    "seen": 1793496480.9360113,
+    "ast_hash": "a00f298c918e9333146bafcf1ef462ab",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/pixelGates.py": {
+    "mtime": 1793490956.3694549,
+    "seen": 1793496480.9360113,
+    "ast_hash": "477de22afa40c3229c897cb71626c977",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/plains_shots.json": {
+    "mtime": 1793490974.5252645,
+    "seen": 1793496480.9360113,
+    "ast_hash": "04a0ad7ed8794ac46cf9c662cf1b6427",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/roadRenderUnit.js": {
+    "mtime": 1793482656.3963485,
+    "seen": 1793496480.9360113,
+    "ast_hash": "0b28a55e9f9231fd9a6848ff52cee5b6",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/road_shots.json": {
+    "mtime": 1793485295.6834576,
+    "seen": 1793496480.9360113,
+    "ast_hash": "5669120e5f830214b9881d70f8f72378",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/runBaselineGates.js": {
+    "mtime": 1793482215.4685743,
+    "seen": 1793496480.9360113,
+    "ast_hash": "f1285ff51e36ae2842c3e50edd0d7ac5",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/shots_v15_config.json": {
+    "mtime": 1793493225.5387702,
+    "seen": 1793496480.9360113,
+    "ast_hash": "1af96dba8b2b7ee4f097891d785ca75d",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/syncManifestAndAliases.py": {
+    "mtime": 1793491227.2702694,
+    "seen": 1793496480.9360113,
+    "ast_hash": "ca802bff624b585c3ecae40f41708202",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/testAzureGates.js": {
+    "mtime": 1793488586.2001743,
+    "seen": 1793496480.9360113,
+    "ast_hash": "b1a8337f5beff8a3c6a27d0a9fac1c7d",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/testGroundAliasing.js": {
+    "mtime": 1793491198.8197231,
+    "seen": 1793496480.9360113,
+    "ast_hash": "5a0ccc76f4924feb91468cd2951e1753",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/testPlainsGates.js": {
+    "mtime": 1793489073.517191,
+    "seen": 1793496480.9360113,
+    "ast_hash": "199be8744c2d2f50b3478c7713b87344",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/scripts/v15/testRoadGates.js": {
+    "mtime": 1793485179.7260616,
+    "seen": 1793496480.9360113,
+    "ast_hash": "604b6b4b7b3767cca312504138fb46e0",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/web-dashboard/public/assets/ground/ground-alias-v15.json": {
+    "mtime": 1793491231.54326,
+    "seen": 1793496481.0488188,
+    "ast_hash": "f2cd69cfe1c8cc328ff5eba34d31dfa3",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/web-dashboard/public/assets/ground/ground-manifest-v15.json": {
+    "mtime": 1793491231.5512564,
+    "seen": 1793496481.050817,
+    "ast_hash": "87f3c6dc33735dfe585fe865212d8dee",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/world-data/ground-alias-v15.json": {
+    "mtime": 1793491231.54326,
+    "seen": 1793496481.1498618,
+    "ast_hash": "f2cd69cfe1c8cc328ff5eba34d31dfa3",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/world-data/ground-manifest-v15.json": {
+    "mtime": 1793491231.5482564,
+    "seen": 1793496481.150861,
+    "ast_hash": "87f3c6dc33735dfe585fe865212d8dee",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/world-data/road-style-v15.json": {
+    "mtime": 1793482578.2126303,
+    "seen": 1793496481.1916099,
+    "ast_hash": "33eba7b81f4b704af5b0ecdb7f92f347",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/report_v15.md": {
+    "mtime": 1793496175.8595176,
+    "seen": 1793496481.2235787,
+    "ast_hash": "2374473d39cc1d76d879a7cff7759594",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v15_diagnosis.md": {
+    "mtime": 1793492474.7941065,
+    "seen": 1793496481.230573,
+    "ast_hash": "2e4525910a799b9af02a9b4d80812050",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/v15_release_notes.md": {
+    "mtime": 1793496308.4086914,
+    "seen": 1793496481.230573,
+    "ast_hash": "e4fd2e48119aa57c1b27f30a1be448e7",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_01_caravan_z10.png": {
+    "mtime": 1793493698.2246225,
+    "seen": 1793496481.574977,
+    "ast_hash": "f00be2b95d0058087ad6dc01822f23fc",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_01_caravan_z14.png": {
+    "mtime": 1793493735.49588,
+    "seen": 1793496481.574977,
+    "ast_hash": "edadaba986313230b200f3ecb00788ed",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_02_west_barrier_z10.png": {
+    "mtime": 1793493760.821722,
+    "seen": 1793496481.574977,
+    "ast_hash": "51c271237e5a7f29f934ab1f4e7aad14",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_02_west_barrier_z14.png": {
+    "mtime": 1793493791.5078785,
+    "seen": 1793496481.574977,
+    "ast_hash": "c4f1df936a4ab6a355e9f9e6e8fa2687",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_03_north_pass_z10.png": {
+    "mtime": 1793493817.52291,
+    "seen": 1793496481.574977,
+    "ast_hash": "1256689109c73f51b403af18efd53767",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_03_north_pass_z14.png": {
+    "mtime": 1793493843.048873,
+    "seen": 1793496481.574977,
+    "ast_hash": "34d2caed2476b68f99cb7df0588800e0",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_04_mist_pass_z10.png": {
+    "mtime": 1793493869.1690361,
+    "seen": 1793496481.574977,
+    "ast_hash": "d1616c713940c7da3d1bae18e494a134",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_04_mist_pass_z14.png": {
+    "mtime": 1793493894.476424,
+    "seen": 1793496481.574977,
+    "ast_hash": "b271d8e2c400bd78e5ab16e93d659d37",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_05_sword_pass_z10.png": {
+    "mtime": 1793493920.0966375,
+    "seen": 1793496481.574977,
+    "ast_hash": "639188a3662fa7ac71180987a3246398",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/azure_win_05_sword_pass_z14.png": {
+    "mtime": 1793493943.9269643,
+    "seen": 1793496481.574977,
+    "ast_hash": "0a6b9acf80eea09989173bcc077c3870",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_01_plains_delta_z10.png": {
+    "mtime": 1793494300.1396914,
+    "seen": 1793496481.574977,
+    "ast_hash": "9f54901fd5ba34057ea5683f70071fb2",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_01_plains_delta_z14.png": {
+    "mtime": 1793494337.38248,
+    "seen": 1793496481.574977,
+    "ast_hash": "6cf119e42b9c70e42f2529f1526b390a",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_02_plains_prairies_z10.png": {
+    "mtime": 1793494377.3743432,
+    "seen": 1793496481.574977,
+    "ast_hash": "1e9885d929418670ae84366fd56cc1ef",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_02_plains_prairies_z14.png": {
+    "mtime": 1793494416.3962693,
+    "seen": 1793496481.574977,
+    "ast_hash": "2f876bb021769876f8afe63aba9201f8",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_03_desert_steppe_z10.png": {
+    "mtime": 1793494439.8089418,
+    "seen": 1793496481.574977,
+    "ast_hash": "5d14dde9ff73c063410d2263e874ab40",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_03_desert_steppe_z14.png": {
+    "mtime": 1793494462.45839,
+    "seen": 1793496481.574977,
+    "ast_hash": "debae18f60ef55cda48379278fe2dbed",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_04_azure_highlands_z10.png": {
+    "mtime": 1793494482.536983,
+    "seen": 1793496481.574977,
+    "ast_hash": "fd96997e8841198a1cec538fa097877f",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_04_azure_highlands_z14.png": {
+    "mtime": 1793494505.30166,
+    "seen": 1793496481.574977,
+    "ast_hash": "0769778b0d95f0f7c844bacb36f38bc3",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_05_frost_tundra_z10.png": {
+    "mtime": 1793494530.847081,
+    "seen": 1793496481.574977,
+    "ast_hash": "96028ea1cd5712b499d9ea5d9f4b38ae",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_05_frost_tundra_z14.png": {
+    "mtime": 1793494559.4172068,
+    "seen": 1793496481.574977,
+    "ast_hash": "472e823dfb0fc35f542ca7ffe8027626",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_06_coast_sea_z10.png": {
+    "mtime": 1793494606.1661031,
+    "seen": 1793496481.574977,
+    "ast_hash": "4b3ed6fce0f90494a46c7528b2243311",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/border_06_coast_sea_z14.png": {
+    "mtime": 1793494643.9531267,
+    "seen": 1793496481.574977,
+    "ast_hash": "b5b93ba5a199015dbc2449c38c171e62",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_01_xingcun_z10.png": {
+    "mtime": 1793492717.8296707,
+    "seen": 1793496481.574977,
+    "ast_hash": "81c4afde1d8bd2c8e47b170239bfdf1c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_01_xingcun_z14.png": {
+    "mtime": 1793492756.4948654,
+    "seen": 1793496481.574977,
+    "ast_hash": "3a208a11d1446f701a422754bd87d97e",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_02_xingcun_east_z10.png": {
+    "mtime": 1793492785.8409228,
+    "seen": 1793496481.574977,
+    "ast_hash": "571edc387d14aff9c435334f5b55cce0",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_02_xingcun_east_z14.png": {
+    "mtime": 1793492812.527877,
+    "seen": 1793496481.574977,
+    "ast_hash": "ad16453c0d0a64f667d5e74bbaece1b8",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_03_wilderness_z10.png": {
+    "mtime": 1793492848.1570745,
+    "seen": 1793496481.574977,
+    "ast_hash": "ff974601d08a8f34d11e9fc593e72062",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_03_wilderness_z14.png": {
+    "mtime": 1793492992.6936507,
+    "seen": 1793496481.574977,
+    "ast_hash": "8a7b48c2e197328c6a2076a2a752d571",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_04_xueshan_z10.png": {
+    "mtime": 1793493256.9927526,
+    "seen": 1793496481.574977,
+    "ast_hash": "19b88e4c1019e19dd62365db89036f08",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_04_xueshan_z14.png": {
+    "mtime": 1793493285.6006584,
+    "seen": 1793496481.574977,
+    "ast_hash": "29fc8e0914b385f09926dffb40b1830f",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_05_azure_pass_z10.png": {
+    "mtime": 1793493334.3333936,
+    "seen": 1793496481.574977,
+    "ast_hash": "e93df5fd253329843a7fffcc6e044bd5",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_05_azure_pass_z14.png": {
+    "mtime": 1793493375.903018,
+    "seen": 1793496481.574977,
+    "ast_hash": "97a73cf4eda34f230936a4e5fd8d4eda",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_06_hanhai_z10.png": {
+    "mtime": 1793493420.1690047,
+    "seen": 1793496481.574977,
+    "ast_hash": "4e132210a40845852e1a151f58259747",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_06_hanhai_z14.png": {
+    "mtime": 1793493493.8876088,
+    "seen": 1793496481.5759757,
+    "ast_hash": "a7f30f0f9bee3dcfcd87a8eb7c75b671",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_07_donghai_z10.png": {
+    "mtime": 1793493575.2075598,
+    "seen": 1793496481.5759757,
+    "ast_hash": "9b44c8584b04cdb6e6c4f3d447cdcc04",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/eval_07_donghai_z14.png": {
+    "mtime": 1793493649.4881551,
+    "seen": 1793496481.5759757,
+    "ast_hash": "2d1185d86645e9a16f013438219cd925",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_01_xitong_city_z10.png": {
+    "mtime": 1793494684.7254043,
+    "seen": 1793496481.5759757,
+    "ast_hash": "37006150259fddcb888bbf3d214490a9",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_01_xitong_city_z14.png": {
+    "mtime": 1793494723.9677925,
+    "seen": 1793496481.5759757,
+    "ast_hash": "857abaef63e138c0bc35953cd205b2fe",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_02_fengyang_city_z10.png": {
+    "mtime": 1793494757.1945832,
+    "seen": 1793496481.5759757,
+    "ast_hash": "9a388511b6cfc24f9075b88f7bb23883",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_02_fengyang_city_z14.png": {
+    "mtime": 1793494798.5354095,
+    "seen": 1793496481.5759757,
+    "ast_hash": "e315b7386a7061c40e89282397061eed",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_03_jinling_city_z10.png": {
+    "mtime": 1793494834.7118008,
+    "seen": 1793496481.5759757,
+    "ast_hash": "3653ebd9ea2e305d3d82b3891b0b5d76",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_03_jinling_city_z14.png": {
+    "mtime": 1793494872.8335485,
+    "seen": 1793496481.5759757,
+    "ast_hash": "617cf9141481c298592835e209ee7691",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_04_leiyin_town_z10.png": {
+    "mtime": 1793494932.7402415,
+    "seen": 1793496481.5759757,
+    "ast_hash": "042747f570b1370657ea518a1f880860",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_04_leiyin_town_z14.png": {
+    "mtime": 1793494975.4434133,
+    "seen": 1793496481.5759757,
+    "ast_hash": "c5cf31fe9ef976f57199ee1957d8072c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_05_canghai_town_z10.png": {
+    "mtime": 1793495019.9156263,
+    "seen": 1793496481.5759757,
+    "ast_hash": "de610e8cc25d20f68ec7cf697501aca8",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_05_canghai_town_z14.png": {
+    "mtime": 1793495055.7650194,
+    "seen": 1793496481.5759757,
+    "ast_hash": "cd129808a55401e10784e82aaa93dd60",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_06_bamboo_village_z10.png": {
+    "mtime": 1793495081.5612485,
+    "seen": 1793496481.5759757,
+    "ast_hash": "1b887632d0c398f568cbe24695630693",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_06_bamboo_village_z14.png": {
+    "mtime": 1793495106.4472487,
+    "seen": 1793496481.5759757,
+    "ast_hash": "6d177bcf7df858976bb888c387e97cfd",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_07_peach_orchard_z10.png": {
+    "mtime": 1793495153.034914,
+    "seen": 1793496481.5759757,
+    "ast_hash": "47c0fef2d12c67a3a31735ad7088f723",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_07_peach_orchard_z14.png": {
+    "mtime": 1793495196.7675579,
+    "seen": 1793496481.5759757,
+    "ast_hash": "0a477e53be2390917d1e2b6f5c7c04dd",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_08_shadi_oasis_z10.png": {
+    "mtime": 1793495231.563707,
+    "seen": 1793496481.5759757,
+    "ast_hash": "e26dbb81356806417f0d18221e7eab78",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_08_shadi_oasis_z14.png": {
+    "mtime": 1793495271.0199873,
+    "seen": 1793496481.5759757,
+    "ast_hash": "f3b9568abe68cc57610b8cedfd5ddf6c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_09_heiyan_village_z10.png": {
+    "mtime": 1793495310.733244,
+    "seen": 1793496481.5759757,
+    "ast_hash": "42fa78652d6238b5f90f57f8a32230c4",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_09_heiyan_village_z14.png": {
+    "mtime": 1793495355.4068434,
+    "seen": 1793496481.5759757,
+    "ast_hash": "e0e854208e9fa55f2db0d7a13e6e3614",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_10_spirit_wood_sea_z10.png": {
+    "mtime": 1793495393.4053714,
+    "seen": 1793496481.5759757,
+    "ast_hash": "c9074f115991abd2b637c9136e1d4a7c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_10_spirit_wood_sea_z14.png": {
+    "mtime": 1793495429.6687584,
+    "seen": 1793496481.5759757,
+    "ast_hash": "1a780aa8fe786fa27489170ef4da5818",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_11_godthunder_peaks_z10.png": {
+    "mtime": 1793495466.996516,
+    "seen": 1793496481.5759757,
+    "ast_hash": "b7b907c94cd732fa011f043d230c9761",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_11_godthunder_peaks_z14.png": {
+    "mtime": 1793495509.349827,
+    "seen": 1793496481.5759757,
+    "ast_hash": "5f4d28b659d380167576290abbf054ec",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_12_lava_spine_z10.png": {
+    "mtime": 1793495530.1818812,
+    "seen": 1793496481.5759757,
+    "ast_hash": "4f80adefcf64e77c67df261a02d5ee59",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_12_lava_spine_z14.png": {
+    "mtime": 1793495565.9509628,
+    "seen": 1793496481.5759757,
+    "ast_hash": "b418fcc74280c79285687992349219e0",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_13_abyssal_scar_z10.png": {
+    "mtime": 1793495665.1679122,
+    "seen": 1793496481.5759757,
+    "ast_hash": "2fa2a4c2e6c2b4312d998381d5e88340",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_13_abyssal_scar_z14.png": {
+    "mtime": 1793495739.810519,
+    "seen": 1793496481.5759757,
+    "ast_hash": "5dddfa9c6337901515e1ae0b29d6265d",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_14_tiedao_village_z10.png": {
+    "mtime": 1793495803.382492,
+    "seen": 1793496481.5759757,
+    "ast_hash": "a126ef2c4449c1ccbce9f3a984112409",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_14_tiedao_village_z14.png": {
+    "mtime": 1793495863.6322236,
+    "seen": 1793496481.5759757,
+    "ast_hash": "668aa167719f68b1381400a0389f3567",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_15_binghu_town_z10.png": {
+    "mtime": 1793495928.594443,
+    "seen": 1793496481.5759757,
+    "ast_hash": "7dfaa697790326b718b85f0c49d164ce",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_15_binghu_town_z14.png": {
+    "mtime": 1793496006.3908207,
+    "seen": 1793496481.5759757,
+    "ast_hash": "2b842aa03299f9ef3e7ebee9ad48e6af",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_16_moyun_town_z10.png": {
+    "mtime": 1793496074.8058512,
+    "seen": 1793496481.5759757,
+    "ast_hash": "a7517c20df702983adf6600ee5ffa902",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/land_16_moyun_town_z14.png": {
+    "mtime": 1793496132.2160432,
+    "seen": 1793496481.5759757,
+    "ast_hash": "08f2a69d141ca209d9be9aa925f90f9c",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_01_azure_high_peak_z10.png": {
+    "mtime": 1793493972.1639464,
+    "seen": 1793496481.5759757,
+    "ast_hash": "aef97eeb02632409a36877c9a9647ce6",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_01_azure_high_peak_z14.png": {
+    "mtime": 1793493992.9881792,
+    "seen": 1793496481.5759757,
+    "ast_hash": "82418aaa16fe170435fd54117dc7b41d",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_02_ore_teeth_z10.png": {
+    "mtime": 1793494017.78276,
+    "seen": 1793496481.5759757,
+    "ast_hash": "e64bad6d4bb98f6ca4307724b53c406f",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_02_ore_teeth_z14.png": {
+    "mtime": 1793494042.2448359,
+    "seen": 1793496481.5759757,
+    "ast_hash": "4f520d4d7b9ea5b07135a096fc7b42c7",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_03_hermit_highlands_z10.png": {
+    "mtime": 1793494068.9530888,
+    "seen": 1793496481.5759757,
+    "ast_hash": "b215b84b24470cf016cbe1d9b3f5ca2b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_03_hermit_highlands_z14.png": {
+    "mtime": 1793494100.6716278,
+    "seen": 1793496481.5759757,
+    "ast_hash": "808fada9fa8dbe69e21315ac8fe29aad",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_04_wind_isles_z10.png": {
+    "mtime": 1793494126.4932656,
+    "seen": 1793496481.5759757,
+    "ast_hash": "860a0df2c5108f819746a75edca89baf",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_04_wind_isles_z14.png": {
+    "mtime": 1793494153.8634248,
+    "seen": 1793496481.5759757,
+    "ast_hash": "33ff0e0527f74741f1c70e1b48d991f7",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_05_western_gorge_z10.png": {
+    "mtime": 1793494180.6516805,
+    "seen": 1793496481.5759757,
+    "ast_hash": "9bd4f120e9c8cb1e3e951e4e473b897d",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_05_western_gorge_z14.png": {
+    "mtime": 1793494213.1105304,
+    "seen": 1793496481.5759757,
+    "ast_hash": "03c2901c34d35333aa884b2a701cc034",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_06_sword_gorge_z10.png": {
+    "mtime": 1793494238.4131265,
+    "seen": 1793496481.5759757,
+    "ast_hash": "0167dfe995baa99261d4b408b1d29632",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15/mt_06_sword_gorge_z14.png": {
+    "mtime": 1793494265.29042,
+    "seen": 1793496481.5759757,
+    "ast_hash": "3778e869399afcca9fae8472e336d053",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_01_pass_north.png": {
+    "mtime": 1793487375.3710136,
+    "seen": 1793496481.5759757,
+    "ast_hash": "084b39111ea75cb369360fa0520ccd49",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_02_ridge_west.png": {
+    "mtime": 1793487422.0586734,
+    "seen": 1793496481.5759757,
+    "ast_hash": "e812ff6bf9d5f8abb6c317f7c88cdfd0",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_03_high_peak.png": {
+    "mtime": 1793487466.282202,
+    "seen": 1793496481.5759757,
+    "ast_hash": "e4562c3eda9e19b08cc368cb62857b78",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_04_pass_south.png": {
+    "mtime": 1793487632.9661517,
+    "seen": 1793496481.5759757,
+    "ast_hash": "ab3a4e6fe326c49151bb4a75cda6ba8f",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_05_mid_ridge.png": {
+    "mtime": 1793487894.536054,
+    "seen": 1793496481.5759757,
+    "ast_hash": "95af3677d820ad4f4d929a97960cc996",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_06_inner_valley.png": {
+    "mtime": 1793488130.5247257,
+    "seen": 1793496481.5759757,
+    "ast_hash": "5274bff3e2bf65a9329227f3f15f3f0b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_07_east_bastion.png": {
+    "mtime": 1793488359.157577,
+    "seen": 1793496481.5759757,
+    "ast_hash": "177dcd4ced0efa9cd100944933f05adf",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_azure/azure_08_cliff_edge.png": {
+    "mtime": 1793488519.9463277,
+    "seen": 1793496481.5759757,
+    "ast_hash": "eca235000d53d6761a21ab60ccf13007",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_plains/plains_01_xingcun.png": {
+    "mtime": 1793489244.3319838,
+    "seen": 1793496481.5759757,
+    "ast_hash": "3da593f0bcafc7f04fc2d0ce9620d022",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_plains/plains_02_xingcun_east.png": {
+    "mtime": 1793489373.2951825,
+    "seen": 1793496481.5759757,
+    "ast_hash": "e45d41547b89ec4a614486eab600d553",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_plains/plains_03_wilderness.png": {
+    "mtime": 1793489665.8686845,
+    "seen": 1793496481.5759757,
+    "ast_hash": "30bff74ea5c8fb66fe4f8f4f06051d46",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_plains/plains_04_west_farm.png": {
+    "mtime": 1793489975.8689382,
+    "seen": 1793496481.5759757,
+    "ast_hash": "6584420362623fc82cdf88c8db5077e5",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_plains/plains_05_central.png": {
+    "mtime": 1793490251.5806994,
+    "seen": 1793496481.5759757,
+    "ast_hash": "1c65c810d2f15e5fb3be82afd923e100",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_plains/plains_06_delta.png": {
+    "mtime": 1793490569.726259,
+    "seen": 1793496481.5759757,
+    "ast_hash": "f157694333ec2fdc31263739f272f2d4",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_01_xingcun_horiz.png": {
+    "mtime": 1793485356.781455,
+    "seen": 1793496481.5759757,
+    "ast_hash": "cd9a68d4aae4118134e01d2f6838307b",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_02_xingcun_cross.png": {
+    "mtime": 1793485404.212613,
+    "seen": 1793496481.5759757,
+    "ast_hash": "eb6bb123b180a8ebf69ee809fe6995d8",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_03_xingcun_vert.png": {
+    "mtime": 1793485457.6120687,
+    "seen": 1793496481.5759757,
+    "ast_hash": "464b4c7dd2ae496d32611e5e8a9ba7c0",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_04_xueshan_pass.png": {
+    "mtime": 1793485508.7671726,
+    "seen": 1793496481.5759757,
+    "ast_hash": "c7522df5fea15e5090229a3dfbfc6e39",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_05_azure_pass.png": {
+    "mtime": 1793485581.1258974,
+    "seen": 1793496481.5759757,
+    "ast_hash": "ed43d4ca9ac447595616d2689ea74a12",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_06_central_plains.png": {
+    "mtime": 1793485710.0234745,
+    "seen": 1793496481.5759757,
+    "ast_hash": "8d7a1884da16eb086cac9d698faaabfa",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_07_jiangnan.png": {
+    "mtime": 1793485953.2199833,
+    "seen": 1793496481.5759757,
+    "ast_hash": "798cab18c60ef39f96207b2fa714a19f",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_08_nine_springs.png": {
+    "mtime": 1793486191.021949,
+    "seen": 1793496481.5759757,
+    "ast_hash": "12f33ac24d674d5507a69f6c9a551963",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_09_northern_road.png": {
+    "mtime": 1793486427.7230792,
+    "seen": 1793496481.5759757,
+    "ast_hash": "87b61789d550d1da66dfd7e4d84db0f0",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_10_donghai_causeway.png": {
+    "mtime": 1793486596.2166574,
+    "seen": 1793496481.5759757,
+    "ast_hash": "316feba4bcfe2b250b2af21de1eb2ded",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_11_western_gorge.png": {
+    "mtime": 1793486786.8704472,
+    "seen": 1793496481.5759757,
+    "ast_hash": "c5d8042b8307dde19a4571ee5f1f7ed8",
+    "semantic_hash": ""
+  },
+  "jianghu-bot/review/shots_v15_road/road_12_south_frost.png": {
+    "mtime": 1793486991.492661,
+    "seen": 1793496481.5759757,
+    "ast_hash": "40818aa295c03dee10fa3bbc1dfd2a7b",
     "semantic_hash": ""
   }
 }
