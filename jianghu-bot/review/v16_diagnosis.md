@@ -111,5 +111,20 @@
 
 ---
 
-### P7: Minimap Palette Sync
-*(Akan dicatat pada P7)*
+### P7: Minimap Palette Sync (K8)
+- **File & Baris**: `scripts/buildWorldRaster.mjs` (L45–185), `scripts/v16/testMinimapSync.js`
+- **Penyebab**: `buildWorldRaster.mjs` sebelumnya membaca palet region lama dari `regions.json` yang tidak sesuai dengan warna tanah kanvas makro nyata; menggambar balok batu hitam pekat solid yang menutupi celah resmi Azure Pass; dan mencetak 52 bulatan besar segel anchor kota/desa langsung ke dalam buffer raster sehingga menimpa warna tanah alami di Xingcun, Azure Pass, dan Xueshan.
+- **Perbaikan**:
+  1. Menyelaraskan pewarnaan raster dengan palet makro & ink-wash 29 region (Dataran T1 hijau segar `#7c8e58`, Nine Springs Delta hijau subur `#7e8c56`, Pegunungan Azure abu batu karst `#72726c`, Xueshan T4 salju putih-biru muda `#cad3d6`, Gurun Barat pasir emas `#b49866`).
+  2. Mempertahankan 4 koridor celah resmi pada penutupan barrier tebing batuan Azure di raster.
+  3. Mengubah rasterisasi jalan menjadi sapuan lembut antialiasing 1 petak (opasitas 55%) yang menyatu dengan lanskap tanpa kotak kasar.
+  4. Menghapus pencetakan stempel segel anchor statis ke dalam raster karena komponen `Minimap.tsx` sudah merender seluruh landmark sebagai ikon vektor SVG/Canvas dinamis dengan label.
+- **Bukti Sesudah**:
+  - `P01_xingcun`: Ground [123.3, 137.4, 87.5] vs Raster [138.9, 146.5, 104.5] -> ΔE = 6.75 (Target <= 25) -> PASS
+  - `P04_farm`: Ground [126.1, 124.7, 80.7] vs Raster [123.3, 122.3, 78.3] -> ΔE = 1.01 (Target <= 25) -> PASS
+  - `P06_azure_pass`: Ground [114, 113.9, 107.7] vs Raster [122, 120.4, 112.4] -> ΔE = 2.91 (Target <= 25) -> PASS
+  - `P11_xueshan`: Ground [201.5, 210.9, 214.6] vs Raster [197.6, 204.4, 204.7] -> ΔE = 3.00 (Target <= 25) -> PASS
+  - `P12_desert`: Ground [180.5, 152.1, 101.6] vs Raster [177.4, 149.4, 99.4] -> ΔE = 1.08 (Target <= 25) -> PASS
+  - Maksimum ΔE: 6.75 (Target <= 25) -> PASS
+  - Benchmark Minimap H5: 10/10 pin akurat, memori 0.34 MB (<= 3.0 MB), render latency 0.061 ms (<= 1.0 ms) -> PASS
+  - Audit Kontrak Grid V10: V1–V9 100% PASS, G1–G8 100% PASS.
