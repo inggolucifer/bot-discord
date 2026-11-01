@@ -1,0 +1,642 @@
+[
+  {
+    "name": "eval_01_xingcun_z10",
+    "x": 2050,
+    "y": 2650,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Desa Xingcun Center (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "eval_01_xingcun_z14",
+    "x": 2050,
+    "y": 2650,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Desa Xingcun Center (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "eval_02_xingcun_east_z10",
+    "x": 2062,
+    "y": 2648,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Desa Xingcun East (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "eval_02_xingcun_east_z14",
+    "x": 2062,
+    "y": 2648,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Desa Xingcun East (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "eval_03_wilderness_z10",
+    "x": 2300,
+    "y": 3000,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Central Wilderness (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "eval_03_wilderness_z14",
+    "x": 2300,
+    "y": 3000,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Central Wilderness (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "eval_04_xueshan_z10",
+    "x": 2350,
+    "y": 4300,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Xueshan Snow Frost (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "eval_04_xueshan_z14",
+    "x": 2350,
+    "y": 4300,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Xueshan Snow Frost (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "eval_05_azure_pass_z10",
+    "x": 2200,
+    "y": 3340,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Azure Mountain Pass North (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "eval_05_azure_pass_z14",
+    "x": 2200,
+    "y": 3340,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Azure Mountain Pass North (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "eval_06_hanhai_z10",
+    "x": 900,
+    "y": 2600,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Western Sacred Desert Hanhai (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "eval_06_hanhai_z14",
+    "x": 900,
+    "y": 2600,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Western Sacred Desert Hanhai (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "eval_07_donghai_z10",
+    "x": 3950,
+    "y": 2600,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Donghai Port & Coast (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "eval_07_donghai_z14",
+    "x": 3950,
+    "y": 2600,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Donghai Port & Coast (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "azure_win_01_caravan_z10",
+    "x": 750,
+    "y": 3340,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Azure Wall Caravan Gap (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "azure_win_01_caravan_z14",
+    "x": 750,
+    "y": 3340,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Azure Wall Caravan Gap (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "azure_win_02_west_barrier_z10",
+    "x": 1500,
+    "y": 3350,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Azure Wall Solid West Barrier (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "azure_win_02_west_barrier_z14",
+    "x": 1500,
+    "y": 3350,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Azure Wall Solid West Barrier (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "azure_win_03_north_pass_z10",
+    "x": 2200,
+    "y": 3350,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Azure Wall North Pass Gate (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "azure_win_03_north_pass_z14",
+    "x": 2200,
+    "y": 3350,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Azure Wall North Pass Gate (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "azure_win_04_mist_pass_z10",
+    "x": 2600,
+    "y": 3340,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Azure Wall Mist Pass Gate (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "azure_win_04_mist_pass_z14",
+    "x": 2600,
+    "y": 3340,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Azure Wall Mist Pass Gate (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "azure_win_05_sword_pass_z10",
+    "x": 3100,
+    "y": 3340,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Azure Wall Sword Gorge Pass Gate (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "azure_win_05_sword_pass_z14",
+    "x": 3100,
+    "y": 3340,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Azure Wall Sword Gorge Pass Gate (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "mt_01_azure_high_peak_z10",
+    "x": 1800,
+    "y": 3350,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Azure High Peak Massif (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "mt_01_azure_high_peak_z14",
+    "x": 1800,
+    "y": 3350,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Azure High Peak Massif (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "mt_02_ore_teeth_z10",
+    "x": 3625,
+    "y": 2800,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Ore Teeth Range Ridge (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "mt_02_ore_teeth_z14",
+    "x": 3625,
+    "y": 2800,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Ore Teeth Range Ridge (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "mt_03_hermit_highlands_z10",
+    "x": 2700,
+    "y": 3600,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Hermit Highlands Plateau (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "mt_03_hermit_highlands_z14",
+    "x": 2700,
+    "y": 3600,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Hermit Highlands Plateau (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "mt_04_wind_isles_z10",
+    "x": 4600,
+    "y": 2700,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Floating Wind Isles (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "mt_04_wind_isles_z14",
+    "x": 4600,
+    "y": 2700,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Floating Wind Isles (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "mt_05_western_gorge_z10",
+    "x": 600,
+    "y": 3300,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Western Gorge Labyrinth (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "mt_05_western_gorge_z14",
+    "x": 600,
+    "y": 3300,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Western Gorge Labyrinth (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "mt_06_sword_gorge_z10",
+    "x": 3300,
+    "y": 3700,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Sword Gorge Deep Ravine (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "mt_06_sword_gorge_z14",
+    "x": 3300,
+    "y": 3700,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Sword Gorge Deep Ravine (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "border_01_plains_delta_z10",
+    "x": 1800,
+    "y": 2500,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Plains to Nine Springs Delta (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "border_01_plains_delta_z14",
+    "x": 1800,
+    "y": 2500,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Plains to Nine Springs Delta (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "border_02_plains_prairies_z10",
+    "x": 2300,
+    "y": 2200,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Plains to Beast Prairies (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "border_02_plains_prairies_z14",
+    "x": 2300,
+    "y": 2200,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Plains to Beast Prairies (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "border_03_desert_steppe_z10",
+    "x": 1100,
+    "y": 2700,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Desert to Thundersteppe (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "border_03_desert_steppe_z14",
+    "x": 1100,
+    "y": 2700,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Desert to Thundersteppe (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "border_04_azure_highlands_z10",
+    "x": 2400,
+    "y": 3500,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Azure Range to Hermit Highlands (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "border_04_azure_highlands_z14",
+    "x": 2400,
+    "y": 3500,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Azure Range to Hermit Highlands (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "border_05_frost_tundra_z10",
+    "x": 2500,
+    "y": 4200,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Frostmoon Sea to Snow Tundra (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "border_05_frost_tundra_z14",
+    "x": 2500,
+    "y": 4200,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Frostmoon Sea to Snow Tundra (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "border_06_coast_sea_z10",
+    "x": 3900,
+    "y": 2700,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Bone Sea Coast to Eastern Sea (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "border_06_coast_sea_z14",
+    "x": 3900,
+    "y": 2700,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Bone Sea Coast to Eastern Sea (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_01_xitong_city_z10",
+    "x": 2300,
+    "y": 2700,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "XiTong City Capital (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_01_xitong_city_z14",
+    "x": 2300,
+    "y": 2700,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "XiTong City Capital (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_02_fengyang_city_z10",
+    "x": 2200,
+    "y": 2100,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Fengyang City (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_02_fengyang_city_z14",
+    "x": 2200,
+    "y": 2100,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Fengyang City (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_03_jinling_city_z10",
+    "x": 1900,
+    "y": 2900,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Jinling City (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_03_jinling_city_z14",
+    "x": 1900,
+    "y": 2900,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Jinling City (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_04_leiyin_town_z10",
+    "x": 1500,
+    "y": 3800,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Leiyin Town (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_04_leiyin_town_z14",
+    "x": 1500,
+    "y": 3800,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Leiyin Town (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_05_canghai_town_z10",
+    "x": 3800,
+    "y": 2300,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Canghai Town (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_05_canghai_town_z14",
+    "x": 3800,
+    "y": 2300,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Canghai Town (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_06_bamboo_village_z10",
+    "x": 2150,
+    "y": 2600,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Bamboo Grove Village (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_06_bamboo_village_z14",
+    "x": 2150,
+    "y": 2600,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Bamboo Grove Village (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_07_peach_orchard_z10",
+    "x": 2080,
+    "y": 2620,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Peach Orchard Hamlet (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_07_peach_orchard_z14",
+    "x": 2080,
+    "y": 2620,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Peach Orchard Hamlet (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_08_shadi_oasis_z10",
+    "x": 800,
+    "y": 3000,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Shadi Oasis Camp (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_08_shadi_oasis_z14",
+    "x": 800,
+    "y": 3000,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Shadi Oasis Camp (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_09_heiyan_village_z10",
+    "x": 500,
+    "y": 3800,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Heiyan Village (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_09_heiyan_village_z14",
+    "x": 500,
+    "y": 3800,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Heiyan Village (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_10_spirit_wood_sea_z10",
+    "x": 3200,
+    "y": 2200,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Spirit Wood Sea Forest (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_10_spirit_wood_sea_z14",
+    "x": 3200,
+    "y": 2200,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Spirit Wood Sea Forest (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_11_godthunder_peaks_z10",
+    "x": 3400,
+    "y": 4000,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Godthunder Peaks (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_11_godthunder_peaks_z14",
+    "x": 3400,
+    "y": 4000,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Godthunder Peaks (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_12_lava_spine_z10",
+    "x": 1200,
+    "y": 4200,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Lava Spine Volcano (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_12_lava_spine_z14",
+    "x": 1200,
+    "y": 4200,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Lava Spine Volcano (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_13_abyssal_scar_z10",
+    "x": 1000,
+    "y": 1500,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Abyssal Scar (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_13_abyssal_scar_z14",
+    "x": 1000,
+    "y": 1500,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Abyssal Scar (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_14_tiedao_village_z10",
+    "x": 1800,
+    "y": 2200,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Tiedao Village (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_14_tiedao_village_z14",
+    "x": 1800,
+    "y": 2200,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Tiedao Village (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_15_binghu_town_z10",
+    "x": 2400,
+    "y": 4100,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Binghu Town (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_15_binghu_town_z14",
+    "x": 2400,
+    "y": 4100,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Binghu Town (Zoom 1.4, Grid ON)"
+  },
+  {
+    "name": "land_16_moyun_town_z10",
+    "x": 400,
+    "y": 3600,
+    "zoom": 1,
+    "grid": 1,
+    "desc": "Moyun Town (Zoom 1.0, Grid ON)"
+  },
+  {
+    "name": "land_16_moyun_town_z14",
+    "x": 400,
+    "y": 3600,
+    "zoom": 1.4,
+    "grid": 1,
+    "desc": "Moyun Town (Zoom 1.4, Grid ON)"
+  }
+]

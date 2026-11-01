@@ -19,6 +19,12 @@ const GATES_CONFIG_PATH = path.resolve(__dirname, 'gates.json');
 const isBaseline = process.argv.includes('--baseline');
 const skipCommands = process.argv.includes('--skip-commands');
 
+if (process.argv.includes('--mode') && process.argv[process.argv.indexOf('--mode') + 1] === 'v15') {
+  console.log('[gateRunner] Routing to V15 Authoritative Gate Runner (scripts/v15/gateRunner.js)...');
+  require('../v15/gateRunner.js');
+  return;
+}
+
 function getNestedValue(obj, dotPath) {
   if (!obj || !dotPath) return undefined;
   const parts = dotPath.split('.');

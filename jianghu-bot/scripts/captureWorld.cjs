@@ -91,17 +91,6 @@ server.listen(3001, async () => {
   const seenSha1 = new Map();
   const results = [];
 
-  const page = await br.newPage({ viewport: { width: 1280, height: 720 } });
-  page.on('pageerror', (err) => {
-    console.error('  [pageerror]', err.message);
-  });
-  page.on('console', (m) => {
-    const t = m.text();
-    if (/GROUND|error|Error|WARN|warn|Ready|ready|chunks/i.test(t)) {
-      console.log('  [page]', t.slice(0, 160));
-    }
-  });
-
   for (const s of shots) {
     const filePath = path.join(outDir, `${s.name}.png`);
     if (fs.existsSync(filePath) && fs.statSync(filePath).size > 50000) {
@@ -110,7 +99,6 @@ server.listen(3001, async () => {
       console.log(`\n[SKIP] Sudah ada di disk: ${s.name} (SHA-1: ${sha1})`);
       if (seenSha1.has(sha1)) {
         console.error(`[ERROR] Duplicate screenshot detected! ${s.name} has identical SHA-1 to ${seenSha1.get(sha1)}`);
-        await page.close();
         await br.close();
         server.close();
         process.exit(1);
@@ -119,14 +107,25 @@ server.listen(3001, async () => {
       continue;
     }
 
+    const page = await br.newPage({ viewport: { width: 1280, height: 720 } });
+    page.on('pageerror', (err) => {
+      console.error('  [pageerror]', err.message);
+    });
+    page.on('console', (m) => {
+      const t = m.text();
+      if (/GROUND|error|Error|WARN|warn|Ready|ready|chunks/i.test(t)) {
+        console.log('  [page]', t.slice(0, 160));
+      }
+    });
+
     const gridParam = s.grid !== undefined ? `&grid=${s.grid}` : '';
     const url = `http://localhost:3000/world?debugCam=${s.x},${s.y},${s.zoom || 1}${gridParam}`;
     console.log(`\n[Shot] Capturing ${s.name} at (${s.x}, ${s.y}) zoom=${s.zoom || 1}${gridParam}...`);
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 });
 
-    await page.evaluate(() => {
+    await page.evaluate(async () => {
       if (window.groundTextures && !window.groundTextures.ready) {
-        window.groundTextures.load().catch(() => {});
+        await window.groundTextures.load();
       }
     }).catch(() => {});
 
@@ -257,9 +256,10 @@ server.listen(3001, async () => {
       groundReady: isGroundReady,
       sprites: debugMetrics ? debugMetrics.spriteCount : 0
     });
+
+    await page.close();
   }
 
-  await page.close();
   await br.close();
   server.close();
 
