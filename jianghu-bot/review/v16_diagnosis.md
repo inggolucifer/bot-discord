@@ -95,4 +95,21 @@
 ---
 
 ### P6: Azure Mountain & Highlands Density Refill
-*(Akan dicatat pada P6)*
+- **File & Baris**: `scripts/v16/measureDensityV16.js`, `review/v16_density.json`
+- **Penyebab**: Dinding Azure massif memerlukan konfirmasi bahwa kepadatan spasial di sela-sela massif tetap terjaga pada target median >= 22 tanpa merusak penutupan barrier (0 kebocoran) dan tanpa merusak 28 region lainnya.
+- **Perbaikan**:
+  1. Menghasilkan audit komprehensif 29 region (8.700 viewport + 870 chunk) yang dicatat ke `review/v16_density.json`.
+  2. Memverifikasi median densitas Pegunungan Azure pada 22.5 sprites/viewport dan 91.5 objek/chunk.
+  3. Menjalankan BFS flood-fill 8 arah pada 3951x501 sel dinding Azure Wall: 0 celah bocor ilegal, 4 celah resmi utuh.
+- **Bukti Sesudah**:
+  - Azure Mountain Range median sprites: 22.5 (Target >= 22) -> PASS
+  - Hermit Highlands median sprites: 25.0 (Target >= 20) -> PASS
+  - Central Plains median sprites: 29.0 (Target 28–30) -> PASS
+  - Azure Barrier Unauthorized Leaks: 0 (Target 0) -> PASS
+  - Celah Resmi Lolos: 4/4 (Target 4/4) -> PASS
+  - Audit Kontrak Grid V10: V1–V9 100% PASS, G1–G8 100% PASS.
+
+---
+
+### P7: Minimap Palette Sync
+*(Akan dicatat pada P7)*
