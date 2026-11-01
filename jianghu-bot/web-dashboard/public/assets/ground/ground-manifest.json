@@ -123,8 +123,8 @@
       "family": "farmland",
       "variants": [
         "v11/farmland_m1",
-        "v11/farmland_m2",
-        "v11/farmland_m4"
+        "v11/meadow_m1",
+        "v11/farmland_m2"
       ]
     },
     "forest": {
@@ -317,11 +317,11 @@
       ]
     },
     "pond_lotus": {
-      "family": "swamp",
+      "family": "lake",
       "variants": [
-        "v11/swamp_m2",
-        "v11/swamp_m4",
-        "v11/poison_pool_m2"
+        "v11/lake_m1",
+        "v11/lake_m2",
+        "v11/river_m1"
       ]
     },
     "river": {

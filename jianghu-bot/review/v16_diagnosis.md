@@ -35,4 +35,19 @@
 ---
 
 ### P2: Farmland & Lotus Pond
-*(Akan dicatat pada P2)*
+- **File & Baris**: `web-dashboard/public/assets/ground/ground-manifest.json` dan `web-dashboard/src/lib/groundRenderer.ts` (L1350–1475)
+- **Penyebab**: Farmland sebelumnya menampilkan makro tanah mentah berwarna olive-cokelat kering (Hue 64.8 deg) dengan garis alur bajak diagonal sintetis; `pond_lotus` salah dipetakan ke family `'swamp'` dengan `poison_pool_m2`.
+- **Perbaikan**:
+  1. Mengoreksi pemetaan `pond_lotus` di `ground-manifest.json` ke family `'lake'` (air jernih) dengan varian `v11/lake_m1`, `v11/lake_m2`, `v11/river_m1`.
+  2. Mengimplementasikan `compositeFarmlandPaddy`: lapisan glaze giok hijau subur (`rgba(68, 138, 48, 0.42)`), petak sawah bersudut membulat (*rounded paddy plots*), pematang rumput pembatas 1 sel (`#4a6c30`), genangan air dangkal jernih, dan taburan tunas padi muda (`rgba(112, 168, 58, 0.75)`).
+  3. Mengimplementasikan `compositeLotusPond`: air teal reflektif jernih (`rgba(62, 128, 134, 0.45)`), daun teratai hijau zamrud mengapung (`rgba(48, 122, 78, 0.85)`), dan kuncup bunga lotus pink (`rgba(235, 142, 172, 0.92)`).
+- **Bukti Sesudah**:
+  - `P04_farm` groundColorSanity(field): Hue = 85.3 deg (Target 65..100 deg) -> PASS
+  - `P04_farm` streakCoherence: 0.2128 (Target <= 0.30) -> PASS
+  - `P04_farm` straightEdgeCount: 0 (Target <= 1) -> PASS
+  - Audit Kontrak Grid V10: V1–V9 100% PASS, G1–G8 100% PASS.
+
+---
+
+### P3: Organic Biome Transition
+*(Akan dicatat pada P3)*

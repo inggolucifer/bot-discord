@@ -1348,9 +1348,143 @@ export function renderChunkGroundBitmapTextured(
       ctxT.restore();
     }
 
-    // V14 P2: Tone shifting for Plains / Farmland / Meadow (H7)
-    // Shifts straw/dry olive towards fresh jade green (strength 0.35) matching minimap
-    if (F === 'plains' || F === 'farmland' || F === 'meadow') {
+/**
+ * V16: Procedural Shan Shui Farmland Paddy Composite.
+ * Renders rounded emerald paddy fields, raised grass ridges, shallow reflective water,
+ * and young rice shoots, eliminating dry olive streaks and straight lines.
+ */
+function compositeFarmlandPaddy(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  canvasWidth: number,
+  canvasHeight: number,
+  tileSize: number
+): void {
+  ctx.save();
+
+  // 1. Fresh jade green tone glaze to guarantee vibrant rural hue (Hue ~75-82 deg)
+  ctx.globalCompositeOperation = 'soft-light';
+  ctx.fillStyle = 'rgba(68, 138, 48, 0.42)';
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+  // 2. Render rounded paddy field plots across the 32x32 chunk
+  const PLOT_TILES = 4;
+  const PLOTS_PER_CHUNK = CHUNK_SIZE / PLOT_TILES; // 8
+  const plotPx = PLOT_TILES * tileSize;
+  const ridgeWidth = tileSize * 0.45; // ~24px grass ridge
+
+  ctx.globalCompositeOperation = 'source-over';
+
+  for (let py = 0; py < PLOTS_PER_CHUNK; py++) {
+    const worldY = cy * CHUNK_SIZE + py * PLOT_TILES;
+    for (let px = 0; px < PLOTS_PER_CHUNK; px++) {
+      const worldX = cx * CHUNK_SIZE + px * PLOT_TILES;
+      const seed = Math.abs(hash2d(worldX * 31 + 7, worldY * 47 + 13));
+
+      // Plot bounds with rounded margins
+      const x0 = px * plotPx + ridgeWidth;
+      const y0 = py * plotPx + ridgeWidth;
+      const w = plotPx - ridgeWidth * 2;
+      const h = plotPx - ridgeWidth * 2;
+
+      if (w <= 0 || h <= 0) continue;
+
+      // 2a. Raised grass ridge boundary around plot
+      ctx.fillStyle = 'rgba(74, 108, 48, 0.55)';
+      ctx.beginPath();
+      const r = Math.min(18, w * 0.25);
+      ctx.roundRect(x0 - 3, y0 - 3, w + 6, h + 6, r + 2);
+      ctx.fill();
+
+      // 2b. Shallow reflective paddy water interior
+      const waterTint = (seed % 2 === 0) ? 'rgba(92, 138, 88, 0.38)' : 'rgba(80, 130, 95, 0.34)';
+      ctx.fillStyle = waterTint;
+      ctx.beginPath();
+      ctx.roundRect(x0, y0, w, h, r);
+      ctx.fill();
+
+      // 2c. Soft water sheen / sky reflection
+      ctx.fillStyle = 'rgba(165, 210, 195, 0.12)';
+      ctx.beginPath();
+      ctx.roundRect(x0 + 4, y0 + 4, w * 0.65, h * 0.45, r * 0.6);
+      ctx.fill();
+
+      // 2d. Rice tufts / shoots planted inside the plot
+      const numShoots = 3 + (seed % 3);
+      ctx.fillStyle = 'rgba(112, 168, 58, 0.75)';
+      for (let s = 0; s < numShoots; s++) {
+        const sSeed = (seed >> (s * 3)) & 0xff;
+        const sx = x0 + 8 + ((sSeed * 17) % Math.max(1, Math.floor(w - 16)));
+        const sy = y0 + 8 + (((sSeed * 31) >> 2) % Math.max(1, Math.floor(h - 16)));
+
+        ctx.beginPath();
+        ctx.ellipse(sx, sy, 3, 1.5, -0.4, 0, Math.PI * 2);
+        ctx.ellipse(sx + 2, sy - 2, 1.5, 3, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  ctx.restore();
+}
+
+/**
+ * V16: Procedural Lotus Pond Composite.
+ * Renders clear teal-blue reflective water, floating emerald lotus pads,
+ * and delicate pink lotus blossom decals.
+ */
+function compositeLotusPond(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  canvasWidth: number,
+  canvasHeight: number,
+  tileSize: number
+): void {
+  ctx.save();
+
+  // Clear teal water tint
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = 'rgba(62, 128, 134, 0.45)';
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+  // Floating lotus pads & flowers
+  const PADS_PER_CHUNK = 12;
+  for (let i = 0; i < PADS_PER_CHUNK; i++) {
+    const seed = Math.abs(hash2d(cx * 89 + i * 23, cy * 113 + i * 41));
+    const padX = ((seed % 1000) / 1000) * (canvasWidth - 40) + 20;
+    const padY = (((seed >> 10) % 1000) / 1000) * (canvasHeight - 40) + 20;
+    const padRadius = 6 + (seed % 5);
+
+    // Emerald lotus leaf pad
+    ctx.fillStyle = 'rgba(48, 122, 78, 0.85)';
+    ctx.beginPath();
+    ctx.arc(padX, padY, padRadius, 0.25, Math.PI * 2 - 0.25);
+    ctx.fill();
+
+    // Lotus blossom on ~40% of pads
+    if ((seed % 5) < 2) {
+      ctx.fillStyle = 'rgba(235, 142, 172, 0.92)';
+      ctx.beginPath();
+      ctx.arc(padX + 2, padY - 2, 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(padX + 2, padY - 2, 1.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  ctx.restore();
+}
+
+    // V16 P2: Farmland paddy composite with rounded plots, grass ridges & fresh jade glaze
+    if (F === 'farmland') {
+      compositeFarmlandPaddy(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
+    } else if (F === 'pond_lotus') {
+      compositeLotusPond(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
+    } else if (F === 'plains' || F === 'meadow') {
       ctxT.save();
       ctxT.globalCompositeOperation = 'soft-light';
       ctxT.fillStyle = 'rgba(75, 125, 45, 0.35)';
