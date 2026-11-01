@@ -1,0 +1,54 @@
+{
+  "p01_xingcun": {
+    "roadNaturalness": {
+      "edgeRoughnessCells": 0.1295,
+      "deltaL": 11.54,
+      "deltaE": 39.28,
+      "snowRoadBRDiff": 0,
+      "roughnessPass": true,
+      "contrastPass": true,
+      "snowPass": true,
+      "pass": true,
+      "status": "PASS"
+    }
+  },
+  "p02_xingcun_cross": {
+    "roadNaturalness": {
+      "edgeRoughnessCells": 0.1158,
+      "deltaL": 7.21,
+      "deltaE": 37.63,
+      "snowRoadBRDiff": 0,
+      "roughnessPass": true,
+      "contrastPass": true,
+      "snowPass": true,
+      "pass": true,
+      "status": "PASS"
+    }
+  },
+  "p11_xueshan": {
+    "roadNaturalness": {
+      "edgeRoughnessCells": 0.1155,
+      "deltaL": 28.2,
+      "deltaE": 28.28,
+      "snowRoadBRDiff": -0.02,
+      "roughnessPass": true,
+      "contrastPass": true,
+      "snowPass": true,
+      "pass": true,
+      "status": "PASS"
+    }
+  },
+  "p13_road_h": {
+    "roadNaturalness": {
+      "edgeRoughnessCells": 0.1616,
+      "deltaL": 10.3,
+      "deltaE": 38.95,
+      "snowRoadBRDiff": 0,
+      "roughnessPass": true,
+      "contrastPass": true,
+      "snowPass": true,
+      "pass": true,
+      "status": "PASS"
+    }
+  }
+}

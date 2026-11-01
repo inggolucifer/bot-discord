@@ -182,10 +182,14 @@ const missingOfficial = OFFICIAL_PASSES.filter(p => !matchedOfficial.has(p.id));
 const isPassed = unauthorizedCorridors.length === 0 && missingOfficial.length === 0;
 
 const isBaseline = process.argv.includes('--baseline');
-const outFile = path.resolve(
-  __dirname,
-  isBaseline ? '../../review/v13_baseline_barrier_closure.json' : '../../review/v13_barrier_closure.json'
-);
+const outArgIdx = process.argv.indexOf('--out');
+const customOut = outArgIdx !== -1 ? process.argv[outArgIdx + 1] : null;
+const outFile = customOut
+  ? path.resolve(process.cwd(), customOut)
+  : path.resolve(
+      __dirname,
+      isBaseline ? '../../review/v13_baseline_barrier_closure.json' : '../../review/v13_barrier_closure.json'
+    );
 
 const result = {
   passed: isPassed,
@@ -204,6 +208,11 @@ const result = {
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.writeFileSync(outFile, JSON.stringify(result, null, 2), 'utf8');
 console.log(`[checkBarrierClosure] Output written to: ${outFile}`);
+
+if (!isBaseline && !customOut) {
+  const v14Out = path.resolve(__dirname, '../../review/v14_barrier_closure.json');
+  fs.writeFileSync(v14Out, JSON.stringify(result, null, 2), 'utf8');
+}
 
 console.log('\n--- RINGKASAN AUDIT DINDING AZURE ---');
 console.log(`Status            : ${isPassed ? 'PASS' : 'GAGAL (BOCOR)'}`);

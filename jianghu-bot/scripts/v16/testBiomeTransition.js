@@ -33,6 +33,9 @@ async function main() {
   execSync(`node "${captureScript}" "${cfgPath}" "${SHOTS_DIR}"`, { cwd: PROJECT_ROOT, stdio: 'inherit' });
 
   let failed = false;
+  const outData = {};
+  let minTransitionWidthCells = 999.0;
+  let minRmsDevCells = 999.0;
 
   for (const pt of points) {
     const pngPath = path.join(SHOTS_DIR, `${pt.name}.png`);
@@ -40,6 +43,19 @@ async function main() {
     const raw = execSync(gateCmd, { cwd: PROJECT_ROOT, encoding: 'utf8' });
     const jsonStart = raw.indexOf('{');
     const res = JSON.parse(raw.slice(jsonStart));
+
+    const widthCells = res.transition.transitionWidthCells || 0;
+    const rmsDev = res.transition.rmsDevCells || 0;
+    if (widthCells < minTransitionWidthCells) minTransitionWidthCells = widthCells;
+    if (rmsDev < minRmsDevCells) minRmsDevCells = rmsDev;
+
+    const ptResult = {
+      biomeTransition: res.transition,
+      straightEdge: res.edge
+    };
+    outData[pt.name.toLowerCase()] = ptResult;
+    if (pt.name.toLowerCase().includes('p21')) outData['p07_azure_west'] = ptResult;
+    if (pt.name.toLowerCase().includes('p22')) outData['p06_azure_pass'] = ptResult;
 
     console.log(`\n[testBiomeTransition] Metrics for ${pt.name}:`, JSON.stringify(res.transition, null, 2));
     console.log(`[testBiomeTransition] StraightEdge for ${pt.name}: straightEdgeCount=${res.edge.straightEdgeCount}`);
@@ -58,6 +74,13 @@ async function main() {
       console.log(`[GATE P3 PASS] ${pt.name} straightEdgeCount = ${res.edge.straightEdgeCount} (<= 1)`);
     }
   }
+
+  outData.minTransitionWidthCells = Math.round(minTransitionWidthCells * 100) / 100;
+  outData.minRmsDevCells = Math.round(minRmsDevCells * 100) / 100;
+
+  const outJsonPath = path.resolve(PROJECT_ROOT, 'review/v16_biome_evaluation.json');
+  fs.writeFileSync(outJsonPath, JSON.stringify(outData, null, 2), 'utf8');
+  console.log(`[testBiomeTransition] Saved evaluation summary to ${outJsonPath}`);
 
   if (failed) process.exit(1);
 

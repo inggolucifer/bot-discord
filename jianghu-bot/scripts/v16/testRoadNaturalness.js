@@ -34,12 +34,17 @@ async function main() {
   execSync(`node "${captureScript}" "${cfgPath}" "${SHOTS_DIR}"`, { cwd: PROJECT_ROOT, stdio: 'inherit' });
 
   let failed = false;
+  const outData = {};
 
   for (const pt of points) {
     const pngPath = path.join(SHOTS_DIR, `${pt.name}.png`);
     const roadCmd = `python -c "import sys; sys.path.insert(0, '${path.join(__dirname).replace(/\\/g, '/')}'); import pixelGates as pg, json; res = pg.analyze_road_naturalness('${pngPath.replace(/\\/g, '/')}', is_snow=${pt.isSnow ? 'True' : 'False'}); print(json.dumps(res));"`;
     const raw = execSync(roadCmd, { cwd: PROJECT_ROOT, encoding: 'utf8' });
     const res = JSON.parse(raw.trim());
+
+    outData[pt.name.toLowerCase()] = {
+      roadNaturalness: res
+    };
 
     console.log(`\n[testRoadNaturalness] Metrics for ${pt.name}:`, JSON.stringify(res, null, 2));
 
@@ -59,6 +64,10 @@ async function main() {
       }
     }
   }
+
+  const outJsonPath = path.resolve(PROJECT_ROOT, 'review/v16_road_evaluation.json');
+  fs.writeFileSync(outJsonPath, JSON.stringify(outData, null, 2), 'utf8');
+  console.log(`[testRoadNaturalness] Saved evaluation summary to ${outJsonPath}`);
 
   if (failed) process.exit(1);
 

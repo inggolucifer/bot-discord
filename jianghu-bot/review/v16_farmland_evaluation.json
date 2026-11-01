@@ -1,0 +1,27 @@
+{
+  "p04_farm": {
+    "streakCoherence": {
+      "coherence": 0.2128,
+      "target": "<= 0.30",
+      "pass": true,
+      "status": "PASS"
+    },
+    "colorSanity": {
+      "biomeClass": "field",
+      "meanHue": 85.3,
+      "meanSaturation": 0.355,
+      "meanValue": 0.487,
+      "meanRGB": [
+        107.1,
+        123.3,
+        80.4
+      ],
+      "bMinusRDiff": 26.7,
+      "brownOliveRatio": 0.013,
+      "pass": true,
+      "status": "PASS",
+      "failReasons": []
+    },
+    "lushGreenRatio": 0.987
+  }
+}

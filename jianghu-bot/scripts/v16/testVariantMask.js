@@ -31,6 +31,8 @@ async function main() {
   console.log(`[testVariantMask] Capturing P01 and P03 via ${captureScript}...`);
   execSync(`node "${captureScript}" "${cfgPath}" "${SHOTS_DIR}"`, { cwd: PROJECT_ROOT, stdio: 'inherit' });
 
+  const outData = {};
+
   for (const pt of points) {
     const pngPath = path.join(SHOTS_DIR, `${pt.name}.png`);
     // Analyze with pixelGates.py
@@ -39,12 +41,27 @@ async function main() {
     const jsonStart = raw.indexOf('{');
     const res = JSON.parse(raw.slice(jsonStart));
 
-    console.log(`[testVariantMask] ${pt.name} straightEdgeCount: ${res.edge.straightEdgeCount} (pass: ${res.edge.pass})`);
+    // Analyze color sanity for grass
+    const colorCmd = `python -c "import sys; sys.path.insert(0, '${path.join(__dirname).replace(/\\/g, '/')}'); import pixelGates as pg, json; res = pg.analyze_ground_color_sanity('${pngPath.replace(/\\/g, '/')}', biome='grass'); print(json.dumps(res));"`;
+    const colorRaw = execSync(colorCmd, { cwd: PROJECT_ROOT, encoding: 'utf8' });
+    const colorRes = JSON.parse(colorRaw.trim());
+
+    outData[pt.name.toLowerCase()] = {
+      straightEdge: res.edge,
+      brownOliveRatio: colorRes.brownOliveRatio,
+      colorSanity: colorRes
+    };
+
+    console.log(`[testVariantMask] ${pt.name} straightEdgeCount: ${res.edge.straightEdgeCount} (pass: ${res.edge.pass}), brownOliveRatio: ${colorRes.brownOliveRatio}`);
     if (res.edge.straightEdgeCount > 1) {
       console.error(`[GATE P1 FAIL] ${pt.name} straightEdgeCount exceeds 1: ${res.edge.straightEdgeCount}`);
       process.exit(1);
     }
   }
+
+  const outJsonPath = path.resolve(PROJECT_ROOT, 'review/v16_plains_evaluation.json');
+  fs.writeFileSync(outJsonPath, JSON.stringify(outData, null, 2), 'utf8');
+  console.log(`[testVariantMask] Saved evaluation summary to ${outJsonPath}`);
 
   // 2. Run Grid Contract audits
   console.log('[testVariantMask] Running auditGridV10 & testGridContract...');

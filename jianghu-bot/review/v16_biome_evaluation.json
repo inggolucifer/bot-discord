@@ -1,0 +1,72 @@
+{
+  "p21_boundary_t1": {
+    "biomeTransition": {
+      "transitionWidthCells": 11.389,
+      "transitionWidthPx": 615,
+      "rmsDevCells": 2.92,
+      "widthPass": true,
+      "wavinessPass": true,
+      "pass": true,
+      "status": "PASS"
+    },
+    "straightEdge": {
+      "straightEdgeCount": 0,
+      "detectedLines": [],
+      "pass": true,
+      "status": "PASS"
+    }
+  },
+  "p07_azure_west": {
+    "biomeTransition": {
+      "transitionWidthCells": 11.389,
+      "transitionWidthPx": 615,
+      "rmsDevCells": 2.92,
+      "widthPass": true,
+      "wavinessPass": true,
+      "pass": true,
+      "status": "PASS"
+    },
+    "straightEdge": {
+      "straightEdgeCount": 0,
+      "detectedLines": [],
+      "pass": true,
+      "status": "PASS"
+    }
+  },
+  "p22_boundary_t1": {
+    "biomeTransition": {
+      "transitionWidthCells": 5.278,
+      "transitionWidthPx": 285,
+      "rmsDevCells": 4.11,
+      "widthPass": true,
+      "wavinessPass": true,
+      "pass": true,
+      "status": "PASS"
+    },
+    "straightEdge": {
+      "straightEdgeCount": 0,
+      "detectedLines": [],
+      "pass": true,
+      "status": "PASS"
+    }
+  },
+  "p06_azure_pass": {
+    "biomeTransition": {
+      "transitionWidthCells": 5.278,
+      "transitionWidthPx": 285,
+      "rmsDevCells": 4.11,
+      "widthPass": true,
+      "wavinessPass": true,
+      "pass": true,
+      "status": "PASS"
+    },
+    "straightEdge": {
+      "straightEdgeCount": 0,
+      "detectedLines": [],
+      "pass": true,
+      "status": "PASS"
+    }
+  },
+  "minTransitionWidthCells": 5.28,
+  "minRmsDevCells": 2.92
+}

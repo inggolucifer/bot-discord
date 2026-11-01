@@ -1,0 +1,73 @@
+{
+  "p06_azure_pass": {
+    "textureRichness": {
+      "luminanceStd": 16.65,
+      "sobelMean": 6.72,
+      "has3Components": true,
+      "pass": true,
+      "status": "PASS"
+    },
+    "straightEdge": {
+      "straightEdgeCount": 0,
+      "detectedLines": [],
+      "pass": true,
+      "status": "PASS"
+    },
+    "colorSanity": {
+      "biomeClass": "stone",
+      "meanHue": 84.7,
+      "meanSaturation": 0.51,
+      "meanValue": 0.615,
+      "meanRGB": [
+        123.6,
+        156.5,
+        76.7
+      ],
+      "bMinusRDiff": 46.9,
+      "brownOliveRatio": 0.013,
+      "pass": false,
+      "status": "FAIL_COLOR",
+      "failReasons": [
+        "Stone Saturation too high: 0.510 > 0.22",
+        "Stone |B-R| blue bias: 46.9 > 25"
+      ]
+    }
+  },
+  "p08_azure_far_west": {
+    "textureRichness": {
+      "luminanceStd": 33.45,
+      "sobelMean": 6.35,
+      "has3Components": true,
+      "pass": true,
+      "status": "PASS"
+    },
+    "straightEdge": {
+      "straightEdgeCount": 0,
+      "detectedLines": [],
+      "pass": true,
+      "status": "PASS"
+    },
+    "colorSanity": {
+      "biomeClass": "stone",
+      "meanHue": 42.6,
+      "meanSaturation": 0.411,
+      "meanValue": 0.705,
+      "meanRGB": [
+        179.6,
+        151.5,
+        101.6
+      ],
+      "bMinusRDiff": 78,
+      "brownOliveRatio": 0.943,
+      "pass": false,
+      "status": "FAIL_COLOR",
+      "failReasons": [
+        "Stone Saturation too high: 0.411 > 0.22",
+        "Stone |B-R| blue bias: 78.0 > 25",
+        "Stone Value out of range: 0.705"
+      ]
+    }
+  },
+  "maxStoneSaturation": 0.51,
+  "maxBMinusRDiff": 78
+}

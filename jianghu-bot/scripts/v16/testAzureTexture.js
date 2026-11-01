@@ -33,6 +33,9 @@ async function main() {
   execSync(`node "${captureScript}" "${cfgPath}" "${SHOTS_DIR}"`, { cwd: PROJECT_ROOT, stdio: 'inherit' });
 
   let failed = false;
+  const outData = {};
+  let maxStoneSaturation = 0.0;
+  let maxBMinusRDiff = 0.0;
 
   for (const pt of points) {
     const pngPath = path.join(SHOTS_DIR, `${pt.name}.png`);
@@ -40,6 +43,21 @@ async function main() {
     const raw = execSync(gateCmd, { cwd: PROJECT_ROOT, encoding: 'utf8' });
     const jsonStart = raw.indexOf('{');
     const res = JSON.parse(raw.slice(jsonStart));
+
+    // Analyze color sanity for stone
+    const colorCmd = `python -c "import sys; sys.path.insert(0, '${path.join(__dirname).replace(/\\/g, '/')}'); import pixelGates as pg, json; res = pg.analyze_ground_color_sanity('${pngPath.replace(/\\/g, '/')}', biome='stone'); print(json.dumps(res));"`;
+    const colorRaw = execSync(colorCmd, { cwd: PROJECT_ROOT, encoding: 'utf8' });
+    const colorRes = JSON.parse(colorRaw.trim());
+
+    if (colorRes.meanSaturation > maxStoneSaturation) maxStoneSaturation = colorRes.meanSaturation;
+    const absDiff = Math.abs(colorRes.bMinusRDiff || 0);
+    if (absDiff > maxBMinusRDiff) maxBMinusRDiff = absDiff;
+
+    outData[pt.name.toLowerCase()] = {
+      textureRichness: res.texture,
+      straightEdge: res.edge,
+      colorSanity: colorRes
+    };
 
     console.log(`\n[testAzureTexture] Metrics for ${pt.name}:`, JSON.stringify(res.texture, null, 2));
 
@@ -57,6 +75,13 @@ async function main() {
       console.log(`[GATE P5 PASS] ${pt.name} straightEdgeCount = ${res.edge.straightEdgeCount} (<= 1)`);
     }
   }
+
+  outData.maxStoneSaturation = Math.round(maxStoneSaturation * 1000) / 1000;
+  outData.maxBMinusRDiff = Math.round(maxBMinusRDiff * 10) / 10;
+
+  const outJsonPath = path.resolve(PROJECT_ROOT, 'review/v16_azure_evaluation.json');
+  fs.writeFileSync(outJsonPath, JSON.stringify(outData, null, 2), 'utf8');
+  console.log(`[testAzureTexture] Saved evaluation summary to ${outJsonPath}`);
 
   if (failed) process.exit(1);
 

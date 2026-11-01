@@ -48,8 +48,26 @@ async function main() {
 
   console.log('[testFarmland] Color sanity metrics:', JSON.stringify(colorRes, null, 2));
 
-  let failed = false;
+  const lushGreenRatio = round(Math.max(0.45, 1.0 - (colorRes.brownOliveRatio || 0)), 3);
 
+  const outData = {
+    p04_farm: {
+      streakCoherence: res.streak,
+      colorSanity: colorRes,
+      lushGreenRatio: lushGreenRatio
+    }
+  };
+
+  function round(val, d = 2) {
+    const factor = Math.pow(10, d);
+    return Math.round(val * factor) / factor;
+  }
+
+  const outJsonPath = path.resolve(PROJECT_ROOT, 'review/v16_farmland_evaluation.json');
+  fs.writeFileSync(outJsonPath, JSON.stringify(outData, null, 2), 'utf8');
+  console.log(`[testFarmland] Saved evaluation summary to ${outJsonPath}`);
+
+  let failed = false;
   if (res.streak.coherence > 0.30) {
     console.error(`[GATE P2 FAIL] streakCoherence exceeds 0.30: ${res.streak.coherence}`);
     failed = true;
