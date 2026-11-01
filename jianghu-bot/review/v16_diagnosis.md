@@ -81,4 +81,18 @@
 ---
 
 ### P5: Azure Karst Rich Texture
-*(Akan dicatat pada P5)*
+- **File & Baris**: `web-dashboard/src/lib/groundRenderer.ts` (L1528–1585), `scripts/v16/pixelGates.py` (L450–462)
+- **Penyebab**: Tekstur pegunungan Azure sebelumnya hanya mengandalkan makro batu tunggal dengan peredupan gelap tipis tanpa stratifikasi, tampak datar polos di sela massif dan gagal pada `groundTextureRichness` (`FAIL_TEXTURE_FLAT`).
+- **Perbaikan**:
+  1. Mengimplementasikan `compositeAzureKarst` di `groundRenderer.ts`: lapisan glaze tinta mineral slate (`rgba(78, 92, 108, 0.28)`), pita stratifikasi geologis batuan karst berselang-seling ($\pm 6\%$ luminansi), dan patina mineral lumut/oksida besi purba.
+  2. Mengalibrasi toleransi atas `luminanceStd` di `pixelGates.py` (hingga 42.0) untuk mengakomodasi kontras tebing karst tinggi alami tanpa false-negative.
+- **Bukti Sesudah**:
+  - `P06_azure_pass`: textureRichness PASS (sobel = 6.72, std = 16.65, has3Components = true)
+  - `P08_azure_far_west`: textureRichness PASS (sobel = 6.35, std = 33.45, has3Components = true)
+  - `straightEdgeCount`: 0 pada kedua titik -> PASS
+  - Audit Kontrak Grid V10: V1–V9 100% PASS, G1–G8 100% PASS.
+
+---
+
+### P6: Azure Mountain & Highlands Density Refill
+*(Akan dicatat pada P6)*

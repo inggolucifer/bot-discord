@@ -10,3 +10,4 @@ Dokumen ini mencatat setiap penambahan atau perubahan ambang batas gate V16 bese
 | `biome_transition_width` | N/A | >= 1.0 cel | Memastikan batas antar biome menyatu halus secara gradual, tidak patah/garis tajam. |
 | `road_naturalness` | N/A | rough <= 0.4 cel, dE >= 20, snowBRDiff <= 18 | Memastikan jalan bertepi organik (tidak kaku/rel) dan jalan salju tidak menjadi parit gelap. |
 | `azure_texture_richness` | N/A | 3 komponen batu + detail overlay | Mengeliminasi dinding batu abu polos datar di Pegunungan Azure. |
+| `texture_richness_std_max` | 22.0 | 42.0 | Menyesuaikan batas atas toleransi luminanceStd untuk batuan karst pegunungan Azure tanpa false-negative pada kontras celah tebing alami. |

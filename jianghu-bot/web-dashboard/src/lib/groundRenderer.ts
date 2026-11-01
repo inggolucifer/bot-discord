@@ -1525,6 +1525,70 @@ function compositeLotusPond(
   ctx.restore();
 }
 
+/**
+ * V16: Karst Rock Stratification & Mineral Depth for Azure Mountains.
+ * Renders subtle horizontal/diagonal geological stratification bands (±6% lightness)
+ * and rich mineral patina, giving ancient karst stone depth and presence.
+ */
+function compositeAzureKarst(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  canvasWidth: number,
+  canvasHeight: number,
+  tileSize: number
+): void {
+  ctx.save();
+
+  // 1. Cool mineral ink wash glaze (Azure blue-grey slate tint)
+  ctx.globalCompositeOperation = 'soft-light';
+  ctx.fillStyle = 'rgba(78, 92, 108, 0.28)';
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+  // 2. Geological karst stratification bands (alternating micro-lightness bands)
+  const BAND_HEIGHT = tileSize * 0.75;
+  const numBands = Math.ceil(canvasHeight / BAND_HEIGHT);
+
+  for (let b = 0; b < numBands; b++) {
+    const worldY = cy * CHUNK_SIZE + (b * 0.75);
+    const bandSeed = Math.abs(hash2d(cx * 19 + b * 43, Math.floor(worldY * 11)));
+    const bandNoise = ((bandSeed % 100) / 100) - 0.5;
+
+    const y0 = b * BAND_HEIGHT;
+    const h = BAND_HEIGHT + 2;
+
+    if (bandNoise > 0.1) {
+      // Light mineral stratum
+      ctx.globalCompositeOperation = 'soft-light';
+      ctx.fillStyle = `rgba(210, 218, 225, ${(bandNoise * 0.25).toFixed(3)})`;
+      ctx.fillRect(0, y0, canvasWidth, h);
+    } else if (bandNoise < -0.1) {
+      // Dark slate stratum
+      ctx.globalCompositeOperation = 'multiply';
+      ctx.fillStyle = `rgba(85, 90, 95, ${(Math.abs(bandNoise) * 0.35).toFixed(3)})`;
+      ctx.fillRect(0, y0, canvasWidth, h);
+    }
+  }
+
+  // 3. Ancient moss / iron oxide mineral patina
+  for (let i = 0; i < 8; i++) {
+    const seed = Math.abs(hash2d(cx * 67 + i * 29, cy * 83 + i * 37));
+    const px = ((seed % 1000) / 1000) * (canvasWidth - 80) + 40;
+    const py = (((seed >> 10) % 1000) / 1000) * (canvasHeight - 80) + 40;
+    const rw = 25 + (seed % 35);
+    const rh = 12 + ((seed >> 5) % 18);
+
+    ctx.globalCompositeOperation = 'soft-light';
+    const isMoss = (seed % 3 === 0);
+    ctx.fillStyle = isMoss ? 'rgba(72, 105, 68, 0.22)' : 'rgba(125, 95, 75, 0.18)';
+    ctx.beginPath();
+    ctx.ellipse(px, py, rw, rh, 0.2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
     // V16 P2: Farmland paddy composite with rounded plots, grass ridges & fresh jade glaze
     if (F === 'farmland') {
       compositeFarmlandPaddy(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
@@ -1538,13 +1602,9 @@ function compositeLotusPond(
       ctxT.restore();
     }
 
-    // V15 P2: Neutral stone darkening for Azure Mountains / rock_ground / canyon (J2)
-    if (F === 'rock_ground' || F === 'canyon_floor') {
-      ctxT.save();
-      ctxT.globalCompositeOperation = 'multiply';
-      ctxT.fillStyle = 'rgba(120, 125, 130, 0.18)';
-      ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
-      ctxT.restore();
+    // V16 P5: Rich Karst rock stratification for Azure Mountains / rock_ground / canyon / cliff
+    if (F === 'rock_ground' || F === 'canyon_floor' || F === 'cliff') {
+      compositeAzureKarst(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
     }
 
     // V13 P2: Settlement floor uses base ground + warm loam village road glaze (+8% lightness)

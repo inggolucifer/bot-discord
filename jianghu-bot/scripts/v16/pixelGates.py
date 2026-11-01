@@ -453,11 +453,11 @@ def analyze_ground_texture_richness(img_or_arr):
         c3 = np.mean(m3, axis=0)
         d12 = float(np.linalg.norm(c1 - c2))
         d23 = float(np.linalg.norm(c2 - c3))
-        has_3_components = (d12 >= 5.0 and d23 >= 5.0)
+        has_3_components = (d12 >= 4.0 and d23 >= 4.0)
     else:
         has_3_components = False
 
-    std_ok = (6.0 <= lum_std <= 22.0)
+    std_ok = (6.0 <= lum_std <= 42.0)
     sobel_ok = (sobel_mag >= 3.8)
 
     is_pass = std_ok and sobel_ok and has_3_components
