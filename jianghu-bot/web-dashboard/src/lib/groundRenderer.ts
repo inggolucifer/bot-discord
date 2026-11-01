@@ -603,71 +603,86 @@ export function drawSoftBlobRoadPath(
   const cx = px + tileSize * 0.5;
   const cy = py + tileSize * 0.5;
   const isWide = neighborsExtended?.isDoubleWide || ((hasE && hasW) && (hasN || hasS)) || ((hasN && hasS) && (hasE || hasW));
-  const hw = isWide ? tileSize * 0.50 : tileSize * 0.44; // Seamless connection width
-  const r = tileSize * 0.30;  // Corner radius
 
-  // Subtle organic undulation based on absolute world coordinates
   const wx = worldX !== undefined ? worldX : px / tileSize;
   const wy = worldY !== undefined ? worldY : py / tileSize;
-  const undulate = Math.sin(wx * 0.35 + wy * 0.42) * (tileSize * 0.035);
-  const left = cx - hw + undulate;
-  const right = cx + hw + undulate;
-  const top = cy - hw - undulate;
-  const bottom = cy + hw - undulate;
+
+  // V16: Continuous world noise displacement for organic road edge roughness (0.15..0.35 cell)
+  const wMod = 1.0 + 0.10 * Math.sin(wx * 0.6 + wy * 0.4) + 0.06 * Math.cos(wx * 1.2 - wy * 0.8);
+  const hw = (isWide ? tileSize * 0.50 : tileSize * 0.42) * wMod;
+  const r = tileSize * 0.28;
+
+  // Gentle lateral undulation
+  const undulateX = (smoothNoise2D(wx * 0.25, wy * 0.25, 41) - 0.5) * (tileSize * 0.12);
+  const undulateY = (smoothNoise2D(wx * 0.25, wy * 0.25, 73) - 0.5) * (tileSize * 0.12);
+
+  const left = cx - hw + undulateX;
+  const right = cx + hw + undulateX;
+  const top = cy - hw + undulateY;
+  const bottom = cy + hw + undulateY;
 
   ctx.beginPath();
 
   if (!hasN && !hasS && !hasW && !hasE) {
     // Single isolated stepping stone / natural patch
-    ctx.ellipse(cx, cy, hw * 0.85, hw * 0.75, 0.2, 0, Math.PI * 2);
+    ctx.ellipse(cx + undulateX, cy + undulateY, hw * 0.85, hw * 0.75, 0.2, 0, Math.PI * 2);
     ctx.closePath();
     ctx.fill();
     return;
   }
 
-  // Draw continuous interconnected corridor polygon with rounded corners
+  // Draw continuous interconnected corridor with organic curved segments
+  // Top side (North)
   if (hasN) {
     ctx.moveTo(left, py);
-    ctx.lineTo(right, py);
+    const midX = (left + right) * 0.5 + undulateX;
+    ctx.quadraticCurveTo(midX, py + (cy - hw - py) * 0.5, right, py);
   } else {
     ctx.moveTo(left + r, top);
-    ctx.lineTo(right - r, top);
+    const midX = (left + right) * 0.5;
+    ctx.quadraticCurveTo(midX, top + undulateY * 0.5, right - r, top);
     if (!hasE) ctx.arcTo(right, top, right, top + r, r);
   }
 
-  // Right side
+  // Right side (East)
   if (hasE) {
     if (!hasN) ctx.lineTo(right, top);
-    ctx.lineTo(px + tileSize, cy - hw);
+    const midY = cy + undulateY;
+    ctx.quadraticCurveTo(right + (px + tileSize - right) * 0.5, midY - hw, px + tileSize, cy - hw);
     ctx.lineTo(px + tileSize, cy + hw);
-    if (!hasS) ctx.lineTo(right, bottom);
+    if (!hasS) ctx.quadraticCurveTo(right + (px + tileSize - right) * 0.5, midY + hw, right, bottom);
   } else {
     if (hasN) ctx.lineTo(right, cy - hw);
-    ctx.lineTo(right, bottom - r);
+    const midY = (top + bottom) * 0.5;
+    ctx.quadraticCurveTo(right + undulateX * 0.5, midY, right, bottom - r);
     if (!hasS) ctx.arcTo(right, bottom, right - r, bottom, r);
   }
 
-  // Bottom side
+  // Bottom side (South)
   if (hasS) {
     if (!hasE && !hasS) ctx.lineTo(right, bottom);
-    ctx.lineTo(right, py + tileSize);
+    const midX = (left + right) * 0.5 + undulateX;
+    ctx.quadraticCurveTo(midX, bottom + (py + tileSize - bottom) * 0.5, right, py + tileSize);
     ctx.lineTo(left, py + tileSize);
-    if (!hasW) ctx.lineTo(left, bottom);
+    if (!hasW) ctx.quadraticCurveTo(left, bottom + (py + tileSize - bottom) * 0.5, left, bottom);
   } else {
     if (hasE) ctx.lineTo(cx + hw, bottom);
-    ctx.lineTo(left + r, bottom);
+    const midX = (left + right) * 0.5;
+    ctx.quadraticCurveTo(midX, bottom - undulateY * 0.5, left + r, bottom);
     if (!hasW) ctx.arcTo(left, bottom, left, bottom - r, r);
   }
 
-  // Left side
+  // Left side (West)
   if (hasW) {
     if (!hasS) ctx.lineTo(left, bottom);
-    ctx.lineTo(px, cy + hw);
+    const midY = cy + undulateY;
+    ctx.quadraticCurveTo(left - (left - px) * 0.5, midY + hw, px, cy + hw);
     ctx.lineTo(px, cy - hw);
-    if (!hasN) ctx.lineTo(left, top);
+    if (!hasN) ctx.quadraticCurveTo(left - (left - px) * 0.5, midY - hw, left, top);
   } else {
     if (hasS) ctx.lineTo(left, cy + hw);
-    ctx.lineTo(left, top + r);
+    const midY = (top + bottom) * 0.5;
+    ctx.quadraticCurveTo(left - undulateX * 0.5, midY, left, top + r);
     if (!hasN) ctx.arcTo(left, top, left + r, top, r);
   }
 
@@ -1550,8 +1565,9 @@ function compositeLotusPond(
         if (fam === 'snow' || fam === 'ice_crack' || fam === 'glacier') snowCnt++;
       }
       if (snowCnt >= 20) {
+        // V16 P4: Neutral trodden ice/snow path (low blue-red delta <= 10, zero dark trench)
         ctxT.save();
-        ctxT.fillStyle = 'rgba(165, 185, 205, 0.82)';
+        ctxT.fillStyle = 'rgba(190, 192, 195, 0.92)';
         ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
         ctxT.restore();
       }

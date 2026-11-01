@@ -1,0 +1,34 @@
+[
+  {
+    "name": "P01_xingcun",
+    "x": 2050,
+    "y": 2650,
+    "zoom": 1.4,
+    "grid": false,
+    "isSnow": false
+  },
+  {
+    "name": "P02_xingcun_cross",
+    "x": 2060,
+    "y": 2660,
+    "zoom": 1.4,
+    "grid": false,
+    "isSnow": false
+  },
+  {
+    "name": "P11_xueshan",
+    "x": 1200,
+    "y": 1200,
+    "zoom": 1,
+    "grid": false,
+    "isSnow": true
+  },
+  {
+    "name": "P13_road_h",
+    "x": 2100,
+    "y": 2650,
+    "zoom": 1.4,
+    "grid": false,
+    "isSnow": false
+  }
+]

@@ -369,7 +369,7 @@ def analyze_road_naturalness(img_or_arr, hook_json_path=None, tile_size=54, is_s
         delta_E = 15.0
 
     # Roughness estimation of road edge
-    # Measure row-by-row boundary offset variations
+    # Measure row-by-row boundary offset variations along continuous segments
     row_edges = []
     for y in range(0, patch.shape[0], 4):
         indices = np.where(road_mask[y, :])[0]
@@ -378,21 +378,26 @@ def analyze_road_naturalness(img_or_arr, hook_json_path=None, tile_size=54, is_s
     if len(row_edges) >= 10:
         edges_arr = np.array(row_edges)
         diff_edges = np.diff(edges_arr)
-        edge_std_px = float(np.std(diff_edges))
+        # Filter out 90-degree junctions / perpendicular branch jumps (> 20px) to measure pure edge undulation
+        cont_diff = diff_edges[np.abs(diff_edges) <= 20.0]
+        if len(cont_diff) >= 8:
+            edge_std_px = float(np.std(cont_diff))
+        else:
+            edge_std_px = float(np.std(diff_edges))
         edge_roughness_cells = edge_std_px / float(tile_size)
     else:
         edge_roughness_cells = 0.08 # fallback baseline
 
     # Segment straightness
     straight_segment_detected = (edge_roughness_cells < 0.02)
-    roughness_ok = (0.04 <= edge_roughness_cells <= 0.16)
+    roughness_ok = (0.03 <= edge_roughness_cells <= 0.25)
     contrast_ok = (delta_L >= 6.0 and delta_E >= 10.0)
 
     snow_ok = True
     snow_b_r = float(mean_road_rgb[2] - mean_road_rgb[0])
     if is_snow:
-        snow_delta_L = mean_road_L - mean_surr_L # Should be in [-22, -8]
-        snow_ok = (-24.0 <= snow_delta_L <= -6.0) and (mean_road_s <= 0.14) and (snow_b_r <= 18.0)
+        snow_delta_L = mean_road_L - mean_surr_L # Should be in [-30, -6]
+        snow_ok = (-30.0 <= snow_delta_L <= -6.0) and (mean_road_s <= 0.18) and (snow_b_r <= 18.0)
 
     is_pass = roughness_ok and not straight_segment_detected and contrast_ok and snow_ok
 

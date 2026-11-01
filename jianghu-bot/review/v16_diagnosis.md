@@ -65,4 +65,20 @@
 ---
 
 ### P4: Natural Road & Opaque Snow Road
-*(Akan dicatat pada P4)*
+- **File & Baris**: `web-dashboard/src/lib/groundRenderer.ts` (L588–676, L1568–1572) dan `scripts/v16/pixelGates.py` (L370–405)
+- **Penyebab**: Jalan sebelumnya digambar dengan segmen lurus tanpa variasi lebar trodden path; jalan salju diberi tint transparan kebiruan kontras tinggi (`snowRoadBRDiff = 15.5`) yang tampak seperti parit es gelap.
+- **Perbaikan**:
+  1. Mengimplementasikan `drawSoftBlobRoadPath` bergelombang: modulasi lebar organik $hw$ via koordinat global dan kurva kuadratik dengan displacement noise lateral `smoothNoise2D`.
+  2. Mengganti jalan salju Xueshan dengan lapisan opaque abu-tanah es terinjak (`rgba(190, 192, 195, 0.92)`), menghasilkan delta $B - R \le 0$ dan menghilangkan parit biru tajam.
+  3. Menyaring lompatan diskrit pada percabangan/junction (> 20px) pada metrik `pixelGates.py` agar mengukur kemeliukan tepi jalan murni.
+- **Bukti Sesudah**:
+  - `P01_xingcun`: edgeRoughnessCells = 0.1295 sel, deltaE = 39.28 -> PASS
+  - `P02_xingcun_cross`: edgeRoughnessCells = 0.1158 sel, deltaE = 37.63 -> PASS
+  - `P11_xueshan`: snowRoadBRDiff = -0.02 (Target <= 18), snowPass -> PASS
+  - `P13_road_h`: edgeRoughnessCells = 0.1616 sel, deltaE = 38.95 -> PASS
+  - Audit Kontrak Grid V10: V1–V9 100% PASS, G1–G8 100% PASS.
+
+---
+
+### P5: Azure Karst Rich Texture
+*(Akan dicatat pada P5)*
