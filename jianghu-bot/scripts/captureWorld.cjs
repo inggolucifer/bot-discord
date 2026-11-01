@@ -183,7 +183,7 @@ server.listen(3001, async () => {
     }
 
     let finalBuffer = await page.screenshot();
-    if (s.ground === 'only') {
+    if (s.ground === 'only' && !s.compress) {
       finalBuffer = await sharp(finalBuffer)
         .png({ compressionLevel: 9 })
         .toBuffer();
