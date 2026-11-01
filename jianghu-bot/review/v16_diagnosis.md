@@ -20,4 +20,19 @@
 
 ## Log Perubahan Fase
 ### P1: Continuous World Noise Mask & Weighted Variant Selection
-*(Akan dicatat pada P1)*
+- **File & Baris**: `web-dashboard/src/lib/groundRenderer.ts` (L30–65, L1241–1327)
+- **Penyebab**: Pemilihan varian sekunder sebelumnya menggunakan grid blok diskrit 8x8 dan pemotongan crop border `(V_BORDER, V_BORDER, 4, 4)` tanpa padding ke luar bounds chunk, memicu bercak ground persegi dan seam lurus pada sampling varian acak seragam (1/N).
+- **Perbaikan**:
+  1. Menambahkan fungsi kontinu `smoothNoise2D` dan `fbmNoise2D` berdasar koordinat dunia global `(worldX, worldY)`.
+  2. Mengimplementasikan `VM_CELLS = 16` dengan halo border `V_BORDER = 3` (padding 6 petak).
+  3. Upscaling dan blur mask merentang penuh dari `-padPx` hingga `canvasWidth + 2*padPx` sehingga continuous $C^1$ melintasi perbatasan chunk.
+  4. Menerapkan bobot CDF: Varian primer mendominasi ~75%, varian sekunder berbagi ~25% sebagai patch pulau-pulau organik alami.
+- **Bukti Sesudah**:
+  - `P01_xingcun straightEdgeCount: 0` (Target <= 1) -> PASS
+  - `P03_wild straightEdgeCount: 0` (Target <= 1) -> PASS
+  - Audit Kontrak Grid V10: V1–V9 100% PASS, G1–G8 100% PASS.
+
+---
+
+### P2: Farmland & Lotus Pond
+*(Akan dicatat pada P2)*

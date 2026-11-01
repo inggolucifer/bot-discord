@@ -37,6 +37,36 @@ export function hash2d(x: number, y: number): number {
 }
 
 /**
+ * Continuous 2D value noise with cubic Hermite interpolation.
+ * World-coordinate continuous, guaranteeing zero seams across chunk boundaries.
+ */
+export function smoothNoise2D(x: number, y: number, seed: number = 0): number {
+  const xi = Math.floor(x);
+  const yi = Math.floor(y);
+  const fx = x - xi;
+  const fy = y - yi;
+  const u = fx * fx * (3 - 2 * fx);
+  const v = fy * fy * (3 - 2 * fy);
+
+  const n00 = ((hash2d(xi + seed * 13, yi + seed * 37) & 0xffff) / 65535.0);
+  const n10 = ((hash2d((xi + 1) + seed * 13, yi + seed * 37) & 0xffff) / 65535.0);
+  const n01 = ((hash2d(xi + seed * 13, (yi + 1) + seed * 37) & 0xffff) / 65535.0);
+  const n11 = ((hash2d((xi + 1) + seed * 13, (yi + 1) + seed * 37) & 0xffff) / 65535.0);
+
+  const nx0 = n00 * (1 - u) + n10 * u;
+  const nx1 = n01 * (1 - u) + n11 * u;
+  return nx0 * (1 - v) + nx1 * v;
+}
+
+/**
+ * 2-Octave Continuous Fractal Noise in range [0, 1].
+ */
+export function fbmNoise2D(x: number, y: number, seed: number = 0): number {
+  return smoothNoise2D(x * 0.05, y * 0.05, seed) * 0.7 +
+         smoothNoise2D(x * 0.12, y * 0.12, seed + 1013) * 0.3;
+}
+
+/**
  * Wuxia Shan Shui / Ink-wash color palettes for all 35+ terrain types.
  */
 export function getTerrainWashPalette(terrainType: string): TerrainWashPalette {
@@ -1210,10 +1240,9 @@ export function renderChunkGroundBitmapTextured(
 
     // 2. If multiple variants, blend secondary variants smoothly using continuous blurred variant mask
     if (variants.length > 1 && F !== 'road_stone') {
-      const BLOCK_TILES = 8;
-      const BLOCKS_PER_CHUNK = CHUNK_SIZE / BLOCK_TILES; // 4
-      const V_BORDER = 1;
-      const V_GRID_DIM = BLOCKS_PER_CHUNK + V_BORDER * 2; // 6x6 blocks
+      const VM_CELLS = 16; // 16x16 sample points inside chunk (2 tiles per cell)
+      const V_BORDER = 3;  // 3 cells padding outside chunk (6 tiles halo)
+      const V_GRID_DIM = VM_CELLS + V_BORDER * 2; // 22x22 total mask dimensions
 
       const scratchVM = getScratch('VM', V_GRID_DIM, V_GRID_DIM);
       const scratchVMB = getScratch('VMB', canvasWidth, canvasHeight);
@@ -1225,25 +1254,34 @@ export function renderChunkGroundBitmapTextured(
         const ctxVT = scratchVT.ctx;
 
         const famId = Math.abs(hash2d(F.length, F.charCodeAt(0) || 7));
+        const cellTiles = CHUNK_SIZE / VM_CELLS; // 2 tiles per mask cell
+        const cellPx = canvasWidth / VM_CELLS;
+        const padPx = V_BORDER * cellPx;
+
+        // V16: Base variants[0] dominates ~75%. Secondary variants share the remaining ~25% as organic patches
+        const numSecondary = variants.length - 1;
+        const threshold = numSecondary === 1 ? 0.72 : (0.75 + (numSecondary - 2) * 0.02);
 
         for (let vIdx = 1; vIdx < variants.length; vIdx++) {
           const varId = variants[vIdx];
           const varPattern = groundTextures.getPattern(ctxVT, varId);
           if (!varPattern) continue;
 
-          // 2a. Fill small 6x6 variant mask using V11 macro sampling hash
+          const varSeed = famId + vIdx * 104729;
           const vmImgData = ctxVM.createImageData(V_GRID_DIM, V_GRID_DIM);
           const vmD32 = new Uint32Array(vmImgData.data.buffer);
 
           let hasAny = false;
-          for (let by = -V_BORDER; by < BLOCKS_PER_CHUNK + V_BORDER; by++) {
-            for (let bx = -V_BORDER; bx < BLOCKS_PER_CHUNK + V_BORDER; bx++) {
-              const bGlobalX = cx * BLOCKS_PER_CHUNK + bx;
-              const bGlobalY = cy * BLOCKS_PER_CHUNK + by;
-              const selIdx = Math.abs(hash2d(bGlobalX * 7919 + famId, bGlobalY * 104729 + famId)) % variants.length;
-              const idx = (by + V_BORDER) * V_GRID_DIM + (bx + V_BORDER);
-              if (selIdx === vIdx) {
-                vmD32[idx] = 0xff000000;
+          for (let my = -V_BORDER; my < VM_CELLS + V_BORDER; my++) {
+            const worldY = cy * CHUNK_SIZE + (my + 0.5) * cellTiles;
+            const rowOffset = (my + V_BORDER) * V_GRID_DIM;
+            for (let mx = -V_BORDER; mx < VM_CELLS + V_BORDER; mx++) {
+              const worldX = cx * CHUNK_SIZE + (mx + 0.5) * cellTiles;
+              const nVal = fbmNoise2D(worldX, worldY, varSeed);
+              const idx = rowOffset + (mx + V_BORDER);
+              if (nVal > threshold) {
+                const alpha = Math.min(255, Math.floor(((nVal - threshold) / (1.0 - threshold)) * 320));
+                vmD32[idx] = (alpha << 24) | 0x00ffffff;
                 hasAny = true;
               } else {
                 vmD32[idx] = 0x00000000;
@@ -1254,21 +1292,21 @@ export function renderChunkGroundBitmapTextured(
           if (!hasAny) continue;
           ctxVM.putImageData(vmImgData, 0, 0);
 
-          // 2b. Upscale & blur variant mask to eliminate block boundary seams
+          // 2b. Upscale & blur variant mask with continuous border padding
           ctxVMB.clearRect(0, 0, canvasWidth, canvasHeight);
           ctxVMB.imageSmoothingEnabled = true;
           ctxVMB.imageSmoothingQuality = 'high';
-          ctxVMB.filter = `blur(${(tileSize * 1.2).toFixed(1)}px)`; // ~65px organic soft blend
+          ctxVMB.filter = `blur(${(tileSize * 0.9).toFixed(1)}px)`; // ~50px organic soft blend
           ctxVMB.drawImage(
             scratchVM.canvas,
-            V_BORDER,
-            V_BORDER,
-            BLOCKS_PER_CHUNK,
-            BLOCKS_PER_CHUNK,
             0,
             0,
-            canvasWidth,
-            canvasHeight
+            V_GRID_DIM,
+            V_GRID_DIM,
+            -padPx,
+            -padPx,
+            canvasWidth + 2 * padPx,
+            canvasHeight + 2 * padPx
           );
           ctxVMB.filter = 'none';
 
@@ -1276,7 +1314,6 @@ export function renderChunkGroundBitmapTextured(
           ctxVT.clearRect(0, 0, canvasWidth, canvasHeight);
           ctxVT.globalCompositeOperation = 'source-over';
           if (typeof (varPattern as any).setTransform === 'function') {
-            // V15 P4.2: Domain warp UV for secondary variants (subtle translation offset)
             const warpSeed = (cx * 37 + cy * 79 + vIdx * 101) & 0xff;
             const warpOffsetX = originX + ((warpSeed % 7) - 3) * (tileSize * 0.15);
             const warpOffsetY = originY + (((warpSeed >> 3) % 7) - 3) * (tileSize * 0.15);
