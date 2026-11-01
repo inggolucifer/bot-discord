@@ -1041,9 +1041,9 @@ export function renderChunkGroundBitmapTextured(
     return tileLookup.get(`${x},${y}`) || (getNeighborTerrain ? getNeighborTerrain(x, y) : undefined);
   };
 
-  // Step 2: Determine family for each tile in chunk + border 2 tiles (36x36 grid)
-  const BORDER = 2;
-  const GRID_DIM = CHUNK_SIZE + BORDER * 2; // 36
+  // Step 2: Determine family for each tile in chunk + border 3 tiles (38x38 grid for wide blur padding)
+  const BORDER = 3;
+  const GRID_DIM = CHUNK_SIZE + BORDER * 2; // 38
   const gridFamilies = new Array<string>(GRID_DIM * GRID_DIM);
   const presentFamilies = new Set<string>();
 
@@ -1084,7 +1084,7 @@ export function renderChunkGroundBitmapTextured(
     ctxT.clearRect(0, 0, canvasWidth, canvasHeight);
     ctxT.globalCompositeOperation = 'source-over';
 
-    // 4b: Small mask M (36x36)
+    // 4b: Small mask M (38x38)
     const imgData = ctxM.createImageData(GRID_DIM, GRID_DIM);
     const d32 = new Uint32Array(imgData.data.buffer);
     if (F === 'settlement_floor') {
@@ -1125,13 +1125,44 @@ export function renderChunkGroundBitmapTextured(
       }
     } else {
       const isBaseFamily = (F === sortedFamilies[0]);
-      for (let i = 0; i < gridFamilies.length; i++) {
-        // V13 P4: Base terrain family fills 100% under everything to form an uninterrupted solid ink wash base
-        // completely eliminates transparent paper holes at biome boundaries (F7)
-        if (isBaseFamily) {
-          d32[i] = 0xff000000;
-        } else {
-          d32[i] = gridFamilies[i] === F ? 0xff000000 : 0x00000000;
+      for (let gy = 0; gy < GRID_DIM; gy++) {
+        for (let gx = 0; gx < GRID_DIM; gx++) {
+          const i = gy * GRID_DIM + gx;
+          if (isBaseFamily) {
+            d32[i] = 0xff000000;
+          } else {
+            const isMatch = (gridFamilies[i] === F);
+            let isBoundary = false;
+            for (let dy = -1; dy <= 1 && !isBoundary; dy++) {
+              for (let dx = -1; dx <= 1; dx++) {
+                const ny = gy + dy;
+                const nx = gx + dx;
+                if (nx >= 0 && nx < GRID_DIM && ny >= 0 && ny < GRID_DIM) {
+                  if ((gridFamilies[ny * GRID_DIM + nx] === F) !== isMatch) {
+                    isBoundary = true;
+                    break;
+                  }
+                }
+              }
+            }
+
+            if (!isBoundary) {
+              d32[i] = isMatch ? 0xff000000 : 0x00000000;
+            } else {
+              // V16 P3: Boundary tile organic displacement via continuous world noise
+              const worldX = cx * CHUNK_SIZE + (gx - BORDER);
+              const worldY = cy * CHUNK_SIZE + (gy - BORDER);
+              const dispNoise = fbmNoise2D(worldX * 0.15, worldY * 0.15, 777);
+              let alpha = isMatch ? 0.80 : 0.0;
+              if (isMatch) {
+                alpha = 0.45 + (dispNoise - 0.5) * 0.6;
+              } else if (dispNoise > 0.65) {
+                alpha = (dispNoise - 0.65) * 1.4;
+              }
+              const aByte = Math.max(0, Math.min(255, Math.round(alpha * 255)));
+              d32[i] = (aByte << 24);
+            }
+          }
         }
       }
     }
@@ -1171,8 +1202,8 @@ export function renderChunkGroundBitmapTextured(
       ctxMB.drawImage(scratchM.canvas, 0, 0, GRID_DIM, GRID_DIM, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
 
       ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
-      // V13 P2: Settlement floor organic feathering blur (0.45 * tileSize) and ink splatter mask
-      const blurPx = F === 'settlement_floor' ? tileSize * 0.45 : tileSize * 0.32;
+      // V16 P3: Broad organic feathering blur (0.75 * tileSize) for soft gradual Shan Shui transitions
+      const blurPx = F === 'settlement_floor' ? tileSize * 0.45 : tileSize * 0.75;
       ctxMB2.filter = `blur(${blurPx.toFixed(1)}px)`;
       ctxMB2.drawImage(scratchMB.canvas, 0, 0);
       ctxMB2.filter = 'none';

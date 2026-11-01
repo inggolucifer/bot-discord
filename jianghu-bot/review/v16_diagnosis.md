@@ -50,4 +50,19 @@
 ---
 
 ### P3: Organic Biome Transition
-*(Akan dicatat pada P3)*
+- **File & Baris**: `web-dashboard/src/lib/groundRenderer.ts` (L1045–1190)
+- **Penyebab**: Batas perbatasan family sebelumnya diisi biner diskrit 0/1 per petak sel kaku tanpa modulasi kontinu, dan radius blur hanya `0.32 * tileSize` (~17px) dengan padding halo `BORDER = 2`, menghasilkan batas garis potong lurus kaku pada perbatasan T1 di `P21` (0.389 sel) dan `P22` (0.0 sel).
+- **Perbaikan**:
+  1. Menaikkan halo border padding `BORDER` dari 2 menjadi 3 sel (`GRID_DIM = 38`), mencegah clipping saat blur diperlebar.
+  2. Mengimplementasikan modulasi batas sel berbasis `fbmNoise2D` kontinu dunia pada sel perbatasan (undulasi organik meliuk alami).
+  3. Memperlebar blur feathering perbatasan family dari `0.32 * tileSize` ke `0.75 * tileSize` (~40.5px) untuk transisi lembut bertahap.
+- **Bukti Sesudah**:
+  - `P21_boundary_t1` transitionWidthCells: 11.389 sel (Target >= 1.0) -> PASS
+  - `P22_boundary_t1` transitionWidthCells: 5.278 sel (Target >= 1.0) -> PASS
+  - `straightEdgeCount`: 0 pada kedua titik -> PASS
+  - Audit Kontrak Grid V10: V1–V9 100% PASS, G1–G8 100% PASS.
+
+---
+
+### P4: Natural Road & Opaque Snow Road
+*(Akan dicatat pada P4)*
