@@ -84,18 +84,18 @@ export function getTerrainWashPalette(terrainType: string): TerrainWashPalette {
     case 'sea_reef':
       return { baseColor: '#5C8299', accentColor: '#3E5E73', mistColor: '#B0C9D6', grainColor: '#2B4A5F', isWater: true, staminaCost: 3.0 };
     case 'pond_lotus':
-      return { baseColor: '#93B7AA', accentColor: '#5E8C7B', mistColor: '#D7E9E2', grainColor: '#497464', isWater: true, staminaCost: 1.4 };
+      return { baseColor: '#266572', accentColor: '#1E525C', mistColor: '#72B5C2', grainColor: '#174048', isWater: true, staminaCost: 1.4 };
 
     // Vegetation, Farmland & Woods
     case 'meadow':
-      return { baseColor: '#D4DEC9', accentColor: '#A8BC99', mistColor: '#EFF3EA', grainColor: '#8CA37A', staminaCost: 1.0 };
+      return { baseColor: '#5F8C45', accentColor: '#426B2E', mistColor: '#92B37B', grainColor: '#355624', staminaCost: 1.0 };
     case 'farmland':
     case 'herb_field':
       return { baseColor: '#4A7C36', accentColor: '#2C5022', mistColor: '#CDE5C0', grainColor: '#386629', staminaCost: 1.0 };
     case 'bamboo_grove':
     case 'bamboo_dense':
     case 'bamboo_forest':
-      return { baseColor: '#BDCEBA', accentColor: '#5E8C7B', mistColor: '#E2EBE0', grainColor: '#4A6B53', staminaCost: 1.3 };
+      return { baseColor: '#4A7C38', accentColor: '#325C24', mistColor: '#80B86C', grainColor: '#284C1C', staminaCost: 1.3 };
     case 'spirit_wood':
     case 'forest':
       return { baseColor: '#B5C4B1', accentColor: '#4A6B53', mistColor: '#DFE7DC', grainColor: '#395340', staminaCost: 1.2 };
@@ -1328,7 +1328,9 @@ export function renderChunkGroundBitmapTextured(
 
       ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
       // V17 P2: Broad organic Gaussian blur (1.5 * tileSize = 81px) for seamless continuous transition
-      const blurPx = F === 'settlement_floor' ? tileSize * 0.45 : tileSize * 1.5;
+      // Water shorelines use a crisp 0.35 * tileSize blur to prevent over-extended cyan edge bands
+      const isWaterFam = F === 'river' || F === 'lake' || F === 'pond_lotus' || F === 'ocean' || F === 'sea' || F === 'water';
+      const blurPx = F === 'settlement_floor' ? tileSize * 0.45 : (isWaterFam ? tileSize * 0.35 : tileSize * 1.5);
       ctxMB2.filter = `blur(${blurPx.toFixed(1)}px)`;
       ctxMB2.drawImage(scratchMB.canvas, 0, 0);
       ctxMB2.filter = 'none';
@@ -1542,7 +1544,7 @@ function compositeFarmlandPaddy(
   const PLOT_TILES = 4;
   const PLOTS_PER_CHUNK = CHUNK_SIZE / PLOT_TILES; // 8
   const plotPx = PLOT_TILES * tileSize;
-  const ridgeWidth = tileSize * 0.35;
+  const ridgeWidth = tileSize * 0.48;
 
   for (let py = 0; py < PLOTS_PER_CHUNK; py++) {
     const worldY = cy * CHUNK_SIZE + py * PLOT_TILES;
@@ -1560,11 +1562,11 @@ function compositeFarmlandPaddy(
       ctx.fillStyle = '#2d5324';
       ctx.beginPath();
       const r = Math.min(16, w * 0.22);
-      ctx.roundRect(x0 - 2, y0 - 2, w + 4, h + 4, r + 2);
+      ctx.roundRect(x0 - 4, y0 - 4, w + 8, h + 8, r + 4);
       ctx.fill();
 
       // 3b. Reflective water interior (teal-cyan sky reflection, Hue ~185-195 deg, Sat > 0.25)
-      ctx.fillStyle = seed % 2 === 0 ? 'rgba(48, 108, 118, 0.70)' : 'rgba(42, 98, 108, 0.65)';
+      ctx.fillStyle = seed % 2 === 0 ? 'rgba(38, 115, 125, 0.75)' : 'rgba(32, 105, 115, 0.70)';
       ctx.beginPath();
       ctx.roundRect(x0, y0, w, h, r);
       ctx.fill();
@@ -1609,34 +1611,36 @@ function compositeLotusPond(
 ): void {
   ctx.save();
 
-  // Clear teal water tint (Hue ~190 deg, Sat ~0.60)
+  // Clear teal water tint (Hue ~180 deg, Sat ~0.58)
   ctx.globalCompositeOperation = 'source-over';
-  ctx.fillStyle = 'rgba(42, 105, 118, 0.85)';
+  ctx.fillStyle = '#266572';
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  ctx.fillStyle = 'rgba(68, 140, 52, 0.28)';
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-  // Floating lotus pads & flowers
-  const PADS_PER_CHUNK = 12;
+  // Floating lotus pads & flowers (lush emerald water foliage)
+  const PADS_PER_CHUNK = 36;
   for (let i = 0; i < PADS_PER_CHUNK; i++) {
     const seed = Math.abs(hash2d(cx * 89 + i * 23, cy * 113 + i * 41));
-    const padX = ((seed % 1000) / 1000) * (canvasWidth - 40) + 20;
-    const padY = (((seed >> 10) % 1000) / 1000) * (canvasHeight - 40) + 20;
-    const padRadius = 6 + (seed % 5);
+    const padX = ((seed % 1000) / 1000) * (canvasWidth - 60) + 30;
+    const padY = (((seed >> 10) % 1000) / 1000) * (canvasHeight - 60) + 30;
+    const padRadius = 14 + (seed % 10);
 
-    // Emerald lotus leaf pad (Hue ~134 deg)
-    ctx.fillStyle = '#347844';
+    // Vibrant emerald lotus leaf pad (Hue ~115-126 deg, Sat ~0.60)
+    ctx.fillStyle = (seed % 2 === 0) ? '#3ca048' : '#459e3c';
     ctx.beginPath();
     ctx.arc(padX, padY, padRadius, 0.25, Math.PI * 2 - 0.25);
     ctx.fill();
 
-    // Lotus blossom on ~40% of pads
+    // Lotus blossom on ~35% of pads
     if ((seed % 5) < 2) {
-      ctx.fillStyle = 'rgba(235, 142, 172, 0.92)';
+      ctx.fillStyle = 'rgba(238, 145, 175, 0.95)';
       ctx.beginPath();
-      ctx.arc(padX + 2, padY - 2, 3, 0, Math.PI * 2);
+      ctx.arc(padX + 2, padY - 2, 4, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
-      ctx.arc(padX + 2, padY - 2, 1.2, 0, Math.PI * 2);
+      ctx.arc(padX + 2, padY - 2, 1.6, 0, Math.PI * 2);
       ctx.fill();
     }
   }
