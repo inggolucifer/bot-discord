@@ -91,7 +91,7 @@ export function getTerrainWashPalette(terrainType: string): TerrainWashPalette {
       return { baseColor: '#D4DEC9', accentColor: '#A8BC99', mistColor: '#EFF3EA', grainColor: '#8CA37A', staminaCost: 1.0 };
     case 'farmland':
     case 'herb_field':
-      return { baseColor: '#C9D6B8', accentColor: '#8CA37A', mistColor: '#E9EFE0', grainColor: '#6B8756', staminaCost: 1.0 };
+      return { baseColor: '#4A7C36', accentColor: '#2C5022', mistColor: '#CDE5C0', grainColor: '#386629', staminaCost: 1.0 };
     case 'bamboo_grove':
     case 'bamboo_dense':
     case 'bamboo_forest':
@@ -887,8 +887,14 @@ export function renderChunkGroundBitmap(
       const bitmask = calculateAutotileBitmask(t.tileX, t.tileY, t.terrainType, chunkNeighborTerrain);
       const frameId = getAutotileFrameId(t.terrainType, bitmask);
       if (atlasLoader.hasFrame(frameId)) {
-        atlasLoader.drawSprite(ctx, frameId, sx, sy, tileSize, tileSize, 0.95);
+        atlasLoader.drawSprite(ctx, frameId, sx, sy, tileSize, tileSize, 0.40);
       }
+      // Rich vibrant river water glaze (Hue ~185-195 deg, Sat > 0.35) to prevent desaturated foam
+      ctx.save();
+      ctx.globalCompositeOperation = 'soft-light';
+      ctx.fillStyle = 'rgba(38, 118, 142, 0.65)';
+      ctx.fillRect(sx, sy, tileSize, tileSize);
+      ctx.restore();
     }
   }
 
@@ -1429,18 +1435,30 @@ function compositeFarmlandPaddy(
 ): void {
   ctx.save();
 
-  // 1. Fresh jade green tone glaze to guarantee vibrant rural hue (Hue ~75-82 deg)
-  ctx.globalCompositeOperation = 'soft-light';
-  ctx.fillStyle = 'rgba(68, 138, 48, 0.42)';
+  // 1. Lush emerald paddy field foundation (solid source-over, Hue ~98-105 deg)
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = '#4a7c36';
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-  // 2. Render rounded paddy field plots across the 32x32 chunk
+  // 2. Multi-octave natural variation in paddy field green
+  const PAT_CELL = tileSize * 2;
+  const numPatX = Math.ceil(canvasWidth / PAT_CELL);
+  const numPatY = Math.ceil(canvasHeight / PAT_CELL);
+  for (let py = 0; py < numPatY; py++) {
+    const wy = cy * CHUNK_SIZE + py * 2;
+    for (let px = 0; px < numPatX; px++) {
+      const wx = cx * CHUNK_SIZE + px * 2;
+      const n = (Math.sin(wx * 0.35) * Math.cos(wy * 0.35) + 1.0) * 0.5;
+      ctx.fillStyle = n > 0.5 ? 'rgba(82, 135, 61, 0.45)' : 'rgba(65, 110, 47, 0.40)';
+      ctx.fillRect(px * PAT_CELL, py * PAT_CELL, PAT_CELL, PAT_CELL);
+    }
+  }
+
+  // 3. Render rounded paddy field plots across chunk
   const PLOT_TILES = 4;
   const PLOTS_PER_CHUNK = CHUNK_SIZE / PLOT_TILES; // 8
   const plotPx = PLOT_TILES * tileSize;
-  const ridgeWidth = tileSize * 0.45; // ~24px grass ridge
-
-  ctx.globalCompositeOperation = 'source-over';
+  const ridgeWidth = tileSize * 0.35;
 
   for (let py = 0; py < PLOTS_PER_CHUNK; py++) {
     const worldY = cy * CHUNK_SIZE + py * PLOT_TILES;
@@ -1448,37 +1466,34 @@ function compositeFarmlandPaddy(
       const worldX = cx * CHUNK_SIZE + px * PLOT_TILES;
       const seed = Math.abs(hash2d(worldX * 31 + 7, worldY * 47 + 13));
 
-      // Plot bounds with rounded margins
       const x0 = px * plotPx + ridgeWidth;
       const y0 = py * plotPx + ridgeWidth;
       const w = plotPx - ridgeWidth * 2;
       const h = plotPx - ridgeWidth * 2;
-
       if (w <= 0 || h <= 0) continue;
 
-      // 2a. Raised grass ridge boundary around plot
-      ctx.fillStyle = 'rgba(74, 108, 48, 0.55)';
+      // 3a. Deep emerald grass ridge around plot
+      ctx.fillStyle = '#2d5324';
       ctx.beginPath();
-      const r = Math.min(18, w * 0.25);
-      ctx.roundRect(x0 - 3, y0 - 3, w + 6, h + 6, r + 2);
+      const r = Math.min(16, w * 0.22);
+      ctx.roundRect(x0 - 2, y0 - 2, w + 4, h + 4, r + 2);
       ctx.fill();
 
-      // 2b. Shallow reflective paddy water interior
-      const waterTint = (seed % 2 === 0) ? 'rgba(92, 138, 88, 0.38)' : 'rgba(80, 130, 95, 0.34)';
-      ctx.fillStyle = waterTint;
+      // 3b. Reflective water interior (teal-cyan sky reflection, Hue ~185-195 deg, Sat > 0.25)
+      ctx.fillStyle = seed % 2 === 0 ? 'rgba(48, 108, 118, 0.70)' : 'rgba(42, 98, 108, 0.65)';
       ctx.beginPath();
       ctx.roundRect(x0, y0, w, h, r);
       ctx.fill();
 
-      // 2c. Soft water sheen / sky reflection
-      ctx.fillStyle = 'rgba(165, 210, 195, 0.12)';
+      // 3c. Sky sheen
+      ctx.fillStyle = 'rgba(125, 185, 195, 0.25)';
       ctx.beginPath();
-      ctx.roundRect(x0 + 4, y0 + 4, w * 0.65, h * 0.45, r * 0.6);
+      ctx.roundRect(x0 + 4, y0 + 4, w * 0.6, h * 0.45, r * 0.5);
       ctx.fill();
 
-      // 2d. Rice tufts / shoots planted inside the plot
-      const numShoots = 3 + (seed % 3);
-      ctx.fillStyle = 'rgba(112, 168, 58, 0.75)';
+      // 3d. Vibrant rice shoots (Hue ~95-100 deg)
+      const numShoots = 3 + (seed % 4);
+      ctx.fillStyle = '#68ad33';
       for (let s = 0; s < numShoots; s++) {
         const sSeed = (seed >> (s * 3)) & 0xff;
         const sx = x0 + 8 + ((sSeed * 17) % Math.max(1, Math.floor(w - 16)));
@@ -1496,7 +1511,7 @@ function compositeFarmlandPaddy(
 }
 
 /**
- * V16: Procedural Lotus Pond Composite.
+ * V16/V17: Procedural Lotus Pond Composite.
  * Renders clear teal-blue reflective water, floating emerald lotus pads,
  * and delicate pink lotus blossom decals.
  */
@@ -1510,9 +1525,9 @@ function compositeLotusPond(
 ): void {
   ctx.save();
 
-  // Clear teal water tint
+  // Clear teal water tint (Hue ~190 deg, Sat ~0.60)
   ctx.globalCompositeOperation = 'source-over';
-  ctx.fillStyle = 'rgba(62, 128, 134, 0.45)';
+  ctx.fillStyle = 'rgba(42, 105, 118, 0.85)';
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
   // Floating lotus pads & flowers
@@ -1523,8 +1538,8 @@ function compositeLotusPond(
     const padY = (((seed >> 10) % 1000) / 1000) * (canvasHeight - 40) + 20;
     const padRadius = 6 + (seed % 5);
 
-    // Emerald lotus leaf pad
-    ctx.fillStyle = 'rgba(48, 122, 78, 0.85)';
+    // Emerald lotus leaf pad (Hue ~134 deg)
+    ctx.fillStyle = '#347844';
     ctx.beginPath();
     ctx.arc(padX, padY, padRadius, 0.25, Math.PI * 2 - 0.25);
     ctx.fill();
@@ -1613,12 +1628,12 @@ function compositeAzureKarst(
     if (allowComposites) {
       if (F === 'farmland' && !flags?.noFarm) {
         compositeFarmlandPaddy(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
-      } else if (F === 'pond_lotus') {
+      } else if (F === 'pond_lotus' || F === 'lake') {
         compositeLotusPond(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
       } else if (F === 'plains' || F === 'meadow') {
         ctxT.save();
         ctxT.globalCompositeOperation = 'soft-light';
-        ctxT.fillStyle = 'rgba(75, 125, 45, 0.35)';
+        ctxT.fillStyle = 'rgba(75, 125, 45, 0.45)';
         ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
         ctxT.restore();
       }
@@ -1715,8 +1730,14 @@ function compositeAzureKarst(
       const bitmask = calculateAutotileBitmask(t.tileX, t.tileY, t.terrainType, chunkNeighborTerrain);
       const frameId = getAutotileFrameId(t.terrainType, bitmask);
       if (atlasLoader.hasFrame(frameId)) {
-        atlasLoader.drawSprite(ctx, frameId, sx, sy, tileSize, tileSize, 0.95);
+        atlasLoader.drawSprite(ctx, frameId, sx, sy, tileSize, tileSize, 0.40);
       }
+      // Rich vibrant river water glaze (Hue ~185-195 deg, Sat > 0.35) to prevent desaturated foam
+      ctx.save();
+      ctx.globalCompositeOperation = 'soft-light';
+      ctx.fillStyle = 'rgba(38, 118, 142, 0.65)';
+      ctx.fillRect(sx, sy, tileSize, tileSize);
+      ctx.restore();
     }
   }
 

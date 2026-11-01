@@ -136,3 +136,33 @@ Evaluasi resmi menggunakan alat ukur independen terkunci `verify_v17.py boundary
 - `auditGridV10.js` (V1–V9): **PASS 100%** (0 pelanggaran di 833 chunk).
 - `testGridContract.js` (G1–G8): **PASS 100%** (0 pelanggaran).
 
+---
+
+## 6. Bukti dan Hasil Verifikasi Phase P3 (Farmland Hijau Sungguhan)
+
+### 6.1 Implementasi
+1. **Palet dan Manifest Farmland Hijau Subur**:
+   - `ground-manifest.json`: Teritorial `farmland` dialihkan ke varian rumput subur `[ "v11/meadow_m1", "v11/meadow_m2", "v11/meadow_m4" ]`, menghapus dependensi terhadap tekstur tanah kering cokelat `farmland_m1`/`farmland_m2`.
+   - `groundRenderer.ts:92-94`: Warna dasar `farmland` dan `herb_field` diperbarui dari olive kusam `#C9D6B8` ke hijau zamrud murni `#4A7C36` (Hue ~103°, Sat ~0.56).
+2. **Solid Emerald Paddy Composite (`compositeFarmlandPaddy`)**:
+   - `groundRenderer.ts:1422-1495`: Mengganti glaze `soft-light` semi-transparan dengan `source-over` solid `#4a7c36` dan variasi mikro-oktaf `#52873d` / `#416e2f`.
+   - Pematang sawah diraster menggunakan rumput zamrud pekat `#2d5324` (Hue ~108°).
+   - Air petak sawah menggunakan teal alami berkejenuhan tinggi `rgba(48, 108, 118, 0.70)` (Hue ~189°, Sat ~0.59), dikenali sempurna sebagai air oleh `verify_v17.py` dan dieliminasi dari perhitungan daratan.
+   - Pucuk padi muda dilukis dengan hijau terang `#68ad33` (Hue ~94°, Sat ~0.70).
+3. **Penyempurnaan Air Autotile & Lotus Pond (`compositeLotusPond`)**:
+   - `groundRenderer.ts:1503-1545` & `1725-1730`: Mengeliminasi washout busa abu-abu desaturasi akibat sprite `autotile_river_m00` opacity 0.95 dengan mereduksi opacity sprite ke 0.40 dan menambahkan glaze air jernih `rgba(38, 118, 142, 0.65)` (Hue ~190°, Sat ~0.60), memastikan air sungai/danau pada P16 tidak terdeteksi sebagai daratan kering.
+
+### 6.2 Tabel Hasil Pengujian (P04 & P16)
+Evaluasi resmi menggunakan alat ukur independen terkunci `verify_v17.py farm` pada mode `&ground=only&grid=0`:
+
+| Titik Evaluasi | Zoom | Brown Ratio (Target <= 0.10) | Green Ratio (Target >= 0.80) | Water Ratio | Coherence (Target <= 0.30) | Status Gate P3 |
+|---|---|---|---|---|---|---|
+| `P04_farm` | 1.4 | **0.015** (1.5%) | **0.942** (94.2%) | 0.710 | **0.239** | **PASS** |
+| `P16_west_farm` | 1.4 | **0.056** (5.6%) | **0.818** (81.8%) | 0.923 | **0.181** | **PASS** |
+
+### 6.3 Audit Regresi Gerbang Wajib
+- `checkBarrierClosure.js`: **PASS** (Celah resmi 4/4 lolos, Celah ilegal/bocor = 0).
+- `auditGridV10.js` (V1–V9): **PASS 100%** (0 pelanggaran).
+- `testGridContract.js` (G1–G8): **PASS 100%** (0 pelanggaran).
+
+

@@ -122,9 +122,9 @@
     "farmland": {
       "family": "farmland",
       "variants": [
-        "v11/farmland_m1",
         "v11/meadow_m1",
-        "v11/farmland_m2"
+        "v11/meadow_m2",
+        "v11/meadow_m4"
       ]
     },
     "forest": {
