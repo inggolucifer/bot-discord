@@ -807,17 +807,25 @@ const CHUNK_SIZE = 32;
  * Pre-renders an entire 32x32 chunk's ground layer (G0, G1, G2, G3, and base G4)
  * onto an OffscreenCanvas. This provides 60+ FPS high-performance rendering.
  */
+export interface GroundBisectFlags {
+  groundOnly?: boolean;
+  layers?: 'base' | 'base+families' | 'base+families+variants' | 'all';
+  noRoad?: boolean;
+  noFarm?: boolean;
+}
+
 export function renderChunkGroundBitmap(
   cx: number,
   cy: number,
   tiles: Array<{ tileX: number; tileY: number; terrainType: string }>,
   tileSize: number = 54,
-  getNeighborTerrain?: NeighborTerrainFn
+  getNeighborTerrain?: NeighborTerrainFn,
+  flags?: GroundBisectFlags
 ): HTMLCanvasElement | null {
   if (typeof document === 'undefined') return null;
 
   if (groundTextures.ready) {
-    const textured = renderChunkGroundBitmapTextured(cx, cy, tiles, tileSize, getNeighborTerrain);
+    const textured = renderChunkGroundBitmapTextured(cx, cy, tiles, tileSize, getNeighborTerrain, flags);
     if (textured) return textured;
   }
 
@@ -1026,7 +1034,8 @@ export function renderChunkGroundBitmapTextured(
   cy: number,
   tiles: Array<{ tileX: number; tileY: number; terrainType: string }>,
   tileSize: number = 54,
-  getNeighborTerrain?: NeighborTerrainFn
+  getNeighborTerrain?: NeighborTerrainFn,
+  flags?: GroundBisectFlags
 ): HTMLCanvasElement | null {
   if (typeof document === 'undefined') return null;
   const t0 = performance.now();
@@ -1096,6 +1105,8 @@ export function renderChunkGroundBitmapTextured(
 
   // Step 4: Render each family
   for (const F of sortedFamilies) {
+    if (flags?.layers === 'base' && F !== sortedFamilies[0]) continue;
+    if (flags?.noRoad && F === 'road_stone') continue;
     ctxT.clearRect(0, 0, canvasWidth, canvasHeight);
     ctxT.globalCompositeOperation = 'source-over';
 
@@ -1285,7 +1296,7 @@ export function renderChunkGroundBitmapTextured(
     }
 
     // 2. If multiple variants, blend secondary variants smoothly using continuous blurred variant mask
-    if (variants.length > 1 && F !== 'road_stone') {
+    if (variants.length > 1 && F !== 'road_stone' && flags?.layers !== 'base+families') {
       const VM_CELLS = 16; // 16x16 sample points inside chunk (2 tiles per cell)
       const V_BORDER = 3;  // 3 cells padding outside chunk (6 tiles halo)
       const V_GRID_DIM = VM_CELLS + V_BORDER * 2; // 22x22 total mask dimensions
@@ -1380,7 +1391,7 @@ export function renderChunkGroundBitmapTextured(
     }
 
     // 2e: V11 Composite 20% detail overlay from FAMILY_detail.png
-    const detailPattern = groundTextures.getDetailPattern(ctxT, F);
+    const detailPattern = (flags?.layers !== 'base+families') ? groundTextures.getDetailPattern(ctxT, F) : null;
     if (detailPattern) {
       ctxT.save();
       ctxT.globalCompositeOperation = 'soft-light';
@@ -1589,32 +1600,31 @@ function compositeAzureKarst(
   ctx.restore();
 }
 
-    // V16 P2: Farmland paddy composite with rounded plots, grass ridges & fresh jade glaze
-    if (F === 'farmland') {
-      compositeFarmlandPaddy(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
-    } else if (F === 'pond_lotus') {
-      compositeLotusPond(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
-    } else if (F === 'plains' || F === 'meadow') {
-      ctxT.save();
-      ctxT.globalCompositeOperation = 'soft-light';
-      ctxT.fillStyle = 'rgba(75, 125, 45, 0.35)';
-      ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
-      ctxT.restore();
-    }
+    const allowComposites = (flags?.layers !== 'base+families' && flags?.layers !== 'base+families+variants');
+    if (allowComposites) {
+      if (F === 'farmland' && !flags?.noFarm) {
+        compositeFarmlandPaddy(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
+      } else if (F === 'pond_lotus') {
+        compositeLotusPond(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
+      } else if (F === 'plains' || F === 'meadow') {
+        ctxT.save();
+        ctxT.globalCompositeOperation = 'soft-light';
+        ctxT.fillStyle = 'rgba(75, 125, 45, 0.35)';
+        ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
+        ctxT.restore();
+      }
 
-    // V16 P5: Rich Karst rock stratification for Azure Mountains / rock_ground / canyon / cliff
-    if (F === 'rock_ground' || F === 'canyon_floor' || F === 'cliff') {
-      compositeAzureKarst(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
-    }
+      if (F === 'rock_ground' || F === 'canyon_floor' || F === 'cliff') {
+        compositeAzureKarst(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
+      }
 
-    // V13 P2: Settlement floor uses base ground + warm loam village road glaze (+8% lightness)
-    // Delta L <= 22 vs surrounding wilderness, zero pale white patch
-    if (F === 'settlement_floor') {
-      ctxT.save();
-      ctxT.globalCompositeOperation = 'source-over';
-      ctxT.fillStyle = 'rgba(180, 160, 135, 0.08)';
-      ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
-      ctxT.restore();
+      if (F === 'settlement_floor') {
+        ctxT.save();
+        ctxT.globalCompositeOperation = 'source-over';
+        ctxT.fillStyle = 'rgba(180, 160, 135, 0.08)';
+        ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
+        ctxT.restore();
+      }
     }
 
     // V13 P2: Road in snowy/glacial biomes becomes trodden ice path (bluish-grey, no cream circles)
@@ -1669,6 +1679,7 @@ function compositeAzureKarst(
     // 4h: Road edges blend smoothly into surrounding ground macro (Prompt V14 P1)
   }
 
+  const allowMacroOverlay = (flags?.layers !== 'base+families' && flags?.layers !== 'base+families+variants');
   // Step 5: Macro radial overlay (anti-repetition)
   const hashVal = (hash2d(cx * 7 + 3, cy * 13 + 5) >>> 0) / 0xffffffff;
   const alpha = Math.min(0.1, 0.05 + 0.05 * hashVal);
@@ -1680,7 +1691,7 @@ function compositeAzureKarst(
   grad.addColorStop(0, isDark ? `rgba(0, 0, 0, ${alpha.toFixed(3)})` : `rgba(255, 255, 255, ${alpha.toFixed(3)})`);
   grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
   ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  if (allowMacroOverlay) ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
   // Step 6a: Autotiles for Rivers (G4 Base)
   for (const t of tiles) {
@@ -1701,13 +1712,15 @@ function compositeAzureKarst(
   }
 
   // Step 6b: Procedural Ground Decals (G3)
-  for (const t of tiles) {
-    const lx = t.tileX - cx * CHUNK_SIZE;
-    const ly = t.tileY - cy * CHUNK_SIZE;
-    const sx = lx * tileSize;
-    const sy = ly * tileSize;
+  if (allowMacroOverlay) {
+    for (const t of tiles) {
+      const lx = t.tileX - cx * CHUNK_SIZE;
+      const ly = t.tileY - cy * CHUNK_SIZE;
+      const sx = lx * tileSize;
+      const sy = ly * tileSize;
 
-    renderL3GroundDecal(ctx, sx, sy, tileSize, t.tileX, t.tileY, t.terrainType);
+      renderL3GroundDecal(ctx, sx, sy, tileSize, t.tileX, t.tileY, t.terrainType);
+    }
   }
 
   // Step 7: Performance profiling

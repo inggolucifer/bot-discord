@@ -252,6 +252,9 @@ export default function WorldCanvas({
     if (typeof window !== 'undefined') {
       try {
         const params = new URLSearchParams(window.location.search);
+        if (params.get('ground') === 'only') {
+          return false;
+        }
         if (params.has('grid')) {
           return params.get('grid') === '1';
         }
@@ -281,6 +284,19 @@ export default function WorldCanvas({
       (window as any).chunkManager = chunkManager;
       (window as any).groundTextures = groundTextures;
       (window as any).atlasLoader = atlasLoader;
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const groundOnly = params.get('ground') === 'only';
+        const layers = (params.get('layers') || 'all') as any;
+        const noRoad = params.get('noroad') === '1';
+        const noFarm = params.get('nofarm') === '1';
+        chunkManager.setRenderFlags({
+          groundOnly,
+          layers,
+          noRoad,
+          noFarm
+        });
+      } catch (e) {}
     }
     atlasLoader.preloadCoreAtlases().then(() => {
       if (typeof window !== 'undefined') {
@@ -718,6 +734,23 @@ export default function WorldCanvas({
             ctx.fillRect(csx, csy, csw, csh);
           }
         }
+      }
+
+      // V17 P0: Ground-Only Mode Short-Circuit
+      if (typeof window !== 'undefined' && window.location && window.location.search && window.location.search.includes('ground=only')) {
+        debugCamFrameCountRef.current++;
+        (window as any).__debugObjectsDrawn = 0;
+        const isHotReady = chunkManager.areHotChunksReady(camera.x, camera.y, camera.zoom) || debugCamFrameCountRef.current >= 45;
+        if (isHotReady && (groundTextures.ready || debugCamFrameCountRef.current >= 30)) {
+          (window as any).__chunksReady = true;
+          (window as any).atlasReady = true;
+          if (!hasFiredReadyRef.current) {
+            hasFiredReadyRef.current = true;
+            window.dispatchEvent(new CustomEvent('chunks-ready', { detail: { spriteCount: 0 } }));
+          }
+        }
+        animationFrameId = requestAnimationFrame(render);
+        return;
       }
 
       // ----------------------------------------------------------------------
@@ -2101,6 +2134,7 @@ export default function WorldCanvas({
             };
 
             if (typeof window !== 'undefined') {
+              (window as any).__debugObjectsDrawn = metrics.spriteCount;
               (window as any).__debugMetrics = metrics;
               (window as any).__chunksReady = true;
               (window as any).atlasReady = true;

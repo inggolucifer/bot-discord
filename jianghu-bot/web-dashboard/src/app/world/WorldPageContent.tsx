@@ -34,7 +34,8 @@ function DebugCamMode({ debugCamParam }: { debugCamParam: string }) {
   const dbgZoom = !isNaN(parts[2]) ? parts[2] : 1.0;
 
   const isMacro = searchParams.get('mode') === 'macro';
-  const hideMinimap = searchParams.get('minimap') === 'false';
+  const isGroundOnly = searchParams.get('ground') === 'only';
+  const hideMinimap = isGroundOnly || searchParams.get('minimap') === 'false';
 
   const currentRegion = (() => {
     for (const reg of CANONICAL_REGIONS) {

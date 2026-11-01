@@ -10,7 +10,8 @@
 
 import { TileData, MapObjectInstance } from '@/types/world';
 import api from '@/lib/api';
-import { renderChunkGroundBitmap, renderChunkGridBitmap } from '@/lib/groundRenderer';
+import { renderChunkGroundBitmap, renderChunkGridBitmap, GroundBisectFlags } from '@/lib/groundRenderer';
+export const GROUND_RENDER_VERSION = 'v17';
 import { groundTextures } from '@/lib/groundTextures';
 
 export const CHUNK_SIZE = 32;
@@ -137,6 +138,17 @@ export class ChunkManager {
   private chunks = new Map<string, StaticChunkData>();
   private unpackedChunks = new Map<string, TileData[]>();
   private chunkBitmaps = new Map<string, HTMLCanvasElement | ImageBitmap>();
+  private currentRenderFlags: GroundBisectFlags = { groundOnly: false, layers: 'all', noRoad: false, noFarm: false };
+
+  public setRenderFlags(flags: Partial<GroundBisectFlags>) {
+    this.currentRenderFlags = { ...this.currentRenderFlags, ...flags };
+    this.chunkBitmaps.clear();
+    this.notifySubscribers();
+  }
+
+  public getRenderFlags(): GroundBisectFlags {
+    return this.currentRenderFlags;
+  }
   private chunkGridBitmaps = new Map<string, HTMLCanvasElement>();
   private liveData = new Map<string, LiveChunkData>();
 
@@ -595,13 +607,17 @@ export class ChunkManager {
   public getChunkBitmap(cx: number, cy: number, tileSize = 54): HTMLCanvasElement | ImageBitmap | null {
     if (typeof document === 'undefined') return null;
 
-    const key = `${cx}:${cy}`;
-    if (this.chunkBitmaps.has(key)) {
-      return this.chunkBitmaps.get(key)!;
+    const chunkKey = `${cx}:${cy}`;
+    const f = this.currentRenderFlags;
+    const flagsKey = `${f.groundOnly ? 'go' : 'norm'}_${f.layers || 'all'}_${f.noRoad ? 'nr' : 'r'}_${f.noFarm ? 'nf' : 'f'}`;
+    const bitmapKey = `${GROUND_RENDER_VERSION}:${cx}:${cy}:${tileSize}:${flagsKey}`;
+
+    if (this.chunkBitmaps.has(bitmapKey)) {
+      return this.chunkBitmaps.get(bitmapKey)!;
     }
 
-    const chunk = this.chunks.get(key);
-    const tiles = this.unpackedChunks.get(key);
+    const chunk = this.chunks.get(chunkKey);
+    const tiles = this.unpackedChunks.get(chunkKey);
     if (!chunk || !tiles) return null;
 
     // Prompt K1: If textures are not yet ready, return provisional ground bitmap without permanent caching
@@ -617,7 +633,8 @@ export class ChunkManager {
         cy,
         tiles,
         tileSize,
-        (x, y) => this.getTile(x, y)?.terrainType
+        (x, y) => this.getTile(x, y)?.terrainType,
+        this.currentRenderFlags
       );
     }
 
@@ -626,11 +643,12 @@ export class ChunkManager {
       cy,
       tiles,
       tileSize,
-      (x, y) => this.getTile(x, y)?.terrainType
+      (x, y) => this.getTile(x, y)?.terrainType,
+      this.currentRenderFlags
     );
 
     if (canvas) {
-      this.chunkBitmaps.set(key, canvas);
+      this.chunkBitmaps.set(bitmapKey, canvas);
     }
     return canvas;
   }
@@ -641,7 +659,7 @@ export class ChunkManager {
   public getChunkGridBitmap(cx: number, cy: number, tileSize = 54): HTMLCanvasElement | null {
     if (typeof document === 'undefined') return null;
 
-    const key = `${cx}:${cy}`;
+    const key = `${GROUND_RENDER_VERSION}:${cx}:${cy}:${tileSize}`;
     if (this.chunkGridBitmaps.has(key)) {
       return this.chunkGridBitmaps.get(key)!;
     }

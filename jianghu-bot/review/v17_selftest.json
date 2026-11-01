@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-11-01T21:20:00Z",
+  "status": "PASS",
+  "output": "SELFTEST OK",
+  "tests": [
+    {
+      "id": "smooth_gradient_1.5_cells",
+      "type": "positive",
+      "expected": "widthCells >= 1.0",
+      "result": "PASS"
+    },
+    {
+      "id": "sharp_straight_edge",
+      "type": "negative",
+      "expected": "widthCells < 0.8 OR rmsCells < 0.35",
+      "result": "FAIL_CONFIRMED"
+    },
+    {
+      "id": "green_lush_image",
+      "type": "positive",
+      "expected": "brown <= 0.10 & green >= 0.80",
+      "result": "PASS"
+    },
+    {
+      "id": "brown_striped_image",
+      "type": "negative",
+      "expected": "brown >= 0.25",
+      "result": "FAIL_CONFIRMED"
+    },
+    {
+      "id": "straight_angular_road",
+      "type": "negative",
+      "expected": "road.pass == False",
+      "result": "FAIL_CONFIRMED"
+    },
+    {
+      "id": "wobbly_organic_road",
+      "type": "positive",
+      "expected": "rightAngleCorners == 0 & edgeRough >= 0.04",
+      "result": "PASS"
+    }
+  ]
+}

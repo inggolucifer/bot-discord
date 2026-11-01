@@ -98,10 +98,14 @@ server.listen(3001, async () => {
       const sha1 = crypto.createHash('sha1').update(pngBuffer).digest('hex');
       console.log(`\n[SKIP] Sudah ada di disk: ${s.name} (SHA-1: ${sha1})`);
       if (seenSha1.has(sha1)) {
-        console.error(`[ERROR] Duplicate screenshot detected! ${s.name} has identical SHA-1 to ${seenSha1.get(sha1)}`);
-        await br.close();
-        server.close();
-        process.exit(1);
+        if (s.name.includes('bisect') || s.allowDuplicate || seenSha1.get(sha1).includes('bisect')) {
+          console.log(`  [NOTE] Bisect layer identical SHA-1 to ${seenSha1.get(sha1)} (expected if layer has no delta)`);
+        } else {
+          console.error(`[ERROR] Duplicate screenshot detected! ${s.name} has identical SHA-1 to ${seenSha1.get(sha1)}`);
+          await br.close();
+          server.close();
+          process.exit(1);
+        }
       }
       seenSha1.set(sha1, s.name);
       continue;
@@ -119,7 +123,12 @@ server.listen(3001, async () => {
     });
 
     const gridParam = s.grid !== undefined ? `&grid=${s.grid}` : '';
-    const url = `http://localhost:3000/world?debugCam=${s.x},${s.y},${s.zoom || 1}${gridParam}`;
+    const groundParam = s.ground ? `&ground=${s.ground}` : '';
+    const layersParam = s.layers ? `&layers=${s.layers}` : '';
+    const noroadParam = s.noroad !== undefined ? `&noroad=${s.noroad}` : '';
+    const nofarmParam = s.nofarm !== undefined ? `&nofarm=${s.nofarm}` : '';
+    const extraParam = s.extra ? `&${s.extra}` : '';
+    const url = `http://localhost:3000/world?debugCam=${s.x},${s.y},${s.zoom || 1}${gridParam}${groundParam}${layersParam}${noroadParam}${nofarmParam}${extraParam}`;
     console.log(`\n[Shot] Capturing ${s.name} at (${s.x}, ${s.y}) zoom=${s.zoom || 1}${gridParam}...`);
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 });
 
@@ -174,7 +183,11 @@ server.listen(3001, async () => {
     }
 
     let finalBuffer = await page.screenshot();
-    if (finalBuffer.length > 390 * 1024) {
+    if (s.ground === 'only') {
+      finalBuffer = await sharp(finalBuffer)
+        .png({ compressionLevel: 9 })
+        .toBuffer();
+    } else if (finalBuffer.length > 390 * 1024) {
       finalBuffer = await sharp(finalBuffer)
         .png({ compressionLevel: 9, palette: true, quality: 90 })
         .toBuffer();
@@ -188,18 +201,23 @@ server.listen(3001, async () => {
     // Save V15 P0.1 Runtime Hook data alongside screenshot
     const hookData = await page.evaluate(() => ({
       viewport: window.__debugViewport || null,
-      roadCells: window.__debugRoadCells || []
-    })).catch(() => ({ viewport: null, roadCells: [] }));
+      roadCells: window.__debugRoadCells || [],
+      debugObjectsDrawn: window.__debugObjectsDrawn !== undefined ? window.__debugObjectsDrawn : null
+    })).catch(() => ({ viewport: null, roadCells: [], debugObjectsDrawn: null }));
     fs.writeFileSync(path.join(outDir, `${s.name}.json`), JSON.stringify(hookData, null, 2));
 
     // c. SHA-1 verification
     const sha1 = crypto.createHash('sha1').update(finalBuffer).digest('hex');
     console.log(`  SHA-1: ${sha1}`);
     if (seenSha1.has(sha1)) {
-      console.error(`[ERROR] Duplicate screenshot detected! ${s.name} has identical SHA-1 to ${seenSha1.get(sha1)}`);
-      await br.close();
-      server.close();
-      process.exit(1);
+      if (s.name.includes('bisect') || s.allowDuplicate || seenSha1.get(sha1).includes('bisect')) {
+        console.log(`  [NOTE] Bisect layer identical SHA-1 to ${seenSha1.get(sha1)} (expected if layer has no delta)`);
+      } else {
+        console.error(`[ERROR] Duplicate screenshot detected! ${s.name} has identical SHA-1 to ${seenSha1.get(sha1)}`);
+        await br.close();
+        server.close();
+        process.exit(1);
+      }
     }
     seenSha1.set(sha1, s.name);
 
