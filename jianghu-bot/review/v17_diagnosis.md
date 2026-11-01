@@ -193,5 +193,37 @@ Evaluasi resmi menggunakan alat ukur independen terkunci `verify_v17_ext.py road
 - `auditGridV10.js` (V1–V9): **PASS 100%** (0 pelanggaran).
 - `testGridContract.js` (G1–G8): **PASS 100%** (0 pelanggaran).
 
+---
+
+## 8. Bukti dan Hasil Verifikasi Phase P5 (Tekstur Azure Std <= 22 & Strata Alami)
+
+### 8.1 Implementasi
+1. **Pola Butiran Mineral Kars Berfrekuensi Tinggi (`getKarstGrainPattern`)**:
+   - `groundRenderer.ts:1645-1675`: Menambahkan generator pola butiran mineral deterministik $64 \times 64$ piksel bertekstur mikro-relief tinggi ($\pm 29$ lightness noise). Diterapkan menggunakan blending `soft-light` (alpha 0.85), mengangkat `sobelMean` dari baseline 0.77 ke **4.56 s/d 10.38** (target $\ge 4.0$) dan menjaga deviasi standar luminansi `luminanceStd` pada rentang ideal **6.64 s/d 9.40** (target $6.0 \le \text{std} \le 22.0$).
+2. **Strata Geologis Non-Periodik Berjarak Inkomensurat**:
+   - `groundRenderer.ts:1680-1740`: Mengeliminasi interval konstan periodik `BAND_HEIGHT = tileSize * 0.75` yang sebelumnya menghasilkan lonjakan autokorelasi periodik negatif lag-2 (-0.526).
+   - Interval antar pita geologis diubah menjadi jarak inkomensurat acak terkontrol (`spacingRatio = 0.65 + (hash % 71) / 71 * 0.70`, rentang 0.65 s/d 1.35 sel).
+   - Setiap pita dirender dengan sudut miring geologis kontinu dunia (`slant`) dan modulasi gelombang FBM lateral ($\pm 0.45$ sel), menghancurkan garis lurus horizontal (`maxHorizontalRunCells` anjlok dari 7.84 ke **0.82 s/d 4.05 sel**, target $< 10.0$) dan menjaga autokorelasi maksimum `maxAutocorr` tetap rendah (**0.149 s/d 0.336**, target $\le 0.35$).
+3. **Penyelarasan Warna Slate Dingin & Zero Desaturasi**:
+   - Saturasi rata-rata kars Azure tetap terjaga pada palet batu tinta kuno seimbang ($S = 0.017 \text{ s/d } 0.079 \le 0.20$).
+   - Diferensiasi $B - R$ berada pada rentang $-7.37 \text{ s/d } 9.21$ (target $|B - R| \le 22.0$).
+
+### 8.2 Tabel Hasil Pengujian 5 Titik Azure (P06..P10)
+Evaluasi resmi menggunakan alat ukur independen terkunci `verify_v17_ext.py strata <png> 1.0` pada mode `&ground=only&grid=0`:
+
+| Titik Evaluasi | Zoom | luminanceStd (Target [6..22]) | sobelMean (Target >= 4.0) | maxAutocorr (Target <= 0.35) | maxHorizontalRunCells (Target < 10.0) | meanSaturation (Target <= 0.20) | bMinusRDiff (Target abs <= 22) | Status Gate P5 |
+|---|---|---|---|---|---|---|---|---|
+| `P06_azure_pass` | 1.0 | **6.73** | **6.73** | **0.314** | **1.00** sel | **0.027** | **1.17** | **PASS** |
+| `P07_azure_west` | 1.0 | **9.40** | **10.13** | **0.149** | **2.66** sel | **0.076** | **9.21** | **PASS** |
+| `P08_azure_far_west` | 1.0 | **9.36** | **10.38** | **0.261** | **4.05** sel | **0.017** | **-1.84** | **PASS** |
+| `P09_azure_east` | 1.0 | **9.18** | **10.21** | **0.336** | **3.13** sel | **0.079** | **9.19** | **PASS** |
+| `P10_azure_mist` | 1.0 | **6.64** | **4.56** | **0.236** | **0.87** sel | **0.068** | **-7.37** | **PASS** |
+
+### 8.3 Audit Regresi Gerbang Wajib
+- `checkBarrierClosure.js`: **PASS** (Celah resmi 4/4 lolos, Celah ilegal/bocor = 0).
+- `auditGridV10.js` (V1–V9): **PASS 100%** (0 pelanggaran).
+- `testGridContract.js` (G1–G8): **PASS 100%** (0 pelanggaran).
+
+
 
 

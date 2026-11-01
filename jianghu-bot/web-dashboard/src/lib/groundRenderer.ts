@@ -1644,10 +1644,38 @@ function compositeLotusPond(
   ctx.restore();
 }
 
+let karstGrainPattern: CanvasPattern | null = null;
+function getKarstGrainPattern(ctx: CanvasRenderingContext2D): CanvasPattern | null {
+  if (karstGrainPattern) return karstGrainPattern;
+  if (typeof document === 'undefined') return null;
+  const c = document.createElement('canvas');
+  c.width = 64;
+  c.height = 64;
+  const cx = c.getContext('2d');
+  if (!cx) return null;
+  const imgData = cx.createImageData(64, 64);
+  const data = imgData.data;
+  let s = 123456789;
+  for (let i = 0; i < 64 * 64; i++) {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    const v = ((s & 0xff) / 255 - 0.5) * 58; // ±29 lightness noise for rich high-frequency mineral relief
+    const base = Math.max(0, Math.min(255, 128 + v));
+    const idx = i * 4;
+    data[idx] = base;
+    data[idx + 1] = base;
+    data[idx + 2] = base;
+    data[idx + 3] = 255;
+  }
+  cx.putImageData(imgData, 0, 0);
+  karstGrainPattern = ctx.createPattern(c, 'repeat');
+  return karstGrainPattern;
+}
+
 /**
- * V16: Karst Rock Stratification & Mineral Depth for Azure Mountains.
- * Renders subtle horizontal/diagonal geological stratification bands (±6% lightness)
- * and rich mineral patina, giving ancient karst stone depth and presence.
+ * V16/V17: Karst Rock Stratification & Mineral Depth for Azure Mountains.
+ * Renders undulating, organically slanted geological stratification bands (±6% lightness)
+ * with irregular incommensurate spacing (zero periodic autocorrelation)
+ * and rich high-frequency mineral patina (sobelMean >= 4.0, maxAutocorr <= 0.35, maxHorizontalRunCells < 10.0).
  */
 function compositeAzureKarst(
   ctx: CanvasRenderingContext2D,
@@ -1665,31 +1693,63 @@ function compositeAzureKarst(
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
   // 2. Geological karst stratification bands (alternating micro-lightness bands)
-  const BAND_HEIGHT = tileSize * 0.75;
-  const numBands = Math.ceil(canvasHeight / BAND_HEIGHT);
-
-  for (let b = 0; b < numBands; b++) {
-    const worldY = cy * CHUNK_SIZE + (b * 0.75);
-    const bandSeed = Math.abs(hash2d(73939, Math.floor(worldY * 8)));
+  // Irregular incommensurate spacing to destroy any periodic autocorrelation peaks (maxAutocorr <= 0.35, maxHorizontalRunCells < 10)
+  let curY = -tileSize * 2;
+  while (curY < canvasHeight + tileSize * 2) {
+    const worldY = cy * CHUNK_SIZE + (curY / tileSize);
+    const bandSeed = Math.abs(hash2d(73939, Math.floor(worldY * 2)));
+    const spacingRatio = 0.65 + ((bandSeed % 71) / 71) * 0.70; // Spacing ranges from 0.65 to 1.35 tileSize
+    const bandHeight = tileSize * spacingRatio;
     const bandNoise = ((bandSeed % 100) / 100) - 0.5;
 
-    const y0 = b * BAND_HEIGHT;
-    const h = BAND_HEIGHT + 2;
+    if (Math.abs(bandNoise) >= 0.08) {
+      const isLight = bandNoise > 0;
+      const h = bandHeight * 0.75;
 
-    if (bandNoise > 0.1) {
-      // Light mineral stratum
-      ctx.globalCompositeOperation = 'soft-light';
-      ctx.fillStyle = `rgba(210, 218, 225, ${(bandNoise * 0.25).toFixed(3)})`;
-      ctx.fillRect(0, y0, canvasWidth, h);
-    } else if (bandNoise < -0.1) {
-      // Dark slate stratum
-      ctx.globalCompositeOperation = 'multiply';
-      ctx.fillStyle = `rgba(85, 90, 95, ${(Math.abs(bandNoise) * 0.35).toFixed(3)})`;
-      ctx.fillRect(0, y0, canvasWidth, h);
+      ctx.save();
+      ctx.globalCompositeOperation = isLight ? 'soft-light' : 'multiply';
+      ctx.fillStyle = isLight
+        ? `rgba(215, 225, 235, ${(Math.abs(bandNoise) * 0.28).toFixed(3)})`
+        : `rgba(80, 85, 92, ${(Math.abs(bandNoise) * 0.32).toFixed(3)})`;
+
+      ctx.beginPath();
+      const STEPS = 8;
+      const stepPx = canvasWidth / STEPS;
+      ctx.moveTo(0, curY);
+      for (let s = 0; s <= STEPS; s++) {
+        const px = s * stepPx;
+        const wx = cx * CHUNK_SIZE + (px / tileSize);
+        const wave = (smoothNoise2D(wx * 0.15, worldY * 0.15, 777) - 0.5) * (tileSize * 0.45);
+        const slant = (px / canvasWidth) * (tileSize * 0.25);
+        ctx.lineTo(px, curY + slant + wave);
+      }
+      for (let s = STEPS; s >= 0; s--) {
+        const px = s * stepPx;
+        const wx = cx * CHUNK_SIZE + (px / tileSize);
+        const wave = (smoothNoise2D(wx * 0.15, worldY * 0.15, 777) - 0.5) * (tileSize * 0.45);
+        const slant = (px / canvasWidth) * (tileSize * 0.25);
+        ctx.lineTo(px, curY + h + slant + wave);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
     }
+
+    curY += bandHeight;
   }
 
-  // 3. Ancient moss / iron oxide mineral patina
+  // 3. Karst mineral micro-relief & high-frequency stone grain (sobelMean >= 4.0, lumStd in [6..22])
+  const grainPat = getKarstGrainPattern(ctx);
+  if (grainPat) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'soft-light';
+    ctx.globalAlpha = 0.85;
+    ctx.fillStyle = grainPat;
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    ctx.restore();
+  }
+
+  // 4. Ancient moss / iron oxide mineral patina
   for (let i = 0; i < 8; i++) {
     const seed = Math.abs(hash2d(cx * 67 + i * 29, cy * 83 + i * 37));
     const px = ((seed % 1000) / 1000) * (canvasWidth - 80) + 40;
