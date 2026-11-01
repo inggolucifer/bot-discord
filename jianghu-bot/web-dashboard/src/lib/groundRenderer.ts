@@ -1070,12 +1070,20 @@ export function renderChunkGroundBitmapTextured(
   const GRID_DIM = CHUNK_SIZE + BORDER * 2; // 38
   const gridFamilies = new Array<string>(GRID_DIM * GRID_DIM);
   const presentFamilies = new Set<string>();
+  const chunkInternalFamilyCounts = new Map<string, number>();
 
   for (let dy = -BORDER; dy < CHUNK_SIZE + BORDER; dy++) {
     for (let dx = -BORDER; dx < CHUNK_SIZE + BORDER; dx++) {
       const gx = cx * CHUNK_SIZE + dx;
       const gy = cy * CHUNK_SIZE + dy;
-      const terrain = chunkNeighborTerrain(gx, gy) || 'plains';
+      let terrain = chunkNeighborTerrain(gx, gy);
+      if (!terrain) {
+        // Clamping to nearest tile inside chunk bounds prevents injecting fake 'plains' into mountain/snow biomes
+        const clampX = Math.max(0, Math.min(CHUNK_SIZE - 1, dx));
+        const clampY = Math.max(0, Math.min(CHUNK_SIZE - 1, dy));
+        terrain = tileLookup.get(`${cx * CHUNK_SIZE + clampX},${cy * CHUNK_SIZE + clampY}`) || tiles[0]?.terrainType || 'plains';
+      }
+
       const fInfo = groundTextures.familyOf(terrain);
       let fam = fInfo ? fInfo.family : 'plains';
       if (terrain.includes('road') && fam === 'plains') {
@@ -1084,15 +1092,35 @@ export function renderChunkGroundBitmapTextured(
       const idx = (dy + BORDER) * GRID_DIM + (dx + BORDER);
       gridFamilies[idx] = fam;
       presentFamilies.add(fam);
+
+      if (dx >= 0 && dx < CHUNK_SIZE && dy >= 0 && dy < CHUNK_SIZE) {
+        chunkInternalFamilyCounts.set(fam, (chunkInternalFamilyCounts.get(fam) || 0) + 1);
+      }
     }
   }
 
   // Step 3: Sort families by bottom->top render priority
-  const sortedFamilies = Array.from(presentFamilies).sort((a, b) => getFamilyPriority(a) - getFamilyPriority(b));
+  // Dominant internal family serves as base layer to ensure true regional foundation
+  let dominantFamily = tiles[0]?.terrainType ? (groundTextures.familyOf(tiles[0].terrainType)?.family || 'plains') : 'plains';
+  let maxCount = -1;
+  for (const [fam, cnt] of chunkInternalFamilyCounts.entries()) {
+    if (cnt > maxCount) {
+      maxCount = cnt;
+      dominantFamily = fam;
+    }
+  }
 
-  // Prepare scratch canvases
+  const sortedFamilies = Array.from(presentFamilies).sort((a, b) => {
+    if (a === dominantFamily) return -1;
+    if (b === dominantFamily) return 1;
+    return getFamilyPriority(a) - getFamilyPriority(b);
+  });
+
+  // Prepare scratch canvases (V17 P2: High-resolution mask 4 px/cell = 152x152)
+  const MASK_SCALE = 4;
+  const MASK_DIM = GRID_DIM * MASK_SCALE; // 152
   const scratchT = getScratch('T', canvasWidth, canvasHeight);
-  const scratchM = getScratch('M', GRID_DIM, GRID_DIM);
+  const scratchM = getScratch('M', MASK_DIM, MASK_DIM);
   const scratchMB = getScratch('MB', GRID_DIM * tileSize, GRID_DIM * tileSize);
   const scratchMB2 = getScratch('MB2', GRID_DIM * tileSize, GRID_DIM * tileSize);
 
@@ -1110,84 +1138,65 @@ export function renderChunkGroundBitmapTextured(
     ctxT.clearRect(0, 0, canvasWidth, canvasHeight);
     ctxT.globalCompositeOperation = 'source-over';
 
-    // 4b: Small mask M (38x38)
-    const imgData = ctxM.createImageData(GRID_DIM, GRID_DIM);
+    // 4b: High-resolution continuous organic mask M (152x152)
+    const imgData = ctxM.createImageData(MASK_DIM, MASK_DIM);
     const d32 = new Uint32Array(imgData.data.buffer);
     if (F === 'settlement_floor') {
       // V13 P2: 2-octave organic noise boundary with f=0.08 and 0.02, zero straight edges
-      for (let gy = 0; gy < GRID_DIM; gy++) {
-        for (let gx = 0; gx < GRID_DIM; gx++) {
-          const idx = gy * GRID_DIM + gx;
-          if (gridFamilies[idx] === 'settlement_floor') {
-            const worldX = cx * CHUNK_SIZE + (gx - BORDER);
-            const worldY = cy * CHUNK_SIZE + (gy - BORDER);
-
-            // Check distance to nearest non-settlement tile within 3-tile radius
+      for (let my = 0; my < MASK_DIM; my++) {
+        const gy = my / MASK_SCALE;
+        const worldY = cy * CHUNK_SIZE + (gy - BORDER);
+        const rowOffset = my * MASK_DIM;
+        for (let mx = 0; mx < MASK_DIM; mx++) {
+          const gx = mx / MASK_SCALE;
+          const worldX = cx * CHUNK_SIZE + (gx - BORDER);
+          const cellGx = Math.max(0, Math.min(GRID_DIM - 1, Math.floor(gx)));
+          const cellGy = Math.max(0, Math.min(GRID_DIM - 1, Math.floor(gy)));
+          if (gridFamilies[cellGy * GRID_DIM + cellGx] === 'settlement_floor') {
             let minDist = 4;
-            for (let dy = -3; dy <= 3; dy++) {
-              for (let dx = -3; dx <= 3; dx++) {
-                const ny = gy + dy;
-                const nx = gx + dx;
+            for (let sdy = -3; sdy <= 3; sdy++) {
+              for (let sdx = -3; sdx <= 3; sdx++) {
+                const ny = cellGy + sdy;
+                const nx = cellGx + sdx;
                 if (nx < 0 || nx >= GRID_DIM || ny < 0 || ny >= GRID_DIM || gridFamilies[ny * GRID_DIM + nx] !== 'settlement_floor') {
-                  const d = Math.sqrt(dx * dx + dy * dy);
+                  const d = Math.hypot(gx - (nx + 0.5), gy - (ny + 0.5));
                   if (d < minDist) minDist = d;
                 }
               }
             }
-
-            // 2-octave smooth sinusoidal noise
             const n1 = (Math.sin(worldX * 0.08) * Math.cos(worldY * 0.08) + 1.0) * 0.5;
             const n2 = (Math.sin(worldX * 0.02 + 1.2) * Math.cos(worldY * 0.02 + 2.1) + 1.0) * 0.5;
-            const noise = n1 * 0.4 + n2 * 0.6; // 0..1
-
-            // Modulate edge falloff organically (minDist 0..1.2 tiles)
+            const noise = n1 * 0.4 + n2 * 0.6;
             const alphaRatio = Math.max(0, Math.min(1.0, (minDist + (noise - 0.5) * 0.6) / 1.0));
-            const a255 = Math.round(alphaRatio * 230);
-            d32[idx] = (a255 << 24);
+            d32[rowOffset + mx] = (Math.round(alphaRatio * 230) << 24);
           } else {
-            d32[idx] = 0x00000000;
+            d32[rowOffset + mx] = 0x00000000;
           }
         }
       }
     } else {
       const isBaseFamily = (F === sortedFamilies[0]);
-      for (let gy = 0; gy < GRID_DIM; gy++) {
-        for (let gx = 0; gx < GRID_DIM; gx++) {
-          const i = gy * GRID_DIM + gx;
-          if (isBaseFamily) {
-            d32[i] = 0xff000000;
-          } else {
-            const isMatch = (gridFamilies[i] === F);
-            let isBoundary = false;
-            for (let dy = -1; dy <= 1 && !isBoundary; dy++) {
-              for (let dx = -1; dx <= 1; dx++) {
-                const ny = gy + dy;
-                const nx = gx + dx;
-                if (nx >= 0 && nx < GRID_DIM && ny >= 0 && ny < GRID_DIM) {
-                  if ((gridFamilies[ny * GRID_DIM + nx] === F) !== isMatch) {
-                    isBoundary = true;
-                    break;
-                  }
-                }
-              }
-            }
+      if (isBaseFamily) {
+        d32.fill(0xff000000);
+      } else {
+        // Continuous world-space 2-octave FBM noise boundary displacement (V17 P2)
+        for (let my = 0; my < MASK_DIM; my++) {
+          const gy = (my + 0.5) / MASK_SCALE;
+          const worldY = cy * CHUNK_SIZE + (gy - BORDER);
+          const rowOffset = my * MASK_DIM;
+          for (let mx = 0; mx < MASK_DIM; mx++) {
+            const gx = (mx + 0.5) / MASK_SCALE;
+            const worldX = cx * CHUNK_SIZE + (gx - BORDER);
 
-            if (!isBoundary) {
-              d32[i] = isMatch ? 0xff000000 : 0x00000000;
-            } else {
-              // V16 P3: Boundary tile organic displacement via continuous world noise
-              const worldX = cx * CHUNK_SIZE + (gx - BORDER);
-              const worldY = cy * CHUNK_SIZE + (gy - BORDER);
-              const dispNoise = fbmNoise2D(worldX * 0.15, worldY * 0.15, 777);
-              let alpha = isMatch ? 0.80 : 0.0;
-              if (isMatch) {
-                alpha = 0.45 + (dispNoise - 0.5) * 0.6;
-              } else if (dispNoise > 0.65) {
-                alpha = (dispNoise - 0.65) * 1.4;
-              }
-              const aByte = Math.max(0, Math.min(255, Math.round(alpha * 255)));
-              d32[i] = (aByte << 24);
-            }
+            // 2-octave FBM noise displacement vector in continuous world coordinates
+            const dispX = (fbmNoise2D(worldX * 0.15, worldY * 0.15, 777) - 0.5) * 2.5;
+            const dispY = (fbmNoise2D(worldX * 0.15, worldY * 0.15, 888) - 0.5) * 2.5;
+
+            const sampleGx = Math.max(0, Math.min(GRID_DIM - 1, Math.floor(gx + dispX)));
+            const sampleGy = Math.max(0, Math.min(GRID_DIM - 1, Math.floor(gy + dispY)));
+            const isMatch = (gridFamilies[sampleGy * GRID_DIM + sampleGx] === F);
+
+            d32[rowOffset + mx] = isMatch ? 0xff000000 : 0x00000000;
           }
         }
       }
@@ -1225,11 +1234,11 @@ export function renderChunkGroundBitmapTextured(
     } else {
       ctxMB.imageSmoothingEnabled = true;
       ctxMB.imageSmoothingQuality = 'high';
-      ctxMB.drawImage(scratchM.canvas, 0, 0, GRID_DIM, GRID_DIM, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
+      ctxMB.drawImage(scratchM.canvas, 0, 0, MASK_DIM, MASK_DIM, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
 
       ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
-      // V16 P3: Broad organic feathering blur (0.75 * tileSize) for soft gradual Shan Shui transitions
-      const blurPx = F === 'settlement_floor' ? tileSize * 0.45 : tileSize * 0.75;
+      // V17 P2: Broad organic Gaussian blur (1.5 * tileSize = 81px) for seamless continuous transition
+      const blurPx = F === 'settlement_floor' ? tileSize * 0.45 : tileSize * 1.5;
       ctxMB2.filter = `blur(${blurPx.toFixed(1)}px)`;
       ctxMB2.drawImage(scratchMB.canvas, 0, 0);
       ctxMB2.filter = 'none';
@@ -1562,7 +1571,7 @@ function compositeAzureKarst(
 
   for (let b = 0; b < numBands; b++) {
     const worldY = cy * CHUNK_SIZE + (b * 0.75);
-    const bandSeed = Math.abs(hash2d(cx * 19 + b * 43, Math.floor(worldY * 11)));
+    const bandSeed = Math.abs(hash2d(73939, Math.floor(worldY * 8)));
     const bandNoise = ((bandSeed % 100) / 100) - 0.5;
 
     const y0 = b * BAND_HEIGHT;

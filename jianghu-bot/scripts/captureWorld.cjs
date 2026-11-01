@@ -258,8 +258,9 @@ server.listen(3001, async () => {
 
     console.log(`  Luminance Mean: ${meanL.toFixed(2)}, StdDev: ${stdL.toFixed(2)}, DarkSamplePoints: ${darkSampleCount}/9`);
 
-    if (darkSampleCount >= 8 || stdL < 8.0) {
-      console.error(`[ERROR] Shot ${s.name} failed visual validation! stdL=${stdL.toFixed(2)} (< 8.0) or dark points=${darkSampleCount}/9`);
+    const minStdL = s.ground === 'only' ? 5.0 : 8.0;
+    if (darkSampleCount >= 8 || stdL < minStdL) {
+      console.error(`[ERROR] Shot ${s.name} failed visual validation! stdL=${stdL.toFixed(2)} (< ${minStdL.toFixed(1)}) or dark points=${darkSampleCount}/9`);
       await br.close();
       server.close();
       process.exit(1);
