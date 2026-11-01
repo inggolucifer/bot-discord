@@ -1,20 +1,20 @@
 {
-  "timestamp": "2026-11-01T00:01:50.155Z",
+  "timestamp": "2026-11-01T00:20:19.821Z",
   "allPass": true,
   "results": {
     "G1": {
       "pass": true,
-      "checkedPairs": 204212,
+      "checkedPairs": 208680,
       "overlaps": 0
     },
     "G2": {
       "pass": true,
-      "checked": 15525,
+      "checked": 15737,
       "violations": 0
     },
     "G3": {
       "pass": true,
-      "checked": 15934,
+      "checked": 16238,
       "violations": 0
     },
     "G4": {
@@ -24,13 +24,13 @@
     },
     "G5": {
       "pass": true,
-      "seen": 167,
-      "covered": 167,
+      "seen": 169,
+      "covered": 169,
       "pct": "100.00"
     },
     "G6": {
       "pass": true,
-      "deltaMb": "-0.58"
+      "deltaMb": "0.05"
     },
     "G7": {
       "pass": true,

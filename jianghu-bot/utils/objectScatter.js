@@ -904,7 +904,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       for (let dy = 0; dy < g.fh && valid; dy++) {
         for (let dx = 0; dx < g.fw && valid; dx++) {
           const tile = getTileAt(wx + dx, wy + dy);
-          if (!tile || tile.isWater || tile.isRoad || tile.isSettlementCore || tile.terrainType === 'mountain_pass' || tile.terrainType === 'sword_gorge_pass') {
+          const isTileWater = !tile || tile.tileType === 'water' || WATER_TERRAINS.has(tile.terrainType);
+          const isTileRoad = tile && tile.terrainType && (tile.terrainType.includes('road') || tile.terrainType.includes('pass'));
+          const isTileSettlement = tile && (tile.isSettlementOrigin || tile.terrainType === 'settlement');
+          if (isTileWater || isTileRoad || isTileSettlement || (tile && (tile.terrainType === 'mountain_pass' || tile.terrainType === 'sword_gorge_pass'))) {
             valid = false;
           }
         }
@@ -970,7 +973,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       for (let dy = 0; dy < g.fh && valid; dy++) {
         for (let dx = 0; dx < g.fw && valid; dx++) {
           const tile = getTileAt(wx + dx, wy + dy);
-          if (!tile || tile.isWater || tile.isRoad || tile.isSettlementCore || tile.terrainType === 'mountain_pass' || tile.terrainType === 'sword_gorge_pass') {
+          const isTileWater = !tile || tile.tileType === 'water' || WATER_TERRAINS.has(tile.terrainType);
+          const isTileRoad = tile && tile.terrainType && (tile.terrainType.includes('road') || tile.terrainType.includes('pass'));
+          const isTileSettlement = tile && (tile.isSettlementOrigin || tile.terrainType === 'settlement');
+          if (isTileWater || isTileRoad || isTileSettlement || (tile && (tile.terrainType === 'mountain_pass' || tile.terrainType === 'sword_gorge_pass'))) {
             valid = false;
           }
         }
@@ -1023,8 +1029,13 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
     baseMin = 110;
     baseVar = 20; // 110..130 (Wilderness Subur)
   } else if (dangerTier === 3) {
-    baseMin = 95;
-    baseVar = 20; // 95..115 (Frontier / Danger)
+    if (chunkRegion.id === 'azure_mountain_range' || chunkRegion.id === 'ore_teeth_range') {
+      baseMin = 108;
+      baseVar = 20; // 108..128 for rich mountain peaks, crags & alpine flora
+    } else {
+      baseMin = 95;
+      baseVar = 20; // 95..115 (Frontier / Danger)
+    }
   } else if (dangerTier === 4) {
     if (chunkRegion.id === 'western_gorge_labyrinth' || chunkRegion.id === 'sword_gorge') {
       baseMin = 88;
@@ -1034,8 +1045,13 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       baseVar = 20; // 60..80 (Barren / Wasteland / Arktik)
     }
   } else {
-    baseMin = 40;
-    baseVar = 20; // 40..60 (Death Zone)
+    if (chunkRegion.id === 'floating_wind_isles') {
+      baseMin = 85;
+      baseVar = 20; // 85..105 for floating isles reefs and shrines
+    } else {
+      baseMin = 40;
+      baseVar = 20; // 40..60 (Death Zone)
+    }
   }
   const maxObjectsBudget = Math.floor(baseMin + densityNoise * baseVar);
 
@@ -1854,7 +1870,9 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- MOUNTAIN, ROCK, PEAK, CRAG, HILL & CLIFF SCATTER ---
       else if (terrain === 'azure_mountain' || terrain.includes('mountain') || terrain.includes('crag') || terrain.includes('peak') || terrain === 'cliff' || terrain === 'hill' || terrain.includes('canyon') || region.id === 'ore_teeth_range') {
-        if (roll < 0.45) {
+        const isTargetMountain = region.id === 'azure_mountain_range' || region.id === 'ore_teeth_range';
+        const mountainRollThreshold = isTargetMountain ? 0.65 : 0.45;
+        if (roll < mountainRollThreshold) {
           const isMountainRegion = [
             'azure_mountain_range',
             'godthunder_peaks',
@@ -1921,10 +1939,11 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
                 }
               }
 
-              // Fallback to small crags/rocks (V14 P4: max 8 small rocks per chunk in mountain regions)
+              // Fallback to small crags/rocks (V14 P4: max 8 small rocks per chunk in mountain regions, max 16 for azure/ore)
               if (!mountainCandidate) {
                 const smallRockCount = objects.filter(o => o.isSmallRock).length;
-                if (smallRockCount < 8) {
+                const maxSmallRocks = isTargetMountain ? 16 : 8;
+                if (smallRockCount < maxSmallRocks) {
                   const smallRocks = assetBindings.natureScatters.rocks.filter(r =>
                     !r.biomes || r.biomes.includes(region.id) || r.biomes.includes('mountain') || r.biomes.includes('ore_teeth_range')
                   );
@@ -2222,19 +2241,38 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- ISLAND REEFS, FLOATING ISLES & COASTAL SHORES ---
       else if (terrain === 'island_reef' || terrain.includes('island') || terrain.includes('reef') || region.id === 'floating_wind_isles' || region.id === 'eastern_sea' || region.id === 'bone_sea_coast') {
-        if (roll < 0.30) {
-          const islandWaters = (assetBindings.natureScatters.waters || []).filter(w =>
-            w.biomes && (w.biomes.includes('eastern_sea') || w.biomes.includes('floating_wind_isles') || w.biomes.includes('bone_sea_coast'))
-          );
-          const islandRocks = assetBindings.natureScatters.rocks.filter(r =>
-            r.biomes && (r.biomes.includes('eastern_sea') || r.biomes.includes('floating_wind_isles') || r.biomes.includes('mountain'))
-          );
-          const islandTrees = assetBindings.natureScatters.trees.filter(t =>
-            t.biomes && (t.biomes.includes('eastern_sea') || t.biomes.includes('floating_wind_isles'))
-          );
-          const pool = [...islandWaters, ...islandRocks, ...islandTrees];
+        const isWindIsles = region.id === 'floating_wind_isles';
+        const islandRollThreshold = isWindIsles ? 0.65 : 0.30;
+        if (roll < islandRollThreshold) {
+          let pool = [];
+          if (isWindIsles) {
+            pool = [
+              { defId: 'celestial_floating_wind_pagoda_shrine', cw: 2, ch: 2, collision: 'solid' },
+              { defId: 'floating_cloud_rock_isle', cw: 3, ch: 2, collision: 'solid' },
+              { defId: 'nature_scatter_coastal_glowing_coral_rock', cw: 2, ch: 1, collision: 'solid' },
+              { defId: 'nature_scatter_celestial_lotus_pond_rockery', cw: 2, ch: 2, collision: 'open' },
+              { defId: 'nature_limestone_karst_arch_natural_bridge', cw: 3, ch: 2, collision: 'soft' },
+              { defId: 'nature_reed_bed_marsh', cw: 2, ch: 1, collision: 'open' },
+              { defId: 'nature_lotus_pond_cluster', cw: 2, ch: 2, collision: 'open' },
+              { defId: 'nature_mossy_river_driftwood', cw: 1, ch: 1, collision: 'open' },
+              { defId: 'resource_snow_lotus', cw: 1, ch: 1, collision: 'soft' },
+              { defId: 'building_pagoda_tower_v1', cw: 2, ch: 2, collision: 'solid' },
+              { defId: 'building_pagoda_tower_v2', cw: 2, ch: 2, collision: 'solid' }
+            ];
+          } else {
+            const islandWaters = (assetBindings.natureScatters.waters || []).filter(w =>
+              w.biomes && (w.biomes.includes('eastern_sea') || w.biomes.includes('floating_wind_isles') || w.biomes.includes('bone_sea_coast'))
+            );
+            const islandRocks = assetBindings.natureScatters.rocks.filter(r =>
+              r.biomes && (r.biomes.includes('eastern_sea') || r.biomes.includes('floating_wind_isles') || r.biomes.includes('mountain'))
+            );
+            const islandTrees = assetBindings.natureScatters.trees.filter(t =>
+              t.biomes && (t.biomes.includes('eastern_sea') || t.biomes.includes('floating_wind_isles'))
+            );
+            pool = [...islandWaters, ...islandRocks, ...islandTrees];
+          }
           const startIdx = Math.floor(rand() * pool.length);
-          const maxPoolTries = Math.min(3, pool.length);
+          const maxPoolTries = Math.min(4, pool.length);
           for (let pi = 0; pi < maxPoolTries; pi++) {
             const itemDef = pool[(startIdx + pi) % pool.length];
             if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getLocalTile, false, itemDef.defId, objects)) {
@@ -2570,11 +2608,12 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
   objects.push(...filteredObjects);
 
   // --- V13 P1: Target Budget Refill Pass ---
-  // If post-process dropped objects below 85% of budget, refill with valid candidates
-  const minBudgetTarget = Math.floor(maxObjectsBudget * 0.85);
+  // If post-process dropped objects below 85% of budget (90% for mountain regions), refill with valid candidates
+  const isTargetMountainRefill = chunkRegion.id === 'azure_mountain_range' || chunkRegion.id === 'ore_teeth_range';
+  const minBudgetTarget = Math.floor(maxObjectsBudget * (isTargetMountainRefill ? 0.90 : 0.85));
   if (objects.length < minBudgetTarget) {
     const refillRand = createPRNG((chunkSeed ^ 0x5a1f893d) >>> 0);
-    const candidatePool = [
+    let candidatePool = [
       'nature_wild_mountain_camellia_shrub',
       'nature_wild_mountain_medicinal_wolfberry_bush',
       'rock_boulder_moss_v1',
@@ -2585,17 +2624,42 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       'rock_cleft_stone_v4',
       'mt_rock_3x2',
       'rock_boulder_moss_v3',
+      'tree_pine_ancient_v1',
+      'tree_pine_ancient_v2',
+      'tree_cypress_frost_v1',
       'nature_limestone_stalagmite_spire',
       'spirit_tree_2x2',
       'nature_ancient_scholar_cypress_stone_cairn'
-    ].filter(id => !isDefForbiddenInRegion(id, chunkRegion.id));
+    ];
+    if (chunkRegion.id === 'floating_wind_isles') {
+      candidatePool = [
+        'celestial_floating_wind_pagoda_shrine',
+        'floating_cloud_rock_isle',
+        'nature_scatter_coastal_glowing_coral_rock',
+        'nature_scatter_celestial_lotus_pond_rockery',
+        'nature_reed_bed_marsh',
+        'nature_lotus_pond_cluster',
+        'nature_mossy_river_driftwood',
+        'resource_snow_lotus',
+        'building_pagoda_tower_v1',
+        'building_pagoda_tower_v2'
+      ];
+    }
+    candidatePool = candidatePool.filter(id => !isDefForbiddenInRegion(id, chunkRegion.id));
 
     if (candidatePool.length > 0) {
-      for (let attempt = 0; attempt < 160 && objects.length < minBudgetTarget; attempt++) {
+      for (let attempt = 0; attempt < 240 && objects.length < minBudgetTarget; attempt++) {
         const rx = startTileX + Math.floor(refillRand() * 32);
         const ry = startTileY + Math.floor(refillRand() * 32);
         const rTile = getLocalTile(rx, ry);
-        if (!rTile || WATER_TERRAINS.has(rTile.terrainType) || (rTile.terrainType && rTile.terrainType.includes('road'))) continue;
+        if (!rTile) continue;
+        const isRoadOrPass = rTile.terrainType && (rTile.terrainType.includes('road') || rTile.terrainType.includes('pass'));
+        if (isRoadOrPass) continue;
+        if (chunkRegion.id === 'floating_wind_isles') {
+          if (rTile.terrainType !== 'island_reef') continue;
+        } else {
+          if (WATER_TERRAINS.has(rTile.terrainType)) continue;
+        }
 
         const pickDef = candidatePool[Math.floor(refillRand() * candidatePool.length)];
         const curDefCount = finalDefCounts.get(pickDef) || 0;

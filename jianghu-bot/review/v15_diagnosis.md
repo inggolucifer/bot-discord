@@ -17,7 +17,7 @@ Sesuai aturan keras V15: **Satu perubahan = satu penyebab = satu bukti**. Seluru
 | **J3** | Plains cokelat-olive & baked trail | `ground-manifest-v14.json` plains [1, 2], `plains_m1.webp` | `plains_m1.webp` `hasBakedPath: true` (flagged 2 komponen, aspect 3.23 & 2.94), Plains patch `hue: 64.7° < 65°` | Buat komposit `plains_v15` (70% meadow, 20% forest, 10% plains_m2; 0% plains_m1/m3/m4) | **LULUS P3**: 6/6 titik Plains hue 80.0°–87.7°, sat 0.319–0.494, 0% baked path |
 | **J4** | Audit buta (False PASS) | `pixelMetrics.py` & `groundContentAudit.py` | Gate ladder melaporkan PASS pada jalan kosong; audit tekstur loloskan jalan diagonal | Implementasikan `roadCoverage` dan `bakedPath` (aspect >= 3.5 / length >= 400px, Delta-E >= 12) | **LULUS P0/P3**: 9/9 self-tests PASS (`v15_selftest.json`), 144 macro diaudit (`v15_ground_audit.json`) |
 | **J5** | 18 macro kotor tanpa aliasing memadai | `ground-manifest-v14.json` | 18 file rejectedList, beberapa family < 3 varian bersih | Domain warp UV varian sekunder + aliasing family tetangga di `ground-alias-v15.json` | **LULUS P4**: 36/36 family memiliki $\ge 3$ varian bersih, 0 rejected macro aktif, domain warp UV aktif |
-| **J6** | Kepadatan pegunungan p10 rendah | `objectScatter.js` & `measureViewport.js` | Azure p10: 11 (target >= 12), Ore Teeth p10: 12 (target >= 13), Wind Isles: 11 (target >= 14) | Tambahkan variasi objek tematik non-barrier pada sel walkable sela massif | Menunggu P5 |
+| **J6** | Kepadatan pegunungan p10 rendah | `objectScatter.js` L1031, L1871, L1942, L2610 | Azure p10: 11 (target >= 12), Ore Teeth p10: 12 (target >= 13), Wind Isles: 11 (target >= 14) | Tingkatkan chunk budget di region pegunungan & pulau angin, roll threshold walkable, kuota batuan kecil, dan refill pass tematik non-barrier | **LULUS P5**: Azure median 22.5, p10 12, emptyRatio 0.604; Ore Teeth median 23, p10 13.9, emptyRatio 0.600; Wind Isles median 19, p10 14 |
 
 ---
 
@@ -109,6 +109,43 @@ Sesuai aturan keras V15: **Satu perubahan = satu penyebab = satu bukti**. Seluru
 - **Family Memenuhi $\ge 3$ Varian Bersih**: **36/36 (100% LULUS)**.
 - **Varian Terlarang/Rejected Aktif**: **0 (100% Bersih)**.
 - **Kontrak Grid V10**: V1–V9 PASS (0 violation), G1–G8 PASS (0 violation).
+
+---
+
+## 6. Bukti Terukur Phase P5: Kepadatan Pegunungan & Lembah (J6)
+
+### 6.1 Akar Cacat
+- `azure_mountain_range` & `ore_teeth_range` memiliki `dangerTier = 3` dengan baseline budget 95..115 per chunk. Akibat massif besar (24x8, 16x10) dan kuota batu kecil dibatasi ketat $\le 8$, viewport di sela tebing mengalami defisit kepadatan (Azure p10 = 11 < 12; Ore Teeth p10 = 11 < 13).
+- `floating_wind_isles` memiliki `dangerTier = 5` (budget hanya 40..60). Selain itu, 64% petak adalah `island_reef` yang terdaftar dalam `WATER_TERRAINS`, menyebabkan kandidat pohon dan batu normal ditolak sehingga median hanya 11 dan emptyRatio membengkak ke 0.954.
+
+### 6.2 Solusi Terukur
+- **Chunk Budget & Threshold Scatter**:
+  - `azure_mountain_range` & `ore_teeth_range`: `baseMin` dinaikkan ke 108 (budget 108..128); `roll` walkable dinaikkan ke 0.65; kuota batu kecil dinaikkan ke 16.
+  - `floating_wind_isles`: `baseMin` dinaikkan ke 85 (budget 85..105); `roll` dinaikkan ke 0.65 dengan pool tematik air/karang/pulau terapung (`celestial_floating_wind_pagoda_shrine`, `floating_cloud_rock_isle`, `nature_scatter_coastal_glowing_coral_rock`, dll.) yang 100% lolos regex air.
+- **Refill Pass Tematik**:
+  - Refill target diatur ke 90% budget untuk region pegunungan dan pulau angin.
+  - Penambahan kandidat refill pinus kuno alpine (`tree_pine_ancient_v1..v2`, `tree_cypress_frost_v1`).
+  - Pembersihan petak air di `objectScatter.js` (L907, L973) menghapus bug klasifikasi `lake_deep`, menghasilkan 0 pelanggaran di `checkObjectsOnWater.js`.
+- **Sterilisasi Koridor**:
+  - Validasi koridor 3-sel tetap aktif penuh via `barrierGenerator.isPassCorridor()`, menjamin 0 kebocoran barrier dan 100% akses terbuka.
+
+### 6.3 Hasil Evaluasi Otoritatif (`review/v15_density.json`)
+| Region | Median V14 | Median V15 (Target) | p10 V14 | p10 V15 (Target) | emptyRatio V15 (Target) | Status Gate |
+|---|---|---|---|---|---|---|
+| `azure_mountain_range` | 21 | **22.5** ($\ge 20$) | 11 | **12.0** ($\ge 12$) | **0.604** ($\le 0.65$) | **PASS** |
+| `ore_teeth_range` | 21 | **23.0** ($\ge 22$) | 12 | **13.9** ($\ge 13$) | **0.600** ($\le 0.65$) | **PASS** |
+| `hermit_highlands` | 25 | **25.0** ($\ge 22$) | 14.9 | **15.0** ($\ge 13$) | **0.638** ($\le 0.65$) | **PASS** |
+| `floating_wind_isles` | 11 | **19.0** ($\ge 14$) | 7.9 | **14.0** ($\ge 9$) | **0.921** ($\le 0.95$) | **PASS** |
+| `central_plains` | 29 | **29.0** ($\ge 28$) | 22 | **22.0** | **0.879** | **PASS** |
+| `northern_desolate` | 16 | **16.0** ($\ge 16$) | 11 | **11.0** | **0.933** | **PASS** |
+| `western_gorge_labyrinth` | 21 | **21.0** | 13 | **12.0** | **0.642** | **PASS** |
+| `sword_gorge` | 21 | **21.0** | 13 | **14.0** | **0.617** | **PASS** |
+
+- **Integritas Dinding Azure**: `checkBarrierClosure.js` $\to$ 0 kebocoran di semua window x (Celah resmi 4/4).
+- **Keterjangkauan Pemukiman**: `checkReachability.js` $\to$ 31/31 pemukiman terjangkau ke Desa Xingcun (100%).
+- **Audit Kontrak Grid V10**: `auditGridV10.js` V1–V9 PASS (73.209 objek teranalisis, 0 pelanggaran).
+- **Uji Gerbang Kontrak Grid**: `testGridContract.js` G1–G8 PASS 100%.
+
 
 
 
