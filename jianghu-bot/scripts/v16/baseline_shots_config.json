@@ -1,0 +1,258 @@
+[
+  {
+    "name": "P01_xingcun",
+    "x": 2050,
+    "y": 2650,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P01_xingcun (2050, 2650) z=1.4 grass"
+  },
+  {
+    "name": "P02_xingcun_cross",
+    "x": 2062,
+    "y": 2648,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P02_xingcun_cross (2062, 2648) z=1.4 grass"
+  },
+  {
+    "name": "P03_wild",
+    "x": 2300,
+    "y": 3000,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P03_wild (2300, 3000) z=1.4 grass"
+  },
+  {
+    "name": "P04_farm",
+    "x": 2450,
+    "y": 2450,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P04_farm (2450, 2450) z=1.4 field"
+  },
+  {
+    "name": "P05_forest",
+    "x": 2700,
+    "y": 2300,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P05_forest (2700, 2300) z=1.4 grass"
+  },
+  {
+    "name": "P06_azure_pass",
+    "x": 2200,
+    "y": 3340,
+    "zoom": 1,
+    "grid": false,
+    "desc": "P06_azure_pass (2200, 3340) z=1 stone"
+  },
+  {
+    "name": "P07_azure_west",
+    "x": 1500,
+    "y": 3350,
+    "zoom": 1,
+    "grid": false,
+    "desc": "P07_azure_west (1500, 3350) z=1 stone"
+  },
+  {
+    "name": "P08_azure_far_west",
+    "x": 800,
+    "y": 3350,
+    "zoom": 1,
+    "grid": false,
+    "desc": "P08_azure_far_west (800, 3350) z=1 stone"
+  },
+  {
+    "name": "P09_azure_east",
+    "x": 3300,
+    "y": 3350,
+    "zoom": 1,
+    "grid": false,
+    "desc": "P09_azure_east (3300, 3350) z=1 stone"
+  },
+  {
+    "name": "P10_azure_mist",
+    "x": 2600,
+    "y": 3340,
+    "zoom": 1,
+    "grid": false,
+    "desc": "P10_azure_mist (2600, 3340) z=1 stone"
+  },
+  {
+    "name": "P11_xueshan",
+    "x": 2350,
+    "y": 4300,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P11_xueshan (2350, 4300) z=1.4 snow"
+  },
+  {
+    "name": "P12_desert",
+    "x": 900,
+    "y": 2600,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P12_desert (900, 2600) z=1.4 sand"
+  },
+  {
+    "name": "P13_road_h",
+    "x": 2040,
+    "y": 2651,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P13_road_h (2040, 2651) z=1.4 grass"
+  },
+  {
+    "name": "P14_road_v",
+    "x": 2053,
+    "y": 2648,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P14_road_v (2053, 2648) z=1.4 grass"
+  },
+  {
+    "name": "P15_central",
+    "x": 2500,
+    "y": 2800,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P15_central (2500, 2800) z=1.4 grass"
+  },
+  {
+    "name": "P16_west_farm",
+    "x": 1800,
+    "y": 2400,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P16_west_farm (1800, 2400) z=1.4 field"
+  },
+  {
+    "name": "P17_delta",
+    "x": 1600,
+    "y": 2200,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P17_delta (1600, 2200) z=1.4 grass"
+  },
+  {
+    "name": "P20_boundary_t1",
+    "x": 2068,
+    "y": 2625,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P20_boundary_t1 (2068, 2625) z=1.4 boundary"
+  },
+  {
+    "name": "P21_boundary_t1",
+    "x": 2074,
+    "y": 2633,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P21_boundary_t1 (2074, 2633) z=1.4 boundary"
+  },
+  {
+    "name": "P22_boundary_t1",
+    "x": 2083,
+    "y": 2626,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P22_boundary_t1 (2083, 2626) z=1.4 boundary"
+  },
+  {
+    "name": "P23_boundary_t1",
+    "x": 2081,
+    "y": 2634,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P23_boundary_t1 (2081, 2634) z=1.4 boundary"
+  },
+  {
+    "name": "P24_boundary_t1",
+    "x": 2099,
+    "y": 2648,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P24_boundary_t1 (2099, 2648) z=1.4 boundary"
+  },
+  {
+    "name": "P25_boundary_azure",
+    "x": 2202,
+    "y": 3329,
+    "zoom": 1,
+    "grid": false,
+    "desc": "P25_boundary_azure (2202, 3329) z=1 boundary"
+  },
+  {
+    "name": "P26_boundary_azure",
+    "x": 2201,
+    "y": 3334,
+    "zoom": 1,
+    "grid": false,
+    "desc": "P26_boundary_azure (2201, 3334) z=1 boundary"
+  },
+  {
+    "name": "P27_boundary_azure",
+    "x": 2199,
+    "y": 3339,
+    "zoom": 1,
+    "grid": false,
+    "desc": "P27_boundary_azure (2199, 3339) z=1 boundary"
+  },
+  {
+    "name": "P28_boundary_azure",
+    "x": 2202,
+    "y": 3342,
+    "zoom": 1,
+    "grid": false,
+    "desc": "P28_boundary_azure (2202, 3342) z=1 boundary"
+  },
+  {
+    "name": "P29_boundary_azure",
+    "x": 2198,
+    "y": 3347,
+    "zoom": 1,
+    "grid": false,
+    "desc": "P29_boundary_azure (2198, 3347) z=1 boundary"
+  },
+  {
+    "name": "P30_road_rand",
+    "x": 2051,
+    "y": 2649,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P30_road_rand (2051, 2649) z=1.4 road"
+  },
+  {
+    "name": "P31_road_rand",
+    "x": 2054,
+    "y": 2650,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P31_road_rand (2054, 2650) z=1.4 road"
+  },
+  {
+    "name": "P32_road_rand",
+    "x": 2199,
+    "y": 3328,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P32_road_rand (2199, 3328) z=1.4 road"
+  },
+  {
+    "name": "P33_road_rand",
+    "x": 2200,
+    "y": 3332,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P33_road_rand (2200, 3332) z=1.4 road"
+  },
+  {
+    "name": "P34_road_rand",
+    "x": 2201,
+    "y": 3336,
+    "zoom": 1.4,
+    "grid": false,
+    "desc": "P34_road_rand (2201, 3336) z=1.4 road"
+  }
+]

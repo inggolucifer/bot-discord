@@ -19,6 +19,12 @@ const GATES_CONFIG_PATH = path.resolve(__dirname, 'gates.json');
 const isBaseline = process.argv.includes('--baseline');
 const skipCommands = process.argv.includes('--skip-commands');
 
+if (process.argv.includes('--mode') && process.argv[process.argv.indexOf('--mode') + 1] === 'v16') {
+  console.log('[gateRunner] Routing to V16 Authoritative Gate Runner (scripts/v16/gateRunner.js)...');
+  require('../v16/gateRunner.js');
+  return;
+}
+
 if (process.argv.includes('--mode') && process.argv[process.argv.indexOf('--mode') + 1] === 'v15') {
   console.log('[gateRunner] Routing to V15 Authoritative Gate Runner (scripts/v15/gateRunner.js)...');
   require('../v15/gateRunner.js');

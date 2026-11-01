@@ -1,0 +1,15 @@
+{
+  "viewport": {
+    "x": 2099,
+    "y": 2648,
+    "zoom": 1,
+    "widthPx": 1280,
+    "heightPx": 720,
+    "camX": 2099,
+    "camY": 2648,
+    "cellsX": 24,
+    "cellsY": 14,
+    "tilePx": 54
+  },
+  "roadCells": []
+}
