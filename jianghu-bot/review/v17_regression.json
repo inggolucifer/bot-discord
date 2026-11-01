@@ -1,0 +1,105 @@
+{
+  "timestamp": "2026-11-01T18:04:46.397Z",
+  "regressionsCount": 0,
+  "regressions": [],
+  "checks": {
+    "AzureBarrier_6_Windows": {
+      "pass": true,
+      "windowsCount": 6,
+      "allWindowsPass": true
+    },
+    "AzureBarrier_Full_Closure": {
+      "pass": true,
+      "unauthorizedLeaks": 0,
+      "officialPassesReached": 4,
+      "passed": true
+    },
+    "GridContract_V1_V9": {
+      "pass": true,
+      "totalAnalyzed": 73209,
+      "gatesPassed": 9,
+      "status": "PASS"
+    },
+    "GridContract_G1_G8": {
+      "pass": true,
+      "allGatesPassed": true,
+      "status": "PASS"
+    },
+    "Regional_Density_29": {
+      "pass": true,
+      "azureMedian": 22.5,
+      "azureP10": 12,
+      "maxDropPct": 0,
+      "dropsOver5Count": 0
+    },
+    "Settlement_Reachability": {
+      "pass": true,
+      "reachableCount": 31,
+      "target": 31
+    },
+    "Visual_Plains_Integrity": {
+      "pass": true,
+      "colorDeltaE": 4.18,
+      "threshold": 12
+    },
+    "Visual_Paper_Leaks": {
+      "pass": true,
+      "leakedPaperPixels": 0
+    }
+  },
+  "barrierWindows": {
+    "window_400_700": {
+      "pass": true,
+      "minX": 400,
+      "maxX": 700,
+      "corridorsCount": 0,
+      "matched": [],
+      "unauthorizedLeaks": 0
+    },
+    "window_1400_1700": {
+      "pass": true,
+      "minX": 1400,
+      "maxX": 1700,
+      "corridorsCount": 0,
+      "matched": [],
+      "unauthorizedLeaks": 0
+    },
+    "window_2200_2400": {
+      "pass": true,
+      "minX": 2200,
+      "maxX": 2400,
+      "corridorsCount": 1,
+      "matched": [
+        "north_pass"
+      ],
+      "unauthorizedLeaks": 0
+    },
+    "window_3000_3200": {
+      "pass": true,
+      "minX": 3000,
+      "maxX": 3200,
+      "corridorsCount": 1,
+      "matched": [
+        "sword_gorge"
+      ],
+      "unauthorizedLeaks": 0
+    },
+    "window_3300_3600": {
+      "pass": true,
+      "minX": 3300,
+      "maxX": 3600,
+      "corridorsCount": 0,
+      "matched": [],
+      "unauthorizedLeaks": 0
+    },
+    "window_3700_3950": {
+      "pass": true,
+      "minX": 3700,
+      "maxX": 3950,
+      "corridorsCount": 0,
+      "matched": [],
+      "unauthorizedLeaks": 0
+    }
+  },
+  "status": "PASS"
+}
