@@ -1276,7 +1276,11 @@ export function renderChunkGroundBitmapTextured(
           ctxVT.clearRect(0, 0, canvasWidth, canvasHeight);
           ctxVT.globalCompositeOperation = 'source-over';
           if (typeof (varPattern as any).setTransform === 'function') {
-            const matrix = new DOMMatrix().translate(originX, originY).scale(scale);
+            // V15 P4.2: Domain warp UV for secondary variants (subtle translation offset)
+            const warpSeed = (cx * 37 + cy * 79 + vIdx * 101) & 0xff;
+            const warpOffsetX = originX + ((warpSeed % 7) - 3) * (tileSize * 0.15);
+            const warpOffsetY = originY + (((warpSeed >> 3) % 7) - 3) * (tileSize * 0.15);
+            const matrix = new DOMMatrix().translate(warpOffsetX, warpOffsetY).scale(scale);
             varPattern.setTransform(matrix);
           }
           ctxVT.fillStyle = varPattern;

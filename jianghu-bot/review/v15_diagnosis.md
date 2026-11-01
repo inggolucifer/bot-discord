@@ -16,7 +16,7 @@ Sesuai aturan keras V15: **Satu perubahan = satu penyebab = satu bukti**. Seluru
 | **J2** | Ground Azure biru jenuh (sat > 0.22) | `regions.json` L38, `canonicalRegions.ts` L203, `groundRenderer.ts` L1317, L1356 | Azure patch `sat: 0.245 > 0.22`, `diff \|B-R\|: 22.6`, warna RGB (90, 102, 114) | Ubah `terrainColor` dari `#3d5a80` ke `#6e7378`, kurangi multiply slate & pass tint | **LULUS P2**: 8/8 titik Azure sat 0.081–0.142 (semua $\le 0.22$), diff \|B-R\| 0.2–7.4 ($\le 25$) |
 | **J3** | Plains cokelat-olive & baked trail | `ground-manifest-v14.json` plains [1, 2], `plains_m1.webp` | `plains_m1.webp` `hasBakedPath: true` (flagged 2 komponen, aspect 3.23 & 2.94), Plains patch `hue: 64.7° < 65°` | Buat komposit `plains_v15` (70% meadow, 20% forest, 10% plains_m2; 0% plains_m1/m3/m4) | **LULUS P3**: 6/6 titik Plains hue 80.0°–87.7°, sat 0.319–0.494, 0% baked path |
 | **J4** | Audit buta (False PASS) | `pixelMetrics.py` & `groundContentAudit.py` | Gate ladder melaporkan PASS pada jalan kosong; audit tekstur loloskan jalan diagonal | Implementasikan `roadCoverage` dan `bakedPath` (aspect >= 3.5 / length >= 400px, Delta-E >= 12) | **LULUS P0/P3**: 9/9 self-tests PASS (`v15_selftest.json`), 144 macro diaudit (`v15_ground_audit.json`) |
-| **J5** | 18 macro kotor tanpa aliasing memadai | `ground-manifest-v14.json` | 18 file rejectedList, beberapa family < 3 varian bersih | Domain warp UV varian sekunder + aliasing family tetangga di `ground-alias-v15.json` | Menunggu P4 |
+| **J5** | 18 macro kotor tanpa aliasing memadai | `ground-manifest-v14.json` | 18 file rejectedList, beberapa family < 3 varian bersih | Domain warp UV varian sekunder + aliasing family tetangga di `ground-alias-v15.json` | **LULUS P4**: 36/36 family memiliki $\ge 3$ varian bersih, 0 rejected macro aktif, domain warp UV aktif |
 | **J6** | Kepadatan pegunungan p10 rendah | `objectScatter.js` & `measureViewport.js` | Azure p10: 11 (target >= 12), Ore Teeth p10: 12 (target >= 13), Wind Isles: 11 (target >= 14) | Tambahkan variasi objek tematik non-barrier pada sel walkable sela massif | Menunggu P5 |
 
 ---
@@ -85,5 +85,30 @@ Sesuai aturan keras V15: **Satu perubahan = satu penyebab = satu bukti**. Seluru
 - **Plains M1 Exclusion**: `plains_m1` 100% EXCLUDED dari seluruh varian aktif (`plainsM1Excluded: true`).
 - **Ringkasan Gate P3**: **6/6 Titik LULUS 100%**.
 - **Kontrak Grid V10**: V1–V9 PASS (0 violation), G1–G8 PASS (0 violation).
+
+---
+
+## 5. Bukti Terukur Phase P4: Ground Aliasing 18 Macro Kotor (J5)
+
+### 5.1 Akar Cacat & Analisis Variasi
+- 19 file tekstur makro masuk dalam daftar rejected (`rejectedList`) karena lattice artifacts, baked streaks, atau artefak periodik.
+- Akibat pemblokiran ini, 5 family memiliki kurang dari 3 varian bersih (`forest_floor` [1,2], `glacier` [3,4], `oasis` [1,2], `swamp` [2,4], `plains` [2]).
+
+### 5.2 Solusi Terukur
+- Dibuat `world-data/ground-alias-v15.json` dan `web-dashboard/public/assets/ground/ground-alias-v15.json` dengan kurasi alias bersih:
+  - `forest_floor` $\to$ pinjam `v11/meadow_m1`, `v11/bamboo_floor_m2` (total 5 varian bersih).
+  - `glacier` $\to$ pinjam `v11/snow_m2`, `v11/snow_m3` (total 4 varian bersih).
+  - `oasis` $\to$ pinjam `v11/meadow_m2`, `v11/meadow_m4` (total 4 varian bersih).
+  - `swamp` $\to$ pinjam `v11/poison_pool_m2`, `v11/demonic_swamp_m2` (total 4 varian bersih).
+  - `plains` $\to$ komposit `plains_v15` (total 10 varian bersih).
+- `ground-manifest.json` disanitasi penuh: seluruh file rejected dibersihkan dari katalog varian terrain (`scripts/v15/syncManifestAndAliases.py`).
+- Diimplementasikan **Domain Warp UV** pada varian sekunder di `groundRenderer.ts` (L1278–L1285) dengan offset translation $\pm 15\%$ berbasis seed deterministik koordinat chunk dan varian index, memecah pola repetisi visual.
+
+### 5.3 Hasil Evaluasi Otoritatif (`review/v15_aliasing_evaluation.json`)
+- **Total Family Dianalisis**: 36/36.
+- **Family Memenuhi $\ge 3$ Varian Bersih**: **36/36 (100% LULUS)**.
+- **Varian Terlarang/Rejected Aktif**: **0 (100% Bersih)**.
+- **Kontrak Grid V10**: V1–V9 PASS (0 violation), G1–G8 PASS (0 violation).
+
 
 

@@ -105,6 +105,32 @@ class GroundTextures {
           }
         }
 
+        // V15 P4.1: Apply ground aliasing from ground-alias-v15.json
+        try {
+          const aliasRes = await fetch('/assets/ground/ground-alias-v15.json');
+          if (aliasRes.ok) {
+            const aliasData = await aliasRes.json();
+            if (aliasData && aliasData.aliases) {
+              for (const [fam, aliasVars] of Object.entries(aliasData.aliases)) {
+                if (Array.isArray(aliasVars)) {
+                  for (const tInfo of Object.values(this.manifest.terrains)) {
+                    if (tInfo.family === fam) {
+                      const cleanAlias = (aliasVars as string[]).filter(v => {
+                        const fileKey = v.replace(/^v11\//, '') + '.webp';
+                        return cleanMap[fileKey] !== false;
+                      });
+                      const merged = [...new Set([...(tInfo.variants || []), ...cleanAlias])];
+                      tInfo.variants = merged;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } catch {
+          // ignore
+        }
+
         // Collect all unique variant IDs and unique family names
         const uniqueVariants = new Set<string>();
         const uniqueFamilies = new Set<string>();

@@ -82,7 +82,6 @@
       "variants": [
         "v11/crater_m1",
         "v11/crater_m2",
-        "v11/crater_m3",
         "v11/crater_m4"
       ]
     },
@@ -108,7 +107,6 @@
       "family": "desert_sand",
       "variants": [
         "v11/desert_sand_m1",
-        "v11/desert_sand_m2",
         "v11/desert_sand_m3",
         "v11/desert_sand_m4"
       ]
@@ -116,7 +114,6 @@
     "dune": {
       "family": "dune",
       "variants": [
-        "v11/dune_m1",
         "v11/dune_m2",
         "v11/dune_m3",
         "v11/dune_m4"
@@ -127,7 +124,6 @@
       "variants": [
         "v11/farmland_m1",
         "v11/farmland_m2",
-        "v11/farmland_m3",
         "v11/farmland_m4"
       ]
     },
@@ -135,7 +131,6 @@
       "family": "forest_floor",
       "variants": [
         "v11/forest_floor_m1",
-        "v11/forest_floor_m2",
         "v11/forest_floor_m3",
         "v11/forest_floor_m4"
       ]
@@ -143,7 +138,6 @@
     "formation_tile": {
       "family": "formation_tile",
       "variants": [
-        "v11/formation_tile_m1",
         "v11/formation_tile_m2",
         "v11/formation_tile_m3",
         "v11/formation_tile_m4"
@@ -152,10 +146,9 @@
     "glacier": {
       "family": "glacier",
       "variants": [
-        "v11/glacier_m1",
-        "v11/glacier_m2",
         "v11/glacier_m3",
-        "v11/glacier_m4"
+        "v11/glacier_m4",
+        "v11/snow_m2"
       ]
     },
     "herb_field": {
@@ -226,8 +219,7 @@
       "variants": [
         "v11/lightning_scar_m1",
         "v11/lightning_scar_m2",
-        "v11/lightning_scar_m3",
-        "v11/lightning_scar_m4"
+        "v11/lightning_scar_m3"
       ]
     },
     "meadow": {
@@ -288,8 +280,7 @@
       "variants": [
         "v11/oasis_m1",
         "v11/oasis_m2",
-        "v11/oasis_m3",
-        "v11/oasis_m4"
+        "v11/meadow_m2"
       ]
     },
     "ocean": {
@@ -308,7 +299,7 @@
         "v11/meadow_m2",
         "v11/meadow_m4",
         "v11/forest_floor_m1",
-        "v11/forest_floor_m2",
+        "v11/bamboo_floor_m2",
         "v11/meadow_m1",
         "v11/meadow_m2",
         "v11/meadow_m4",
@@ -328,10 +319,9 @@
     "pond_lotus": {
       "family": "swamp",
       "variants": [
-        "v11/swamp_m1",
         "v11/swamp_m2",
-        "v11/swamp_m3",
-        "v11/swamp_m4"
+        "v11/swamp_m4",
+        "v11/poison_pool_m2"
       ]
     },
     "river": {
@@ -339,8 +329,7 @@
       "variants": [
         "v11/river_m1",
         "v11/river_m2",
-        "v11/river_m3",
-        "v11/river_m4"
+        "v11/river_m3"
       ]
     },
     "river_shallow": {
@@ -348,8 +337,7 @@
       "variants": [
         "v11/river_m1",
         "v11/river_m2",
-        "v11/river_m3",
-        "v11/river_m4"
+        "v11/river_m3"
       ]
     },
     "road_stone": {
@@ -400,7 +388,6 @@
     "snow": {
       "family": "snow",
       "variants": [
-        "v11/snow_m1",
         "v11/snow_m2",
         "v11/snow_m3",
         "v11/snow_m4"
@@ -410,7 +397,6 @@
       "family": "forest_floor",
       "variants": [
         "v11/forest_floor_m1",
-        "v11/forest_floor_m2",
         "v11/forest_floor_m3",
         "v11/forest_floor_m4"
       ]
@@ -418,10 +404,9 @@
     "swamp": {
       "family": "swamp",
       "variants": [
-        "v11/swamp_m1",
         "v11/swamp_m2",
-        "v11/swamp_m3",
-        "v11/swamp_m4"
+        "v11/swamp_m4",
+        "v11/poison_pool_m2"
       ]
     },
     "sword_gorge_pass": {
