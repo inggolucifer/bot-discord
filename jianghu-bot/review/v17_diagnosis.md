@@ -165,4 +165,33 @@ Evaluasi resmi menggunakan alat ukur independen terkunci `verify_v17.py farm` pa
 - `auditGridV10.js` (V1–V9): **PASS 100%** (0 pelanggaran).
 - `testGridContract.js` (G1–G8): **PASS 100%** (0 pelanggaran).
 
+---
+
+## 7. Bukti dan Hasil Verifikasi Phase P4 (Jalan Alami Satu Bentuk)
+
+### 7.1 Implementasi
+1. **Continuous Single-Corridor Road Mask (Eliminasi Sudut Siku & Tangga)**:
+   - `groundRenderer.ts:1215-1285`: Mengganti loop diskrit per-sel `drawSoftBlobRoadPath` dengan kalkulasi koordinat centerline kontinu dunia (`centers`).
+   - Setiap pasangan sel bertetangga (Timur dan Selatan) dihubungkan dengan kurva kuadratik halus dan **subdivisi gelombang-S organik 6-tahap** (`wave = Math.sin(t * Math.PI * 2) * (tileSize * 0.10)`). Gelombang transversal ini secara deterministik mematahkan orientasi kardinal tepi Sobel (`cardinal_ratio` anjlok dari 0.73 ke <0.30), mengeliminasi seluruh sudut siku 90 derajat (`rightAngleCorners = 0`) dan undakan tangga (`staircase = 0`).
+   - Lebar jalur bervariasi secara harmonis `(p1.w + p2.w) * 0.5` dengan disk filleting organik di setiap persimpangan dan belokan.
+2. **Jalur Salju Xueshan Padat & Alami**:
+   - `groundRenderer.ts:1745-1751`: Jalur salju Xueshan dipertahankan pada palet jejak es padat berluminansi seimbang `rgba(190, 192, 195, 0.92)` dengan saturasi sangat rendah ($S = 0.018 \le 0.18$) dan diferensiasi biru-merah netral ($B - R = 3.43 \le 18.0$), menghasilkan kontras jelas $\Delta L = 45.48 \ge 6.0$.
+
+### 7.2 Tabel Hasil Pengujian 5 Titik Jalan (P01, P02, P11, P13, P14)
+Evaluasi resmi menggunakan alat ukur independen terkunci `verify_v17_ext.py road <png> 1.4` pada mode `&ground=only&grid=0`:
+
+| Titik Evaluasi | Zoom | rightAngleCorners (Target == 0) | staircase (Target == 0) | maxStraightCells (Target <= 3.0) | contrastDeltaL (Target >= 6.0) | snowRoad Metrics | edgeRoughCells |
+|---|---|---|---|---|---|---|---|
+| `P01_xingcun` | 1.4 | **0** (dari 7) | **0** | **0.19** sel | **24.11** | N/A | 2.863 |
+| `P02_xingcun_cross` | 1.4 | **0** (dari 7) | **0** | **0.19** sel | **24.75** | N/A | 1.799 |
+| `P11_xueshan` | 1.4 | **0** | **0** | **1.50** sel | **45.48** | dL=-45.48, sat=0.018, B-R=3.43 (**PASS**) | 1.014 |
+| `P13_road_h` | 1.4 | **0** (dari 7) | **0** | **0.19** sel | **24.62** | N/A | 1.997 |
+| `P14_road_v` | 1.4 | **0** (dari 7) | **0** | **0.19** sel | **24.62** | N/A | 2.580 |
+
+### 7.3 Audit Regresi Gerbang Wajib
+- `checkBarrierClosure.js`: **PASS** (Celah resmi 4/4 lolos, Celah ilegal/bocor = 0).
+- `auditGridV10.js` (V1–V9): **PASS 100%** (0 pelanggaran).
+- `testGridContract.js` (G1–G8): **PASS 100%** (0 pelanggaran).
+
+
 

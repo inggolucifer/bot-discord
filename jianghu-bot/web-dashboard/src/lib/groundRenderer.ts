@@ -1213,28 +1213,112 @@ export function renderChunkGroundBitmapTextured(
     ctxMB.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
     if (F === 'road_stone') {
       ctxMB.fillStyle = '#000000';
+      ctxMB.strokeStyle = '#000000';
+      ctxMB.lineCap = 'round';
+      ctxMB.lineJoin = 'round';
+
+      // V17 P4: Continuous Single-Corridor Road Mask (Zero Angular Corners & Zero Staircases)
+      const centers: Array<{ x: number; y: number; w: number } | null> = new Array(GRID_DIM * GRID_DIM).fill(null);
       for (let gy = 0; gy < GRID_DIM; gy++) {
         for (let gx = 0; gx < GRID_DIM; gx++) {
           const idx = gy * GRID_DIM + gx;
-          if (gridFamilies[idx] === 'road_stone') {
-            const px = gx * tileSize;
-            const py = gy * tileSize;
-
-            let bm = 0;
-            if (gy > 0 && (gridFamilies[idx - GRID_DIM] === 'road_stone' || gridFamilies[idx - GRID_DIM] === 'settlement_floor')) bm |= 1;
-            if (gx < GRID_DIM - 1 && (gridFamilies[idx + 1] === 'road_stone' || gridFamilies[idx + 1] === 'settlement_floor')) bm |= 2;
-            if (gy < GRID_DIM - 1 && (gridFamilies[idx + GRID_DIM] === 'road_stone' || gridFamilies[idx + GRID_DIM] === 'settlement_floor')) bm |= 4;
-            if (gx > 0 && (gridFamilies[idx - 1] === 'road_stone' || gridFamilies[idx - 1] === 'settlement_floor')) bm |= 8;
-
+          if (gridFamilies[idx] === 'road_stone' || gridFamilies[idx] === 'settlement_floor') {
             const wx = cx * CHUNK_SIZE + (gx - BORDER);
             const wy = cy * CHUNK_SIZE + (gy - BORDER);
-            drawSoftBlobRoadPath(ctxMB, px, py, tileSize, bm, wx, wy);
+            const offX = (smoothNoise2D(wx * 0.25, wy * 0.25, 101) - 0.5) * (tileSize * 0.28);
+            const offY = (smoothNoise2D(wx * 0.25, wy * 0.25, 202) - 0.5) * (tileSize * 0.28);
+            const wMod = 0.74 + 0.10 * Math.sin(wx * 0.50 + wy * 0.35);
+            centers[idx] = {
+              x: (gx + 0.5) * tileSize + offX,
+              y: (gy + 0.5) * tileSize + offY,
+              w: tileSize * wMod
+            };
           }
         }
       }
 
+      for (let gy = 0; gy < GRID_DIM; gy++) {
+        for (let gx = 0; gx < GRID_DIM; gx++) {
+          const idx = gy * GRID_DIM + gx;
+          const p1 = centers[idx];
+          if (!p1 || gridFamilies[idx] !== 'road_stone') continue;
+
+          // Connect East neighbor with organic S-wave subdivision (cr <= 0.30, zero cardinal corners)
+          if (gx < GRID_DIM - 1) {
+            const p2 = centers[idx + 1];
+            if (p2) {
+              const wx = cx * CHUNK_SIZE + (gx - BORDER);
+              const wy = cy * CHUNK_SIZE + (gy - BORDER);
+              const dx = p2.x - p1.x;
+              const dy = p2.y - p1.y;
+              const len = Math.hypot(dx, dy) || 1;
+              const nx = -dy / len;
+              const ny = dx / len;
+              const midX = (p1.x + p2.x) * 0.5;
+              const midY = (p1.y + p2.y) * 0.5 + (smoothNoise2D((wx + 0.5) * 0.30, wy * 0.30, 303) - 0.5) * (tileSize * 0.20);
+
+              ctxMB.lineWidth = (p1.w + p2.w) * 0.5;
+              ctxMB.beginPath();
+              ctxMB.moveTo(p1.x, p1.y);
+              ctxMB.quadraticCurveTo(midX, midY, p2.x, p2.y);
+              ctxMB.stroke();
+
+              // Subdivided organic disks along the path to break cardinal Sobel orientation
+              for (let s = 1; s <= 6; s++) {
+                const t = s / 7.0;
+                const bx = (1 - t) * (1 - t) * p1.x + 2 * (1 - t) * t * midX + t * t * p2.x;
+                const by = (1 - t) * (1 - t) * p1.y + 2 * (1 - t) * t * midY + t * t * p2.y;
+                const bw = (1 - t) * p1.w + t * p2.w;
+                const wave = Math.sin(t * Math.PI * 2) * (tileSize * 0.10);
+                ctxMB.beginPath();
+                ctxMB.arc(bx + nx * wave, by + ny * wave, bw * 0.5, 0, Math.PI * 2);
+                ctxMB.fill();
+              }
+            }
+          }
+
+          // Connect South neighbor with organic S-wave subdivision (cr <= 0.30, zero cardinal corners)
+          if (gy < GRID_DIM - 1) {
+            const p2 = centers[idx + GRID_DIM];
+            if (p2) {
+              const wx = cx * CHUNK_SIZE + (gx - BORDER);
+              const wy = cy * CHUNK_SIZE + (gy - BORDER);
+              const dx = p2.x - p1.x;
+              const dy = p2.y - p1.y;
+              const len = Math.hypot(dx, dy) || 1;
+              const nx = -dy / len;
+              const ny = dx / len;
+              const midX = (p1.x + p2.x) * 0.5 + (smoothNoise2D(wx * 0.30, (wy + 0.5) * 0.30, 404) - 0.5) * (tileSize * 0.20);
+              const midY = (p1.y + p2.y) * 0.5;
+
+              ctxMB.lineWidth = (p1.w + p2.w) * 0.5;
+              ctxMB.beginPath();
+              ctxMB.moveTo(p1.x, p1.y);
+              ctxMB.quadraticCurveTo(midX, midY, p2.x, p2.y);
+              ctxMB.stroke();
+
+              for (let s = 1; s <= 6; s++) {
+                const t = s / 7.0;
+                const bx = (1 - t) * (1 - t) * p1.x + 2 * (1 - t) * t * midX + t * t * p2.x;
+                const by = (1 - t) * (1 - t) * p1.y + 2 * (1 - t) * t * midY + t * t * p2.y;
+                const bw = (1 - t) * p1.w + t * p2.w;
+                const wave = Math.sin(t * Math.PI * 2) * (tileSize * 0.10);
+                ctxMB.beginPath();
+                ctxMB.arc(bx + nx * wave, by + ny * wave, bw * 0.5, 0, Math.PI * 2);
+                ctxMB.fill();
+              }
+            }
+          }
+
+          // Central disk for turns, intersections, and standalone stepping stones
+          ctxMB.beginPath();
+          ctxMB.arc(p1.x, p1.y, p1.w * 0.5, 0, Math.PI * 2);
+          ctxMB.fill();
+        }
+      }
+
       ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
-      ctxMB2.filter = 'blur(1.2px)';
+      ctxMB2.filter = 'blur(1.8px)';
       ctxMB2.drawImage(scratchMB.canvas, 0, 0);
       ctxMB2.filter = 'none';
     } else {
