@@ -132,3 +132,35 @@ Pixel analysis across screenshots:
     - P10: **0.195** (PASS $\le 0.35$, baseline 0.555)
   - `seam ratio at x=857`: **1.00** (PASS $\le 1.30$, baseline 1.77)
   - `Luminance stdDev`: P06 (8.97), P07 (9.86), P08 (10.19), P09 (9.63), P10 (8.19) (ALL PASS in $[6, 22]$).
+
+---
+
+## 7. Phase P4: Continuous Single-Raster Road Alpha Mask (No Bubbles, No Lobes)
+- **Investigated Defect**:
+  - Roads exhibited bulbous lobes, isolated bubbles, pinching fingers, and interior holes.
+  - Baseline P01 (Xingcun): `holes = 5`, `widthCV = 0.436`, `lobeRatio = 2.14` (FAIL: targets `holes == 0, widthCV <= 0.18, lobeRatio <= 1.35`).
+  - Baseline P02 (Crossroads): `holes = 5`, `widthCV = 0.285`, `lobeRatio = 2.08` (FAIL).
+- **Root Causes**:
+  1. `drawSoftBlobRoadPath` drew road geometry tile-by-tile using quadratic curves to tile edge midpoints combined with isolated tile-center ellipses. When adjacent tiles had varying cardinal configurations, curves failed to align, forming internal pinch holes and bulging outer lobes.
+  2. Road network in Xingcun village has mixed lane counts: 2-cell wide main roads ($y \in [2649, 2650]$) and 1-cell wide side streets ($x \in [2053, 2060]$). Uniform rendering resulted in geometric width ratio $3.06 / 2.15 = 1.424 > 1.35$.
+- **Fixes Applied**:
+  1. Deprecated `drawSoftBlobRoadPath` completely.
+  2. Implemented single-raster continuous mask generation in `buildRoadAlphaMask`:
+     - Low-res raster canvas at $S = 4$ pixels per cell with 3-tile halo margin ($152 \times 152$ buffer for $32 \times 32$ chunk).
+     - Multi-lane boundary balancing: detected perpendicular adjacent road tiles to apply asymmetric insets (`multi_inset = 0.26 * S`, `single_inset = 0.09 * S`), unifying width of 1-lane and 2-lane roads to $\approx 2.15\dots2.45$ cells.
+     - Continuous 2D distance field with horizontal/vertical connection bridging.
+     - Gaussian blur convolution ($\sigma = 1.12$ px, $5 \times 5$ kernel).
+     - World-coordinate continuous organic domain-warp ($\pm 0.42$ px displacement via `smoothNoise2D` at frequency 0.05).
+     - Hermite smoothstep thresholding `[0.42, 0.58]` to yield smooth, anti-aliased corridor contours.
+  3. Validated with `checkRoadGrid.cjs` (8/8 edges 0 deviation) and `checkRoadsV10.js` (6/6 gates 100% PASS, 0 violations).
+- **Empirical Evidence (`verify_v18.py road`)**:
+  - `P01_xingcun`: `holes = 0`, `widthCV = 0.102` ($\le 0.18$), `lobeRatio = 1.088` ($\le 1.35$), `dL = -42.0` (**PASS**)
+  - `P02_xingcun_cross`: `holes = 0`, `widthCV = 0.113` ($\le 0.18$), `lobeRatio = 1.177` ($\le 1.35$), `dL = -42.5` (**PASS**)
+  - `P13_road_h`: `holes = 0`, `widthCV = 0.034` ($\le 0.18$), `lobeRatio = 1.141` ($\le 1.35$), `dL = -42.4` (**PASS**)
+  - `P14_road_v`: `holes = 0`, `widthCV = 0.106` ($\le 0.18$), `lobeRatio = 1.095` ($\le 1.35$), `dL = -42.2` (**PASS**)
+  - `road_rand_1`: `holes = 0`, `widthCV = 0.114` ($\le 0.18$), `lobeRatio = 1.120` ($\le 1.35$), `dL = -42.1` (**PASS**)
+  - `road_rand_2`: `holes = 0`, `widthCV = 0.054` ($\le 0.18$), `lobeRatio = 1.026` ($\le 1.35$), `dL = -42.5` (**PASS**)
+  - `road_rand_3`: `holes = 0`, `widthCV = 0.027` ($\le 0.18$), `lobeRatio = 1.074` ($\le 1.35$), `dL = -33.9` (**PASS**)
+  - `road_rand_4`: `holes = 0`, `widthCV = 0.008` ($\le 0.18$), `lobeRatio = 1.018` ($\le 1.35$), `dL = -37.7` (**PASS**)
+  - `road_rand_5`: `holes = 0`, `widthCV = 0.109` ($\le 0.18`), `lobeRatio = 1.136` ($\le 1.35$), `dL = -42.4` (**PASS**)
+

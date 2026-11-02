@@ -1,0 +1,83 @@
+{
+  "P01_xingcun": {
+    "holes": 0,
+    "widthCells": 2.46,
+    "widthCV": 0.102,
+    "lobeRatio": 1.088,
+    "dL": -42,
+    "sat": 0.162,
+    "BminusR": -18.4
+  },
+  "P02_xingcun_cross": {
+    "holes": 0,
+    "widthCells": 2.33,
+    "widthCV": 0.113,
+    "lobeRatio": 1.177,
+    "dL": -42.5,
+    "sat": 0.161,
+    "BminusR": -18.4
+  },
+  "P13_road_h": {
+    "holes": 0,
+    "widthCells": 2.62,
+    "widthCV": 0.034,
+    "lobeRatio": 1.141,
+    "dL": -42.4,
+    "sat": 0.162,
+    "BminusR": -18.4
+  },
+  "P14_road_v": {
+    "holes": 0,
+    "widthCells": 2.44,
+    "widthCV": 0.106,
+    "lobeRatio": 1.095,
+    "dL": -42.2,
+    "sat": 0.161,
+    "BminusR": -18.4
+  },
+  "road_rand_1": {
+    "holes": 0,
+    "widthCells": 2.41,
+    "widthCV": 0.114,
+    "lobeRatio": 1.12,
+    "dL": -42.1,
+    "sat": 0.161,
+    "BminusR": -18.4
+  },
+  "road_rand_2": {
+    "holes": 0,
+    "widthCells": 2.04,
+    "widthCV": 0.054,
+    "lobeRatio": 1.026,
+    "dL": -42.5,
+    "sat": 0.019,
+    "BminusR": 3.6
+  },
+  "road_rand_3": {
+    "holes": 0,
+    "widthCells": 2.08,
+    "widthCV": 0.027,
+    "lobeRatio": 1.074,
+    "dL": -33.9,
+    "sat": 0.165,
+    "BminusR": -18.5
+  },
+  "road_rand_4": {
+    "holes": 0,
+    "widthCells": 2.07,
+    "widthCV": 0.008,
+    "lobeRatio": 1.018,
+    "dL": -37.7,
+    "sat": 0.151,
+    "BminusR": -18.2
+  },
+  "road_rand_5": {
+    "holes": 0,
+    "widthCells": 2.47,
+    "widthCV": 0.109,
+    "lobeRatio": 1.136,
+    "dL": -42.4,
+    "sat": 0.158,
+    "BminusR": -17.9
+  }
+}

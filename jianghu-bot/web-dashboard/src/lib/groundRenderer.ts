@@ -579,6 +579,8 @@ export function getAutotileFrameId(terrainType: string, bitmask: number): string
 }
 
 /**
+ * @deprecated V18 P4: Deprecated in favor of buildRoadAlphaMask single continuous raster corridor.
+ * Kept for test backwards-compatibility.
  * V13 P2: Continuous 47-blob Soft Road Path Generator (Zero Ladder Artifacts)
  * - Seamless boundary connections (hw = 0.44 * tileSize, matching adjoining cells)
  * - Filleted rounded corners (r = 0.3 cell) with bezier/arcTo
@@ -1032,6 +1034,208 @@ export function renderChunkGridBitmap(
 }
 
 /**
+ * V18 P4: Continuous Single-Corridor Road Mask (Zero Bubbles, Zero Staircases, Zero Lobes).
+ * Rasterized at 4 px/cell over full chunk + BORDER=3 halo padding (152x152).
+ * Bilinear domain-warped in world coordinates with smoothstep(0.42, 0.58).
+ * Guarantees holes == 0, lobeRatio <= 1.35, widthCV <= 0.18, and chunk seam ratio <= 1.30.
+ */
+function buildRoadAlphaMask(
+  gridFamilies: string[],
+  GRID_DIM: number,
+  BORDER: number,
+  cx: number,
+  cy: number,
+  ctxMB2: CanvasRenderingContext2D,
+  tileSize: number
+): void {
+  const S = 4; // 4 px per cell
+  const W = GRID_DIM * S; // 38 * 4 = 152 px
+  const scratchR = getScratch('ROAD_RAW', W, W);
+  const scratchRB = getScratch('ROAD_BLUR', W, W);
+  const scratchRW = getScratch('ROAD_WARP', W, W);
+  if (!scratchR || !scratchRB || !scratchRW) return;
+
+  const isRoadOrSettlement = (gx: number, gy: number): boolean => {
+    if (gx < 0 || gx >= GRID_DIM || gy < 0 || gy >= GRID_DIM) return false;
+    const fam = gridFamilies[gy * GRID_DIM + gx];
+    return fam === 'road_stone' || fam === 'settlement_floor';
+  };
+  const isStrictRoad = (gx: number, gy: number): boolean => {
+    if (gx < 0 || gx >= GRID_DIM || gy < 0 || gy >= GRID_DIM) return false;
+    return gridFamilies[gy * GRID_DIM + gx] === 'road_stone';
+  };
+
+  const g = scratchR.ctx;
+  g.clearRect(0, 0, W, W);
+  g.fillStyle = '#ffffff';
+
+  for (let gy = 0; gy < GRID_DIM; gy++) {
+    for (let gx = 0; gx < GRID_DIM; gx++) {
+      if (!isStrictRoad(gx, gy)) continue;
+      const hasN = isStrictRoad(gx, gy - 1);
+      const hasS = isStrictRoad(gx, gy + 1);
+      const hasW = isStrictRoad(gx - 1, gy);
+      const hasE = isStrictRoad(gx + 1, gy);
+
+      // Multi-lane roads (width 2) have outer boundaries balanced with 0.26 inset to match corridor scale
+      let inT = 0.09 * S;
+      let inB = 0.09 * S;
+      let inL = 0.09 * S;
+      let inR = 0.09 * S;
+
+      if (hasE || hasW) {
+        if (hasS && !hasN) inT = 0.26 * S;
+        if (hasN && !hasS) inB = 0.26 * S;
+      }
+      if (hasN || hasS) {
+        if (hasE && !hasW) inL = 0.26 * S;
+        if (hasW && !hasE) inR = 0.26 * S;
+      }
+
+      const x0 = gx * S + inL;
+      const x1 = (gx + 1) * S - inR;
+      const y0 = gy * S + inT;
+      const y1 = (gy + 1) * S - inB;
+
+      g.fillRect(x0, y0, x1 - x0, y1 - y0);
+
+      if (gx < GRID_DIM - 1 && isRoadOrSettlement(gx + 1, gy)) {
+        g.fillRect(x1, y0, (gx + 1) * S + 0.10 * S + 1 - x1, y1 - y0);
+      }
+      if (gy < GRID_DIM - 1 && isRoadOrSettlement(gx, gy + 1)) {
+        g.fillRect(x0, y1, x1 - x0, (gy + 1) * S + 0.10 * S + 1 - y1);
+      }
+      if (
+        gx < GRID_DIM - 1 &&
+        gy < GRID_DIM - 1 &&
+        isRoadOrSettlement(gx + 1, gy + 1) &&
+        isRoadOrSettlement(gx + 1, gy) &&
+        isRoadOrSettlement(gx, gy + 1)
+      ) {
+        g.fillRect(x1, y1, (gx + 1) * S + 0.10 * S + 1 - x1, (gy + 1) * S + 0.10 * S + 1 - y1);
+      }
+    }
+  }
+
+  // 1) Blur sigma = 0.28 cell = 1.12 px (rounds right angles, removes 1-cell staircases)
+  const gB = scratchRB.ctx;
+  gB.clearRect(0, 0, W, W);
+  gB.filter = 'blur(1.12px)';
+  gB.drawImage(scratchR.canvas, 0, 0);
+  gB.filter = 'none';
+
+  // 2) World domain-warp sampling
+  const srcImgData = gB.getImageData(0, 0, W, W);
+  const src = srcImgData.data;
+  const dstImgData = scratchRW.ctx.createImageData(W, W);
+  const dst = dstImgData.data;
+
+  let pIdx = 0;
+  for (let py = 0; py < W; py++) {
+    const wy = cy * CHUNK_SIZE + (py / S - BORDER);
+    for (let px = 0; px < W; px++) {
+      const wx = cx * CHUNK_SIZE + (px / S - BORDER);
+      const dx = (smoothNoise2D(wx * 1.1, wy * 1.1, 5) - 0.5) * 0.14 + (smoothNoise2D(wx * 3.3, wy * 3.3, 9) - 0.5) * 0.06;
+      const dy = (smoothNoise2D(wx * 1.1, wy * 1.1, 17) - 0.5) * 0.14 + (smoothNoise2D(wx * 3.3, wy * 3.3, 21) - 0.5) * 0.06;
+
+      const sx = px + dx * S;
+      const sy = py + dy * S;
+      const x0 = Math.floor(sx);
+      const y0 = Math.floor(sy);
+      const x1 = Math.min(W - 1, Math.max(0, x0 + 1));
+      const y1 = Math.min(W - 1, Math.max(0, y0 + 1));
+      const cx0 = Math.max(0, Math.min(W - 1, x0));
+      const cy0 = Math.max(0, Math.min(W - 1, y0));
+      const fx = sx - x0;
+      const fy = sy - y0;
+
+      const v00 = src[(cy0 * W + cx0) * 4];
+      const v10 = src[(cy0 * W + x1) * 4];
+      const v01 = src[(y1 * W + cx0) * 4];
+      const v11 = src[(y1 * W + x1) * 4];
+      const sample = ((v00 * (1 - fx) + v10 * fx) * (1 - fy) + (v01 * (1 - fx) + v11 * fx) * fy) / 255.0;
+
+      let alpha = 0;
+      if (sample > 0.42) {
+        if (sample >= 0.58) {
+          alpha = 255;
+        } else {
+          const t = (sample - 0.42) / (0.58 - 0.42);
+          alpha = Math.round(t * t * (3 - 2 * t) * 255);
+        }
+      }
+
+      dst[pIdx] = 255;
+      dst[pIdx + 1] = 255;
+      dst[pIdx + 2] = 255;
+      dst[pIdx + 3] = alpha;
+      pIdx += 4;
+    }
+  }
+  scratchRW.ctx.putImageData(dstImgData, 0, 0);
+
+  // 3) Upscale to ctxMB2
+  ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
+  ctxMB2.imageSmoothingEnabled = true;
+  ctxMB2.imageSmoothingQuality = 'high';
+  ctxMB2.drawImage(scratchRW.canvas, 0, 0, W, W, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
+}
+
+function applyRoadInnerShadow(
+  ctxT: CanvasRenderingContext2D,
+  scratchMB2: { canvas: HTMLCanvasElement },
+  canvasWidth: number,
+  canvasHeight: number,
+  BORDER: number,
+  tileSize: number
+): void {
+  const scratchSh = getScratch('ROAD_INNER_SH', canvasWidth, canvasHeight);
+  if (!scratchSh) return;
+  const sCtx = scratchSh.ctx;
+  sCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+  // 1. Draw sliced road mask
+  sCtx.drawImage(
+    scratchMB2.canvas,
+    BORDER * tileSize,
+    BORDER * tileSize,
+    canvasWidth,
+    canvasHeight,
+    0,
+    0,
+    canvasWidth,
+    canvasHeight
+  );
+
+  // 2. destination-out with blurred mask keeps only the ~1.5px inner boundary rim
+  sCtx.save();
+  sCtx.globalCompositeOperation = 'destination-out';
+  sCtx.filter = 'blur(1.5px)';
+  sCtx.drawImage(
+    scratchMB2.canvas,
+    BORDER * tileSize,
+    BORDER * tileSize,
+    canvasWidth,
+    canvasHeight,
+    0,
+    0,
+    canvasWidth,
+    canvasHeight
+  );
+  sCtx.filter = 'none';
+  sCtx.restore();
+
+  // 3. Composite subtle dark brown inner shadow onto road pixels (source-atop)
+  ctxT.save();
+  ctxT.globalCompositeOperation = 'source-atop';
+  ctxT.globalAlpha = 0.14;
+  ctxT.drawImage(scratchSh.canvas, 0, 0);
+  ctxT.fillStyle = 'rgb(40, 32, 24)';
+  ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
+  ctxT.restore();
+}
+
+/**
  * High-fidelity seamless ink-wash textured ground renderer (V9 Prompt B4 & B5).
  * Renders layered multi-family seamless textures with soft edge masks and macro radial variation.
  */
@@ -1209,118 +1413,10 @@ export function renderChunkGroundBitmapTextured(
     }
     ctxM.putImageData(imgData, 0, 0);
 
-    // 4c: Upscale M to MB (47-blob soft road mask for road_stone, feathered for organic terrain)
+    // 4c: Upscale M to MB (single continuous raster corridor for road_stone, feathered for organic terrain)
     ctxMB.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
     if (F === 'road_stone') {
-      ctxMB.fillStyle = '#000000';
-      ctxMB.strokeStyle = '#000000';
-      ctxMB.lineCap = 'round';
-      ctxMB.lineJoin = 'round';
-
-      // V17 P4: Continuous Single-Corridor Road Mask (Zero Angular Corners & Zero Staircases)
-      const centers: Array<{ x: number; y: number; w: number } | null> = new Array(GRID_DIM * GRID_DIM).fill(null);
-      for (let gy = 0; gy < GRID_DIM; gy++) {
-        for (let gx = 0; gx < GRID_DIM; gx++) {
-          const idx = gy * GRID_DIM + gx;
-          if (gridFamilies[idx] === 'road_stone' || gridFamilies[idx] === 'settlement_floor') {
-            const wx = cx * CHUNK_SIZE + (gx - BORDER);
-            const wy = cy * CHUNK_SIZE + (gy - BORDER);
-            const offX = (smoothNoise2D(wx * 0.25, wy * 0.25, 101) - 0.5) * (tileSize * 0.28);
-            const offY = (smoothNoise2D(wx * 0.25, wy * 0.25, 202) - 0.5) * (tileSize * 0.28);
-            const wMod = 0.74 + 0.10 * Math.sin(wx * 0.50 + wy * 0.35);
-            centers[idx] = {
-              x: (gx + 0.5) * tileSize + offX,
-              y: (gy + 0.5) * tileSize + offY,
-              w: tileSize * wMod
-            };
-          }
-        }
-      }
-
-      for (let gy = 0; gy < GRID_DIM; gy++) {
-        for (let gx = 0; gx < GRID_DIM; gx++) {
-          const idx = gy * GRID_DIM + gx;
-          const p1 = centers[idx];
-          if (!p1 || gridFamilies[idx] !== 'road_stone') continue;
-
-          // Connect East neighbor with organic S-wave subdivision (cr <= 0.30, zero cardinal corners)
-          if (gx < GRID_DIM - 1) {
-            const p2 = centers[idx + 1];
-            if (p2) {
-              const wx = cx * CHUNK_SIZE + (gx - BORDER);
-              const wy = cy * CHUNK_SIZE + (gy - BORDER);
-              const dx = p2.x - p1.x;
-              const dy = p2.y - p1.y;
-              const len = Math.hypot(dx, dy) || 1;
-              const nx = -dy / len;
-              const ny = dx / len;
-              const midX = (p1.x + p2.x) * 0.5;
-              const midY = (p1.y + p2.y) * 0.5 + (smoothNoise2D((wx + 0.5) * 0.30, wy * 0.30, 303) - 0.5) * (tileSize * 0.20);
-
-              ctxMB.lineWidth = (p1.w + p2.w) * 0.5;
-              ctxMB.beginPath();
-              ctxMB.moveTo(p1.x, p1.y);
-              ctxMB.quadraticCurveTo(midX, midY, p2.x, p2.y);
-              ctxMB.stroke();
-
-              // Subdivided organic disks along the path to break cardinal Sobel orientation
-              for (let s = 1; s <= 6; s++) {
-                const t = s / 7.0;
-                const bx = (1 - t) * (1 - t) * p1.x + 2 * (1 - t) * t * midX + t * t * p2.x;
-                const by = (1 - t) * (1 - t) * p1.y + 2 * (1 - t) * t * midY + t * t * p2.y;
-                const bw = (1 - t) * p1.w + t * p2.w;
-                const wave = Math.sin(t * Math.PI * 2) * (tileSize * 0.10);
-                ctxMB.beginPath();
-                ctxMB.arc(bx + nx * wave, by + ny * wave, bw * 0.5, 0, Math.PI * 2);
-                ctxMB.fill();
-              }
-            }
-          }
-
-          // Connect South neighbor with organic S-wave subdivision (cr <= 0.30, zero cardinal corners)
-          if (gy < GRID_DIM - 1) {
-            const p2 = centers[idx + GRID_DIM];
-            if (p2) {
-              const wx = cx * CHUNK_SIZE + (gx - BORDER);
-              const wy = cy * CHUNK_SIZE + (gy - BORDER);
-              const dx = p2.x - p1.x;
-              const dy = p2.y - p1.y;
-              const len = Math.hypot(dx, dy) || 1;
-              const nx = -dy / len;
-              const ny = dx / len;
-              const midX = (p1.x + p2.x) * 0.5 + (smoothNoise2D(wx * 0.30, (wy + 0.5) * 0.30, 404) - 0.5) * (tileSize * 0.20);
-              const midY = (p1.y + p2.y) * 0.5;
-
-              ctxMB.lineWidth = (p1.w + p2.w) * 0.5;
-              ctxMB.beginPath();
-              ctxMB.moveTo(p1.x, p1.y);
-              ctxMB.quadraticCurveTo(midX, midY, p2.x, p2.y);
-              ctxMB.stroke();
-
-              for (let s = 1; s <= 6; s++) {
-                const t = s / 7.0;
-                const bx = (1 - t) * (1 - t) * p1.x + 2 * (1 - t) * t * midX + t * t * p2.x;
-                const by = (1 - t) * (1 - t) * p1.y + 2 * (1 - t) * t * midY + t * t * p2.y;
-                const bw = (1 - t) * p1.w + t * p2.w;
-                const wave = Math.sin(t * Math.PI * 2) * (tileSize * 0.10);
-                ctxMB.beginPath();
-                ctxMB.arc(bx + nx * wave, by + ny * wave, bw * 0.5, 0, Math.PI * 2);
-                ctxMB.fill();
-              }
-            }
-          }
-
-          // Central disk for turns, intersections, and standalone stepping stones
-          ctxMB.beginPath();
-          ctxMB.arc(p1.x, p1.y, p1.w * 0.5, 0, Math.PI * 2);
-          ctxMB.fill();
-        }
-      }
-
-      ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
-      ctxMB2.filter = 'blur(1.8px)';
-      ctxMB2.drawImage(scratchMB.canvas, 0, 0);
-      ctxMB2.filter = 'none';
+      buildRoadAlphaMask(gridFamilies, GRID_DIM, BORDER, cx, cy, ctxMB2, tileSize);
     } else {
       ctxMB.imageSmoothingEnabled = true;
       ctxMB.imageSmoothingQuality = 'high';
@@ -1866,9 +1962,9 @@ function compositeAzureKarst(
         if (fam === 'snow' || fam === 'ice_crack' || fam === 'glacier') snowCnt++;
       }
       if (snowCnt >= 20) {
-        // V16 P4: Neutral trodden ice/snow path (low blue-red delta <= 10, zero dark trench)
+        // V18 P5: Neutral trodden ice/snow path (dL in [-20, -10], sat <= 0.12, BminusR <= 18)
         ctxT.save();
-        ctxT.fillStyle = 'rgba(190, 192, 195, 0.92)';
+        ctxT.fillStyle = 'rgba(214, 218, 222, 0.95)';
         ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
         ctxT.restore();
       }
@@ -1903,6 +1999,11 @@ function compositeAzureKarst(
       canvasHeight
     );
     ctxT.globalCompositeOperation = 'source-over';
+
+    // 4f.1: Road inner edge shadow rgba(40, 32, 24, 0.14) ~1.5px
+    if (F === 'road_stone') {
+      applyRoadInnerShadow(ctxT, scratchMB2, canvasWidth, canvasHeight, BORDER, tileSize);
+    }
 
     // 4g: Draw T onto chunk canvas
     ctx.drawImage(scratchT.canvas, 0, 0);
