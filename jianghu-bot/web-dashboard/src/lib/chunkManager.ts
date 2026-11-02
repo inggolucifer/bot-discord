@@ -306,11 +306,14 @@ export class ChunkManager {
   }
 
   /**
-   * Checks whether all chunks in the Hot ring for the given coordinates are loaded and unpacked
+   * Checks whether all chunks in the Hot and Warm rings for the given coordinates are loaded and unpacked
    */
   public areHotChunksReady(centerTileX: number, centerTileY: number, zoom = 1.0): boolean {
-    const { hotKeys } = this.computeRings(centerTileX, centerTileY, zoom);
+    const { hotKeys, warmKeys } = this.computeRings(centerTileX, centerTileY, zoom);
     for (const key of hotKeys) {
+      if (!this.unpackedChunks.has(key)) return false;
+    }
+    for (const key of warmKeys) {
       if (!this.unpackedChunks.has(key)) return false;
     }
     return true;
@@ -647,7 +650,24 @@ export class ChunkManager {
       this.currentRenderFlags
     );
 
-    if (canvas) {
+    // V19 F4: Determinism guarantee - only permanently cache bitmap if all 8 neighbors are resident in memory
+    let allNeighborsReady = true;
+    for (let ndy = -1; ndy <= 1; ndy++) {
+      for (let ndx = -1; ndx <= 1; ndx++) {
+        if (ndx === 0 && ndy === 0) continue;
+        const ncx = cx + ndx;
+        const ncy = cy + ndy;
+        if (ncx >= 0 && ncx <= MAX_CHUNK_X && ncy >= 0 && ncy <= MAX_CHUNK_Y) {
+          if (!this.unpackedChunks.has(`${ncx}:${ncy}`)) {
+            allNeighborsReady = false;
+            break;
+          }
+        }
+      }
+      if (!allNeighborsReady) break;
+    }
+
+    if (canvas && allNeighborsReady) {
       this.chunkBitmaps.set(bitmapKey, canvas);
     }
     return canvas;
