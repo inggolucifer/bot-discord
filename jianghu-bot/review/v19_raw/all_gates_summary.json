@@ -1,0 +1,156 @@
+{
+  "all_pass": true,
+  "total_gates": 14,
+  "passed_gates": 14,
+  "results": {
+    "P04_farm": {
+      "metrics": {
+        "green": 0.934,
+        "brown": 0.0,
+        "water": 0.06
+      },
+      "pass": true
+    },
+    "P16_west_farm": {
+      "metrics": {
+        "green": 1.0,
+        "brown": 0.0,
+        "water": 0.0
+      },
+      "pass": true
+    },
+    "P01_road": {
+      "metrics": {
+        "holes": 0,
+        "widthCells": 2.51,
+        "widthCV": 0.376,
+        "lobeRatio": 1.038,
+        "dL": -29.2,
+        "sat": 0.142,
+        "BminusR": -17.6
+      },
+      "pass": true
+    },
+    "P11_road": {
+      "metrics": {
+        "holes": 0,
+        "widthCells": 2.57,
+        "widthCV": 0.049,
+        "lobeRatio": 1.148,
+        "dL": -15.8,
+        "sat": 0.108,
+        "BminusR": 4.0
+      },
+      "pass": true
+    },
+    "P13_road": {
+      "metrics": {
+        "holes": 0,
+        "widthCells": 3.03,
+        "widthCV": 0.062,
+        "lobeRatio": 1.023,
+        "dL": -31.2,
+        "sat": 0.144,
+        "BminusR": -17.9
+      },
+      "pass": true
+    },
+    "P14_road": {
+      "metrics": {
+        "holes": 0,
+        "widthCells": 2.85,
+        "widthCV": 0.094,
+        "lobeRatio": 1.159,
+        "dL": -31.3,
+        "sat": 0.143,
+        "BminusR": -17.6
+      },
+      "pass": true
+    },
+    "P11_repeat": {
+      "metrics": {
+        "maxAutocorr": 0.147,
+        "lagCells": 9.2
+      },
+      "pass": true
+    },
+    "P07_repeat": {
+      "metrics": {
+        "maxAutocorr": 0.106,
+        "lagCells": 8.0
+      },
+      "pass": true
+    },
+    "P07_band": {
+      "metrics": {
+        "bandStd": 1.09,
+        "moirePeakRatio": 58.7
+      },
+      "pass": true
+    },
+    "P06_seam": {
+      "metrics": {
+        "seamJump": 4.77,
+        "baseJump": 4.25,
+        "ratio": 1.12
+      },
+      "pass": true
+    },
+    "P01_cell_blend": {
+      "metrics": {
+        "target_box": {
+          "x0": 720,
+          "x1": 830,
+          "y0": 440,
+          "y1": 530
+        },
+        "target_mean_rgb": [
+          124.88,
+          123.61,
+          104.35
+        ],
+        "road_mean_rgb": [
+          123.96,
+          119.59,
+          106.6
+        ],
+        "diff_rgb": [
+          0.92,
+          4.02,
+          2.25
+        ],
+        "max_channel_diff": 4.02,
+        "euclidean_diff": 4.7,
+        "threshold": 12.0,
+        "pass": true
+      },
+      "pass": true
+    },
+    "P04_texture": {
+      "metrics": {
+        "file": "D:\\gitub\\bot-discord\\jianghu-bot\\review\\shots_v19\\P04_farm.png",
+        "stddev": 11.85,
+        "median_luminance": 159.93,
+        "dark_components_over_1cell": 0,
+        "max_dark_area_cells": 0.5233,
+        "pass": true
+      },
+      "pass": true
+    },
+    "P16_texture": {
+      "metrics": {
+        "file": "D:\\gitub\\bot-discord\\jianghu-bot\\review\\shots_v19\\P16_west_farm.png",
+        "stddev": 14.136,
+        "median_luminance": 152.93,
+        "dark_components_over_1cell": 0,
+        "max_dark_area_cells": 0.418,
+        "pass": true
+      },
+      "pass": true
+    },
+    "F4_determinism": {
+      "pass": true,
+      "summary": "100% bit-exact across all 6 points and 3 conditions"
+    }
+  }
+}

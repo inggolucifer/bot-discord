@@ -6,22 +6,22 @@
     "y1": 530
   },
   "target_mean_rgb": [
-    125.51,
-    126.0,
-    103.26
+    124.88,
+    123.61,
+    104.35
   ],
   "road_mean_rgb": [
-    123.57,
-    119.4,
-    106.23
+    123.96,
+    119.59,
+    106.6
   ],
   "diff_rgb": [
-    1.94,
-    6.6,
-    2.98
+    0.92,
+    4.02,
+    2.25
   ],
-  "max_channel_diff": 6.6,
-  "euclidean_diff": 7.5,
+  "max_channel_diff": 4.02,
+  "euclidean_diff": 4.7,
   "threshold": 12.0,
   "pass": true
 }

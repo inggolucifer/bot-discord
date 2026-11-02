@@ -112,6 +112,8 @@ server.listen(3001, async () => {
     }
 
     const page = await br.newPage({ viewport: { width: 1280, height: 720 } });
+    await page.route('**fonts.googleapis.com**', route => route.abort());
+    await page.route('**fonts.gstatic.com**', route => route.abort());
     page.on('pageerror', (err) => {
       console.error('  [pageerror]', err.message, err.stack);
     });
@@ -182,7 +184,21 @@ server.listen(3001, async () => {
       console.log(`  debugMetrics: sprites=${debugMetrics.spriteCount}, uniqueDefs=${debugMetrics.uniqueDefIds}, renderMs=${debugMetrics.renderTimeMs?.toFixed(2)}`);
     }
 
-    let finalBuffer = await page.screenshot();
+    let finalBuffer;
+    try {
+      finalBuffer = await page.screenshot({ timeout: 15000 });
+    } catch (err) {
+      console.warn(`  [WARN] page.screenshot timed out, capturing directly from canvas: ${err.message}`);
+      const dataUrl = await page.evaluate(() => {
+        const c = document.querySelector('canvas');
+        return c ? c.toDataURL('image/png') : null;
+      });
+      if (dataUrl) {
+        finalBuffer = Buffer.from(dataUrl.split(',')[1], 'base64');
+      } else {
+        throw err;
+      }
+    }
     if (s.ground === 'only' && !s.compress) {
       finalBuffer = await sharp(finalBuffer)
         .png({ compressionLevel: 9 })

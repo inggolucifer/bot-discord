@@ -1,0 +1,256 @@
+[
+  {
+    "name": "P01_xingcun",
+    "x": 2050,
+    "y": 2650,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "allowDuplicate": true
+  },
+  {
+    "name": "P01_xingcun_grid",
+    "x": 2050,
+    "y": 2650,
+    "zoom": 1.4,
+    "grid": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P01_xingcun_noroad",
+    "x": 2050,
+    "y": 2650,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "noroad": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P04_farm",
+    "x": 2450,
+    "y": 2450,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "allowDuplicate": true
+  },
+  {
+    "name": "P04_farm_grid",
+    "x": 2450,
+    "y": 2450,
+    "zoom": 1.4,
+    "grid": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P07_azure_west",
+    "x": 1500,
+    "y": 3350,
+    "zoom": 1,
+    "grid": 0,
+    "ground": "only",
+    "allowDuplicate": true
+  },
+  {
+    "name": "P07_azure_west_grid",
+    "x": 1500,
+    "y": 3350,
+    "zoom": 1,
+    "grid": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P11_xueshan",
+    "x": 2350,
+    "y": 4300,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "allowDuplicate": true
+  },
+  {
+    "name": "P11_xueshan_grid",
+    "x": 2350,
+    "y": 4300,
+    "zoom": 1.4,
+    "grid": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P11_xueshan_noroad",
+    "x": 2350,
+    "y": 4300,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "noroad": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P13_road_h",
+    "x": 2040,
+    "y": 2651,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "allowDuplicate": true
+  },
+  {
+    "name": "P13_road_h_grid",
+    "x": 2040,
+    "y": 2651,
+    "zoom": 1.4,
+    "grid": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P13_road_h_noroad",
+    "x": 2040,
+    "y": 2651,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "noroad": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P14_road_v",
+    "x": 2053,
+    "y": 2648,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "allowDuplicate": true
+  },
+  {
+    "name": "P14_road_v_grid",
+    "x": 2053,
+    "y": 2648,
+    "zoom": 1.4,
+    "grid": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P14_road_v_noroad",
+    "x": 2053,
+    "y": 2648,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "noroad": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P06_azure_pass",
+    "x": 2200,
+    "y": 3340,
+    "zoom": 1,
+    "grid": 0,
+    "ground": "only",
+    "allowDuplicate": true
+  },
+  {
+    "name": "P06_azure_pass_grid",
+    "x": 2200,
+    "y": 3340,
+    "zoom": 1,
+    "grid": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P16_west_farm",
+    "x": 2215,
+    "y": 2444,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "allowDuplicate": true
+  },
+  {
+    "name": "P16_west_farm_grid",
+    "x": 2215,
+    "y": 2444,
+    "zoom": 1.4,
+    "grid": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P02_xingcun_cross",
+    "x": 2062,
+    "y": 2648,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "allowDuplicate": true
+  },
+  {
+    "name": "P02_xingcun_cross_grid",
+    "x": 2062,
+    "y": 2648,
+    "zoom": 1.4,
+    "grid": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P02_xingcun_cross_noroad",
+    "x": 2062,
+    "y": 2648,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "noroad": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P03_wild",
+    "x": 2300,
+    "y": 3000,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "allowDuplicate": true
+  },
+  {
+    "name": "P03_wild_grid",
+    "x": 2300,
+    "y": 3000,
+    "zoom": 1.4,
+    "grid": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P05_forest",
+    "x": 2700,
+    "y": 2300,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "allowDuplicate": true
+  },
+  {
+    "name": "P05_forest_grid",
+    "x": 2700,
+    "y": 2300,
+    "zoom": 1.4,
+    "grid": 1,
+    "allowDuplicate": true
+  },
+  {
+    "name": "P12_desert",
+    "x": 900,
+    "y": 2600,
+    "zoom": 1.4,
+    "grid": 0,
+    "ground": "only",
+    "allowDuplicate": true
+  },
+  {
+    "name": "P12_desert_grid",
+    "x": 900,
+    "y": 2600,
+    "zoom": 1.4,
+    "grid": 1,
+    "allowDuplicate": true
+  }
+]

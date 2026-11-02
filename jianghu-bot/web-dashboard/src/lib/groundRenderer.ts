@@ -1471,7 +1471,7 @@ export function renderChunkGroundBitmapTextured(
       else if (volcanicCnt >= 30) effectiveFamily = 'volcanic';
       else if (swampCnt >= 30) effectiveFamily = 'swamp';
       else if (rockCnt >= 30) effectiveFamily = 'rock_ground';
-      else effectiveFamily = 'settlement_floor';
+      else effectiveFamily = 'road_stone'; // V19 F1: in central plains/culture, use neutral road stone texture
     }
 
     const fInfo = groundTextures.familyOf(effectiveFamily);
