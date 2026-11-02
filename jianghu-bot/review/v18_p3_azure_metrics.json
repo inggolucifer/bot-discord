@@ -1,0 +1,57 @@
+{
+  "P06_azure_pass": {
+    "band": {
+      "bandStd": 1.33,
+      "moirePeakRatio": 23.6
+    },
+    "repeat": {
+      "maxAutocorr": 0.126,
+      "lagCells": 7.6
+    }
+  },
+  "P07_azure_west": {
+    "band": {
+      "bandStd": 1.07,
+      "moirePeakRatio": 37.1
+    },
+    "repeat": {
+      "maxAutocorr": 0.115,
+      "lagCells": 8
+    },
+    "seam_857": {
+      "seamJump": 5.42,
+      "baseJump": 5.44,
+      "ratio": 1
+    }
+  },
+  "P08_azure_far_west": {
+    "band": {
+      "bandStd": 1.13,
+      "moirePeakRatio": 17.6
+    },
+    "repeat": {
+      "maxAutocorr": 0.268,
+      "lagCells": 11.4
+    }
+  },
+  "P09_azure_east": {
+    "band": {
+      "bandStd": 1.28,
+      "moirePeakRatio": 24.2
+    },
+    "repeat": {
+      "maxAutocorr": 0.205,
+      "lagCells": 11.4
+    }
+  },
+  "P10_azure_mist": {
+    "band": {
+      "bandStd": 1.45,
+      "moirePeakRatio": 21.8
+    },
+    "repeat": {
+      "maxAutocorr": 0.195,
+      "lagCells": 11.4
+    }
+  }
+}

@@ -202,9 +202,15 @@ class GroundTextures {
     return this.loadPromise;
   }
 
-  familyOf(terrain: string): { family: string; variants: string[] } | null {
+  familyOf(terrainOrFamily: string): { family: string; variants: string[] } | null {
     if (!this.manifest || !this.manifest.terrains) return null;
-    return this.manifest.terrains[terrain] || null;
+    if (this.manifest.terrains[terrainOrFamily]) return this.manifest.terrains[terrainOrFamily];
+    for (const info of Object.values(this.manifest.terrains)) {
+      if (info && info.family === terrainOrFamily && Array.isArray(info.variants) && info.variants.length > 0) {
+        return info;
+      }
+    }
+    return null;
   }
 
   getImage(id: string): HTMLImageElement | ImageBitmap | null {

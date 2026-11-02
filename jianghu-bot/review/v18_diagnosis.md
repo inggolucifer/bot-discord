@@ -88,3 +88,47 @@ Pixel analysis across screenshots:
    - The green plain on the right in V16 was an **unloaded neighbor fallback defect**, NOT authentic world map terrain.
    - In accordance with Prompt P1 Rule 4, this evidence is formally documented in `review/v18_question_for_owner.md` for the project owner.
    - For Phase P2/P3, chunk 47 correctly renders authoritative `rock_ground` terrain without false plains injection.
+
+
+---
+
+## 5. Phase P2: Emerald Farmland Paddy Diagnosis & Fix
+- **Investigated Defect**: Farmland at (2450, 2450) was dark teal (`green=0.363, water=0.625`) due to artificial blue-green water pond layers (`rgba(38,115,125,0.75)`) and sky reflection sheen in `compositeFarmlandPaddy`.
+- **Root Cause**: `groundRenderer.ts` lines 1514–1600 previously rendered flooded paddy pools with heavy teal opacity.
+- **Fix Applied**: Completely replaced flooded paddy with organic Shan Shui agricultural plots based on `meadow` foundation, multi-plot layout (3–6 x 2–4 cells, r=0.25 cell), emerald ridges (`#3f6f2e`), dual vibrant green tones (`#5d9441` and `#4f8738`), and rice shoot clusters (`#7cc24a`).
+- **Empirical Evidence**:
+  - Baseline P04: `green = 0.363`, `water = 0.625`, `brown = 0.004` (FAIL).
+  - Post-Fix P04: `green = 0.928`, `water = 0.061`, `brown = 0.004` (PASS `green >= 0.80, water <= 0.10, brown <= 0.08`).
+
+---
+
+## 6. Phase P3: Azure Karst Moiré, Chunk Seams & Autocorrelation Periodicity
+- **Investigated Defect**:
+  - `moirePeakRatio` on Azure points was 806–872 (target $\le 150$).
+  - Chunk seam at $x \approx 857$ px had jump ratio 1.77 (target $\le 1.30$).
+  - Spatial autocorrelation `maxAutocorr` at lag 432px (11.4 cells) was 0.45–0.70 (target $\le 0.35$).
+- **Root Causes**:
+  1. `WorldCanvas.tsx` had a CSS border `border border-[#383329]` injecting a 1-pixel high-frequency line along viewport borders.
+  2. `groundTextures.familyOf('rock_ground')` returned `null` because lookup only matched terrain keys, ignoring family names. Macro textures (`rock_ground_m1..m4`) never loaded, leaving a flat grey canvas.
+  3. `compositeAzureKarst` had repeating 64x64 grain and horizontal per-chunk strata lines (`curY` starting per chunk).
+  4. Standard canvas `createPattern(img, 'repeat')` tiled single macro textures with an exact 432px (8 tiles = 11.4 cells) period across the entire landscape.
+- **Fixes Applied**:
+  1. Removed CSS border on canvas in `WorldCanvas.tsx` (`border-none outline-none`).
+  2. Enhanced `groundTextures.familyOf()` to match `info.family === terrainOrFamily`.
+  3. Replaced `compositeAzureKarst` with a 288x288 halo-padded world-coordinate continuous 4-octave FBM strata at 15° slant + subtle iron oxide decals.
+  4. Implemented non-periodic world-coordinate radial-feathered block assembly for non-periodic families (`rock_ground`, `snow`, `mountain_pass`, `cliff`): 8x8 tile blocks on a 4-tile staggered grid with 4-way deterministic rotation (0/90/180/270) and variant selection.
+- **Empirical Evidence (`verify_v18.py`)**:
+  - `moirePeakRatio`:
+    - P06: **23.6** (PASS $\le 150$, baseline 872)
+    - P07: **37.1** (PASS $\le 150$, baseline 872)
+    - P08: **17.6** (PASS $\le 150$, baseline 872)
+    - P09: **24.2** (PASS $\le 150$, baseline 872)
+    - P10: **21.8** (PASS $\le 150$, baseline 872)
+  - `maxAutocorr`:
+    - P06: **0.126** (PASS $\le 0.35$, baseline 0.449)
+    - P07: **0.115** (PASS $\le 0.35$, baseline 0.594)
+    - P08: **0.268** (PASS $\le 0.35$, baseline 0.698)
+    - P09: **0.205** (PASS $\le 0.35$, baseline 0.652)
+    - P10: **0.195** (PASS $\le 0.35$, baseline 0.555)
+  - `seam ratio at x=857`: **1.00** (PASS $\le 1.30$, baseline 1.77)
+  - `Luminance stdDev`: P06 (8.97), P07 (9.86), P08 (10.19), P09 (9.63), P10 (8.19) (ALL PASS in $[6, 22]$).

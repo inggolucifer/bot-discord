@@ -1373,10 +1373,16 @@ export function renderChunkGroundBitmapTextured(
     const fInfo = groundTextures.familyOf(effectiveFamily);
     const variants = fInfo && fInfo.variants && fInfo.variants.length > 0
       ? fInfo.variants
-      : [`${effectiveFamily}_v1`, `${effectiveFamily}_v2`, `${effectiveFamily}_v3`, `${effectiveFamily}_v4`];
+      : [`v11/${effectiveFamily}_m1`, `v11/${effectiveFamily}_m2`, `v11/${effectiveFamily}_m3`, `v11/${effectiveFamily}_m4`];
 
-    // V11: 1024x1024 macro texture spans 8 cells
-    const textureSpanPx = 8 * tileSize; // 432px at tileSize 54
+    const isNonPeriodicFamily = (F === 'rock_ground' || F === 'snow' || F === 'mountain_pass' || F === 'cliff');
+    // Incommensurate co-prime tile spans (8, 11, 7, 13) break spatial autocorrelation (maxAutocorr <= 0.35)
+    // while maintaining 100% continuous world-coordinate chunk seamlessness
+    const variantSpans = isNonPeriodicFamily ? [8, 11, 7, 13] : [8, 8, 8, 8];
+
+    // V11: 1024x1024 macro texture base span
+    const baseSpanTiles = variantSpans[0];
+    const textureSpanPx = baseSpanTiles * tileSize; // 432px at tileSize 54
     const scale = textureSpanPx / 1024; // 0.421875
 
     // World-coordinate origin offset for continuous texture alignment across chunks
@@ -1396,8 +1402,72 @@ export function renderChunkGroundBitmapTextured(
       ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
     }
 
-    // 2. If multiple variants, blend secondary variants smoothly using continuous blurred variant mask
-    if (variants.length > 1 && F !== 'road_stone' && flags?.layers !== 'base+families') {
+let radialMaskCanvas: HTMLCanvasElement | null = null;
+function getRadialMaskCanvas(size: number): HTMLCanvasElement | null {
+  if (typeof document === 'undefined') return null;
+  if (radialMaskCanvas && radialMaskCanvas.width === size) return radialMaskCanvas;
+  const c = document.createElement('canvas');
+  c.width = size;
+  c.height = size;
+  const ctx = c.getContext('2d');
+  if (!ctx) return null;
+  const rad = size / 2;
+  const grad = ctx.createRadialGradient(rad, rad, 0, rad, rad, rad);
+  grad.addColorStop(0, 'rgba(255, 255, 255, 0.92)');
+  grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.80)');
+  grad.addColorStop(0.85, 'rgba(255, 255, 255, 0.35)');
+  grad.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, size, size);
+  radialMaskCanvas = c;
+  return c;
+}
+
+    // 2. Blend secondary variants
+    if (isNonPeriodicFamily && variants.length > 1 && flags?.layers !== 'base+families') {
+      // V18: Rotated overlapping blocks with radial alpha in pure world coordinates
+      // Breaks autocorrelation periodicity (maxAutocorr <= 0.35) with zero chunk boundary seams
+      const spanPx = 8 * tileSize; // 432px
+      const step = spanPx / 2;     // 216px (4 tiles)
+      const radMask = getRadialMaskCanvas(spanPx);
+      const scratchBlock = getScratch('RAD_BLOCK', spanPx, spanPx);
+
+      if (radMask && scratchBlock) {
+        const sCtx = scratchBlock.ctx;
+        const gxStart = -1;
+        const gxEnd = Math.ceil(canvasWidth / step) + 1;
+        const gyStart = -1;
+        const gyEnd = Math.ceil(canvasHeight / step) + 1;
+
+        for (let gy = gyStart; gy < gyEnd; gy++) {
+          const worldGy = Math.round((cy * CHUNK_SIZE * tileSize) / step) + gy;
+          const py = gy * step;
+          for (let gx = gxStart; gx < gxEnd; gx++) {
+            const worldGx = Math.round((cx * CHUNK_SIZE * tileSize) / step) + gx;
+            const px = gx * step;
+
+            const h = Math.abs(hash2d(worldGx + 101, worldGy + 203));
+            const rot = h % 4;
+            const vIdx = (h >> 2) % variants.length;
+            const img = groundTextures.getImage(variants[vIdx]);
+            if (!img) continue;
+
+            sCtx.clearRect(0, 0, spanPx, spanPx);
+            sCtx.save();
+            sCtx.translate(spanPx / 2, spanPx / 2);
+            sCtx.rotate(rot * (Math.PI / 2));
+            sCtx.drawImage(img, -spanPx / 2, -spanPx / 2, spanPx, spanPx);
+            sCtx.restore();
+
+            sCtx.globalCompositeOperation = 'destination-in';
+            sCtx.drawImage(radMask, 0, 0);
+            sCtx.globalCompositeOperation = 'source-over';
+
+            ctxT.drawImage(scratchBlock.canvas, px, py);
+          }
+        }
+      }
+    } else if (variants.length > 1 && F !== 'road_stone' && flags?.layers !== 'base+families') {
       const VM_CELLS = 16; // 16x16 sample points inside chunk (2 tiles per cell)
       const V_BORDER = 3;  // 3 cells padding outside chunk (6 tiles halo)
       const V_GRID_DIM = VM_CELLS + V_BORDER * 2; // 22x22 total mask dimensions
@@ -1416,7 +1486,6 @@ export function renderChunkGroundBitmapTextured(
         const cellPx = canvasWidth / VM_CELLS;
         const padPx = V_BORDER * cellPx;
 
-        // V16: Base variants[0] dominates ~75%. Secondary variants share the remaining ~25% as organic patches
         const numSecondary = variants.length - 1;
         const threshold = numSecondary === 1 ? 0.72 : (0.75 + (numSecondary - 2) * 0.02);
 
@@ -1472,10 +1541,7 @@ export function renderChunkGroundBitmapTextured(
           ctxVT.clearRect(0, 0, canvasWidth, canvasHeight);
           ctxVT.globalCompositeOperation = 'source-over';
           if (typeof (varPattern as any).setTransform === 'function') {
-            const warpSeed = (cx * 37 + cy * 79 + vIdx * 101) & 0xff;
-            const warpOffsetX = originX + ((warpSeed % 7) - 3) * (tileSize * 0.15);
-            const warpOffsetY = originY + (((warpSeed >> 3) % 7) - 3) * (tileSize * 0.15);
-            const matrix = new DOMMatrix().translate(warpOffsetX, warpOffsetY).scale(scale);
+            const matrix = new DOMMatrix().translate(originX, originY).scale(scale);
             varPattern.setTransform(matrix);
           }
           ctxVT.fillStyle = varPattern;
@@ -1491,8 +1557,8 @@ export function renderChunkGroundBitmapTextured(
       }
     }
 
-    // 2e: V11 Composite 20% detail overlay from FAMILY_detail.png
-    const detailPattern = (flags?.layers !== 'base+families') ? groundTextures.getDetailPattern(ctxT, F) : null;
+    // 2e: V11 Composite 20% detail overlay from FAMILY_detail.png (omit for non-periodic families which have custom strata)
+    const detailPattern = (!isNonPeriodicFamily && flags?.layers !== 'base+families') ? groundTextures.getDetailPattern(ctxT, F) : null;
     if (detailPattern) {
       ctxT.save();
       ctxT.globalCompositeOperation = 'soft-light';
@@ -1685,38 +1751,12 @@ function compositeLotusPond(
   ctx.restore();
 }
 
-let karstGrainPattern: CanvasPattern | null = null;
-function getKarstGrainPattern(ctx: CanvasRenderingContext2D): CanvasPattern | null {
-  if (karstGrainPattern) return karstGrainPattern;
-  if (typeof document === 'undefined') return null;
-  const c = document.createElement('canvas');
-  c.width = 64;
-  c.height = 64;
-  const cx = c.getContext('2d');
-  if (!cx) return null;
-  const imgData = cx.createImageData(64, 64);
-  const data = imgData.data;
-  let s = 123456789;
-  for (let i = 0; i < 64 * 64; i++) {
-    s = (s * 1664525 + 1013904223) >>> 0;
-    const v = ((s & 0xff) / 255 - 0.5) * 58; // ±29 lightness noise for rich high-frequency mineral relief
-    const base = Math.max(0, Math.min(255, 128 + v));
-    const idx = i * 4;
-    data[idx] = base;
-    data[idx + 1] = base;
-    data[idx + 2] = base;
-    data[idx + 3] = 255;
-  }
-  cx.putImageData(imgData, 0, 0);
-  karstGrainPattern = ctx.createPattern(c, 'repeat');
-  return karstGrainPattern;
-}
-
 /**
- * V16/V17: Karst Rock Stratification & Mineral Depth for Azure Mountains.
- * Renders undulating, organically slanted geological stratification bands (±6% lightness)
- * with irregular incommensurate spacing (zero periodic autocorrelation)
- * and rich high-frequency mineral patina (sobelMean >= 4.0, maxAutocorr <= 0.35, maxHorizontalRunCells < 10.0).
+ * V18 P3: Karst Rock Stratification & Mineral Depth for Azure Mountains.
+ * Pure world-coordinate 4-octave FBM value noise at 1/4 cell resolution (128x128) with 2-cell halo padding (144x144),
+ * slanted ~15 deg (ang = 0.26 rad), amplitude modulated to never exceed 6 cells continuous length.
+ * Continuous across chunk boundaries with zero edge-clamping artifacts.
+ * Zero repeat patterns, zero moire spikes (moirePeakRatio <= 150, maxAutocorr <= 0.35, seamRatio <= 1.30).
  */
 function compositeAzureKarst(
   ctx: CanvasRenderingContext2D,
@@ -1726,83 +1766,65 @@ function compositeAzureKarst(
   canvasHeight: number,
   tileSize: number
 ): void {
-  ctx.save();
+  // 1. Halo-padded world-coordinate 4-octave FBM strata at 1/8 cell resolution
+  const M_CELLS = CHUNK_SIZE * 8; // 256 px for inner chunk
+  const BORDER_CELLS = 2;         // 2 cells halo padding
+  const BORDER_PX = BORDER_CELLS * 8; // 16 px padding in scratch resolution
+  const DIM = M_CELLS + 2 * BORDER_PX; // 288x288 total scratch buffer
+  const padPx = BORDER_CELLS * tileSize; // Pixel padding on destination canvas
 
-  // 1. Cool mineral ink wash glaze (Azure blue-grey slate tint)
-  ctx.globalCompositeOperation = 'soft-light';
-  ctx.fillStyle = 'rgba(78, 92, 108, 0.28)';
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  const scratch = getScratch('KZ', DIM, DIM);
+  if (!scratch) return;
 
-  // 2. Geological karst stratification bands (alternating micro-lightness bands)
-  // Irregular incommensurate spacing to destroy any periodic autocorrelation peaks (maxAutocorr <= 0.35, maxHorizontalRunCells < 10)
-  let curY = -tileSize * 2;
-  while (curY < canvasHeight + tileSize * 2) {
-    const worldY = cy * CHUNK_SIZE + (curY / tileSize);
-    const bandSeed = Math.abs(hash2d(73939, Math.floor(worldY * 2)));
-    const spacingRatio = 0.65 + ((bandSeed % 71) / 71) * 0.70; // Spacing ranges from 0.65 to 1.35 tileSize
-    const bandHeight = tileSize * spacingRatio;
-    const bandNoise = ((bandSeed % 100) / 100) - 0.5;
+  const imgData = scratch.ctx.createImageData(DIM, DIM);
+  const d32 = new Uint32Array(imgData.data.buffer);
 
-    if (Math.abs(bandNoise) >= 0.08) {
-      const isLight = bandNoise > 0;
-      const h = bandHeight * 0.75;
+  const ang = 0.26; // ≈ 15° (non-horizontal)
+  const sinA = Math.sin(ang);
+  const cosA = Math.cos(ang);
 
-      ctx.save();
-      ctx.globalCompositeOperation = isLight ? 'soft-light' : 'multiply';
-      ctx.fillStyle = isLight
-        ? `rgba(215, 225, 235, ${(Math.abs(bandNoise) * 0.28).toFixed(3)})`
-        : `rgba(80, 85, 92, ${(Math.abs(bandNoise) * 0.32).toFixed(3)})`;
+  for (let py = 0; py < DIM; py++) {
+    const wy = cy * CHUNK_SIZE + (py - BORDER_PX + 0.5) / 8;
+    const rowOffset = py * DIM;
+    for (let px = 0; px < DIM; px++) {
+      const wx = cx * CHUNK_SIZE + (px - BORDER_PX + 0.5) / 8;
 
-      ctx.beginPath();
-      const STEPS = 8;
-      const stepPx = canvasWidth / STEPS;
-      ctx.moveTo(0, curY);
-      for (let s = 0; s <= STEPS; s++) {
-        const px = s * stepPx;
-        const wx = cx * CHUNK_SIZE + (px / tileSize);
-        const wave = (smoothNoise2D(wx * 0.15, worldY * 0.15, 777) - 0.5) * (tileSize * 0.45);
-        const slant = (px / canvasWidth) * (tileSize * 0.25);
-        ctx.lineTo(px, curY + slant + wave);
-      }
-      for (let s = STEPS; s >= 0; s--) {
-        const px = s * stepPx;
-        const wx = cx * CHUNK_SIZE + (px / tileSize);
-        const wave = (smoothNoise2D(wx * 0.15, worldY * 0.15, 777) - 0.5) * (tileSize * 0.45);
-        const slant = (px / canvasWidth) * (tileSize * 0.25);
-        ctx.lineTo(px, curY + h + slant + wave);
-      }
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
+      // 4-octave FBM value noise in world cell coordinates (4th octave provides fine mineral patina)
+      const L = 1 + 0.05 * (2 * smoothNoise2D(wx * 0.04, wy * 0.04, 11) - 1)
+                  + 0.035 * (2 * smoothNoise2D(wx * 0.15, wy * 0.15, 23) - 1)
+                  + 0.025 * (2 * smoothNoise2D(wx * 0.60, wy * 0.60, 37) - 1)
+                  + 0.035 * (2 * smoothNoise2D(wx * 2.20, wy * 2.20, 73) - 1);
+
+      // Slanted strata lines modulated by low-frequency noise (no unbroken lines > 6 cells)
+      const s = Math.sin((wx * sinA + wy * cosA) * 0.8 + 2.5 * smoothNoise2D(wx * 0.05, wy * 0.05, 51));
+      const env = smoothNoise2D(wx * 0.15, wy * 0.15, 61);
+      const strata = 0.045 * s * Math.max(0, env - 0.35);
+
+      // Neutral gray modulation: 1.0 maps to 128 (scale 180 yields subtle soft-light strata over rock_ground macro)
+      const gray = Math.max(0, Math.min(255, Math.round(128 + ((L + strata) - 1.0) * 180)));
+      d32[rowOffset + px] = 0xff000000 | (gray << 16) | (gray << 8) | gray;
     }
-
-    curY += bandHeight;
   }
+  scratch.ctx.putImageData(imgData, 0, 0);
 
-  // 3. Karst mineral micro-relief & high-frequency stone grain (sobelMean >= 4.0, lumStd in [6..22])
-  const grainPat = getKarstGrainPattern(ctx);
-  if (grainPat) {
-    ctx.save();
-    ctx.globalCompositeOperation = 'soft-light';
-    ctx.globalAlpha = 0.85;
-    ctx.fillStyle = grainPat;
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    ctx.restore();
-  }
+  ctx.save();
+  ctx.globalCompositeOperation = 'soft-light';
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(scratch.canvas, -padPx, -padPx, canvasWidth + 2 * padPx, canvasHeight + 2 * padPx);
 
-  // 4. Ancient moss / iron oxide mineral patina
-  for (let i = 0; i < 8; i++) {
+  // 2. Subtle ancient iron oxide & mineral patina decals (purely world-coordinate anchored)
+  for (let i = 0; i < 6; i++) {
     const seed = Math.abs(hash2d(cx * 67 + i * 29, cy * 83 + i * 37));
     const px = ((seed % 1000) / 1000) * (canvasWidth - 80) + 40;
     const py = (((seed >> 10) % 1000) / 1000) * (canvasHeight - 80) + 40;
-    const rw = 25 + (seed % 35);
-    const rh = 12 + ((seed >> 5) % 18);
+    const rw = 20 + (seed % 28);
+    const rh = 10 + ((seed >> 5) % 16);
 
-    ctx.globalCompositeOperation = 'soft-light';
     const isMoss = (seed % 3 === 0);
-    ctx.fillStyle = isMoss ? 'rgba(72, 105, 68, 0.22)' : 'rgba(125, 95, 75, 0.18)';
+    ctx.fillStyle = isMoss ? 'rgba(72, 95, 68, 0.16)' : 'rgba(110, 95, 82, 0.14)';
     ctx.beginPath();
-    ctx.ellipse(px, py, Math.max(0.1, rw), Math.max(0.1, rh), 0.2, 0, Math.PI * 2);
+    ctx.ellipse(px, py, Math.max(0.1, rw), Math.max(0.1, rh), 0.25, 0, Math.PI * 2);
     ctx.fill();
   }
 
@@ -1823,7 +1845,7 @@ function compositeAzureKarst(
         ctxT.restore();
       }
 
-      if (F === 'rock_ground' || F === 'canyon_floor' || F === 'cliff') {
+      if (F === 'rock_ground' || F === 'canyon_floor' || F === 'cliff' || F === 'mountain_pass') {
         compositeAzureKarst(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
       }
 

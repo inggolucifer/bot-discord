@@ -2449,7 +2449,7 @@ export default function WorldCanvas({
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchEnd}
         onWheel={e => e.preventDefault()}
-        className="w-full h-full cursor-crosshair active:cursor-grabbing border border-[#383329] shadow-2xl touch-none"
+        className="w-full h-full cursor-crosshair active:cursor-grabbing border-none outline-none shadow-2xl touch-none"
       />
 
       {/* L9: HUD CONTROLS (Vertical Floating Wuxia Dock on Left - Hidden in debugCam) */}
