@@ -1114,13 +1114,14 @@ function buildRoadAlphaMask(
       ) {
         g.fillRect(x1, y1, (gx + 1) * S + 0.10 * S + 1 - x1, (gy + 1) * S + 0.10 * S + 1 - y1);
       }
+
     }
   }
 
   // 1) Blur sigma = 0.28 cell = 1.12 px (rounds right angles, removes 1-cell staircases)
   const gB = scratchRB.ctx;
   gB.clearRect(0, 0, W, W);
-  gB.filter = 'blur(1.12px)';
+  gB.filter = 'blur(1.4px)';
   gB.drawImage(scratchR.canvas, 0, 0);
   gB.filter = 'none';
 
@@ -1135,8 +1136,8 @@ function buildRoadAlphaMask(
     const wy = cy * CHUNK_SIZE + (py / S - BORDER);
     for (let px = 0; px < W; px++) {
       const wx = cx * CHUNK_SIZE + (px / S - BORDER);
-      const dx = (smoothNoise2D(wx * 1.1, wy * 1.1, 5) - 0.5) * 0.14 + (smoothNoise2D(wx * 3.3, wy * 3.3, 9) - 0.5) * 0.06;
-      const dy = (smoothNoise2D(wx * 1.1, wy * 1.1, 17) - 0.5) * 0.14 + (smoothNoise2D(wx * 3.3, wy * 3.3, 21) - 0.5) * 0.06;
+      const dx = (smoothNoise2D(wx * 1.1, wy * 1.1, 5) - 0.5) * 0.12;
+      const dy = (smoothNoise2D(wx * 1.1, wy * 1.1, 17) - 0.5) * 0.12;
 
       const sx = px + dx * S;
       const sy = py + dy * S;
@@ -1156,11 +1157,11 @@ function buildRoadAlphaMask(
       const sample = ((v00 * (1 - fx) + v10 * fx) * (1 - fy) + (v01 * (1 - fx) + v11 * fx) * fy) / 255.0;
 
       let alpha = 0;
-      if (sample > 0.42) {
-        if (sample >= 0.58) {
+      if (sample > 0.46) {
+        if (sample >= 0.54) {
           alpha = 255;
         } else {
-          const t = (sample - 0.42) / (0.58 - 0.42);
+          const t = (sample - 0.46) / (0.54 - 0.46);
           alpha = Math.round(t * t * (3 - 2 * t) * 255);
         }
       }
@@ -1470,7 +1471,7 @@ export function renderChunkGroundBitmapTextured(
       else if (volcanicCnt >= 30) effectiveFamily = 'volcanic';
       else if (swampCnt >= 30) effectiveFamily = 'swamp';
       else if (rockCnt >= 30) effectiveFamily = 'rock_ground';
-      else effectiveFamily = 'road_stone'; // V19 F1: in central plains/culture, use neutral road stone texture
+      else effectiveFamily = 'settlement_floor';
     }
 
     const fInfo = groundTextures.familyOf(effectiveFamily);
@@ -1975,9 +1976,10 @@ function compositeAzureKarst(
       }
       if (snowCnt >= 15) {
         isSnowRoad = true;
-        // V18 P5: Neutral trodden ice/snow path (dL in [-20, -10], sat <= 0.12, BminusR <= 18)
+        // V19 F2: Neutral cool trodden snow road (dL in [-20, -10], sat <= 0.12, BminusR in [0, 18])
         ctxT.save();
-        ctxT.fillStyle = 'rgba(215, 218, 201, 0.95)';
+        ctxT.clearRect(0, 0, canvasWidth, canvasHeight);
+        ctxT.fillStyle = 'rgb(197, 223, 201)';
         ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
         ctxT.restore();
       }
