@@ -11,7 +11,7 @@
 import { TileData, MapObjectInstance } from '@/types/world';
 import api from '@/lib/api';
 import { renderChunkGroundBitmap, renderChunkGridBitmap, GroundBisectFlags } from '@/lib/groundRenderer';
-export const GROUND_RENDER_VERSION = 'v17';
+export const GROUND_RENDER_VERSION = 'v18';
 import { groundTextures } from '@/lib/groundTextures';
 
 export const CHUNK_SIZE = 32;

@@ -1507,10 +1507,18 @@ export function renderChunkGroundBitmapTextured(
     }
 
 /**
- * V16: Procedural Shan Shui Farmland Paddy Composite.
- * Renders rounded emerald paddy fields, raised grass ridges, shallow reflective water,
- * and young rice shoots, eliminating dry olive streaks and straight lines.
+ * V18 P2: Procedural Shan Shui Farmland Paddy Composite.
+ * Clean meadow foundation with world-coordinate continuous variable paddy plots (3-6 x 2-4 cells),
+ * rounded corners r=0.25 cell, dual vibrant green tones (#5d9441 & #4f8738), emerald ridges (#3f6f2e),
+ * and light green rice shoot dots (#7cc24a). Zero artificial teal pools or sky sheen.
  */
+function getPaddyRowY(r: number): number {
+  return r * 3 + Math.floor(Math.sin(r * 1.7) * 0.8);
+}
+function getPaddyColX(r: number, c: number): number {
+  return Math.floor(c * 4.5 + Math.sin(c * 1.5 + r * 2.3) * 0.7);
+}
+
 function compositeFarmlandPaddy(
   ctx: CanvasRenderingContext2D,
   cx: number,
@@ -1521,74 +1529,88 @@ function compositeFarmlandPaddy(
 ): void {
   ctx.save();
 
-  // 1. Lush emerald paddy field foundation (solid source-over, Hue ~98-105 deg)
-  ctx.globalCompositeOperation = 'source-over';
-  ctx.fillStyle = '#4a7c36';
+  // 1. Base: Soft-light glaze enhancing the underlying meadow macro textures to vibrant rural tones
+  ctx.globalCompositeOperation = 'soft-light';
+  ctx.fillStyle = 'rgba(78, 130, 48, 0.28)';
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-  // 2. Multi-octave natural variation in paddy field green
-  const PAT_CELL = tileSize * 2;
-  const numPatX = Math.ceil(canvasWidth / PAT_CELL);
-  const numPatY = Math.ceil(canvasHeight / PAT_CELL);
-  for (let py = 0; py < numPatY; py++) {
-    const wy = cy * CHUNK_SIZE + py * 2;
-    for (let px = 0; px < numPatX; px++) {
-      const wx = cx * CHUNK_SIZE + px * 2;
-      const n = (Math.sin(wx * 0.35) * Math.cos(wy * 0.35) + 1.0) * 0.5;
-      ctx.fillStyle = n > 0.5 ? 'rgba(82, 135, 61, 0.45)' : 'rgba(65, 110, 47, 0.40)';
-      ctx.fillRect(px * PAT_CELL, py * PAT_CELL, PAT_CELL, PAT_CELL);
-    }
-  }
+  // 2. World-coordinate variable paddy plots (3-6 x 2-4 cells)
+  ctx.globalCompositeOperation = 'source-over';
 
-  // 3. Render rounded paddy field plots across chunk
-  const PLOT_TILES = 4;
-  const PLOTS_PER_CHUNK = CHUNK_SIZE / PLOT_TILES; // 8
-  const plotPx = PLOT_TILES * tileSize;
-  const ridgeWidth = tileSize * 0.48;
+  const minWy = cy * CHUNK_SIZE;
+  const maxWy = (cy + 1) * CHUNK_SIZE;
+  const minWx = cx * CHUNK_SIZE;
+  const maxWx = (cx + 1) * CHUNK_SIZE;
 
-  for (let py = 0; py < PLOTS_PER_CHUNK; py++) {
-    const worldY = cy * CHUNK_SIZE + py * PLOT_TILES;
-    for (let px = 0; px < PLOTS_PER_CHUNK; px++) {
-      const worldX = cx * CHUNK_SIZE + px * PLOT_TILES;
-      const seed = Math.abs(hash2d(worldX * 31 + 7, worldY * 47 + 13));
+  const rMin = Math.floor((minWy - 8) / 3);
+  const rMax = Math.ceil((maxWy + 8) / 3);
+  const cMin = Math.floor((minWx - 10) / 4.5);
+  const cMax = Math.ceil((maxWx + 10) / 4.5);
 
-      const x0 = px * plotPx + ridgeWidth;
-      const y0 = py * plotPx + ridgeWidth;
-      const w = plotPx - ridgeWidth * 2;
-      const h = plotPx - ridgeWidth * 2;
-      if (w <= 0 || h <= 0) continue;
+  const ridgeWidth = tileSize * 0.30; // 0.30 cell ridge width
+  const rRadius = tileSize * 0.25;    // r = 0.25 cell rounded corner
 
-      // 3a. Deep emerald grass ridge around plot
-      ctx.fillStyle = '#2d5324';
+  for (let r = rMin; r <= rMax; r++) {
+    const Y0 = getPaddyRowY(r);
+    const Y1 = getPaddyRowY(r + 1);
+    const H = Y1 - Y0; // 2..4 cells
+    const py = (Y0 - minWy) * tileSize;
+    const ph = H * tileSize;
+    if (py + ph < 0 || py > canvasHeight) continue;
+
+    for (let c = cMin; c <= cMax; c++) {
+      const X0 = getPaddyColX(r, c);
+      const X1 = getPaddyColX(r, c + 1);
+      const W = X1 - X0; // 3..6 cells
+      const px = (X0 - minWx) * tileSize;
+      const pw = W * tileSize;
+      if (px + pw < 0 || px > canvasWidth) continue;
+
+      // 2a. Pematang (ridge): #3f6f2e selebar 0.30 sel
+      ctx.fillStyle = '#3f6f2e';
       ctx.beginPath();
-      const r = Math.min(16, w * 0.22);
-      ctx.roundRect(x0 - 4, y0 - 4, w + 8, h + 8, r + 4);
+      ctx.roundRect(px, py, pw, ph, rRadius + 2);
       ctx.fill();
 
-      // 3b. Reflective water interior (teal-cyan sky reflection, Hue ~185-195 deg, Sat > 0.25)
-      ctx.fillStyle = seed % 2 === 0 ? 'rgba(38, 115, 125, 0.75)' : 'rgba(32, 105, 115, 0.70)';
+      // 2b. Badan petak sawah: sudut membulat r=0.25 sel, dua nada hijau (#5d9441 & #4f8738)
+      const ix0 = px + ridgeWidth;
+      const iy0 = py + ridgeWidth;
+      const iw = pw - ridgeWidth * 2;
+      const ih = ph - ridgeWidth * 2;
+      if (iw <= 0 || ih <= 0) continue;
+
+      const plotSeed = Math.abs(hash2d(X0 * 31 + 7, Y0 * 47 + 13));
+      const plotColor = (plotSeed % 2 === 0) ? '#5d9441' : '#4f8738';
+      ctx.fillStyle = plotColor;
       ctx.beginPath();
-      ctx.roundRect(x0, y0, w, h, r);
+      ctx.roundRect(ix0, iy0, iw, ih, rRadius);
       ctx.fill();
 
-      // 3c. Sky sheen
-      ctx.fillStyle = 'rgba(125, 185, 195, 0.25)';
-      ctx.beginPath();
-      ctx.roundRect(x0 + 4, y0 + 4, w * 0.6, h * 0.45, r * 0.5);
-      ctx.fill();
-
-      // 3d. Vibrant rice shoots (Hue ~95-100 deg)
-      const numShoots = 3 + (seed % 4);
-      ctx.fillStyle = '#68ad33';
-      for (let s = 0; s < numShoots; s++) {
-        const sSeed = (seed >> (s * 3)) & 0xff;
-        const sx = x0 + 8 + ((sSeed * 17) % Math.max(1, Math.floor(w - 16)));
-        const sy = y0 + 8 + (((sSeed * 31) >> 2) % Math.max(1, Math.floor(h - 16)));
-
+      // 2c. Tanah cokelat HANYA decal <= 5% luas total
+      if (plotSeed % 4 === 0) {
+        ctx.fillStyle = 'rgba(75, 58, 28, 0.20)';
+        const lx = ix0 + (plotSeed % Math.max(1, Math.floor(iw - 16)));
+        const ly = iy0 + ((plotSeed >> 3) % Math.max(1, Math.floor(ih - 16)));
+        const lw = Math.min(iw * 0.35, tileSize * 0.8);
+        const lh = Math.min(ih * 0.35, tileSize * 0.5);
         ctx.beginPath();
-        ctx.ellipse(sx, sy, 3, 1.5, -0.4, 0, Math.PI * 2);
-        ctx.ellipse(sx + 2, sy - 2, 1.5, 3, 0.3, 0, Math.PI * 2);
+        ctx.roundRect(lx, ly, lw, lh, 3);
         ctx.fill();
+      }
+
+      // 2d. Rumpun padi: titik hijau muda #7cc24a ukuran 0.12-0.20 sel, <= 2/sel
+      ctx.fillStyle = '#7cc24a';
+      const dotRadius = Math.max(1.8, tileSize * 0.08); // ~0.16 sel diameter
+      const stepX = tileSize * 0.85;
+      const stepY = tileSize * 0.85;
+      for (let sy = iy0 + tileSize * 0.45; sy < iy0 + ih - tileSize * 0.35; sy += stepY) {
+        for (let sx = ix0 + tileSize * 0.45; sx < ix0 + iw - tileSize * 0.35; sx += stepX) {
+          const jx = ((Math.sin(sx * 0.2 + sy * 0.3) + 1) * 0.5 - 0.5) * (tileSize * 0.12);
+          const jy = ((Math.cos(sx * 0.3 - sy * 0.2) + 1) * 0.5 - 0.5) * (tileSize * 0.12);
+          ctx.beginPath();
+          ctx.arc(sx + jx, sy + jy, dotRadius, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
     }
   }
@@ -1597,9 +1619,10 @@ function compositeFarmlandPaddy(
 }
 
 /**
- * V16/V17: Procedural Lotus Pond Composite.
- * Renders clear teal-blue reflective water, floating emerald lotus pads,
- * and delicate pink lotus blossom decals.
+ * V18 P2: Procedural Lotus Pond Composite.
+ * Renders misty teal-aquamarine reflective water channels interspersed with dense,
+ * overlapping emerald lotus leaf pads (#3ca048, #459e3c) and soft pink blossom accents.
+ * Saturasi air <= 0.45, V >= 0.45 in accordance with V18 P2 specification.
  */
 function compositeLotusPond(
   ctx: CanvasRenderingContext2D,
@@ -1611,37 +1634,51 @@ function compositeLotusPond(
 ): void {
   ctx.save();
 
-  // Clear teal water tint (Hue ~180 deg, Sat ~0.58)
+  // 1. Pale misty translucent water channels (Sat <= 0.45, V >= 0.45)
+  // Hue ~182 deg, Sat ~0.38, Val ~0.60 (#5f969b)
   ctx.globalCompositeOperation = 'source-over';
-  ctx.fillStyle = '#266572';
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  ctx.fillStyle = 'rgba(68, 140, 52, 0.28)';
+  ctx.fillStyle = '#5f969b';
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-  // Floating lotus pads & flowers (lush emerald water foliage)
-  const PADS_PER_CHUNK = 36;
-  for (let i = 0; i < PADS_PER_CHUNK; i++) {
-    const seed = Math.abs(hash2d(cx * 89 + i * 23, cy * 113 + i * 41));
-    const padX = ((seed % 1000) / 1000) * (canvasWidth - 60) + 30;
-    const padY = (((seed >> 10) % 1000) / 1000) * (canvasHeight - 60) + 30;
-    const padRadius = 14 + (seed % 10);
+  // Soft organic jade water wash
+  ctx.fillStyle = 'rgba(78, 142, 115, 0.35)';
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    // Vibrant emerald lotus leaf pad (Hue ~115-126 deg, Sat ~0.60)
-    ctx.fillStyle = (seed % 2 === 0) ? '#3ca048' : '#459e3c';
-    ctx.beginPath();
-    ctx.arc(padX, padY, padRadius, 0.25, Math.PI * 2 - 0.25);
-    ctx.fill();
+  // 2. Lush emerald lotus pads covering ~65% of the pond surface
+  // Arranged in natural organic clusters along cell grid
+  const numCols = Math.ceil(canvasWidth / (tileSize * 0.8));
+  const numRows = Math.ceil(canvasHeight / (tileSize * 0.8));
 
-    // Lotus blossom on ~35% of pads
-    if ((seed % 5) < 2) {
-      ctx.fillStyle = 'rgba(238, 145, 175, 0.95)';
-      ctx.beginPath();
-      ctx.arc(padX + 2, padY - 2, 4, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(padX + 2, padY - 2, 1.6, 0, Math.PI * 2);
-      ctx.fill();
+  for (let ry = 0; ry < numRows; ry++) {
+    const wy = cy * CHUNK_SIZE + ry * 0.8;
+    for (let rx = 0; rx < numCols; rx++) {
+      const wx = cx * CHUNK_SIZE + rx * 0.8;
+      const seed = Math.abs(hash2d(Math.floor(wx * 19 + 7), Math.floor(wy * 23 + 13)));
+
+      // 76% chance of lotus leaf cluster in this slot
+      if ((seed % 100) < 76) {
+        const px = rx * (tileSize * 0.8) + ((seed % 17) - 8);
+        const py = ry * (tileSize * 0.8) + (((seed >> 4) % 17) - 8);
+        const padR = tileSize * 0.44 + ((seed % 7) - 3);
+
+        // Emerald lotus pad (#3ca048 & #459e3c)
+        ctx.fillStyle = (seed % 2 === 0) ? '#3ca048' : '#459e3c';
+        ctx.beginPath();
+        ctx.arc(px, py, Math.max(10, padR), 0.25, Math.PI * 2 - 0.25);
+        ctx.fill();
+
+        // Lotus flower on ~28% of clusters
+        if ((seed % 7) < 2) {
+          ctx.fillStyle = 'rgba(238, 155, 180, 0.95)';
+          ctx.beginPath();
+          ctx.arc(px + 2, py - 2, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(px + 2, py - 2, 2.0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
     }
   }
 
