@@ -1,0 +1,144 @@
+{
+  "timestamp": "2026-11-02T13:52:16.590Z",
+  "allPass": true,
+  "results": {
+    "P04_farm": {
+      "coords": {
+        "x": 2450,
+        "y": 2450
+      },
+      "farm": {
+        "green": 0.934,
+        "brown": 0,
+        "water": 0.06,
+        "passGreen": true,
+        "passBrown": true,
+        "passWater": true
+      },
+      "texture": {
+        "stddev": 11.85,
+        "median_luminance": 159.93,
+        "dark_components_over_1cell": 0,
+        "max_dark_area_cells": 0.5233,
+        "passStddev": true,
+        "passDark": true
+      },
+      "pointPass": true
+    },
+    "farm_rand_1": {
+      "coords": {
+        "x": 2477,
+        "y": 2505
+      },
+      "farm": {
+        "green": 1,
+        "brown": 0,
+        "water": 0,
+        "passGreen": true,
+        "passBrown": true,
+        "passWater": true
+      },
+      "texture": {
+        "stddev": 10.722,
+        "median_luminance": 152.21,
+        "dark_components_over_1cell": 0,
+        "max_dark_area_cells": 0.388,
+        "passStddev": true,
+        "passDark": true
+      },
+      "pointPass": true
+    },
+    "farm_rand_2": {
+      "coords": {
+        "x": 1779,
+        "y": 2321
+      },
+      "farm": {
+        "green": 1,
+        "brown": 0,
+        "water": 0,
+        "passGreen": true,
+        "passBrown": true,
+        "passWater": true
+      },
+      "texture": {
+        "stddev": 13.015,
+        "median_luminance": 156.29,
+        "dark_components_over_1cell": 0,
+        "max_dark_area_cells": 0.3872,
+        "passStddev": true,
+        "passDark": true
+      },
+      "pointPass": true
+    },
+    "farm_rand_3": {
+      "coords": {
+        "x": 2341,
+        "y": 2445
+      },
+      "farm": {
+        "green": 1,
+        "brown": 0,
+        "water": 0,
+        "passGreen": true,
+        "passBrown": true,
+        "passWater": true
+      },
+      "texture": {
+        "stddev": 13.898,
+        "median_luminance": 150.58,
+        "dark_components_over_1cell": 0,
+        "max_dark_area_cells": 0.4311,
+        "passStddev": true,
+        "passDark": true
+      },
+      "pointPass": true
+    },
+    "farm_rand_4": {
+      "coords": {
+        "x": 2215,
+        "y": 2444
+      },
+      "farm": {
+        "green": 1,
+        "brown": 0,
+        "water": 0,
+        "passGreen": true,
+        "passBrown": true,
+        "passWater": true
+      },
+      "texture": {
+        "stddev": 14.136,
+        "median_luminance": 152.93,
+        "dark_components_over_1cell": 0,
+        "max_dark_area_cells": 0.418,
+        "passStddev": true,
+        "passDark": true
+      },
+      "pointPass": true
+    },
+    "farm_rand_5": {
+      "coords": {
+        "x": 2223,
+        "y": 2509
+      },
+      "farm": {
+        "green": 0.876,
+        "brown": 0,
+        "water": 0.006,
+        "passGreen": true,
+        "passBrown": true,
+        "passWater": true
+      },
+      "texture": {
+        "stddev": 13.46,
+        "median_luminance": 139.36,
+        "dark_components_over_1cell": 0,
+        "max_dark_area_cells": 0.3448,
+        "passStddev": true,
+        "passDark": true
+      },
+      "pointPass": true
+    }
+  }
+}

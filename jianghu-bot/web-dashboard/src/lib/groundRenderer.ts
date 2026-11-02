@@ -1687,10 +1687,10 @@ function getRadialMaskCanvas(size: number): HTMLCanvasElement | null {
     }
 
 /**
- * V18 P2: Procedural Shan Shui Farmland Paddy Composite.
- * Clean meadow foundation with world-coordinate continuous variable paddy plots (3-6 x 2-4 cells),
- * rounded corners r=0.25 cell, dual vibrant green tones (#5d9441 & #4f8738), emerald ridges (#3f6f2e),
- * and light green rice shoot dots (#7cc24a). Zero artificial teal pools or sky sheen.
+ * V19 F3: Organic Shan Shui Farmland Paddy Composite.
+ * World-coordinate continuous variable paddy plots (3-6 x 2-4 cells) with thin divider ridges
+ * in multiply mode rgba(48,86,34,0.55), translucent paddy bodies rgba(112,168,66,0.38) & rgba(96,150,56,0.38),
+ * soft-light water sheen rgba(140,185,130,0.18), and pseudo-random rice shoot shards rgba(150,190,70,0.45).
  */
 function getPaddyRowY(r: number): number {
   return r * 3 + Math.floor(Math.sin(r * 1.7) * 0.8);
@@ -1709,14 +1709,6 @@ function compositeFarmlandPaddy(
 ): void {
   ctx.save();
 
-  // 1. Base: Soft-light glaze enhancing the underlying meadow macro textures to vibrant rural tones
-  ctx.globalCompositeOperation = 'soft-light';
-  ctx.fillStyle = 'rgba(78, 130, 48, 0.28)';
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-  // 2. World-coordinate variable paddy plots (3-6 x 2-4 cells)
-  ctx.globalCompositeOperation = 'source-over';
-
   const minWy = cy * CHUNK_SIZE;
   const maxWy = (cy + 1) * CHUNK_SIZE;
   const minWx = cx * CHUNK_SIZE;
@@ -1727,13 +1719,63 @@ function compositeFarmlandPaddy(
   const cMin = Math.floor((minWx - 10) / 4.5);
   const cMax = Math.ceil((maxWx + 10) / 4.5);
 
-  const ridgeWidth = tileSize * 0.30; // 0.30 cell ridge width
-  const rRadius = tileSize * 0.25;    // r = 0.25 cell rounded corner
+  const ridgeWidth = Math.max(1.5, tileSize * 0.10);
+  const rRadius = Math.max(2, tileSize * 0.20);
+  const pad = ridgeWidth * 0.8;
 
+  // 1. Lapisan pematang: pembagi petak tipis berbasis grid dunia, multiply mode
+  // Gambar pembagi horizontal & vertikal tipis sekali (BUKAN blok tebal) dengan celah sudut irigasi
+  ctx.globalCompositeOperation = 'multiply';
+  ctx.strokeStyle = 'rgba(48, 86, 34, 0.55)';
+  ctx.lineWidth = ridgeWidth;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+
+  const gap = tileSize * 0.28;
+
+  ctx.beginPath();
+  // Horizontal divider segments along Y0:
+  for (let r = rMin; r <= rMax; r++) {
+    const Y0 = getPaddyRowY(r);
+    const py = (Y0 - minWy) * tileSize;
+    if (py < -tileSize || py > canvasHeight + tileSize) continue;
+
+    for (let c = cMin; c <= cMax; c++) {
+      const X0 = getPaddyColX(r, c);
+      const X1 = getPaddyColX(r, c + 1);
+      const px0 = (X0 - minWx) * tileSize;
+      const px1 = (X1 - minWx) * tileSize;
+      if (px1 < 0 || px0 > canvasWidth) continue;
+
+      ctx.moveTo(px0 + gap, py);
+      ctx.lineTo(px1 - gap, py);
+    }
+  }
+
+  // Vertical divider segments along X0:
   for (let r = rMin; r <= rMax; r++) {
     const Y0 = getPaddyRowY(r);
     const Y1 = getPaddyRowY(r + 1);
-    const H = Y1 - Y0; // 2..4 cells
+    const py0 = (Y0 - minWy) * tileSize;
+    const py1 = (Y1 - minWy) * tileSize;
+    if (py1 < 0 || py0 > canvasHeight) continue;
+
+    for (let c = cMin; c <= cMax; c++) {
+      const X0 = getPaddyColX(r, c);
+      const px = (X0 - minWx) * tileSize;
+      if (px < -tileSize || px > canvasWidth + tileSize) continue;
+
+      ctx.moveTo(px, py0 + gap);
+      ctx.lineTo(px, py1 - gap);
+    }
+  }
+  ctx.stroke();
+
+  // 2. Lapisan petak & kilau air & rumpun padi
+  for (let r = rMin; r <= rMax; r++) {
+    const Y0 = getPaddyRowY(r);
+    const Y1 = getPaddyRowY(r + 1);
+    const H = Y1 - Y0;
     const py = (Y0 - minWy) * tileSize;
     const ph = H * tileSize;
     if (py + ph < 0 || py > canvasHeight) continue;
@@ -1741,55 +1783,64 @@ function compositeFarmlandPaddy(
     for (let c = cMin; c <= cMax; c++) {
       const X0 = getPaddyColX(r, c);
       const X1 = getPaddyColX(r, c + 1);
-      const W = X1 - X0; // 3..6 cells
+      const W = X1 - X0;
       const px = (X0 - minWx) * tileSize;
       const pw = W * tileSize;
       if (px + pw < 0 || px > canvasWidth) continue;
 
-      // 2a. Pematang (ridge): #3f6f2e selebar 0.30 sel
-      ctx.fillStyle = '#3f6f2e';
-      ctx.beginPath();
-      ctx.roundRect(px, py, pw, ph, rRadius + 2);
-      ctx.fill();
-
-      // 2b. Badan petak sawah: sudut membulat r=0.25 sel, dua nada hijau (#5d9441 & #4f8738)
-      const ix0 = px + ridgeWidth;
-      const iy0 = py + ridgeWidth;
-      const iw = pw - ridgeWidth * 2;
-      const ih = ph - ridgeWidth * 2;
-      if (iw <= 0 || ih <= 0) continue;
+      const ix0 = px + pad;
+      const iy0 = py + pad;
+      const iw = pw - pad * 2;
+      const ih = ph - pad * 2;
+      if (iw <= 3 || ih <= 3) continue;
 
       const plotSeed = Math.abs(hash2d(X0 * 31 + 7, Y0 * 47 + 13));
-      const plotColor = (plotSeed % 2 === 0) ? '#5d9441' : '#4f8738';
+
+      // 2a. Lapisan petak: warna semi-transparan bergantian (source-over)
+      const plotColor = (plotSeed % 2 === 0) ? 'rgba(112, 168, 66, 0.38)' : 'rgba(96, 150, 56, 0.38)';
+      ctx.globalCompositeOperation = 'source-over';
       ctx.fillStyle = plotColor;
       ctx.beginPath();
       ctx.roundRect(ix0, iy0, iw, ih, rRadius);
       ctx.fill();
 
-      // 2c. Tanah cokelat HANYA decal <= 5% luas total
-      if (plotSeed % 4 === 0) {
-        ctx.fillStyle = 'rgba(75, 58, 28, 0.20)';
-        const lx = ix0 + (plotSeed % Math.max(1, Math.floor(iw - 16)));
-        const ly = iy0 + ((plotSeed >> 3) % Math.max(1, Math.floor(ih - 16)));
-        const lw = Math.min(iw * 0.35, tileSize * 0.8);
-        const lh = Math.min(ih * 0.35, tileSize * 0.5);
-        ctx.beginPath();
-        ctx.roundRect(lx, ly, lw, lh, 3);
-        ctx.fill();
-      }
+      // 2b. Di atas tiap petak: kilau air tipis soft-light
+      ctx.globalCompositeOperation = 'soft-light';
+      ctx.fillStyle = 'rgba(140, 185, 130, 0.18)';
+      ctx.beginPath();
+      ctx.roundRect(ix0, iy0, iw, ih, rRadius);
+      ctx.fill();
 
-      // 2d. Rumpun padi: titik hijau muda #7cc24a ukuran 0.12-0.20 sel, <= 2/sel
-      ctx.fillStyle = '#7cc24a';
-      const dotRadius = Math.max(1.8, tileSize * 0.08); // ~0.16 sel diameter
-      const stepX = tileSize * 0.85;
-      const stepY = tileSize * 0.85;
-      for (let sy = iy0 + tileSize * 0.45; sy < iy0 + ih - tileSize * 0.35; sy += stepY) {
-        for (let sx = ix0 + tileSize * 0.45; sx < ix0 + iw - tileSize * 0.35; sx += stepX) {
-          const jx = ((Math.sin(sx * 0.2 + sy * 0.3) + 1) * 0.5 - 0.5) * (tileSize * 0.12);
-          const jy = ((Math.cos(sx * 0.3 - sy * 0.2) + 1) * 0.5 - 0.5) * (tileSize * 0.12);
+      // 2c. Rumpun padi: serpihan kecil (0.10-0.16 sel) pseudo-acak, density <= 1 per sel
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = 'rgba(150, 190, 70, 0.45)';
+      for (let gy = Y0; gy < Y1; gy++) {
+        for (let gx = X0; gx < X1; gx++) {
+          const h = hash2d(gx * 73 + 19, gy * 91 + 31);
+          if (((h >>> 16) & 0xff) > 165) continue;
+
+          const cxTile = (gx - minWx + 0.5) * tileSize;
+          const cyTile = (gy - minWy + 0.5) * tileSize;
+
+          const jx = (((h & 0x7f) / 127) - 0.5) * (tileSize * 0.40);
+          const jy = ((((h >>> 8) & 0x7f) / 127) - 0.5) * (tileSize * 0.40);
+
+          const pxDot = cxTile + jx;
+          const pyDot = cyTile + jy;
+
+          if (pxDot < ix0 + 3 || pxDot > ix0 + iw - 3 || pyDot < iy0 + 3 || pyDot > iy0 + ih - 3) continue;
+
+          const angle = (((h >>> 20) & 0xff) / 255) * Math.PI;
+          const shardLen = tileSize * (0.10 + (((h >>> 12) & 0x0f) / 15) * 0.06);
+          const shardThick = Math.max(1.2, tileSize * 0.04);
+
+          ctx.save();
+          ctx.translate(pxDot, pyDot);
+          ctx.rotate(angle);
           ctx.beginPath();
-          ctx.arc(sx + jx, sy + jy, dotRadius, 0, Math.PI * 2);
+          ctx.ellipse(0, 0, shardLen * 0.5, shardThick * 0.5, 0, 0, Math.PI * 2);
           ctx.fill();
+          ctx.restore();
         }
       }
     }
