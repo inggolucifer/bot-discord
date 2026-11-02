@@ -1,0 +1,161 @@
+{
+  "timestamp": "2026-11-02T00:45:20.762Z",
+  "head": "bdfeda4e",
+  "farm": {
+    "P04_farm": {
+      "green": 0.375,
+      "brown": 0.004,
+      "water": 0.616
+    },
+    "P16_west_farm": {
+      "green": 0.076,
+      "brown": 0.004,
+      "water": 0.914
+    }
+  },
+  "road": {
+    "P01_xingcun": {
+      "holes": 3,
+      "widthCells": 1.41,
+      "widthCV": 0.39,
+      "lobeRatio": 1.09,
+      "dL": -31.1,
+      "sat": 0.141,
+      "BminusR": -17.4
+    },
+    "P02_xingcun_cross": {
+      "holes": 1,
+      "widthCells": 1.23,
+      "widthCV": 0.449,
+      "lobeRatio": 2.281,
+      "dL": -31.3,
+      "sat": 0.14,
+      "BminusR": -17.4
+    },
+    "P11_xueshan": {
+      "holes": 1,
+      "widthCells": 0.9,
+      "widthCV": 0.183,
+      "lobeRatio": 1.777,
+      "dL": -45,
+      "sat": 0.019,
+      "BminusR": 3.7
+    },
+    "P13_road_h": {
+      "holes": 2,
+      "widthCells": 1.67,
+      "widthCV": 0.254,
+      "lobeRatio": 1.053,
+      "dL": -31.5,
+      "sat": 0.142,
+      "BminusR": -17.4
+    },
+    "P14_road_v": {
+      "holes": 3,
+      "widthCells": 1.39,
+      "widthCV": 0.4,
+      "lobeRatio": 1.091,
+      "dL": -31.2,
+      "sat": 0.141,
+      "BminusR": -17.4
+    }
+  },
+  "band": {
+    "P06_azure_pass": {
+      "bandStd": 5.11,
+      "moirePeakRatio": 805.8
+    },
+    "P07_azure_west": {
+      "bandStd": 5.12,
+      "moirePeakRatio": 872.2
+    },
+    "P08_azure_far_west": {
+      "bandStd": 5.06,
+      "moirePeakRatio": 858.9
+    },
+    "P09_azure_east": {
+      "bandStd": 4.92,
+      "moirePeakRatio": 876.6
+    },
+    "P10_azure_mist": {
+      "bandStd": 4.52,
+      "moirePeakRatio": 240.1
+    }
+  },
+  "repeat": {
+    "P06_azure_pass": {
+      "maxAutocorr": 0.657,
+      "lagCells": 5.1
+    },
+    "P07_azure_west": {
+      "maxAutocorr": 0.691,
+      "lagCells": 5.1
+    },
+    "P08_azure_far_west": {
+      "maxAutocorr": 0.713,
+      "lagCells": 5.1
+    },
+    "P09_azure_east": {
+      "maxAutocorr": 0.71,
+      "lagCells": 5.1
+    },
+    "P10_azure_mist": {
+      "maxAutocorr": 0.52,
+      "lagCells": 11.4
+    },
+    "P11_xueshan": {
+      "maxAutocorr": 0.481,
+      "lagCells": 8.1
+    },
+    "snow_rand_1": {
+      "maxAutocorr": 0.692,
+      "lagCells": 8.1
+    },
+    "snow_rand_2": {
+      "maxAutocorr": 0.627,
+      "lagCells": 8.1
+    },
+    "snow_rand_3": {
+      "maxAutocorr": 0.638,
+      "lagCells": 8.1
+    },
+    "snow_rand_4": {
+      "maxAutocorr": 0.669,
+      "lagCells": 8.1
+    },
+    "snow_rand_5": {
+      "maxAutocorr": 0.702,
+      "lagCells": 8.1
+    }
+  },
+  "seam": {
+    "P07_azure_west_x857": {
+      "seamJump": 11.97,
+      "baseJump": 6.77,
+      "ratio": 1.77
+    }
+  },
+  "baseline_defect_checks": {
+    "defectA_farmland_teal_pool": {
+      "expected": "FAIL (green < 0.80, water > 0.10)",
+      "actual": "green=0.375, water=0.616, brown=0.004",
+      "confirmed_defect": true
+    },
+    "defectB_azure_moire_seam": {
+      "expected": "FAIL (moirePeakRatio > 150, seam > 1.30)",
+      "actual": "moirePeakRatio=872.2, seamRatio=1.77",
+      "confirmed_defect": true
+    },
+    "defectC_road_bubbles_lobes": {
+      "expected": "FAIL (holes > 0, lobeRatio > 1.35, widthCV > 0.18)",
+      "actual": "holes=3, lobeRatio=1.09, widthCV=0.39",
+      "confirmed_defect": true
+    },
+    "defectD_snow_dark_road_repeat": {
+      "expected": "FAIL (dL < -20, maxAutocorr > 0.35)",
+      "actual": "dL=-45, maxAutocorr=0.481",
+      "confirmed_defect": true
+    },
+    "all_defects_confirmed_failing": true
+  }
+}
