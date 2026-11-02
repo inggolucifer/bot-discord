@@ -1187,8 +1187,10 @@ function applyRoadInnerShadow(
   canvasWidth: number,
   canvasHeight: number,
   BORDER: number,
-  tileSize: number
+  tileSize: number,
+  isSnow: boolean = false
 ): void {
+  if (isSnow) return; // Snow roads use clean trodden snow tint without dirt edge shadow
   const scratchSh = getScratch('ROAD_INNER_SH', canvasWidth, canvasHeight);
   if (!scratchSh) return;
   const sCtx = scratchSh.ctx;
@@ -1223,15 +1225,18 @@ function applyRoadInnerShadow(
     canvasHeight
   );
   sCtx.filter = 'none';
+
+  // Tint only the rim pixels with dark brown (source-in fills only existing rim alpha)
+  sCtx.globalCompositeOperation = 'source-in';
+  sCtx.fillStyle = 'rgb(40, 32, 24)';
+  sCtx.fillRect(0, 0, canvasWidth, canvasHeight);
   sCtx.restore();
 
-  // 3. Composite subtle dark brown inner shadow onto road pixels (source-atop)
+  // 3. Composite subtle dark brown inner shadow onto road pixels (source-over)
   ctxT.save();
-  ctxT.globalCompositeOperation = 'source-atop';
+  ctxT.globalCompositeOperation = 'source-over';
   ctxT.globalAlpha = 0.14;
   ctxT.drawImage(scratchSh.canvas, 0, 0);
-  ctxT.fillStyle = 'rgb(40, 32, 24)';
-  ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
   ctxT.restore();
 }
 
@@ -1544,7 +1549,15 @@ function getRadialMaskCanvas(size: number): HTMLCanvasElement | null {
 
             const h = Math.abs(hash2d(worldGx + 101, worldGy + 203));
             const rot = h % 4;
-            const vIdx = (h >> 2) % variants.length;
+            let vIdx = (h >> 2) % variants.length;
+            if (F === 'snow') {
+              const r = (h >> 2) % 100;
+              if (r < 35) vIdx = 0;
+              else if (r < 65) vIdx = 1;
+              else if (r < 85) vIdx = 2;
+              else vIdx = 3;
+              if (vIdx >= variants.length) vIdx = 0;
+            }
             const img = groundTextures.getImage(variants[vIdx]);
             if (!img) continue;
 
@@ -1559,7 +1572,9 @@ function getRadialMaskCanvas(size: number): HTMLCanvasElement | null {
             sCtx.drawImage(radMask, 0, 0);
             sCtx.globalCompositeOperation = 'source-over';
 
-            ctxT.drawImage(scratchBlock.canvas, px, py);
+            const warpX = (smoothNoise2D(worldGx * 0.3, worldGy * 0.3) - 0.5) * 0.3 * tileSize;
+            const warpY = (smoothNoise2D(worldGx * 0.3 + 17, worldGy * 0.3 + 31) - 0.5) * 0.3 * tileSize;
+            ctxT.drawImage(scratchBlock.canvas, px + warpX, py + warpY);
           }
         }
       }
@@ -1955,16 +1970,18 @@ function compositeAzureKarst(
     }
 
     // V13 P2: Road in snowy/glacial biomes becomes trodden ice path (bluish-grey, no cream circles)
+    let isSnowRoad = false;
     if (F === 'road_stone') {
       let snowCnt = 0;
       for (let i = 0; i < gridFamilies.length; i++) {
         const fam = gridFamilies[i];
         if (fam === 'snow' || fam === 'ice_crack' || fam === 'glacier') snowCnt++;
       }
-      if (snowCnt >= 20) {
+      if (snowCnt >= 15) {
+        isSnowRoad = true;
         // V18 P5: Neutral trodden ice/snow path (dL in [-20, -10], sat <= 0.12, BminusR <= 18)
         ctxT.save();
-        ctxT.fillStyle = 'rgba(214, 218, 222, 0.95)';
+        ctxT.fillStyle = 'rgba(215, 218, 201, 0.95)';
         ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
         ctxT.restore();
       }
@@ -2002,7 +2019,7 @@ function compositeAzureKarst(
 
     // 4f.1: Road inner edge shadow rgba(40, 32, 24, 0.14) ~1.5px
     if (F === 'road_stone') {
-      applyRoadInnerShadow(ctxT, scratchMB2, canvasWidth, canvasHeight, BORDER, tileSize);
+      applyRoadInnerShadow(ctxT, scratchMB2, canvasWidth, canvasHeight, BORDER, tileSize, isSnowRoad);
     }
 
     // 4g: Draw T onto chunk canvas

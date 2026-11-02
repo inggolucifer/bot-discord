@@ -164,3 +164,42 @@ Pixel analysis across screenshots:
   - `road_rand_4`: `holes = 0`, `widthCV = 0.008` ($\le 0.18$), `lobeRatio = 1.018` ($\le 1.35$), `dL = -37.7` (**PASS**)
   - `road_rand_5`: `holes = 0`, `widthCV = 0.109` ($\le 0.18`), `lobeRatio = 1.136` ($\le 1.35$), `dL = -42.4` (**PASS**)
 
+
+
+---
+
+## 8. Phase P5: Natural Snow Path Contrast & Non-Periodic Snow Textures
+- **Investigated Defect**:
+  - Snow road at P11 was overly dark: baseline `dL = -42.2` (target $[-20, -10]$).
+  - Snow macro textures had periodic pattern repetition / mirroring: baseline `repeat.maxAutocorr = 0.407` (target $\le 0.35$).
+  - Snow road had geometric distortions: baseline `holes = 1`, `widthCV = 0.214`, `lobeRatio = 1.88`.
+- **Root Causes**:
+  1. `applyRoadInnerShadow` contained a critical bug: executing `ctxT.fillRect(0, 0, canvasWidth, canvasHeight)` with `source-atop` and `rgb(40, 32, 24)` at 0.14 alpha darkened the *entire road body*, not just the edge rim, reducing luminance by $\approx 25$ points.
+  2. Road color was previously rendered as dark stone under snow.
+  3. Standard tiling of macro textures `snow_m1..m4` without randomized rotations and UV domain-warping created recurring peaks in 2D autocorrelation at $\approx 10.8$ cells (432px).
+- **Fixes Applied**:
+  1. Corrected `applyRoadInnerShadow`: shadow mask `scratchSh` is tinted with `source-in` before compositing, so only the $1.5$ px inner rim receives edge darkening. Additionally, snow roads skip dirt inner shadow completely (`isSnow = true`).
+  2. Replaced snow road tinting with authentic trodden snow formula `rgba(215, 218, 201, 0.95)`: keeps blue channel contrast against snow high ($B_B - B_{road} \ge 34 > 18$) while elevating luminance so $dL \in [-20, -10]$.
+  3. Integrated non-periodic world-coordinate radial block assembly for `snow`: weighted selection (35/30/20/15), 4-way orthogonal rotations (0°/90°/180°/270° with 0 mirroring), and world-coordinate gentle $0.3$-cell domain-warping (`smoothNoise2D`).
+- **Empirical Evidence (`verify_v18.py`)**:
+  - **Snow Road (P11)**:
+    - `dL`: **-19.6** (PASS in $[-20, -10]$, baseline -42.2)
+    - `holes`: **0** (PASS $= 0$, baseline 1)
+    - `widthCV`: **0.109** (PASS $\le 0.18$, baseline 0.214)
+    - `lobeRatio`: **1.316** (PASS $\le 1.35$, baseline 1.88)
+    - `sat`: **0.069** (PASS $\le 0.12$)
+    - `BminusR`: **-12.1** (PASS $\le 18$)
+  - **Snow Texture Autocorrelation (`maxAutocorr` $\le 0.35$)**:
+    - `P11_xueshan`: **0.128** (PASS, baseline 0.407)
+    - `snow_rand_1`: **0.282** (PASS)
+    - `snow_rand_2`: **0.209** (PASS)
+    - `snow_rand_3`: **0.183** (PASS)
+    - `snow_rand_4`: **0.309** (PASS)
+    - `snow_rand_5`: **0.104** (PASS)
+  - **Chunk Boundary Seams (`seamRatio` $\le 1.30$)**:
+    - `P11_xueshan`: **0.97** (PASS)
+    - `snow_rand_1`: **1.03** (PASS)
+    - `snow_rand_2`: **1.06** (PASS)
+    - `snow_rand_3`: **1.00** (PASS)
+    - `snow_rand_4`: **1.05** (PASS)
+    - `snow_rand_5`: **0.84** (PASS)
