@@ -1099,18 +1099,18 @@ function buildRoadAlphaMask(
 
       g.fillRect(x0, y0, x1 - x0, y1 - y0);
 
-      if (gx < GRID_DIM - 1 && isRoadOrSettlement(gx + 1, gy)) {
+      if (gx < GRID_DIM - 1 && isStrictRoad(gx + 1, gy)) {
         g.fillRect(x1, y0, (gx + 1) * S + 0.10 * S + 1 - x1, y1 - y0);
       }
-      if (gy < GRID_DIM - 1 && isRoadOrSettlement(gx, gy + 1)) {
+      if (gy < GRID_DIM - 1 && isStrictRoad(gx, gy + 1)) {
         g.fillRect(x0, y1, x1 - x0, (gy + 1) * S + 0.10 * S + 1 - y1);
       }
       if (
         gx < GRID_DIM - 1 &&
         gy < GRID_DIM - 1 &&
-        isRoadOrSettlement(gx + 1, gy + 1) &&
-        isRoadOrSettlement(gx + 1, gy) &&
-        isRoadOrSettlement(gx, gy + 1)
+        isStrictRoad(gx + 1, gy + 1) &&
+        isStrictRoad(gx + 1, gy) &&
+        isStrictRoad(gx, gy + 1)
       ) {
         g.fillRect(x1, y1, (gx + 1) * S + 0.10 * S + 1 - x1, (gy + 1) * S + 0.10 * S + 1 - y1);
       }
@@ -1314,6 +1314,8 @@ export function renderChunkGroundBitmapTextured(
     }
   }
 
+// V19 F1: settlement_floor uses road_stone texture & tint to eliminate olive squares
+
   // Step 3: Sort families by bottom->top render priority
   // Dominant internal family serves as base layer to ensure true regional foundation
   let dominantFamily = tiles[0]?.terrainType ? (groundTextures.familyOf(tiles[0].terrainType)?.family || 'plains') : 'plains';
@@ -1468,7 +1470,7 @@ export function renderChunkGroundBitmapTextured(
       else if (volcanicCnt >= 30) effectiveFamily = 'volcanic';
       else if (swampCnt >= 30) effectiveFamily = 'swamp';
       else if (rockCnt >= 30) effectiveFamily = 'rock_ground';
-      else effectiveFamily = 'settlement_floor';
+      else effectiveFamily = 'road_stone'; // V19 F1: in central plains/culture, use neutral road stone texture
     }
 
     const fInfo = groundTextures.familyOf(effectiveFamily);
@@ -1960,13 +1962,7 @@ function compositeAzureKarst(
         compositeAzureKarst(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
       }
 
-      if (F === 'settlement_floor') {
-        ctxT.save();
-        ctxT.globalCompositeOperation = 'source-over';
-        ctxT.fillStyle = 'rgba(180, 160, 135, 0.08)';
-        ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
-        ctxT.restore();
-      }
+      // V19 F1: settlement_floor olive tint rgba(180, 160, 135, 0.08) removed to match neutral road stone corridor
     }
 
     // V13 P2: Road in snowy/glacial biomes becomes trodden ice path (bluish-grey, no cream circles)
