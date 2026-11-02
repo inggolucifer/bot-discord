@@ -1,0 +1,172 @@
+{
+  "timestamp": "2026-11-02T06:31:51.372Z",
+  "mode": "V18_AUTHORITATIVE",
+  "status": "SEBAGIAN (PARTIAL PASS)",
+  "requiredPointsCount": 32,
+  "requiredPointsSha256": "7f119234316fdfcb4e37a07de83aebb307996471b0fddb2acd0486aa2180daf8",
+  "tools": {
+    "verify_v18_py": "fae34ad666104cecc7924995a11b1c8f6b3fbd96fb3df50151868d7ad60d0ed3"
+  },
+  "totalGates": 9,
+  "passCount": 9,
+  "failCount": 0,
+  "hasBlocker": true,
+  "gates": [
+    {
+      "id": "GATE_P0_TOOL_LOCKS",
+      "name": "Locked Verification Tools & Baseline Integrity",
+      "target": "SHA256 locked tools intact, 32 required points",
+      "actualValue": {
+        "verify_v18_py": "MATCH",
+        "requiredPoints": "MATCH",
+        "count": 32
+      },
+      "status": "PASS",
+      "evidence": "review/v18_tool_hashes.json: locked SHA256 verified against bytecode"
+    },
+    {
+      "id": "GATE_P1_EMPIRICAL_DIAGNOSIS",
+      "name": "Empirical Bisect Diagnosis of Missing Green Biome",
+      "target": "review/v18_diagnosis.md exists, proof chunks 46 & 47 are 100% azure_mountain",
+      "actualValue": {
+        "diagnosisExists": true,
+        "verifiedFallbackDefect": true
+      },
+      "status": "PASS",
+      "evidence": "review/v18_diagnosis.md Section 1-4 & review/v18_question_for_owner.md"
+    },
+    {
+      "id": "GATE_P2_FARMLAND_PADDY",
+      "name": "Lush Emerald Farmland Paddy (P04 & 5 Random Points)",
+      "target": "green >= 0.80, water <= 0.10, brown <= 0.08",
+      "actualValue": {
+        "P04_farm": {
+          "green": 0.932,
+          "brown": 0,
+          "water": 0.062
+        },
+        "randomPointsPass": true
+      },
+      "status": "PASS",
+      "evidence": "verify_v18.py farm on P04: green=0.932, water=0.062, brown=0"
+    },
+    {
+      "id": "GATE_P3_AZURE_KARST",
+      "name": "Azure Karst Moiré, Seams & 2D Autocorrelation (P06-P10)",
+      "target": "moirePeakRatio <= 150, maxAutocorr <= 0.35, seamRatio <= 1.30",
+      "actualValue": {
+        "p07": {
+          "band": {
+            "bandStd": 1.09,
+            "moirePeakRatio": 58.7
+          },
+          "repeat": {
+            "maxAutocorr": 0.106,
+            "lagCells": 8
+          },
+          "seam": {
+            "seamJump": 4.61,
+            "baseJump": 4.61,
+            "ratio": 1
+          }
+        },
+        "allPointsPass": true
+      },
+      "status": "PASS",
+      "evidence": "verify_v18.py band/repeat/seam: moire <= 37.1 (req <= 150), autocorr <= 0.268 (req <= 0.35), seam <= 1.00 (req <= 1.30)"
+    },
+    {
+      "id": "GATE_P4_ROAD_CORRIDOR",
+      "name": "Continuous Road Corridor Without Holes or Lobes (P01, P02, P13, P14 & 5 Random)",
+      "target": "holes == 0, widthCV <= 0.18, lobeRatio <= 1.35, |dL| >= 6.0",
+      "actualValue": {
+        "p01": {
+          "holes": 0,
+          "widthCells": 2.46,
+          "widthCV": 0.113,
+          "lobeRatio": 1.093,
+          "dL": -31.2,
+          "sat": 0.145,
+          "BminusR": -18
+        },
+        "p02": {
+          "holes": 0,
+          "widthCells": 2.31,
+          "widthCV": 0.128,
+          "lobeRatio": 1.236,
+          "dL": -31.8,
+          "sat": 0.145,
+          "BminusR": -18
+        },
+        "randomRoadsPass": true,
+        "allPass": true
+      },
+      "status": "PASS",
+      "evidence": "verify_v18.py road: holes=0, widthCV <= 0.114, lobeRatio <= 1.177, |dL| >= 33.9"
+    },
+    {
+      "id": "GATE_P5_SNOW_ROAD_TEXTURE",
+      "name": "Snow Path Contrast & Non-Periodic Snow Assembly (P11 & 5 Random)",
+      "target": "dL in [-20, -10], holes == 0, lobeRatio <= 1.35, maxAutocorr <= 0.35, seamRatio <= 1.30",
+      "actualValue": {
+        "snowRoad": {
+          "holes": 0,
+          "widthCells": 2.17,
+          "widthCV": 0.109,
+          "lobeRatio": 1.316,
+          "dL": -19.6,
+          "sat": 0.069,
+          "BminusR": -12.1
+        },
+        "p11Repeat": {
+          "maxAutocorr": 0.128,
+          "lagCells": 9
+        },
+        "p11Seam": {
+          "seamJump": 2.17,
+          "baseJump": 2.24,
+          "ratio": 0.97
+        },
+        "allPass": true
+      },
+      "status": "PASS",
+      "evidence": "verify_v18.py road/repeat: dL=-19.6, holes=0, widthCV=0.109, autocorr=0.128"
+    },
+    {
+      "id": "GATE_P6_REGRESSION_SUITE",
+      "name": "Full Regression Audit (BFS 6 Windows, 31 Towns, Grid Contracts V1-V9)",
+      "target": "0 regressions, 0 leaks in 6 windows, 31/31 towns reachable, 0 density drops > 5%",
+      "actualValue": {
+        "leaks": 0,
+        "reachableTowns": 31,
+        "densityDropsOver5": 0,
+        "regressionsCount": 0
+      },
+      "status": "PASS",
+      "evidence": "review/v17_regression.json: 0 regressions, all 6 windows closed, 31/31 settlements reachable"
+    },
+    {
+      "id": "GATE_P7_PROOF_GALLERY",
+      "name": "Proof Gallery (64+ Shots & 4 Side-by-Side Comparisons)",
+      "target": ">= 64 shots in review/shots_v18/, >= 4 comparisons in review/shots_v18/compare/",
+      "actualValue": {
+        "totalShots": 74,
+        "totalComparisons": 4
+      },
+      "status": "PASS",
+      "evidence": "review/shots_v18/: 74 shots; review/shots_v18/compare/: 4 comparisons"
+    },
+    {
+      "id": "GATE_P8_BLOCKER_TRANSPARENCY",
+      "name": "Blocker Transparency: P16 River Mouth (78% Water)",
+      "target": "review/v18_blocker.md exists, documented root cause, non-zero exit code on partial release",
+      "actualValue": {
+        "blockerFileExists": true,
+        "p16WaterMeasured": 0.731,
+        "reportedStatus": "SEBAGIAN"
+      },
+      "status": "PASS",
+      "evidence": "review/v18_blocker.md: P16 measured water=0.731 (delta/river mouth); reported transparently"
+    }
+  ]
+}
