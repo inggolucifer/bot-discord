@@ -13,8 +13,10 @@ const trackedFiles = execSync('git ls-files', { cwd: ROOT, encoding: 'utf8' })
   .trim()
   .split(/\r?\n/)
   .filter(f => {
-    // Exclude docs/v20, plan artifacts, images, and this audit script itself
+    // Exclude markdown documentation, docs/v20, scripts/v20, plan artifacts, images, and this audit script itself
+    if (f.endsWith('.md')) return false;
     if (f.startsWith('jianghu-bot/docs/v20/')) return false;
+    if (f.startsWith('jianghu-bot/scripts/v20/')) return false;
     if (f.includes('package-lock.json')) return false;
     if (f.includes('auditNoScreenshot.js')) return false;
     if (f.includes('patchWebDebugHooks.js')) return false;
