@@ -28,6 +28,11 @@ import {
   Sun,
   Shield,
   Eye,
+  Home,
+  Gavel,
+  Sword,
+  FlaskConical,
+  Store,
   X
 } from 'lucide-react';
 import { useUIStore } from '@/lib/store';
@@ -52,6 +57,8 @@ export default function SettlementPanoramaView({
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedBuilding, setSelectedBuilding] = useState<any | null>(null);
+  const [showResidencesModal, setShowResidencesModal] = useState<boolean>(false);
+  const [selectedResident, setSelectedResident] = useState<any | null>(null);
   const [actionNotice, setActionNotice] = useState<string | null>(null);
   const [scrollOffset, setScrollOffset] = useState<number>(0);
   const [isTrackingMinimized, setIsTrackingMinimized] = useState<boolean>(false);
@@ -144,6 +151,18 @@ export default function SettlementPanoramaView({
     const bId = (building.id || '').toLowerCase();
     const bType = (building.type || building.buildingType || '').toLowerCase();
     const bName = (building.name || '').toLowerCase();
+
+    // V20: Coming soon facilities
+    if (building.status === 'coming_soon' || ['auction', 'storage', 'teleport_array'].includes(bId)) {
+      showNotice(`🏮 [${building.name}] sedang dalam persiapan dan akan segera hadir!`);
+      return;
+    }
+
+    // V20: Residences modal
+    if (bId === 'residences' || bType === 'residences') {
+      setShowResidencesModal(true);
+      return;
+    }
 
     if (bId === 'inn' && onOpenInn) {
       onOpenInn();
@@ -365,10 +384,17 @@ export default function SettlementPanoramaView({
             if (b.id === 'manual_pavilion' || b.type === 'manual_pavilion') IconComp = BookOpen;
             if (b.id === 'bounty_board' || b.type === 'bounty_board') IconComp = FileText;
             if (b.id === 'courier_stables' || b.type === 'courier_stables') IconComp = Compass;
-            if (b.id === 'vault' || b.type === 'vault') IconComp = Archive;
+            if (b.id === 'vault' || b.id === 'storage' || b.type === 'storage') IconComp = Archive;
             if (b.id === 'dock' || b.type === 'dock') IconComp = Ship;
             if (b.id === 'sect_hall' || b.type === 'sect_hall') IconComp = Swords;
             if (b.id === 'dungeon' || b.type === 'dungeon_entrance') IconComp = Sparkles;
+            if (b.id === 'residences' || b.type === 'residences') IconComp = Home;
+            if (b.id === 'auction' || b.type === 'auction') IconComp = Gavel;
+            if (b.id === 'barracks' || b.type === 'barracks') IconComp = Shield;
+            if (b.id === 'armory' || b.type === 'armory') IconComp = Sword;
+            if (b.id === 'alchemy_hall' || b.type === 'alchemy_hall') IconComp = FlaskConical;
+            if (b.id === 'meditation_grounds' || b.type === 'meditation_grounds') IconComp = Sparkles;
+            if (b.id === 'sect_market' || b.type === 'sect_market') IconComp = Store;
 
             const bannerText = b.bannerText || `${b.chineseName || ''} · ${b.name.split(' ')[0]}`;
 
