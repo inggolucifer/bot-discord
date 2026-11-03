@@ -214,19 +214,7 @@ export default function WorldCanvas({
       debugCamMountTimeRef.current = performance.now();
       debugCamFrameCountRef.current = 0;
       chunkManager.updateCamera(debugCam.x, debugCam.y, debugCam.zoom);
-      if (typeof window !== 'undefined') {
-        (window as any).__chunksReady = false;
-        (window as any).__debugRoadCells = [];
-        (window as any).__debugViewport = null;
-        (window as any).__panCameraTo = (x: number, y: number, zoom?: number) => {
-          setCamera(prev => ({ ...prev, x, y, zoom: zoom !== undefined ? zoom : prev.zoom }));
-          animatedPlayerPos.current = { x, y };
-          chunkManager.updateCamera(x, y, zoom !== undefined ? zoom : 1.3);
-        };
-        (window as any).__dbg = {
-          getChunkBitmap: (cx: number, cy: number) => chunkManager.getChunkBitmap(cx, cy, 54)
-        };
-      }
+      
     }
   }, [debugCam?.x, debugCam?.y, debugCam?.zoom]);
 
@@ -252,9 +240,6 @@ export default function WorldCanvas({
     if (typeof window !== 'undefined') {
       try {
         const params = new URLSearchParams(window.location.search);
-        if (params.get('ground') === 'only') {
-          return false;
-        }
         if (params.has('grid')) {
           return params.get('grid') === '1';
         }
@@ -277,26 +262,13 @@ export default function WorldCanvas({
     }
   }, [showGrid]);
 
-  // Preload Core WebP Atlases & Ground Textures on Mount (Fase 19 / V9 / V11 / V12)
+  // Preload Core WebP Atlases & Ground Textures on Mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).atlasReady = false;
       (window as any).chunkManager = chunkManager;
       (window as any).groundTextures = groundTextures;
       (window as any).atlasLoader = atlasLoader;
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const groundOnly = params.get('ground') === 'only';
-        const layers = (params.get('layers') || 'all') as any;
-        const noRoad = params.get('noroad') === '1';
-        const noFarm = params.get('nofarm') === '1';
-        chunkManager.setRenderFlags({
-          groundOnly,
-          layers,
-          noRoad,
-          noFarm
-        });
-      } catch (e) {}
     }
     atlasLoader.preloadCoreAtlases().then(() => {
       if (typeof window !== 'undefined') {
@@ -736,22 +708,7 @@ export default function WorldCanvas({
         }
       }
 
-      // V17 P0: Ground-Only Mode Short-Circuit
-      if (typeof window !== 'undefined' && window.location && window.location.search && window.location.search.includes('ground=only')) {
-        debugCamFrameCountRef.current++;
-        (window as any).__debugObjectsDrawn = 0;
-        const isHotReady = chunkManager.areHotChunksReady(camera.x, camera.y, camera.zoom) || debugCamFrameCountRef.current >= 45;
-        if (isHotReady && (groundTextures.ready || debugCamFrameCountRef.current >= 30)) {
-          (window as any).__chunksReady = true;
-          (window as any).atlasReady = true;
-          if (!hasFiredReadyRef.current) {
-            hasFiredReadyRef.current = true;
-            window.dispatchEvent(new CustomEvent('chunks-ready', { detail: { spriteCount: 0 } }));
-          }
-        }
-        animationFrameId = requestAnimationFrame(render);
-        return;
-      }
+      
 
       // ----------------------------------------------------------------------
       // L2: FALLBACK PER-TILE & DYNAMIC GROUND OVERLAYS (G4 Waves, Territory, Plots)
@@ -2134,69 +2091,14 @@ export default function WorldCanvas({
             };
 
             if (typeof window !== 'undefined') {
-              (window as any).__debugObjectsDrawn = metrics.spriteCount;
-              (window as any).__debugMetrics = metrics;
-              (window as any).__chunksReady = true;
               (window as any).atlasReady = true;
-              window.dispatchEvent(new CustomEvent('chunks-ready', { detail: metrics }));
             }
             hasFiredReadyRef.current = true;
           }
         }
       }
 
-      // V15 P0.1: Runtime Debug Hooks (__debugViewport & __debugRoadCells)
-      if (typeof window !== 'undefined') {
-        (window as any).__debugViewport = {
-          x: camera.x,
-          y: camera.y,
-          zoom: camera.zoom,
-          widthPx: width,
-          heightPx: height,
-          camX: camera.x,
-          camY: camera.y,
-          cellsX: Math.ceil(width / currentTileSize),
-          cellsY: Math.ceil(height / currentTileSize),
-          tilePx: currentTileSize
-        };
-
-        const activeRoadCells = [];
-        for (let ty = minTileY; ty <= maxTileY; ty++) {
-          for (let tx = minTileX; tx <= maxTileX; tx++) {
-            const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
-            const tt = tile?.terrainType;
-            if (tt && (tt.includes('road') || tt === 'road_stone' || tt.includes('pass'))) {
-              const sx = toScreenX(tx);
-              const sy = toScreenY(ty);
-              if (sx + currentTileSize >= 0 && sx <= width && sy + currentTileSize >= 0 && sy <= height) {
-                activeRoadCells.push({
-                  gx: tx,
-                  gy: ty,
-                  px: Math.round(sx),
-                  py: Math.round(sy),
-                  widthPx: Math.round(currentTileSize),
-                  heightPx: Math.round(currentTileSize),
-                  biome: (tile as any)?.biome || 'road',
-                  orientation: 'auto'
-                });
-              }
-            }
-          }
-        }
-        (window as any).__debugRoadCells = activeRoadCells;
-
-        // Visual debug overlay when &debugRoad=1 is active
-        if (typeof window !== 'undefined' && window.location && window.location.search && window.location.search.includes('debugRoad=1')) {
-          ctx.save();
-          ctx.strokeStyle = '#00ffff';
-          ctx.lineWidth = 1;
-          for (let i = 0; i < activeRoadCells.length; i++) {
-            const rc = activeRoadCells[i];
-            ctx.strokeRect(rc.px + 0.5, rc.py + 0.5, rc.widthPx - 1, rc.heightPx - 1);
-          }
-          ctx.restore();
-        }
-      }
+      
 
       animationFrameId = requestAnimationFrame(render);
     };

@@ -10,7 +10,7 @@
 
 import { TileData, MapObjectInstance } from '@/types/world';
 import api from '@/lib/api';
-import { renderChunkGroundBitmap, renderChunkGridBitmap, GroundBisectFlags } from '@/lib/groundRenderer';
+import { renderChunkGroundBitmap, renderChunkGridBitmap } from '@/lib/groundRenderer';
 export const GROUND_RENDER_VERSION = 'v18';
 import { groundTextures } from '@/lib/groundTextures';
 
@@ -138,17 +138,6 @@ export class ChunkManager {
   private chunks = new Map<string, StaticChunkData>();
   private unpackedChunks = new Map<string, TileData[]>();
   private chunkBitmaps = new Map<string, HTMLCanvasElement | ImageBitmap>();
-  private currentRenderFlags: GroundBisectFlags = { groundOnly: false, layers: 'all', noRoad: false, noFarm: false };
-
-  public setRenderFlags(flags: Partial<GroundBisectFlags>) {
-    this.currentRenderFlags = { ...this.currentRenderFlags, ...flags };
-    this.chunkBitmaps.clear();
-    this.notifySubscribers();
-  }
-
-  public getRenderFlags(): GroundBisectFlags {
-    return this.currentRenderFlags;
-  }
   private chunkGridBitmaps = new Map<string, HTMLCanvasElement>();
   private liveData = new Map<string, LiveChunkData>();
 
@@ -611,9 +600,7 @@ export class ChunkManager {
     if (typeof document === 'undefined') return null;
 
     const chunkKey = `${cx}:${cy}`;
-    const f = this.currentRenderFlags;
-    const flagsKey = `${f.groundOnly ? 'go' : 'norm'}_${f.layers || 'all'}_${f.noRoad ? 'nr' : 'r'}_${f.noFarm ? 'nf' : 'f'}`;
-    const bitmapKey = `${GROUND_RENDER_VERSION}:${cx}:${cy}:${tileSize}:${flagsKey}`;
+    const bitmapKey = `${GROUND_RENDER_VERSION}:${cx}:${cy}:${tileSize}`;
 
     if (this.chunkBitmaps.has(bitmapKey)) {
       return this.chunkBitmaps.get(bitmapKey)!;
@@ -636,8 +623,7 @@ export class ChunkManager {
         cy,
         tiles,
         tileSize,
-        (x, y) => this.getTile(x, y)?.terrainType,
-        this.currentRenderFlags
+        (x, y) => this.getTile(x, y)?.terrainType
       );
     }
 
@@ -646,8 +632,7 @@ export class ChunkManager {
       cy,
       tiles,
       tileSize,
-      (x, y) => this.getTile(x, y)?.terrainType,
-      this.currentRenderFlags
+      (x, y) => this.getTile(x, y)?.terrainType
     );
 
     // V19 F4: Determinism guarantee - only permanently cache bitmap if all 8 neighbors are resident in memory

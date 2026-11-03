@@ -809,25 +809,17 @@ const CHUNK_SIZE = 32;
  * Pre-renders an entire 32x32 chunk's ground layer (G0, G1, G2, G3, and base G4)
  * onto an OffscreenCanvas. This provides 60+ FPS high-performance rendering.
  */
-export interface GroundBisectFlags {
-  groundOnly?: boolean;
-  layers?: 'base' | 'base+families' | 'base+families+variants' | 'all';
-  noRoad?: boolean;
-  noFarm?: boolean;
-}
-
 export function renderChunkGroundBitmap(
   cx: number,
   cy: number,
   tiles: Array<{ tileX: number; tileY: number; terrainType: string }>,
   tileSize: number = 54,
-  getNeighborTerrain?: NeighborTerrainFn,
-  flags?: GroundBisectFlags
+  getNeighborTerrain?: NeighborTerrainFn
 ): HTMLCanvasElement | null {
   if (typeof document === 'undefined') return null;
 
   if (groundTextures.ready) {
-    const textured = renderChunkGroundBitmapTextured(cx, cy, tiles, tileSize, getNeighborTerrain, flags);
+    const textured = renderChunkGroundBitmapTextured(cx, cy, tiles, tileSize, getNeighborTerrain);
     if (textured) return textured;
   }
 
@@ -1250,8 +1242,7 @@ export function renderChunkGroundBitmapTextured(
   cy: number,
   tiles: Array<{ tileX: number; tileY: number; terrainType: string }>,
   tileSize: number = 54,
-  getNeighborTerrain?: NeighborTerrainFn,
-  flags?: GroundBisectFlags
+  getNeighborTerrain?: NeighborTerrainFn
 ): HTMLCanvasElement | null {
   if (typeof document === 'undefined') return null;
   const t0 = performance.now();
@@ -1351,8 +1342,6 @@ export function renderChunkGroundBitmapTextured(
 
   // Step 4: Render each family
   for (const F of sortedFamilies) {
-    if (flags?.layers === 'base' && F !== sortedFamilies[0]) continue;
-    if (flags?.noRoad && F === 'road_stone') continue;
     ctxT.clearRect(0, 0, canvasWidth, canvasHeight);
     ctxT.globalCompositeOperation = 'source-over';
 
@@ -1528,7 +1517,7 @@ function getRadialMaskCanvas(size: number): HTMLCanvasElement | null {
 }
 
     // 2. Blend secondary variants
-    if (isNonPeriodicFamily && variants.length > 1 && flags?.layers !== 'base+families') {
+    if (isNonPeriodicFamily && variants.length > 1 ) {
       // V18: Rotated overlapping blocks with radial alpha in pure world coordinates
       // Breaks autocorrelation periodicity (maxAutocorr <= 0.35) with zero chunk boundary seams
       const spanPx = 8 * tileSize; // 432px
@@ -1581,7 +1570,7 @@ function getRadialMaskCanvas(size: number): HTMLCanvasElement | null {
           }
         }
       }
-    } else if (variants.length > 1 && F !== 'road_stone' && flags?.layers !== 'base+families') {
+    } else if (variants.length > 1 && F !== 'road_stone' ) {
       const VM_CELLS = 16; // 16x16 sample points inside chunk (2 tiles per cell)
       const V_BORDER = 3;  // 3 cells padding outside chunk (6 tiles halo)
       const V_GRID_DIM = VM_CELLS + V_BORDER * 2; // 22x22 total mask dimensions
@@ -1672,7 +1661,7 @@ function getRadialMaskCanvas(size: number): HTMLCanvasElement | null {
     }
 
     // 2e: V11 Composite 20% detail overlay from FAMILY_detail.png (omit for non-periodic families which have custom strata)
-    const detailPattern = (!isNonPeriodicFamily && flags?.layers !== 'base+families') ? groundTextures.getDetailPattern(ctxT, F) : null;
+    const detailPattern = (!isNonPeriodicFamily ) ? groundTextures.getDetailPattern(ctxT, F) : null;
     if (detailPattern) {
       ctxT.save();
       ctxT.globalCompositeOperation = 'soft-light';
@@ -1996,9 +1985,9 @@ function compositeAzureKarst(
   ctx.restore();
 }
 
-    const allowComposites = (flags?.layers !== 'base+families' && flags?.layers !== 'base+families+variants');
+    const allowComposites = true;
     if (allowComposites) {
-      if (F === 'farmland' && !flags?.noFarm) {
+      if (F === 'farmland' ) {
         compositeFarmlandPaddy(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
       } else if (F === 'pond_lotus' || F === 'lake') {
         compositeLotusPond(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
@@ -2077,7 +2066,7 @@ function compositeAzureKarst(
     // 4h: Road edges blend smoothly into surrounding ground macro (Prompt V14 P1)
   }
 
-  const allowMacroOverlay = (flags?.layers !== 'base+families' && flags?.layers !== 'base+families+variants');
+  const allowMacroOverlay = true;
   // Step 5: Macro radial overlay (anti-repetition)
   const hashVal = (hash2d(cx * 7 + 3, cy * 13 + 5) >>> 0) / 0xffffffff;
   const alpha = Math.min(0.1, 0.05 + 0.05 * hashVal);
