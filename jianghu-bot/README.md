@@ -1,5 +1,13 @@
 # Jianghu World RPG System
 
+## Versi 20.0 — Rombak Sistem Peta: "Satu Pemukiman = Satu Bangunan Besar"
+- **52 Pemukiman Megah**: Setiap desa, dusun, kota, dan sekte di peta dunia 5000x5000 diwakili oleh tepat 1 bangunan/gerbang besar tanpa kekacauan rumah kecil di sekitarnya.
+- **Interior Pemukiman Tale of Immortal**: Masuk ke gerbang kota membuka panorama dengan fasilitas lengkap (Penginapan, Kedai, Pasar, Bengkel, Balai Sekte) dan panel modal Rumah Penduduk.
+- **Rumah Menyendiri & Reruntuhan Alam Liar**: 85 rumah pertapa/pemburu/nelayan dan 55 reruntuhan kuno tersebar di alam liar dengan jarak aman.
+- **Pembersihan Repositori**: Pemangkasan aset usang dan berkas review, menurunkan file ter-track dari 3.585 menjadi < 1.450 file.
+- **Zero Screenshot Policy**: Seluruh verifikasi dialihkan ke data deterministik, tes unit, dan peta terminal ASCII.
+
+
 Jianghu World adalah game RPG Web Xianxia/Wuxia mandiri dengan sistem kultivasi, ekonomi, profesi, item, pet, asset, eksplorasi, dan turnamen.
 
 ## Web-First Runtime (Required)

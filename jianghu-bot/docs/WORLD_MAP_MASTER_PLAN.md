@@ -930,3 +930,10 @@ Status eksekusi implementasi sistem peta dunia setelah overhaul menyeluruh:
 ---
 *Dokumen Master Plan diperbarui dengan hasil audit dan pengujian eksekusi resmi.*
 
+
+## ADDENDUM V20: REFORMA SISTEM PEMUKIMAN "SATU PEMUKIMAN = SATU BANGUNAN BESAR" (NOVEMBER 2026)
+1. **Model Spasial**: Seluruh 52 pemukiman kanonikal Tianyuan hanya berdiri sebagai satu marker sprite besar di area span. Baris atas (`spanWidth` × `spanHeight - 1`) adalah solid, dan baris terbawah adalah forecourt dengan tile entrance di tengah.
+2. **Zona Eksklusi Bersih**: Radius eksklusi sekeliling pemukiman bebas 100% dari objek buatan manusia liar (sumur, gubuk, kandang, tumpukan kayu).
+3. **Interior ToI**: Fasilitas pemukiman dikelola melalui SSOT `settlement-facilities-v20.json` dan ditampilkan di `SettlementPanoramaView.tsx`.
+4. **Rumah Menyendiri**: 85 rumah 1x1 tersebar di alam bebas (`standalone-homes-v20.json`) untuk profesi terpencil (pertapa, pemburu, dsb.).
+5. **Reruntuhan Kuno**: 55 reruntuhan (`ruins-v20.json`) memperkaya eksplorasi alam liar.

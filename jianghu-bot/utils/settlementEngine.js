@@ -24,18 +24,7 @@ let anchorsCache = null;
 
 function loadBlueprints() {
     if (blueprintsCache) return blueprintsCache;
-    try {
-        blueprintsCache = {
-            village: JSON.parse(fs.readFileSync(path.join(BLUEPRINTS_DIR, 'village_blueprint.json'), 'utf8')),
-            city: JSON.parse(fs.readFileSync(path.join(BLUEPRINTS_DIR, 'city_blueprint.json'), 'utf8')),
-            port: JSON.parse(fs.readFileSync(path.join(BLUEPRINTS_DIR, 'port_blueprint.json'), 'utf8')),
-            outpost: JSON.parse(fs.readFileSync(path.join(BLUEPRINTS_DIR, 'outpost_blueprint.json'), 'utf8')),
-            sect: JSON.parse(fs.readFileSync(path.join(BLUEPRINTS_DIR, 'sect_blueprint.json'), 'utf8'))
-        };
-    } catch (err) {
-        console.error('[SettlementEngine] Error loading blueprints:', err.message);
-        blueprintsCache = {};
-    }
+    blueprintsCache = {};
     return blueprintsCache;
 }
 
