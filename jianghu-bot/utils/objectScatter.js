@@ -26,6 +26,22 @@ const assetPlacementV10 = require('./assetPlacementV10');
 const { isInSettlementExclusion } = require('./settlementZones');
 const MANMADE_SET = new Set(require('../world-data/manmade-defids-v20.json'));
 
+const STANDALONE_HOMES = (() => {
+  try {
+    return require('../world-data/standalone-homes-v20.json');
+  } catch (e) {
+    return [];
+  }
+})();
+
+const RUINS_DATA = (() => {
+  try {
+    return require('../world-data/ruins-v20.json');
+  } catch (e) {
+    return [];
+  }
+})();
+
 function isManmadeDefId(defId) {
   if (!defId) return false;
   if (MANMADE_SET.has(defId)) return true;
@@ -1240,245 +1256,49 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
   // 2. V20: Outskirts structures around settlements removed (interior has all facilities)
 
-  // 3. Wilderness Huts Outside Villages & Companion Props (Prompt 4 SSOT)
-  const allAnchors = worldData.getAnchors();
-  const nearbyHutAnchors = allAnchors.filter(a =>
-    Math.abs(a.x - (startTileX + 16)) < 120 && Math.abs(a.y - (startTileY + 16)) < 120
+  // 3. V20 Authoritative Standalone Wilderness Homes & Ruins
+  const homesInChunk = STANDALONE_HOMES.filter(h =>
+    h.x >= startTileX && h.x <= endTileX &&
+    h.y >= startTileY && h.y <= endTileY
   );
-  const chunkSpacings = new Set();
-  const samplePoints = [
-    [startTileX + 16, startTileY + 16],
-    [startTileX, startTileY],
-    [endTileX, startTileY],
-    [startTileX, endTileY],
-    [endTileX, endTileY]
-  ];
-  for (const [sx, sy] of samplePoints) {
-    const r = getRegionAt(sx, sy);
-    const sp = HUT_GRID_SPACING[r.id];
-    if (sp) chunkSpacings.add(sp);
+
+  for (const home of homesInChunk) {
+    occupiedGrid.set(`${home.x},${home.y}`, home.id);
+    objects.push({
+      id: home.id,
+      defId: home.defId,
+      x: home.x,
+      y: home.y,
+      customLabel: home.houseName,
+      occupantName: home.occupantName,
+      profession: home.profession,
+      dialog: home.dialog,
+      collision: 'solid',
+      cw: 1,
+      ch: 1,
+      tags: ['standalone_home', 'shelter', home.profession]
+    });
   }
 
-  for (const S of chunkSpacings) {
-    const minCellX = Math.floor((startTileX - 3) / S);
-    const maxCellX = Math.floor((endTileX + 3) / S);
-    const minCellY = Math.floor((startTileY - 3) / S);
-    const maxCellY = Math.floor((endTileY + 3) / S);
+  const ruinsInChunk = RUINS_DATA.filter(r =>
+    r.x >= startTileX && r.x <= endTileX &&
+    r.y >= startTileY && r.y <= endTileY
+  );
 
-    for (let cy = minCellY; cy <= maxCellY; cy++) {
-      for (let cx = minCellX; cx <= maxCellX; cx++) {
-        const cellMinX = cx * S;
-        const cellMinY = cy * S;
-        const cellCenterX = cellMinX + Math.floor(S / 2);
-        const cellCenterY = cellMinY + Math.floor(S / 2);
-        const cellRegion = getRegionAt(cellCenterX, cellCenterY);
-
-        // Only process if this cell's primary region matches S
-        if (HUT_GRID_SPACING[cellRegion.id] !== S) continue;
-
-        const cellSeed = (worldSeed ^ (cx * 73856093) ^ (cy * 19349663) ^ (S * 83492791)) >>> 0;
-        const cellRand = createPRNG(cellSeed);
-
-        // Deterministic candidate search within cell (Prompt 4 SSOT: Up to 3 huts in fertile S=40, up to 2 in S=60/90)
-        const cellHuts = [];
-        const maxHutSlots = S === 40 ? 3 : 2;
-        const minHutDist = S === 40 ? 12 : 16;
-        for (let hutSlot = 0; hutSlot < maxHutSlots; hutSlot++) {
-          let winningHut = null;
-          for (const preferScenic of [true, false]) {
-            if (winningHut) break;
-            const searchRand = createPRNG((cellSeed + hutSlot * 31337 + (preferScenic ? 1013 : 2027)) >>> 0);
-            for (let attempt = 0; attempt < 32; attempt++) {
-              const candX = cellMinX + 2 + Math.floor(searchRand() * (S - 4));
-              const candY = cellMinY + 2 + Math.floor(searchRand() * (S - 4));
-
-              // If placing secondary/tertiary hut, ensure spacing Chebyshev >= minHutDist
-              if (cellHuts.length > 0) {
-                const tooClose = cellHuts.some(h => Math.max(Math.abs(candX - h.x), Math.abs(candY - h.y)) < minHutDist);
-                if (tooClose) continue;
-              }
-
-              const tile = getTileAt(candX, candY);
-              if (!tile) continue;
-              const t = tile.terrainType || '';
-              // Allow hermit huts & ruins on mountain/cliff/rock terrain
-              if (tile.isSolid && !t.includes('mountain') && !t.includes('cliff') && !t.includes('rock') && !t.includes('crag') && !t.includes('peak') && !t.includes('pass')) continue;
-              if (WATER_TERRAINS.has(t) || t.includes('road') || t.includes('pass') || t === 'settlement' || tile.isSettlementOrigin) continue;
-
-              // Anchor rejection (Chebyshev >= 8)
-              let nearAnchor = false;
-              for (const a of nearbyHutAnchors) {
-                if (Math.max(Math.abs(candX - a.x), Math.abs(candY - a.y)) < 8) {
-                  nearAnchor = true;
-                  break;
-                }
-              }
-              if (nearAnchor) continue;
-
-              // Road rejection (Chebyshev >= 3) - Fast Set lookup
-              let nearRoad = false;
-              for (let dy = -2; dy <= 2; dy++) {
-                for (let dx = -2; dx <= 2; dx++) {
-                  if (AUTHORED_ROAD_TILES.has(`${candX + dx},${candY + dy}`)) {
-                    nearRoad = true;
-                    break;
-                  }
-                }
-                if (nearRoad) break;
-              }
-              if (nearRoad || t.includes('road')) continue;
-
-              // Prefer scenic (Fast check: naturally scenic terrain or cardinal neighbors)
-              if (preferScenic) {
-                let isScenic = (WATER_TERRAINS.has(t) || t.includes('forest') || t === 'spirit_wood' || t.includes('mountain') || t.includes('cliff'));
-                if (!isScenic) {
-                  const SCENIC_CHECKS = [{ dx: 3, dy: 0 }, { dx: -3, dy: 0 }, { dx: 0, dy: 3 }, { dx: 0, dy: -3 }];
-                  for (let sci = 0; sci < 4; sci++) {
-                    const nt = getTileAt(candX + SCENIC_CHECKS[sci].dx, candY + SCENIC_CHECKS[sci].dy);
-                    if (nt) {
-                      const ntt = nt.terrainType || '';
-                      if (WATER_TERRAINS.has(ntt) || ntt.includes('road') || ntt.includes('forest') || ntt === 'spirit_wood' || ntt.includes('mountain')) {
-                        isScenic = true;
-                        break;
-                      }
-                    }
-                  }
-                }
-                if (!isScenic) continue;
-              }
-
-              winningHut = { x: candX, y: candY };
-              break;
-            }
-          }
-          if (winningHut) cellHuts.push(winningHut);
-          else if (hutSlot === 0) break;
-        }
-
-        for (let hi = 0; hi < cellHuts.length; hi++) {
-          const winningHut = cellHuts[hi];
-          const hutRand = createPRNG((cellSeed + hi * 47329) >>> 0);
-          const hx = winningHut.x;
-          const hy = winningHut.y;
-          const hutTile = getTileAt(hx, hy);
-          const effectiveDanger = Math.max(hutTile.dangerTier || 1, cellRegion.dangerTier || 1);
-          const isHighDanger = effectiveDanger >= 4;
-
-          // Proportions roll
-          const propRoll = hutRand();
-          let isAbandoned = false;
-          let enterable = false;
-          let structureTemplate = 'hut_6x5';
-
-          if (isHighDanger) {
-            if (propRoll < 0.35) {
-              isAbandoned = true;
-              enterable = true;
-              structureTemplate = 'hut_abandoned_6x5';
-            } else if (propRoll < 0.70) {
-              isAbandoned = false;
-              enterable = true;
-              structureTemplate = 'hut_6x5';
-            } else {
-              isAbandoned = false;
-              enterable = false;
-              structureTemplate = 'hut_6x5';
-            }
-          } else {
-            if (propRoll < 0.10) {
-              isAbandoned = true;
-              enterable = true;
-              structureTemplate = 'hut_abandoned_6x5';
-            } else if (propRoll < 0.45) {
-              isAbandoned = false;
-              enterable = true;
-              structureTemplate = 'hut_6x5';
-            } else {
-              isAbandoned = false;
-              enterable = false;
-              structureTemplate = 'hut_6x5';
-            }
-          }
-
-          const hutDefId = selectWildernessHutDef(cellRegion.id, hutTile.terrainType || '', isAbandoned, hutRand());
-          const hutName = HUT_LABELS[hutDefId] || (isAbandoned ? 'Gubuk Terbengkalai' : 'Pondok Singgah Musafir');
-          const hutCol = getCanonCollision(hutDefId, 1, 1);
-
-          // Place hut if inside this chunk
-          if (hx >= startTileX && hx <= endTileX && hy >= startTileY && hy <= endTileY) {
-            if (canPlaceFootprint(hx, hy, hutCol.w, hutCol.h, occupiedGrid, getTileAt, false, hutDefId, objects)) {
-              const objId = `wilderness_hut_${hx}_${hy}`;
-              markFootprintOccupied(hx, hy, hutCol.w, hutCol.h, occupiedGrid, objId, hutDefId);
-              objects.push({
-                id: objId,
-                defId: hutDefId,
-                x: hx,
-                y: hy,
-                collision: 'solid',
-                enterable,
-                isAbandoned,
-                structureTemplate,
-                customLabel: hutName,
-                tags: ['hut', 'wilderness_hut', 'shelter', isAbandoned ? 'abandoned' : (enterable ? 'enterable' : 'decorative'), cellRegion.id]
-              });
-            }
-          }
-
-          // Companion props (0..3)
-          const numProps = Math.floor(hutRand() * 4);
-          if (numProps > 0) {
-            const propPool = selectCompanionPropPool(hutDefId, isAbandoned);
-            const COMPANION_OFFSETS = [
-              { dx: -2, dy: -1 }, { dx: -2, dy: 0 }, { dx: -2, dy: 1 },
-              { dx: 2, dy: -1 }, { dx: 2, dy: 0 }, { dx: 2, dy: 1 },
-              { dx: -1, dy: 2 }, { dx: 0, dy: 2 }, { dx: 1, dy: 2 },
-              { dx: -1, dy: -2 }, { dx: 0, dy: -2 }, { dx: 1, dy: -2 }
-            ];
-
-            const shuffledOffsets = [...COMPANION_OFFSETS].sort((a, b) => {
-              const hA = ((a.dx * 37 + a.dy * 19) + cellSeed + hi * 17) % 100;
-              const hB = ((b.dx * 37 + b.dy * 19) + cellSeed + hi * 17) % 100;
-              return hA - hB;
-            });
-
-            let placedProps = 0;
-            for (const off of shuffledOffsets) {
-              if (placedProps >= numProps) break;
-              const px = hx + off.dx;
-              const py = hy + off.dy;
-
-              if (px < startTileX || px > endTileX || py < startTileY || py > endTileY) {
-                placedProps++;
-                continue;
-              }
-
-              const pTile = getTileAt(px, py);
-              if (!pTile || (pTile.isSolid && !pTile.terrainType.includes('mountain') && !pTile.terrainType.includes('cliff'))) continue;
-              const pt = pTile.terrainType || '';
-              const propDefId = propPool[(placedProps + Math.floor(hutRand() * propPool.length)) % propPool.length];
-
-              if (WATER_TERRAINS.has(pt) && propDefId !== 'prop_moored_rowboat') continue;
-              if (pt.includes('road') || pt.includes('pass') || pt === 'settlement' || pTile.isSettlementOrigin) continue;
-
-              const pCol = getCanonCollision(propDefId, 1, 1);
-              if (canPlaceFootprint(px, py, pCol.w, pCol.h, occupiedGrid, getTileAt, false, propDefId, objects)) {
-                const pObjId = `companion_prop_${px}_${py}`;
-                markFootprintOccupied(px, py, pCol.w, pCol.h, occupiedGrid, pObjId, propDefId);
-                objects.push({
-                  id: pObjId,
-                  defId: propDefId,
-                  x: px,
-                  y: py,
-                  collision: (propDefId === 'prop_extinguished_campfire' || propDefId === 'prop_vegetable_patch') ? 'none' : 'soft',
-                  tags: ['companion_prop', 'prop', cellRegion.id]
-                });
-                placedProps++;
-              }
-            }
-          }
-        }
-      }
-    }
+  for (const ruin of ruinsInChunk) {
+    occupiedGrid.set(`${ruin.x},${ruin.y}`, ruin.id);
+    objects.push({
+      id: ruin.id,
+      defId: ruin.defId,
+      x: ruin.x,
+      y: ruin.y,
+      customLabel: ruin.name,
+      kind: ruin.kind,
+      collision: 'solid',
+      cw: 1,
+      ch: 1,
+      tags: ['ruin', ruin.kind]
+    });
   }
 
   // 3.6 16x16 Quadrant Mini-Landmarks (Prompt V11 P5)

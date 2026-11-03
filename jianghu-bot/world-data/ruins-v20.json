@@ -1,0 +1,552 @@
+[
+  {
+    "id": "ruin_01",
+    "x": 3288,
+    "y": 2514,
+    "defId": "hut_abandoned_hermit_ruin",
+    "kind": "abandoned_hermitage",
+    "name": "Pertapaan Angin Runtuh",
+    "description": "Tempat bertapa seorang kultivator masa lalu, kini dipenuhi lumut dan akar tanaman menjalar.",
+    "regionSlug": "formation_barrens"
+  },
+  {
+    "id": "ruin_02",
+    "x": 1098,
+    "y": 1004,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Pondok Runtuh Berlumut",
+    "description": "Ditinggalkan bertahun-tahun lalu oleh penghuninya yang melarikan diri dari kekacauan.",
+    "regionSlug": "lava_spine"
+  },
+  {
+    "id": "ruin_03",
+    "x": 2757,
+    "y": 3393,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Sarang Halberd Retak",
+    "description": "Bilah-bilah senjata kuno yang telah kehilangan kilau spiritualnya dimakan zaman.",
+    "regionSlug": "azure_mountain_range"
+  },
+  {
+    "id": "ruin_04",
+    "x": 4047,
+    "y": 845,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Paviliun Prasasti Kuno Runtuh",
+    "description": "Sebuah prasasti batu tinggi dengan aksara kuno yang sebagian telah terkikis badai.",
+    "regionSlug": "mist_insect_valley"
+  },
+  {
+    "id": "ruin_05",
+    "x": 2562,
+    "y": 893,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Bekas Pondok Penebang Tua",
+    "description": "Pondok kayu yang dindingnya telah lapuk dimakan rayap dan cuaca.",
+    "regionSlug": "crimson_battlefield"
+  },
+  {
+    "id": "ruin_06",
+    "x": 787,
+    "y": 945,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Gubuk Lapuk Terbengkalai",
+    "description": "Pondok kayu yang dindingnya telah lapuk dimakan rayap dan cuaca.",
+    "regionSlug": "lava_spine"
+  },
+  {
+    "id": "ruin_07",
+    "x": 3931,
+    "y": 2335,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Prasasti Batu Retak",
+    "description": "Sisa pilar batu dari paviliun prasasti yang hancur saat perang sekte berabad-abad silam.",
+    "regionSlug": "formation_barrens"
+  },
+  {
+    "id": "ruin_08",
+    "x": 3615,
+    "y": 3256,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Prasasti Batu Retak",
+    "description": "Sebuah prasasti batu tinggi dengan aksara kuno yang sebagian telah terkikis badai.",
+    "regionSlug": "azure_mountain_range"
+  },
+  {
+    "id": "ruin_09",
+    "x": 3390,
+    "y": 3713,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Bekas Pondok Penebang Tua",
+    "description": "Pondok kayu yang dindingnya telah lapuk dimakan rayap dan cuaca.",
+    "regionSlug": "mirror_lake"
+  },
+  {
+    "id": "ruin_10",
+    "x": 2701,
+    "y": 4144,
+    "defId": "hut_abandoned_hermit_ruin",
+    "kind": "abandoned_hermitage",
+    "name": "Pertapaan Angin Runtuh",
+    "description": "Tempat bertapa seorang kultivator masa lalu, kini dipenuhi lumut dan akar tanaman menjalar.",
+    "regionSlug": "northern_desolate"
+  },
+  {
+    "id": "ruin_11",
+    "x": 850,
+    "y": 3417,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Gundukan Pedang Berkarat",
+    "description": "Sisa-sisa tombak dan pedang perang berkarat yang tertancap di atas tanah berbatu.",
+    "regionSlug": "western_sacred_desert"
+  },
+  {
+    "id": "ruin_12",
+    "x": 3659,
+    "y": 2231,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Gubuk Lapuk Terbengkalai",
+    "description": "Ditinggalkan bertahun-tahun lalu oleh penghuninya yang melarikan diri dari kekacauan.",
+    "regionSlug": "formation_barrens"
+  },
+  {
+    "id": "ruin_13",
+    "x": 3215,
+    "y": 1843,
+    "defId": "hut_abandoned_hermit_ruin",
+    "kind": "abandoned_hermitage",
+    "name": "Pondok Semedi Retak",
+    "description": "Meja batu tempat meditasi masih utuh, meski atap bangunannya telah lama ambruk.",
+    "regionSlug": "border_march"
+  },
+  {
+    "id": "ruin_14",
+    "x": 813,
+    "y": 2583,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Gundukan Pedang Berkarat",
+    "description": "Bilah-bilah senjata kuno yang telah kehilangan kilau spiritualnya dimakan zaman.",
+    "regionSlug": "western_sacred_desert"
+  },
+  {
+    "id": "ruin_15",
+    "x": 1713,
+    "y": 1688,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Bekas Pondok Penebang Tua",
+    "description": "Pondok kayu yang dindingnya telah lapuk dimakan rayap dan cuaca.",
+    "regionSlug": "southern_demon_domain"
+  },
+  {
+    "id": "ruin_16",
+    "x": 3069,
+    "y": 3197,
+    "defId": "hut_abandoned_hermit_ruin",
+    "kind": "abandoned_hermitage",
+    "name": "Reruntuhan Gua Daois",
+    "description": "Tempat bertapa seorang kultivator masa lalu, kini dipenuhi lumut dan akar tanaman menjalar.",
+    "regionSlug": "azure_mountain_range"
+  },
+  {
+    "id": "ruin_17",
+    "x": 1147,
+    "y": 1763,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Makam Senjata Patah",
+    "description": "Bilah-bilah senjata kuno yang telah kehilangan kilau spiritualnya dimakan zaman.",
+    "regionSlug": "western_sacred_desert"
+  },
+  {
+    "id": "ruin_18",
+    "x": 1505,
+    "y": 1564,
+    "defId": "hut_abandoned_hermit_ruin",
+    "kind": "abandoned_hermitage",
+    "name": "Pondok Semedi Retak",
+    "description": "Meja batu tempat meditasi masih utuh, meski atap bangunannya telah lama ambruk.",
+    "regionSlug": "western_sacred_desert"
+  },
+  {
+    "id": "ruin_19",
+    "x": 3252,
+    "y": 1838,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Tugu Peringatan Perang Kuno",
+    "description": "Sebuah prasasti batu tinggi dengan aksara kuno yang sebagian telah terkikis badai.",
+    "regionSlug": "border_march"
+  },
+  {
+    "id": "ruin_20",
+    "x": 2848,
+    "y": 2111,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Tugu Peringatan Perang Kuno",
+    "description": "Sisa pilar batu dari paviliun prasasti yang hancur saat perang sekte berabad-abad silam.",
+    "regionSlug": "border_march"
+  },
+  {
+    "id": "ruin_21",
+    "x": 3286,
+    "y": 2953,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Prasasti Batu Retak",
+    "description": "Sebuah prasasti batu tinggi dengan aksara kuno yang sebagian telah terkikis badai.",
+    "regionSlug": "sword_gorge"
+  },
+  {
+    "id": "ruin_22",
+    "x": 1038,
+    "y": 3812,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Gundukan Pedang Berkarat",
+    "description": "Medan tempur masa lalu di mana para prajurit fana dan kultivator gugur bersama.",
+    "regionSlug": "beast_prairies"
+  },
+  {
+    "id": "ruin_23",
+    "x": 3618,
+    "y": 2836,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Monumen Berlumut Abadi",
+    "description": "Sebuah prasasti batu tinggi dengan aksara kuno yang sebagian telah terkikis badai.",
+    "regionSlug": "ore_teeth_range"
+  },
+  {
+    "id": "ruin_24",
+    "x": 3590,
+    "y": 1918,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Sarang Halberd Retak",
+    "description": "Sisa-sisa tombak dan pedang perang berkarat yang tertancap di atas tanah berbatu.",
+    "regionSlug": "formation_barrens"
+  },
+  {
+    "id": "ruin_25",
+    "x": 1116,
+    "y": 1093,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Makam Senjata Patah",
+    "description": "Medan tempur masa lalu di mana para prajurit fana dan kultivator gugur bersama.",
+    "regionSlug": "lava_spine"
+  },
+  {
+    "id": "ruin_26",
+    "x": 2301,
+    "y": 1758,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Bekas Pondok Penebang Tua",
+    "description": "Sisa tiang kayu dan atap jerami yang hampir menyatu dengan tanah hutan.",
+    "regionSlug": "southern_demon_domain"
+  },
+  {
+    "id": "ruin_27",
+    "x": 1200,
+    "y": 1204,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Tugu Peringatan Perang Kuno",
+    "description": "Sisa pilar batu dari paviliun prasasti yang hancur saat perang sekte berabad-abad silam.",
+    "regionSlug": "lava_spine"
+  },
+  {
+    "id": "ruin_28",
+    "x": 1592,
+    "y": 3443,
+    "defId": "hut_abandoned_hermit_ruin",
+    "kind": "abandoned_hermitage",
+    "name": "Pertapaan Sunyi Terbengkalai",
+    "description": "Tercium sisa aroma dupa kuno yang samar terbawa hembusan angin gunung.",
+    "regionSlug": "azure_mountain_range"
+  },
+  {
+    "id": "ruin_29",
+    "x": 839,
+    "y": 3658,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Puing Medan Tempur Kuno",
+    "description": "Bilah-bilah senjata kuno yang telah kehilangan kilau spiritualnya dimakan zaman.",
+    "regionSlug": "beast_prairies"
+  },
+  {
+    "id": "ruin_30",
+    "x": 1733,
+    "y": 3941,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Gundukan Pedang Berkarat",
+    "description": "Medan tempur masa lalu di mana para prajurit fana dan kultivator gugur bersama.",
+    "regionSlug": "beast_prairies"
+  },
+  {
+    "id": "ruin_31",
+    "x": 2553,
+    "y": 1504,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Reruntuhan Atap Jerami",
+    "description": "Pondok kayu yang dindingnya telah lapuk dimakan rayap dan cuaca.",
+    "regionSlug": "southern_demon_domain"
+  },
+  {
+    "id": "ruin_32",
+    "x": 3590,
+    "y": 1545,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Bekas Pondok Penebang Tua",
+    "description": "Pondok kayu yang dindingnya telah lapuk dimakan rayap dan cuaca.",
+    "regionSlug": "spirit_wood_sea"
+  },
+  {
+    "id": "ruin_33",
+    "x": 1984,
+    "y": 3469,
+    "defId": "hut_abandoned_hermit_ruin",
+    "kind": "abandoned_hermitage",
+    "name": "Pertapaan Angin Runtuh",
+    "description": "Tempat bertapa seorang kultivator masa lalu, kini dipenuhi lumut dan akar tanaman menjalar.",
+    "regionSlug": "azure_mountain_range"
+  },
+  {
+    "id": "ruin_34",
+    "x": 2696,
+    "y": 4081,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Gubuk Lapuk Terbengkalai",
+    "description": "Ditinggalkan bertahun-tahun lalu oleh penghuninya yang melarikan diri dari kekacauan.",
+    "regionSlug": "thundersteppe"
+  },
+  {
+    "id": "ruin_35",
+    "x": 4089,
+    "y": 3989,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Puing Medan Tempur Kuno",
+    "description": "Sisa-sisa tombak dan pedang perang berkarat yang tertancap di atas tanah berbatu.",
+    "regionSlug": "eastern_sea"
+  },
+  {
+    "id": "ruin_36",
+    "x": 2980,
+    "y": 3381,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Gundukan Pedang Berkarat",
+    "description": "Bilah-bilah senjata kuno yang telah kehilangan kilau spiritualnya dimakan zaman.",
+    "regionSlug": "azure_mountain_range"
+  },
+  {
+    "id": "ruin_37",
+    "x": 1941,
+    "y": 1201,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Tugu Peringatan Perang Kuno",
+    "description": "Sebuah prasasti batu tinggi dengan aksara kuno yang sebagian telah terkikis badai.",
+    "regionSlug": "southern_demon_domain"
+  },
+  {
+    "id": "ruin_38",
+    "x": 2153,
+    "y": 2947,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Pondok Runtuh Berlumut",
+    "description": "Ditinggalkan bertahun-tahun lalu oleh penghuninya yang melarikan diri dari kekacauan.",
+    "regionSlug": "central_plains"
+  },
+  {
+    "id": "ruin_39",
+    "x": 2893,
+    "y": 3406,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Bekas Pondok Penebang Tua",
+    "description": "Ditinggalkan bertahun-tahun lalu oleh penghuninya yang melarikan diri dari kekacauan.",
+    "regionSlug": "azure_mountain_range"
+  },
+  {
+    "id": "ruin_40",
+    "x": 3261,
+    "y": 3919,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Reruntuhan Atap Jerami",
+    "description": "Pondok kayu yang dindingnya telah lapuk dimakan rayap dan cuaca.",
+    "regionSlug": "mirror_lake"
+  },
+  {
+    "id": "ruin_41",
+    "x": 2849,
+    "y": 4100,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Gubuk Lapuk Terbengkalai",
+    "description": "Ditinggalkan bertahun-tahun lalu oleh penghuninya yang melarikan diri dari kekacauan.",
+    "regionSlug": "northern_desolate"
+  },
+  {
+    "id": "ruin_42",
+    "x": 2286,
+    "y": 3218,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Tugu Peringatan Perang Kuno",
+    "description": "Sebuah prasasti batu tinggi dengan aksara kuno yang sebagian telah terkikis badai.",
+    "regionSlug": "azure_mountain_range"
+  },
+  {
+    "id": "ruin_43",
+    "x": 3561,
+    "y": 2933,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Monumen Berlumut Abadi",
+    "description": "Aksara kaligrafi pada batu ini memancarkan residu Qi pedang yang samar namun tajam.",
+    "regionSlug": "ore_teeth_range"
+  },
+  {
+    "id": "ruin_44",
+    "x": 2608,
+    "y": 3743,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Reruntuhan Atap Jerami",
+    "description": "Ditinggalkan bertahun-tahun lalu oleh penghuninya yang melarikan diri dari kekacauan.",
+    "regionSlug": "northern_desolate"
+  },
+  {
+    "id": "ruin_45",
+    "x": 1166,
+    "y": 3218,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Gundukan Pedang Berkarat",
+    "description": "Medan tempur masa lalu di mana para prajurit fana dan kultivator gugur bersama.",
+    "regionSlug": "western_sacred_desert"
+  },
+  {
+    "id": "ruin_46",
+    "x": 3809,
+    "y": 1695,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Prasasti Batu Retak",
+    "description": "Sebuah prasasti batu tinggi dengan aksara kuno yang sebagian telah terkikis badai.",
+    "regionSlug": "spirit_wood_sea"
+  },
+  {
+    "id": "ruin_47",
+    "x": 3433,
+    "y": 3889,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Gubuk Lapuk Terbengkalai",
+    "description": "Pondok kayu yang dindingnya telah lapuk dimakan rayap dan cuaca.",
+    "regionSlug": "mirror_lake"
+  },
+  {
+    "id": "ruin_48",
+    "x": 2362,
+    "y": 3509,
+    "defId": "building_wayside_stone_stele_pavilion_ruin",
+    "kind": "stone_stele_ruin",
+    "name": "Paviliun Prasasti Kuno Runtuh",
+    "description": "Sisa pilar batu dari paviliun prasasti yang hancur saat perang sekte berabad-abad silam.",
+    "regionSlug": "azure_mountain_range"
+  },
+  {
+    "id": "ruin_49",
+    "x": 3754,
+    "y": 4048,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Makam Senjata Patah",
+    "description": "Bilah-bilah senjata kuno yang telah kehilangan kilau spiritualnya dimakan zaman.",
+    "regionSlug": "mirror_lake"
+  },
+  {
+    "id": "ruin_50",
+    "x": 2431,
+    "y": 1038,
+    "defId": "hut_abandoned_hermit_ruin",
+    "kind": "abandoned_hermitage",
+    "name": "Reruntuhan Gua Daois",
+    "description": "Meja batu tempat meditasi masih utuh, meski atap bangunannya telah lama ambruk.",
+    "regionSlug": "venom_mire"
+  },
+  {
+    "id": "ruin_51",
+    "x": 3016,
+    "y": 3642,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Bekas Pondok Penebang Tua",
+    "description": "Sisa tiang kayu dan atap jerami yang hampir menyatu dengan tanah hutan.",
+    "regionSlug": "mirror_lake"
+  },
+  {
+    "id": "ruin_52",
+    "x": 2930,
+    "y": 1751,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Gubuk Lapuk Terbengkalai",
+    "description": "Sisa tiang kayu dan atap jerami yang hampir menyatu dengan tanah hutan.",
+    "regionSlug": "southern_demon_domain"
+  },
+  {
+    "id": "ruin_53",
+    "x": 1511,
+    "y": 3138,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Reruntuhan Atap Jerami",
+    "description": "Pondok kayu yang dindingnya telah lapuk dimakan rayap dan cuaca.",
+    "regionSlug": "azure_mountain_range"
+  },
+  {
+    "id": "ruin_54",
+    "x": 1510,
+    "y": 1966,
+    "defId": "hut_abandoned_thatched_ruin",
+    "kind": "collapsed_cottage",
+    "name": "Bekas Pondok Penebang Tua",
+    "description": "Sisa tiang kayu dan atap jerami yang hampir menyatu dengan tanah hutan.",
+    "regionSlug": "border_march"
+  },
+  {
+    "id": "ruin_55",
+    "x": 3085,
+    "y": 1036,
+    "defId": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "kind": "sword_grave_remnant",
+    "name": "Gundukan Pedang Berkarat",
+    "description": "Bilah-bilah senjata kuno yang telah kehilangan kilau spiritualnya dimakan zaman.",
+    "regionSlug": "venom_mire"
+  }
+]
