@@ -165,6 +165,17 @@ function getStaticChunk(cx, cy, version = WORLD_VERSION) {
         if (tile.chineseName) special.chineseName = tile.chineseName;
         if (tile.label) special.label = tile.label;
       }
+      if (tile.isSettlementEntrance) {
+        special.isSettlementEntrance = true;
+        if (tile.settlementName) special.settlementName = tile.settlementName;
+        if (tile.settlementData) {
+          special.settlementData = {
+            id: tile.settlementData.id,
+            name: tile.settlementData.name,
+            tier: tile.settlementData.tier
+          };
+        }
+      }
       if (autotileFrame) {
         special.autotileBitmask = autotileBitmask;
         special.autotileFrame = autotileFrame;
@@ -324,6 +335,8 @@ function unpackChunkTiles(chunk) {
         isSettlementOrigin: special.isSettlementOrigin !== undefined ? special.isSettlementOrigin : baseTile.isSettlementOrigin,
         settlementName: special.settlementName !== undefined ? special.settlementName : baseTile.settlementName,
         chineseName: special.chineseName !== undefined ? special.chineseName : baseTile.chineseName,
+        isSettlementEntrance: special.isSettlementEntrance !== undefined ? special.isSettlementEntrance : baseTile.isSettlementEntrance,
+        settlementData: special.settlementData !== undefined ? special.settlementData : baseTile.settlementData,
         autotileBitmask: special.autotileBitmask !== undefined ? special.autotileBitmask : baseTile.autotileBitmask,
         autotileFrame: special.autotileFrame !== undefined ? special.autotileFrame : baseTile.autotileFrame,
         objects: objectsOnTile

@@ -3,6 +3,20 @@ const path = require('path');
 
 const ANCHORS_PATH = path.join(__dirname, '../world-data/anchors.json');
 const BLUEPRINTS_DIR = path.join(__dirname, '../world-data/settlements');
+const FACILITIES_V20_PATH = path.join(__dirname, '../world-data/settlement-facilities-v20.json');
+
+let facilitiesV20Cache = null;
+function loadFacilitiesV20() {
+    if (facilitiesV20Cache) return facilitiesV20Cache;
+    try {
+        if (fs.existsSync(FACILITIES_V20_PATH)) {
+            facilitiesV20Cache = JSON.parse(fs.readFileSync(FACILITIES_V20_PATH, 'utf8'));
+        }
+    } catch (err) {
+        console.error('[SettlementEngine] Error loading settlement-facilities-v20.json:', err.message);
+    }
+    return facilitiesV20Cache;
+}
 
 // Load blueprints cache
 let blueprintsCache = null;
@@ -345,8 +359,8 @@ function getSettlementPanoramaData(settlementName, player = null, dbNpcs = []) {
         {
             type: 'city_gate',
             label: `🏮 Gerbang ${anchor.name} (Keluar ke Peta Dunia)`,
-            targetTile: { x: anchor.x, y: anchor.y },
-            description: `Melangkah keluar melintasi gerbang utama pemukiman menuju koordinat [${anchor.x}, ${anchor.y}] di peta alam liar.`
+            targetTile: (anchor.v20 && anchor.v20.entrance) ? { x: anchor.v20.entrance.x, y: anchor.v20.entrance.y } : { x: anchor.x, y: anchor.y },
+            description: `Melangkah keluar melintasi gerbang utama pemukiman menuju koordinat [${(anchor.v20 && anchor.v20.entrance) ? anchor.v20.entrance.x : anchor.x}, ${(anchor.v20 && anchor.v20.entrance) ? anchor.v20.entrance.y : anchor.y}] di peta alam liar.`
         }
     ];
 

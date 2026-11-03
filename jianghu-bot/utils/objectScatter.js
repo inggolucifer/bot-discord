@@ -23,6 +23,27 @@ const scaleCanon = require('../world-data/scale-canon.json');
 const frameSubstitutions = require('../world-data/frame-substitutions-v9.json');
 const GC = require('./gridContract');
 const assetPlacementV10 = require('./assetPlacementV10');
+const { isInSettlementExclusion } = require('./settlementZones');
+const MANMADE_SET = new Set(require('../world-data/manmade-defids-v20.json'));
+
+function isManmadeDefId(defId) {
+  if (!defId) return false;
+  if (MANMADE_SET.has(defId)) return true;
+  const d = defId.toLowerCase();
+  return d.startsWith('building_') ||
+         d.startsWith('house_') ||
+         d.startsWith('hut_') ||
+         d.startsWith('prop_') ||
+         d.startsWith('craft_') ||
+         d.startsWith('shop_') ||
+         d.startsWith('furn_') ||
+         d.startsWith('decor_') ||
+         d.startsWith('market_') ||
+         d.startsWith('structure_') ||
+         d.startsWith('facility_') ||
+         d.startsWith('fence_') ||
+         d.startsWith('wall_');
+}
 const barrierGenerator = require('./barrierGenerator');
 
 // Regional Palettes & Themes SSOT (Prompt J1)
@@ -790,16 +811,38 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
   objects.familyCounts = new Map();
   objects.defCounts = new Map();
   const origPush = objects.push.bind(objects);
+  const ambientNaturePerAnchor = new Map();
   objects.push = function(...items) {
+    const filtered = [];
     for (let i = 0; i < items.length; i++) {
       const it = items[i];
-      if (it && it.defId) {
-        const fam = getAssetFamily(it.defId);
-        objects.familyCounts.set(fam, (objects.familyCounts.get(fam) || 0) + 1);
-        objects.defCounts.set(it.defId, (objects.defCounts.get(it.defId) || 0) + 1);
+      if (!it || !it.defId) continue;
+      
+      // V20: Settlement marker is always allowed
+      if (it.tags && it.tags.includes('settlement_marker')) {
+        filtered.push(it);
+      } else {
+        // Check settlement exclusion zone
+        const ex = isInSettlementExclusion(it.x, it.y);
+        if (ex.inZone) {
+          if (isManmadeDefId(it.defId)) {
+            // Strictly prohibit manmade objects in exclusion zone
+            continue;
+          }
+          // Ambient nature props capped at 12 per anchor
+          const aId = ex.anchor.id;
+          const curr = ambientNaturePerAnchor.get(aId) || 0;
+          if (curr >= 12) continue;
+          ambientNaturePerAnchor.set(aId, curr + 1);
+        }
+        filtered.push(it);
       }
+
+      const fam = getAssetFamily(it.defId);
+      objects.familyCounts.set(fam, (objects.familyCounts.get(fam) || 0) + 1);
+      objects.defCounts.set(it.defId, (objects.defCounts.get(it.defId) || 0) + 1);
     }
-    return origPush(...items);
+    return origPush(...filtered);
   };
   const occupiedGrid = new Map();
   const chunkDefCounts = new Map();
@@ -1055,59 +1098,39 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
   }
   const maxObjectsBudget = Math.floor(baseMin + densityNoise * baseVar);
 
-  // 1. Set-pieces from anchors & 29 Regional Landmarks
+  // 1. V20 Single Large Settlement Marker per Anchor
   const anchorsInChunk = worldData.getAnchors().filter(a =>
     a.x >= startTileX && a.x <= endTileX &&
     a.y >= startTileY && a.y <= endTileY
   );
-  const isSettlementChunk = anchorsInChunk.some(a => ['village', 'hamlet', 'city', 'capital_city', 'sect', 'port'].includes(a.type));
+  const isSettlementChunk = anchorsInChunk.some(a => ['village', 'hamlet', 'town', 'city', 'major_city', 'capital_city', 'sect', 'port', 'outpost'].includes(a.type));
 
   for (const a of anchorsInChunk) {
-    const region = getRegionAt(a.x, a.y);
-    const landmarkBinding = assetBindings.landmarks[region.id];
+    const markerDefId = (a.v20 && a.v20.markerDefId) || 'settlement_village_default';
+    const fw = a.spanWidth || 2;
+    const fh = a.spanHeight || 2;
+    const objId = `marker_${a.id}`;
 
-    let structureDef = { defId: 'building_village_thatched_cottage', cw: 2, ch: 2, collision: 'solid' };
-
-    if (a.id === 'xitong_city' || a.name.toLowerCase().includes('xitong')) {
-      structureDef = { defId: 'xitong_city_landmark', cw: 4, ch: 3, collision: 'solid' };
-    } else if (a.type === 'sect') {
-      structureDef = { defId: 'building_sect_library', cw: 3, ch: 2, collision: 'solid' };
-    } else if (a.type === 'capital_city' || a.type === 'major_city' || a.type === 'city') {
-      structureDef = { defId: 'building_spirit_pagoda', cw: 3, ch: 3, collision: 'solid' };
-    } else if (a.name.toLowerCase().includes('dermaga') || a.name.toLowerCase().includes('dock') || a.name.toLowerCase().includes('port') || a.type === 'port') {
-      structureDef = { defId: 'building_dock_warehouse', cw: 3, ch: 2, collision: 'solid' };
-    } else if (a.type === 'village' || a.type === 'hamlet') {
-      structureDef = { defId: 'building_village_thatched_cottage', cw: 2, ch: 2, collision: 'solid' };
-    } else if (a.type === 'outpost') {
-      structureDef = { defId: 'building_stone_torii_v1', cw: 2, ch: 2, collision: 'solid' };
-    } else if (landmarkBinding && (a.type === 'landmark' || a.type === 'focal')) {
-      structureDef = {
-        defId: landmarkBinding.defId,
-        cw: landmarkBinding.cw || 3,
-        ch: landmarkBinding.ch || 3,
-        collision: landmarkBinding.collision || 'solid'
-      };
+    // Mark span tiles occupied in occupiedGrid to protect building footprint and forecourt
+    for (let dy = 0; dy < fh; dy++) {
+      for (let dx = 0; dx < fw; dx++) {
+        occupiedGrid.set(`${a.x + dx},${a.y + dy}`, objId);
+      }
     }
 
-    const g = GC.getGrid(structureDef.defId);
-    const fw = g ? g.fw : (structureDef.cw || 2);
-    const fh = g ? g.fh : (structureDef.ch || 2);
-    const x0 = a.x - Math.floor(fw / 2);
-    const y0 = a.y - fh;
-
-    if (canPlaceFootprint(x0, y0, fw, fh, occupiedGrid, getTileAt, true, structureDef.defId, objects, true)) {
-      const objId = `anchor_${a.id}`;
-      markFootprintOccupied(x0, y0, fw, fh, occupiedGrid, objId, structureDef.defId, true);
-      objects.push({
-        id: objId,
-        defId: structureDef.defId,
-        x: x0,
-        y: y0,
-        customLabel: a.name,
-        collision: structureDef.collision,
-        tags: ['setpiece', a.type, region.id]
-      });
-    }
+    objects.push({
+      id: objId,
+      defId: markerDefId,
+      x: a.x,
+      y: a.y,
+      customLabel: a.name,
+      collision: 'solid',
+      spanWidth: fw,
+      spanHeight: fh,
+      cw: fw,
+      ch: Math.max(1, fh - 1),
+      tags: ['settlement_marker', a.type, a.id]
+    });
   }
 
   // 1b. Regional Landmark Placement at Focal Origin (ensures all 29 regions have their grand setpiece)
@@ -1215,41 +1238,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
     }
   }
 
-  // 2. Settlement Density Rings: Outskirts structures around nearby anchors (radius <= 8 tiles)
-  const nearbyAnchors = worldData.getAnchors().filter(a =>
-    a.x >= (startTileX - 8) && a.x <= (endTileX + 8) &&
-    a.y >= (startTileY - 8) && a.y <= (endTileY + 8)
-  );
-
-  if (nearbyAnchors.length > 0) {
-    const outskirts = assetBindings.settlementObjects.outskirts;
-    for (const a of nearbyAnchors) {
-      const ringCount = Math.floor(rand() * 3) + 2; // 2..4 outskirts objects per anchor
-      for (let i = 0; i < ringCount; i++) {
-        if (objects.length - authoredCount >= maxObjectsBudget) break;
-        const angle = rand() * Math.PI * 2;
-        const dist = 3 + rand() * 4; // dist 3..7 tiles from anchor center
-        const ox = Math.round(a.x + Math.cos(angle) * dist);
-        const oy = Math.round(a.y + Math.sin(angle) * dist);
-
-        if (ox >= startTileX && ox <= endTileX && oy >= startTileY && oy <= endTileY) {
-          const itemDef = outskirts[Math.floor(rand() * outskirts.length)];
-          if (canPlaceFootprint(ox, oy, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
-            const objId = `outskirt_${ox}_${oy}`;
-            markFootprintOccupied(ox, oy, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
-            objects.push({
-              id: objId,
-              defId: itemDef.defId,
-              x: ox,
-              y: oy,
-              collision: itemDef.collision,
-              tags: ['settlement_outskirts']
-            });
-          }
-        }
-      }
-    }
-  }
+  // 2. V20: Outskirts structures around settlements removed (interior has all facilities)
 
   // 3. Wilderness Huts Outside Villages & Companion Props (Prompt 4 SSOT)
   const allAnchors = worldData.getAnchors();

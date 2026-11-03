@@ -77,6 +77,7 @@ const pEngine = require('../../utils/proceduralWorldEngine');
 const PropertyStructure = require('../../models/PropertyStructure');
 const { generateDefaultEstateLayout, decompressLayoutRLE, TILE_METADATA } = require('../../utils/propertyManager');
 const { setPlayerAuthoritativePosition } = require('../../services/movementService');
+const settlementZones = require('../../utils/settlementZones');
 const { normalizeRegionSlug, getTerritoryInfo } = require('../../utils/worldRegionEngine');
 const chunkStreamingEngine = require('../../utils/chunkStreamingEngine');
 
@@ -2435,6 +2436,7 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             );
         }
 
+        const anchorAtEntrance = settlementZones.findAnchorByEntrance(currentX, currentY);
         const responsePayload = {
             success: true,
             stepsTaken,
@@ -2447,7 +2449,13 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             stoppedEarly,
             stopReason,
             encounter: encounterResult,
-            exploredChunks: player.exploredChunks || []
+            exploredChunks: player.exploredChunks || [],
+            settlementPrompt: anchorAtEntrance ? {
+                id: anchorAtEntrance.id,
+                name: anchorAtEntrance.name,
+                tier: anchorAtEntrance.tier || 1,
+                regionSlug: anchorAtEntrance.region || anchorAtEntrance.regionSlug || 'central_plains'
+            } : null
         };
 
         if (effectiveReqId) {
