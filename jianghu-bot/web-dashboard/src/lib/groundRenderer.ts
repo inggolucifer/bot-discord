@@ -2144,3 +2144,118 @@ function compositeAzureKarst(
 
   return canvas;
 }
+
+/**
+ * V21 F1: BAKED CHUNK LOADER & LRU CACHE (src/lib/groundRenderer.ts)
+ */
+export interface BakedChunkCacheEntry {
+  cx: number;
+  cy: number;
+  tier: number;
+  bitmap: ImageBitmap;
+  lastAccess: number;
+}
+
+const BAKED_LRU_MAX = 64;
+const bakedChunkCache = new Map<string, BakedChunkCacheEntry>();
+const bakedChunkLoading = new Set<string>();
+const bakedChunkFailed = new Set<string>();
+
+export function getBakedChunk(
+  cx: number,
+  cy: number,
+  tier: number = 0,
+  cameraChunkX?: number,
+  cameraChunkY?: number,
+  onLoaded?: () => void
+): ImageBitmap | null {
+  // Fallback flag per Rule 6
+  if (process.env.NEXT_PUBLIC_LIGHT_WORLD === "0") {
+    return null;
+  }
+  if (typeof window === "undefined" || typeof createImageBitmap !== "function") {
+    return null;
+  }
+
+  const key = `${tier}:${cx}:${cy}`;
+  const cached = bakedChunkCache.get(key);
+  if (cached) {
+    cached.lastAccess = performance.now();
+    return cached.bitmap;
+  }
+
+  if (bakedChunkFailed.has(key)) {
+    return null;
+  }
+
+  if (!bakedChunkLoading.has(key)) {
+    bakedChunkLoading.add(key);
+    const url = `/baked/z${tier}/${cx}_${cy}.webp`;
+
+    fetch(url)
+      .then(async (res) => {
+        bakedChunkLoading.delete(key);
+        if (!res.ok) {
+          bakedChunkFailed.add(key);
+          return;
+        }
+        const blob = await res.blob();
+        const bitmap = await createImageBitmap(blob);
+
+        // LRU eviction: max 64 entries, evict farthest from camera
+        if (bakedChunkCache.size >= BAKED_LRU_MAX) {
+          let farthestKey: string | null = null;
+          let maxDistSq = -1;
+          const camX = cameraChunkX ?? cx;
+          const camY = cameraChunkY ?? cy;
+
+          for (const [k, entry] of bakedChunkCache.entries()) {
+            const dx = entry.cx - camX;
+            const dy = entry.cy - camY;
+            const distSq = dx * dx + dy * dy;
+            if (distSq > maxDistSq) {
+              maxDistSq = distSq;
+              farthestKey = k;
+            }
+          }
+
+          if (farthestKey) {
+            const evicted = bakedChunkCache.get(farthestKey);
+            if (evicted && evicted.bitmap && typeof evicted.bitmap.close === "function") {
+              try { evicted.bitmap.close(); } catch (_) {}
+            }
+            bakedChunkCache.delete(farthestKey);
+          }
+        }
+
+        bakedChunkCache.set(key, {
+          cx,
+          cy,
+          tier,
+          bitmap,
+          lastAccess: performance.now()
+        });
+
+        if (onLoaded) {
+          onLoaded();
+        }
+      })
+      .catch(() => {
+        bakedChunkLoading.delete(key);
+        bakedChunkFailed.add(key);
+      });
+  }
+
+  return null;
+}
+
+export function clearBakedChunkCache(): void {
+  for (const entry of bakedChunkCache.values()) {
+    if (entry.bitmap && typeof entry.bitmap.close === "function") {
+      try { entry.bitmap.close(); } catch (_) {}
+    }
+  }
+  bakedChunkCache.clear();
+  bakedChunkLoading.clear();
+  bakedChunkFailed.clear();
+}

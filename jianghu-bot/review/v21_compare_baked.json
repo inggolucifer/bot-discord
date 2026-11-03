@@ -1,0 +1,113 @@
+{
+  "seed": 1618,
+  "sampleCount": 12,
+  "pixelsPerSample": 2985984,
+  "thresholds": {
+    "maxAvgDeltaRGB": 1,
+    "maxPctGt12": 0.2
+  },
+  "metrics": {
+    "overallAvgDeltaRGB": 0.7585,
+    "overallPctGt12": 0.0109,
+    "status": "PASS"
+  },
+  "samples": [
+    {
+      "sample": 1,
+      "cx": 113,
+      "cy": 14,
+      "avgDeltaRGB": 0.7502,
+      "pctGt12": 0.0118,
+      "status": "PASS"
+    },
+    {
+      "sample": 2,
+      "cx": 91,
+      "cy": 77,
+      "avgDeltaRGB": 0.7769,
+      "pctGt12": 0.0135,
+      "status": "PASS"
+    },
+    {
+      "sample": 3,
+      "cx": 97,
+      "cy": 60,
+      "avgDeltaRGB": 0.7533,
+      "pctGt12": 0.0106,
+      "status": "PASS"
+    },
+    {
+      "sample": 4,
+      "cx": 101,
+      "cy": 127,
+      "avgDeltaRGB": 0.7467,
+      "pctGt12": 0.0093,
+      "status": "PASS"
+    },
+    {
+      "sample": 5,
+      "cx": 83,
+      "cy": 74,
+      "avgDeltaRGB": 0.7574,
+      "pctGt12": 0.0112,
+      "status": "PASS"
+    },
+    {
+      "sample": 6,
+      "cx": 120,
+      "cy": 101,
+      "avgDeltaRGB": 0.7595,
+      "pctGt12": 0.0111,
+      "status": "PASS"
+    },
+    {
+      "sample": 7,
+      "cx": 31,
+      "cy": 121,
+      "avgDeltaRGB": 0.7725,
+      "pctGt12": 0.0111,
+      "status": "PASS"
+    },
+    {
+      "sample": 8,
+      "cx": 62,
+      "cy": 88,
+      "avgDeltaRGB": 0.7627,
+      "pctGt12": 0.0087,
+      "status": "PASS"
+    },
+    {
+      "sample": 9,
+      "cx": 71,
+      "cy": 118,
+      "avgDeltaRGB": 0.7581,
+      "pctGt12": 0.0109,
+      "status": "PASS"
+    },
+    {
+      "sample": 10,
+      "cx": 69,
+      "cy": 64,
+      "avgDeltaRGB": 0.7594,
+      "pctGt12": 0.0099,
+      "status": "PASS"
+    },
+    {
+      "sample": 11,
+      "cx": 94,
+      "cy": 33,
+      "avgDeltaRGB": 0.7572,
+      "pctGt12": 0.013,
+      "status": "PASS"
+    },
+    {
+      "sample": 12,
+      "cx": 110,
+      "cy": 42,
+      "avgDeltaRGB": 0.7479,
+      "pctGt12": 0.0102,
+      "status": "PASS"
+    }
+  ],
+  "timestamp": "2026-11-03T14:06:30.000Z"
+}

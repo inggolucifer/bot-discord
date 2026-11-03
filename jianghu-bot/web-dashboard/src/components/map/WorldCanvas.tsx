@@ -698,7 +698,8 @@ export default function WorldCanvas({
           const csy = toScreenY(cy * CHUNK_SIZE);
           const csw = CHUNK_SIZE * currentTileSize;
           const csh = CHUNK_SIZE * currentTileSize;
-          const bitmap = chunkManager.getChunkBitmap(cx, cy, 54);
+          const lodTier = camera.zoom >= 0.7 ? 0 : (camera.zoom >= 0.35 ? 1 : 2);
+          const bitmap = chunkManager.getChunkBitmap(cx, cy, 54, lodTier);
           if (bitmap) {
             ctx.drawImage(bitmap, csx, csy, csw, csh);
             renderedChunkKeys.add(`${cx}:${cy}`);

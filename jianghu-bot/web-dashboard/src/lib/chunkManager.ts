@@ -10,7 +10,7 @@
 
 import { TileData, MapObjectInstance } from '@/types/world';
 import api from '@/lib/api';
-import { renderChunkGroundBitmap, renderChunkGridBitmap } from '@/lib/groundRenderer';
+import { renderChunkGroundBitmap, renderChunkGridBitmap, getBakedChunk } from '@/lib/groundRenderer';
 import { perfProbe } from '@/lib/perfProbe';
 export const GROUND_RENDER_VERSION = 'v18';
 import { groundTextures } from '@/lib/groundTextures';
@@ -603,8 +603,25 @@ export class ChunkManager {
   /**
    * Pre-renders and caches 32x32 chunk static terrain background onto an OffscreenCanvas
    */
-  public getChunkBitmap(cx: number, cy: number, tileSize = 54): HTMLCanvasElement | ImageBitmap | null {
+  public getChunkBitmap(cx: number, cy: number, tileSize = 54, tier = 0): HTMLCanvasElement | ImageBitmap | null {
     if (typeof document === 'undefined') return null;
+
+    // V21 F1: Try baked chunk bitmap first (LOD tier according to current zoom)
+    if (process.env.NEXT_PUBLIC_LIGHT_WORLD !== '0') {
+      const baked = getBakedChunk(
+        cx,
+        cy,
+        tier,
+        this.currentCenter?.cx,
+        this.currentCenter?.cy,
+        () => {
+          this.notifySubscribers();
+        }
+      );
+      if (baked) {
+        return baked;
+      }
+    }
 
     const chunkKey = `${cx}:${cy}`;
     const bitmapKey = `${GROUND_RENDER_VERSION}:${cx}:${cy}:${tileSize}`;

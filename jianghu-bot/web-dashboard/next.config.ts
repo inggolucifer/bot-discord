@@ -12,6 +12,19 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname, '../../'),
   allowedDevOrigins: ['127.0.0.1', 'localhost'],
   turbopack: {},
+  async headers() {
+    return [
+      {
+        source: '/baked/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default withPWA(nextConfig);
