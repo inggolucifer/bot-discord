@@ -3,6 +3,7 @@ const gridZoneService = require('./gridZoneService');
 const { getCurrentStamina, getMaxStamina } = require('../utils/stamina');
 const { calculateEnergyCost } = require('../utils/explorationMath');
 const { processGridStepConditions } = require('../utils/conditionEngine');
+const settlementZones = require('../utils/settlementZones');
 
 const DIRECTION_MAP = {
   // Indonesian aliases
@@ -266,6 +267,18 @@ class MovementService {
       });
     }
 
+    // V20: Check if landing on a settlement entrance
+    const anchorAtEntrance = settlementZones.findAnchorByEntrance(targetX, targetY);
+    let settlementPrompt = null;
+    if (anchorAtEntrance) {
+      settlementPrompt = {
+        id: anchorAtEntrance.id,
+        name: anchorAtEntrance.name,
+        tier: anchorAtEntrance.tier || 1,
+        regionSlug: anchorAtEntrance.region || anchorAtEntrance.regionSlug || 'central_plains'
+      };
+    }
+
     return {
       ok: true,
       direction: dirInfo.label,
@@ -275,6 +288,7 @@ class MovementService {
       currentStamina: newStamina,
       maxStamina,
       environmentalInhalation,
+      settlementPrompt,
       tileInfo: passCheck.tile ? {
         type: passCheck.tile.tileType,
         terrain: passCheck.tile.terrainType,
@@ -366,6 +380,11 @@ async function setPlayerAuthoritativePosition(player, coords = {}, options = {})
   // 5. Bersihkan travel status jika diminta
   if (options.clearTravelStatus && player.travel) {
     player.travel.status = 'idle';
+    player.travel.active = false;
+    player.travel.from = null;
+    player.travel.to = null;
+    player.travel.path = [];
+    player.travel.eventResolved = true;
   }
 
   // 6. Reset gridMove

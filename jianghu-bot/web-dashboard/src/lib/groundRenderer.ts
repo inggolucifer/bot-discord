@@ -14,6 +14,7 @@
 import { CANONICAL_REGIONS } from '@/config/canonicalRegions';
 import { atlasLoader } from './atlasLoader';
 import { groundTextures } from './groundTextures';
+import { perfProbe } from './perfProbe';
 
 export interface TerrainWashPalette {
   baseColor: string;
@@ -809,25 +810,17 @@ const CHUNK_SIZE = 32;
  * Pre-renders an entire 32x32 chunk's ground layer (G0, G1, G2, G3, and base G4)
  * onto an OffscreenCanvas. This provides 60+ FPS high-performance rendering.
  */
-export interface GroundBisectFlags {
-  groundOnly?: boolean;
-  layers?: 'base' | 'base+families' | 'base+families+variants' | 'all';
-  noRoad?: boolean;
-  noFarm?: boolean;
-}
-
 export function renderChunkGroundBitmap(
   cx: number,
   cy: number,
   tiles: Array<{ tileX: number; tileY: number; terrainType: string }>,
   tileSize: number = 54,
-  getNeighborTerrain?: NeighborTerrainFn,
-  flags?: GroundBisectFlags
+  getNeighborTerrain?: NeighborTerrainFn
 ): HTMLCanvasElement | null {
   if (typeof document === 'undefined') return null;
 
   if (groundTextures.ready) {
-    const textured = renderChunkGroundBitmapTextured(cx, cy, tiles, tileSize, getNeighborTerrain, flags);
+    const textured = renderChunkGroundBitmapTextured(cx, cy, tiles, tileSize, getNeighborTerrain);
     if (textured) return textured;
   }
 
@@ -1121,12 +1114,15 @@ function buildRoadAlphaMask(
   // 1) Blur sigma = 0.28 cell = 1.12 px (rounds right angles, removes 1-cell staircases)
   const gB = scratchRB.ctx;
   gB.clearRect(0, 0, W, W);
-  gB.filter = 'blur(1.4px)';
-  gB.drawImage(scratchR.canvas, 0, 0);
-  gB.filter = 'none';
+  perfProbe.measure('ground:roadBlur', () => {
+    gB.filter = 'blur(1.4px)';
+    gB.drawImage(scratchR.canvas, 0, 0);
+    gB.filter = 'none';
+  });
 
   // 2) World domain-warp sampling
-  const srcImgData = gB.getImageData(0, 0, W, W);
+  perfProbe.count('ground:getImageData');
+  const srcImgData = perfProbe.measure('ground:getImageDataMs', () => gB.getImageData(0, 0, W, W));
   const src = srcImgData.data;
   const dstImgData = scratchRW.ctx.createImageData(W, W);
   const dst = dstImgData.data;
@@ -1173,7 +1169,8 @@ function buildRoadAlphaMask(
       pIdx += 4;
     }
   }
-  scratchRW.ctx.putImageData(dstImgData, 0, 0);
+  perfProbe.count('ground:putImageData');
+  perfProbe.measure('ground:putImageDataMs', () => scratchRW.ctx.putImageData(dstImgData, 0, 0));
 
   // 3) Upscale to ctxMB2
   ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
@@ -1213,19 +1210,21 @@ function applyRoadInnerShadow(
   // 2. destination-out with blurred mask keeps only the ~1.5px inner boundary rim
   sCtx.save();
   sCtx.globalCompositeOperation = 'destination-out';
-  sCtx.filter = 'blur(1.5px)';
-  sCtx.drawImage(
-    scratchMB2.canvas,
-    BORDER * tileSize,
-    BORDER * tileSize,
-    canvasWidth,
-    canvasHeight,
-    0,
-    0,
-    canvasWidth,
-    canvasHeight
-  );
-  sCtx.filter = 'none';
+  perfProbe.measure('ground:rimBlur', () => {
+    sCtx.filter = 'blur(1.5px)';
+    sCtx.drawImage(
+      scratchMB2.canvas,
+      BORDER * tileSize,
+      BORDER * tileSize,
+      canvasWidth,
+      canvasHeight,
+      0,
+      0,
+      canvasWidth,
+      canvasHeight
+    );
+    sCtx.filter = 'none';
+  });
 
   // Tint only the rim pixels with dark brown (source-in fills only existing rim alpha)
   sCtx.globalCompositeOperation = 'source-in';
@@ -1250,8 +1249,7 @@ export function renderChunkGroundBitmapTextured(
   cy: number,
   tiles: Array<{ tileX: number; tileY: number; terrainType: string }>,
   tileSize: number = 54,
-  getNeighborTerrain?: NeighborTerrainFn,
-  flags?: GroundBisectFlags
+  getNeighborTerrain?: NeighborTerrainFn
 ): HTMLCanvasElement | null {
   if (typeof document === 'undefined') return null;
   const t0 = performance.now();
@@ -1351,8 +1349,6 @@ export function renderChunkGroundBitmapTextured(
 
   // Step 4: Render each family
   for (const F of sortedFamilies) {
-    if (flags?.layers === 'base' && F !== sortedFamilies[0]) continue;
-    if (flags?.noRoad && F === 'road_stone') continue;
     ctxT.clearRect(0, 0, canvasWidth, canvasHeight);
     ctxT.globalCompositeOperation = 'source-over';
 
@@ -1419,7 +1415,8 @@ export function renderChunkGroundBitmapTextured(
         }
       }
     }
-    ctxM.putImageData(imgData, 0, 0);
+    perfProbe.count('ground:putImageData');
+    perfProbe.measure('ground:putImageDataMs', () => ctxM.putImageData(imgData, 0, 0));
 
     // 4c: Upscale M to MB (single continuous raster corridor for road_stone, feathered for organic terrain)
     ctxMB.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
@@ -1435,9 +1432,11 @@ export function renderChunkGroundBitmapTextured(
       // Water shorelines use a crisp 0.35 * tileSize blur to prevent over-extended cyan edge bands
       const isWaterFam = F === 'river' || F === 'lake' || F === 'pond_lotus' || F === 'ocean' || F === 'sea' || F === 'water';
       const blurPx = F === 'settlement_floor' ? tileSize * 0.45 : (isWaterFam ? tileSize * 0.35 : tileSize * 1.5);
-      ctxMB2.filter = `blur(${blurPx.toFixed(1)}px)`;
-      ctxMB2.drawImage(scratchMB.canvas, 0, 0);
-      ctxMB2.filter = 'none';
+      perfProbe.measure('ground:transitionBlur', () => {
+        ctxMB2.filter = `blur(${blurPx.toFixed(1)}px)`;
+        ctxMB2.drawImage(scratchMB.canvas, 0, 0);
+        ctxMB2.filter = 'none';
+      });
 
       // Organic transition mask overlay (ink splatter edges)
       const transMask = groundTextures.getTransitionMask(Math.abs(hash2d(cx * 17 + cy, cy * 31)));
@@ -1528,7 +1527,7 @@ function getRadialMaskCanvas(size: number): HTMLCanvasElement | null {
 }
 
     // 2. Blend secondary variants
-    if (isNonPeriodicFamily && variants.length > 1 && flags?.layers !== 'base+families') {
+    if (isNonPeriodicFamily && variants.length > 1 ) {
       // V18: Rotated overlapping blocks with radial alpha in pure world coordinates
       // Breaks autocorrelation periodicity (maxAutocorr <= 0.35) with zero chunk boundary seams
       const spanPx = 8 * tileSize; // 432px
@@ -1581,7 +1580,7 @@ function getRadialMaskCanvas(size: number): HTMLCanvasElement | null {
           }
         }
       }
-    } else if (variants.length > 1 && F !== 'road_stone' && flags?.layers !== 'base+families') {
+    } else if (variants.length > 1 && F !== 'road_stone' ) {
       const VM_CELLS = 16; // 16x16 sample points inside chunk (2 tiles per cell)
       const V_BORDER = 3;  // 3 cells padding outside chunk (6 tiles halo)
       const V_GRID_DIM = VM_CELLS + V_BORDER * 2; // 22x22 total mask dimensions
@@ -1631,25 +1630,28 @@ function getRadialMaskCanvas(size: number): HTMLCanvasElement | null {
           }
 
           if (!hasAny) continue;
-          ctxVM.putImageData(vmImgData, 0, 0);
+          perfProbe.count('ground:putImageData');
+          perfProbe.measure('ground:putImageDataMs', () => ctxVM.putImageData(vmImgData, 0, 0));
 
           // 2b. Upscale & blur variant mask with continuous border padding
           ctxVMB.clearRect(0, 0, canvasWidth, canvasHeight);
           ctxVMB.imageSmoothingEnabled = true;
           ctxVMB.imageSmoothingQuality = 'high';
-          ctxVMB.filter = `blur(${(tileSize * 0.9).toFixed(1)}px)`; // ~50px organic soft blend
-          ctxVMB.drawImage(
-            scratchVM.canvas,
-            0,
-            0,
-            V_GRID_DIM,
-            V_GRID_DIM,
-            -padPx,
-            -padPx,
-            canvasWidth + 2 * padPx,
-            canvasHeight + 2 * padPx
-          );
-          ctxVMB.filter = 'none';
+          perfProbe.measure('ground:variantBlur', () => {
+            ctxVMB.filter = `blur(${(tileSize * 0.9).toFixed(1)}px)`; // ~50px organic soft blend
+            ctxVMB.drawImage(
+              scratchVM.canvas,
+              0,
+              0,
+              V_GRID_DIM,
+              V_GRID_DIM,
+              -padPx,
+              -padPx,
+              canvasWidth + 2 * padPx,
+              canvasHeight + 2 * padPx
+            );
+            ctxVMB.filter = 'none';
+          });
 
           // 2c. Render secondary variant pattern masked by blurred mask
           ctxVT.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -1672,7 +1674,7 @@ function getRadialMaskCanvas(size: number): HTMLCanvasElement | null {
     }
 
     // 2e: V11 Composite 20% detail overlay from FAMILY_detail.png (omit for non-periodic families which have custom strata)
-    const detailPattern = (!isNonPeriodicFamily && flags?.layers !== 'base+families') ? groundTextures.getDetailPattern(ctxT, F) : null;
+    const detailPattern = (!isNonPeriodicFamily ) ? groundTextures.getDetailPattern(ctxT, F) : null;
     if (detailPattern) {
       ctxT.save();
       ctxT.globalCompositeOperation = 'soft-light';
@@ -1970,7 +1972,8 @@ function compositeAzureKarst(
       d32[rowOffset + px] = 0xff000000 | (gray << 16) | (gray << 8) | gray;
     }
   }
-  scratch.ctx.putImageData(imgData, 0, 0);
+  perfProbe.count('ground:putImageData');
+  perfProbe.measure('ground:putImageDataMs', () => scratch.ctx.putImageData(imgData, 0, 0));
 
   ctx.save();
   ctx.globalCompositeOperation = 'soft-light';
@@ -1996,9 +1999,9 @@ function compositeAzureKarst(
   ctx.restore();
 }
 
-    const allowComposites = (flags?.layers !== 'base+families' && flags?.layers !== 'base+families+variants');
+    const allowComposites = true;
     if (allowComposites) {
-      if (F === 'farmland' && !flags?.noFarm) {
+      if (F === 'farmland' ) {
         compositeFarmlandPaddy(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
       } else if (F === 'pond_lotus' || F === 'lake') {
         compositeLotusPond(ctxT, cx, cy, canvasWidth, canvasHeight, tileSize);
@@ -2077,7 +2080,7 @@ function compositeAzureKarst(
     // 4h: Road edges blend smoothly into surrounding ground macro (Prompt V14 P1)
   }
 
-  const allowMacroOverlay = (flags?.layers !== 'base+families' && flags?.layers !== 'base+families+variants');
+  const allowMacroOverlay = true;
   // Step 5: Macro radial overlay (anti-repetition)
   const hashVal = (hash2d(cx * 7 + 3, cy * 13 + 5) >>> 0) / 0xffffffff;
   const alpha = Math.min(0.1, 0.05 + 0.05 * hashVal);
@@ -2129,6 +2132,7 @@ function compositeAzureKarst(
 
   // Step 7: Performance profiling
   const elapsed = performance.now() - t0;
+  perfProbe.mark('ground:buildChunkBitmap', elapsed);
   perfRing.push(elapsed);
   if (perfRing.length > 20) perfRing.shift();
   if (perfRing.length === 20 && Math.random() < 0.05) {
@@ -2139,4 +2143,119 @@ function compositeAzureKarst(
   }
 
   return canvas;
+}
+
+/**
+ * V21 F1: BAKED CHUNK LOADER & LRU CACHE (src/lib/groundRenderer.ts)
+ */
+export interface BakedChunkCacheEntry {
+  cx: number;
+  cy: number;
+  tier: number;
+  bitmap: ImageBitmap;
+  lastAccess: number;
+}
+
+const BAKED_LRU_MAX = 64;
+const bakedChunkCache = new Map<string, BakedChunkCacheEntry>();
+const bakedChunkLoading = new Set<string>();
+const bakedChunkFailed = new Set<string>();
+
+export function getBakedChunk(
+  cx: number,
+  cy: number,
+  tier: number = 0,
+  cameraChunkX?: number,
+  cameraChunkY?: number,
+  onLoaded?: () => void
+): ImageBitmap | null {
+  // Fallback flag per Rule 6
+  if (process.env.NEXT_PUBLIC_LIGHT_WORLD === "0") {
+    return null;
+  }
+  if (typeof window === "undefined" || typeof createImageBitmap !== "function") {
+    return null;
+  }
+
+  const key = `${tier}:${cx}:${cy}`;
+  const cached = bakedChunkCache.get(key);
+  if (cached) {
+    cached.lastAccess = performance.now();
+    return cached.bitmap;
+  }
+
+  if (bakedChunkFailed.has(key)) {
+    return null;
+  }
+
+  if (!bakedChunkLoading.has(key)) {
+    bakedChunkLoading.add(key);
+    const url = `/baked/z${tier}/${cx}_${cy}.webp`;
+
+    fetch(url)
+      .then(async (res) => {
+        bakedChunkLoading.delete(key);
+        if (!res.ok) {
+          bakedChunkFailed.add(key);
+          return;
+        }
+        const blob = await res.blob();
+        const bitmap = await createImageBitmap(blob);
+
+        // LRU eviction: max 64 entries, evict farthest from camera
+        if (bakedChunkCache.size >= BAKED_LRU_MAX) {
+          let farthestKey: string | null = null;
+          let maxDistSq = -1;
+          const camX = cameraChunkX ?? cx;
+          const camY = cameraChunkY ?? cy;
+
+          for (const [k, entry] of bakedChunkCache.entries()) {
+            const dx = entry.cx - camX;
+            const dy = entry.cy - camY;
+            const distSq = dx * dx + dy * dy;
+            if (distSq > maxDistSq) {
+              maxDistSq = distSq;
+              farthestKey = k;
+            }
+          }
+
+          if (farthestKey) {
+            const evicted = bakedChunkCache.get(farthestKey);
+            if (evicted && evicted.bitmap && typeof evicted.bitmap.close === "function") {
+              try { evicted.bitmap.close(); } catch (_) {}
+            }
+            bakedChunkCache.delete(farthestKey);
+          }
+        }
+
+        bakedChunkCache.set(key, {
+          cx,
+          cy,
+          tier,
+          bitmap,
+          lastAccess: performance.now()
+        });
+
+        if (onLoaded) {
+          onLoaded();
+        }
+      })
+      .catch(() => {
+        bakedChunkLoading.delete(key);
+        bakedChunkFailed.add(key);
+      });
+  }
+
+  return null;
+}
+
+export function clearBakedChunkCache(): void {
+  for (const entry of bakedChunkCache.values()) {
+    if (entry.bitmap && typeof entry.bitmap.close === "function") {
+      try { entry.bitmap.close(); } catch (_) {}
+    }
+  }
+  bakedChunkCache.clear();
+  bakedChunkLoading.clear();
+  bakedChunkFailed.clear();
 }

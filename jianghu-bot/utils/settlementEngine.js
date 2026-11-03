@@ -3,6 +3,20 @@ const path = require('path');
 
 const ANCHORS_PATH = path.join(__dirname, '../world-data/anchors.json');
 const BLUEPRINTS_DIR = path.join(__dirname, '../world-data/settlements');
+const FACILITIES_V20_PATH = path.join(__dirname, '../world-data/settlement-facilities-v20.json');
+
+let facilitiesV20Cache = null;
+function loadFacilitiesV20() {
+    if (facilitiesV20Cache) return facilitiesV20Cache;
+    try {
+        if (fs.existsSync(FACILITIES_V20_PATH)) {
+            facilitiesV20Cache = JSON.parse(fs.readFileSync(FACILITIES_V20_PATH, 'utf8'));
+        }
+    } catch (err) {
+        console.error('[SettlementEngine] Error loading settlement-facilities-v20.json:', err.message);
+    }
+    return facilitiesV20Cache;
+}
 
 // Load blueprints cache
 let blueprintsCache = null;
@@ -10,18 +24,7 @@ let anchorsCache = null;
 
 function loadBlueprints() {
     if (blueprintsCache) return blueprintsCache;
-    try {
-        blueprintsCache = {
-            village: JSON.parse(fs.readFileSync(path.join(BLUEPRINTS_DIR, 'village_blueprint.json'), 'utf8')),
-            city: JSON.parse(fs.readFileSync(path.join(BLUEPRINTS_DIR, 'city_blueprint.json'), 'utf8')),
-            port: JSON.parse(fs.readFileSync(path.join(BLUEPRINTS_DIR, 'port_blueprint.json'), 'utf8')),
-            outpost: JSON.parse(fs.readFileSync(path.join(BLUEPRINTS_DIR, 'outpost_blueprint.json'), 'utf8')),
-            sect: JSON.parse(fs.readFileSync(path.join(BLUEPRINTS_DIR, 'sect_blueprint.json'), 'utf8'))
-        };
-    } catch (err) {
-        console.error('[SettlementEngine] Error loading blueprints:', err.message);
-        blueprintsCache = {};
-    }
+    blueprintsCache = {};
     return blueprintsCache;
 }
 
@@ -280,9 +283,10 @@ function generateCanonicalNpcs(settlement) {
  */
 function getSettlementPanoramaData(settlementName, player = null, dbNpcs = []) {
     const anchors = loadAnchors();
+    const v20Data = loadFacilitiesV20();
     const blueprints = loadBlueprints();
 
-    // Find anchor matching settlementName
+    // Find anchor matching settlementName or ID
     const lowerName = (settlementName || '').toLowerCase().trim();
     let anchor = anchors.find(a => 
         (a.name && a.name.toLowerCase() === lowerName) ||
@@ -291,7 +295,6 @@ function getSettlementPanoramaData(settlementName, player = null, dbNpcs = []) {
     );
 
     if (!anchor) {
-        // Fallback synthetic anchor
         anchor = {
             id: lowerName.replace(/\s+/g, '_'),
             name: settlementName,
@@ -307,64 +310,70 @@ function getSettlementPanoramaData(settlementName, player = null, dbNpcs = []) {
     }
 
     const bpType = resolveBlueprintType(anchor);
-    const blueprint = blueprints[bpType] || blueprints.village || {
-        backdropId: 'backdrop_misty_bamboo_village',
-        palette: 'ink_cyan',
-        buildings: [],
-        layers: [],
-        defaultExits: []
-    };
+    const profileKey = (anchor.v20 && anchor.v20.facilitiesProfile) || anchor.type || 'village';
+    const profile = (v20Data && v20Data.profiles && v20Data.profiles[profileKey]) || 
+                    (v20Data && v20Data.profiles && v20Data.profiles.village);
 
-    // Combine buildings from blueprint with anchor overrides
-    const buildings = (blueprint.buildings || []).map(b => ({
-        ...b,
-        // Ensure unique anchor context
-        key: `${anchor.id}_${b.id}`
-    }));
-
-    // If anchor is a port or near water, ensure dock is available
-    if (bpType === 'port' && !buildings.some(b => b.type === 'dock')) {
-        buildings.unshift({
-            id: 'dock',
-            name: 'Dermaga Penyeberangan Feri',
-            chineseName: '渡口码头',
-            bannerText: '渡口 · 凌波舟',
-            desc: 'Dermaga penyeberangan feri dan rakit antar kepulauan.',
-            type: 'dock',
-            icon: 'Ship',
-            scale: 1.1,
-            xPercent: 12,
-            layer: 'ground',
-            openStatus: 'open',
-            services: ['ferry_crossing', 'charter_boat']
+    let buildings = [];
+    if (v20Data && profile && Array.isArray(profile.facilities)) {
+        const facList = profile.facilities;
+        const total = facList.length;
+        buildings = facList.map((facId, idx) => {
+            const def = v20Data.facilityDefs[facId] || {
+                id: facId,
+                name: facId,
+                type: facId,
+                icon: 'Home',
+                desc: ''
+            };
+            const xPct = Math.round(10 + (idx / Math.max(1, total - 1)) * 80);
+            return {
+                id: def.id,
+                type: def.type || def.id,
+                name: def.name,
+                chineseName: def.chineseName || '',
+                bannerText: def.bannerText || `${def.chineseName || ''} · ${def.name.split(' ')[0]}`,
+                desc: def.desc || '',
+                icon: def.icon || 'Home',
+                status: def.status || 'open',
+                openStatus: def.status === 'coming_soon' ? 'closed' : 'open',
+                scale: 1.0,
+                xPercent: xPct,
+                layer: 'ground',
+                key: `${anchor.id}_${def.id}`
+            };
         });
+    } else {
+        const blueprint = blueprints[bpType] || blueprints.village || {
+            backdropId: 'backdrop_misty_bamboo_village',
+            palette: 'ink_cyan',
+            buildings: [],
+            layers: [],
+            defaultExits: []
+        };
+        buildings = (blueprint.buildings || []).map(b => ({
+            ...b,
+            key: `${anchor.id}_${b.id}`
+        }));
     }
 
-    // Compose Exits (Strict Zero-Portal Policy: physical gates, docks, caravan posts only)
+    // Exits: City Gate returns to entrance
+    const exitEntrance = (anchor.v20 && anchor.v20.entrance) ? anchor.v20.entrance : { x: anchor.x, y: anchor.y };
     const exits = [
         {
             type: 'city_gate',
             label: `🏮 Gerbang ${anchor.name} (Keluar ke Peta Dunia)`,
-            targetTile: { x: anchor.x, y: anchor.y },
-            description: `Melangkah keluar melintasi gerbang utama pemukiman menuju koordinat [${anchor.x}, ${anchor.y}] di peta alam liar.`
+            targetTile: { x: exitEntrance.x, y: exitEntrance.y },
+            description: `Melangkah keluar melintasi gerbang utama pemukiman menuju koordinat [${exitEntrance.x}, ${exitEntrance.y}] di peta alam liar.`
         }
     ];
 
-    if (bpType === 'port' || (anchor.type === 'port' || anchor.type === 'island')) {
+    if (bpType === 'port' || anchor.type === 'port' || anchor.type === 'island') {
         exits.push({
             type: 'dock',
             label: '⛵ Dermaga Kapal & Feri Penyeberangan',
-            targetTile: { x: anchor.x, y: anchor.y },
+            targetTile: { x: exitEntrance.x, y: exitEntrance.y },
             description: 'Menyeberangi perairan laut atau danau menggunakan kapal feri atau rakit bambu resmi.'
-        });
-    }
-
-    if (bpType === 'city' || bpType === 'outpost') {
-        exits.push({
-            type: 'caravan_station',
-            label: '🐎 Stasiun Kafilah Lintas Wilayah',
-            targetTile: { x: anchor.x, y: anchor.y },
-            description: 'Melakukan perjalanan darat antar pos pemukiman dengan perlindungan kafilah dagang.'
         });
     }
 
@@ -374,45 +383,57 @@ function getSettlementPanoramaData(settlementName, player = null, dbNpcs = []) {
         npcStrip = dbNpcs.map(n => ({
             _id: n._id ? n._id.toString() : `npc_${n.name}`,
             name: n.name,
-            title: n.title || 'Kultivator Kota',
-            realm: n.realm || 'Ranah Kondensasi Qi',
-            sect: n.sect || 'Pengembara Bebas',
-            relationship: n.relationship || 'Stranger',
-            relationshipPoints: n.relationshipPoints || 10,
-            greeting: n.greeting || 'Salam kenal, rekan se-dharma.',
-            hasQuest: Boolean(n.questIds && n.questIds.length > 0),
-            portraitUrl: n.portraitUrl || n.imageUrl || null
+            title: n.title || 'Kultivator',
+            portraitUrl: n.portraitUrl || null,
+            greeting: n.greeting || '',
+            hasQuest: Array.isArray(n.questIds) && n.questIds.length > 0,
+            relationship: 'Stranger'
         }));
     } else {
         npcStrip = generateCanonicalNpcs(anchor);
     }
 
-    // Compose Quest Tracking HUD data
-    const tracking = {
-        activeQuestId: 'quest_settlement_patrol',
-        title: `Eksplorasi Wilayah ${anchor.name}`,
-        targetNpc: npcStrip.length > 0 ? npcStrip[0].name : 'Kepala Wilayah',
-        targetLocation: `${anchor.name} (${anchor.region || 'Tianyuan'})`,
-        distanceCells: player && player.x !== undefined && player.y !== undefined
-            ? Math.round(Math.hypot(player.x - anchor.x, player.y - anchor.y))
-            : 0
+    const panoramaInfo = (profile && profile.panorama) || {
+        backdropId: 'backdrop_misty_bamboo_village',
+        palette: 'ink_cyan',
+        skyColor: '#0a131c',
+        groundColor: '#141c22',
+        layers: []
     };
 
     return {
-        settlement: anchor,
-        backdropId: blueprint.backdropId,
-        palette: blueprint.palette,
-        skyColor: blueprint.skyColor || '#0a1017',
-        groundColor: blueprint.groundColor || '#141c24',
+        settlement: {
+            id: anchor.id,
+            name: anchor.name,
+            chineseName: anchor.chineseName,
+            type: anchor.type,
+            region: anchor.region || anchor.regionSlug,
+            tier: anchor.tier || 1,
+            x: anchor.x,
+            y: anchor.y,
+            v20: anchor.v20
+        },
+        backdropId: panoramaInfo.backdropId,
+        palette: panoramaInfo.palette,
+        skyColor: panoramaInfo.skyColor,
+        groundColor: panoramaInfo.groundColor,
+        description: panoramaInfo.description || anchor.description || '',
         timeOfDay: getTimeOfDay(),
-        weather: 'clear',
-        layers: blueprint.layers || [],
+        weather: 'Cerah',
+        layers: panoramaInfo.layers || [],
         buildings,
+        residences: (anchor.v20 && anchor.v20.residences) || [],
         npcStrip,
+        npcs: npcStrip,
         exits,
-        tracking
+        tracking: {
+            activePlayers: 1,
+            reputation: 'Netral (0)',
+            isSectHome: anchor.type === 'sect'
+        }
     };
 }
+
 
 module.exports = {
     loadAnchors,

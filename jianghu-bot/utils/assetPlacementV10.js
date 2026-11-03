@@ -394,7 +394,7 @@ function placeContextualAssets(
   }
 
   // --------------------------------------------------------------------------
-  // E. TOWN FACILITIES & PROF STRUCTURES (Proportionate by Anchor Tier)
+  // E. TOWN FACILITIES & PROF STRUCTURES (V20: Disabled - inside settlement interior)
   // --------------------------------------------------------------------------
   const anchorsInChunk = allAnchors.filter(a =>
     a.x >= (startTileX - 32) && a.x <= (endTileX + 32) &&
@@ -405,71 +405,6 @@ function placeContextualAssets(
     const a = anchorsInChunk[ai];
     const isMajor = a.type === 'capital_city' || a.type === 'major_city' || a.type === 'city' || a.type === 'sect';
     const isUrban = isMajor || a.type === 'town';
-
-    // Facilities: Major cities get 10 facilities, small rural villages get 2 local facilities
-    const facCount = isUrban ? 10 : 2;
-    for (let fi = 0; fi < facCount; fi++) {
-      let facDef = TOWN_FACILITY_VARIANTS[(ai * 7 + fi) % TOWN_FACILITY_VARIANTS.length];
-      if (a.id === 'xitong_city' && fi === 0) facDef = 'xitong_city_landmark';
-      if (isMajor && fi === 0) facDef = 'building_spirit_pagoda';
-
-      const g = GC.getGrid(facDef);
-      const fw = g ? g.fw : 2;
-      const fh = g ? g.fh : 2;
-
-      for (let attempt = 0; attempt < 12; attempt++) {
-        const angle = (((fi * 36) + attempt * 30) / 180) * Math.PI;
-        const dist = 5 + attempt * 2;
-        const fx = Math.round(a.x + Math.cos(angle) * dist);
-        const fy = Math.round(a.y + Math.sin(angle) * dist);
-
-        if (fx < startTileX || fx > endTileX || fy < startTileY || fy > endTileY) continue;
-        if (AUTHORED_ROAD_TILES.has(`${fx},${fy}`)) continue;
-
-        if (canPlaceFootprint(fx, fy, fw, fh, occupiedGrid, getTileAt, false, facDef, objects)) {
-          const objId = `facility_${fx}_${fy}`;
-          markFootprintOccupied(fx, fy, fw, fh, occupiedGrid, objId, facDef);
-          objects.push({
-            id: objId,
-            defId: facDef,
-            x: fx,
-            y: fy,
-            collision: 'solid',
-            tags: ['facility', a.type]
-          });
-          break;
-        }
-      }
-    }
-
-    // Professional Craft Structure (4 for urban, 2 for rural)
-    const profCount = isUrban ? 4 : 2;
-    for (let pi = 0; pi < profCount; pi++) {
-      const profDef = PROF_STRUCTURE_VARIANTS[(ai * 3 + pi) % PROF_STRUCTURE_VARIANTS.length];
-      for (let attempt = 0; attempt < 10; attempt++) {
-        const pAngle = (((pi * 90) + attempt * 36) / 180) * Math.PI;
-        const pDist = 4 + attempt * 2;
-        const px = Math.round(a.x + Math.cos(pAngle) * pDist);
-        const py = Math.round(a.y + Math.sin(pAngle) * pDist);
-
-        if (px < startTileX || px > endTileX || py < startTileY || py > endTileY) continue;
-        if (AUTHORED_ROAD_TILES.has(`${px},${py}`)) continue;
-
-        if (canPlaceFootprint(px, py, 1, 1, occupiedGrid, getTileAt, false, profDef, objects)) {
-          const objId = `prof_${px}_${py}`;
-          markFootprintOccupied(px, py, 1, 1, occupiedGrid, objId, profDef);
-          objects.push({
-            id: objId,
-            defId: profDef,
-            x: px,
-            y: py,
-            collision: 'solid',
-            tags: ['craft_structure', 'profession']
-          });
-          break;
-        }
-      }
-    }
 
     // Village & Settlement Signature Trees (Peach blossoms, weeping willows, bamboo, ginkgo)
     const VILLAGE_TREE_VARIANTS = [
@@ -519,46 +454,8 @@ function placeContextualAssets(
   }
 
   // --------------------------------------------------------------------------
-  // F. RUSTIC COUNTRYSIDE (8 for urban outskirts, 3 for rural hamlets)
+  // F. RUSTIC COUNTRYSIDE (V20: Disabled inside settlement exclusion zones)
   // --------------------------------------------------------------------------
-  for (let ai = 0; ai < anchorsInChunk.length; ai++) {
-    const a = anchorsInChunk[ai];
-    const isUrban = a.type === 'capital_city' || a.type === 'major_city' || a.type === 'city' || a.type === 'sect' || a.type === 'town';
-    const rusticLimit = isUrban ? 8 : 3;
-    for (let ri = 0; ri < rusticLimit; ri++) {
-      const rusticDef = RUSTIC_COUNTRY_VARIANTS[(ai * 7 + ri) % RUSTIC_COUNTRY_VARIANTS.length];
-      const g = GC.getGrid(rusticDef);
-      const fw = g ? g.fw : 2;
-      const fh = g ? g.fh : 2;
-
-      for (let attempt = 0; attempt < 12; attempt++) {
-        const angle = (((ri * 36) + attempt * 30) / 180) * Math.PI;
-        const dist = 6 + attempt * 2;
-        const rx = Math.round(a.x + Math.cos(angle) * dist);
-        const ry = Math.round(a.y + Math.sin(angle) * dist);
-
-        if (rx < startTileX || rx > endTileX || ry < startTileY || ry > endTileY) continue;
-        if (AUTHORED_ROAD_TILES.has(`${rx},${ry}`)) continue;
-
-        const tile = getTileAt(rx, ry);
-        if (!tile || tile.isSolid) continue;
-
-        if (canPlaceFootprint(rx, ry, fw, fh, occupiedGrid, getTileAt, false, rusticDef, objects)) {
-          const objId = `rustic_${rx}_${ry}`;
-          markFootprintOccupied(rx, ry, fw, fh, occupiedGrid, objId, rusticDef);
-          objects.push({
-            id: objId,
-            defId: rusticDef,
-            x: rx,
-            y: ry,
-            collision: 'solid',
-            tags: ['rustic_country', 'outskirts']
-          });
-          break;
-        }
-      }
-    }
-  }
 
   // --------------------------------------------------------------------------
   // G. POI MISC & WATER EDGE STRUCTURES (8 variants)

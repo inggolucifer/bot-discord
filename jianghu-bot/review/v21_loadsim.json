@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-11-03T14:49:20.786Z",
+  "clientCount": 500,
+  "activeChunks": 25,
+  "totalTicks": 60,
+  "totalSimDurationMs": 55,
+  "metrics": {
+    "deltasDelivered": 1500,
+    "tickLatencyAvgMs": 0.661,
+    "tickLatencyP50Ms": 0.538,
+    "tickLatencyP95Ms": 1.386,
+    "tickLatencyMaxMs": 3.058,
+    "maxPayloadBytes": 2301,
+    "avgPayloadBytes": 519.5,
+    "heapStartMb": 5.13,
+    "heapEndMb": 6.77,
+    "heapDeltaMb": 1.64
+  },
+  "thresholds": {
+    "maxLatencyP95Ms": 500,
+    "maxPayloadBytes": 8192,
+    "maxHeapGrowthMb": 50
+  },
+  "status": "PASS"
+}

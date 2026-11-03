@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-11-01T12:58:51.125Z",
-  "totalExpected": 100,
-  "totalCaptured": 100,
-  "uniqueHashes": 100,
-  "duplicates": 0,
-  "pass": true,
-  "status": "PASS"
-}

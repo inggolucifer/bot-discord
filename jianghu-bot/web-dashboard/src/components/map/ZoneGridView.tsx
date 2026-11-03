@@ -53,6 +53,7 @@ import MapSearchModal from './modals/MapSearchModal';
 import WorldMapLoadingScreen from './WorldMapLoadingScreen';
 import RegionCalligraphyBanner from './RegionCalligraphyBanner';
 import Minimap from './Minimap';
+import NearbyPanel from '@/components/world/NearbyPanel';
 import { CANONICAL_REGIONS } from '@/config/canonicalRegions';
 import { chunkManager } from '@/lib/chunkManager';
 
@@ -145,6 +146,7 @@ export default function ZoneGridView({
   // View Mode: 'map' | 'settlement' | 'courtyard'
   const [viewMode, setViewMode] = useState<'map' | 'settlement' | 'courtyard'>('map');
   const [activeSettlementName, setActiveSettlementName] = useState<string>('XiTong City');
+  const [settlementPrompt, setSettlementPrompt] = useState<{ id: string; name: string; tier?: number; regionSlug?: string } | null>(null);
   const [activeCourtyardName, setActiveCourtyardName] = useState<string>('Paviliun Gazebo Puncak Pinus');
 
   // State lainnya
@@ -159,6 +161,7 @@ export default function ZoneGridView({
   const [thermalStatus, setThermalStatus] = useState<any | null>(null);
   const [activeBattleId, setActiveBattleId] = useState<string | null>(null);
   const [showMacroMap, setShowMacroMap] = useState(false);
+  const [isNearbyOpen, setIsNearbyOpen] = useState<boolean>(false);
   const [activeRegionBanner, setActiveRegionBanner] = useState<{
     regionName: string;
     chineseName?: string;
@@ -637,6 +640,9 @@ export default function ZoneGridView({
         isOpenToPublic: true
       });
       if (res.data?.success) {
+        if (res.data.settlementPrompt) {
+          setSettlementPrompt(res.data.settlementPrompt);
+        }
         showMessage(`Pembangunan ${assetName} dimulai! Pekerja mulai beraksi.`);
         setBuildModalTile(null);
         fetchZoneData();
@@ -979,6 +985,19 @@ export default function ZoneGridView({
             >
               <Search className="w-3.5 h-3.5 text-amber-400" />
               <span className="hidden sm:inline">Cari</span>
+            </button>
+
+            <button
+              onClick={() => setIsNearbyOpen((prev) => !prev)}
+              className={`px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg border flex items-center gap-1 backdrop-blur-md text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all flex-shrink-0 ${
+                isNearbyOpen
+                  ? 'bg-amber-950/80 border-amber-500 text-amber-200'
+                  : 'bg-black/80 border-amber-800/60 text-amber-300 hover:bg-black'
+              }`}
+              title="Buka atau tutup panel Sekitar Anda"
+            >
+              <Compass className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline">Sekitar</span>
             </button>
 
             <button
@@ -1556,6 +1575,27 @@ export default function ZoneGridView({
              />
            </div>
         </div>
+      )}
+
+      {/* Panel Sekitar Anda (V21 F3) */}
+      {!activeBattleId && !interiorData && (
+        <NearbyPanel
+          playerX={px}
+          playerY={py}
+          isOpen={isNearbyOpen}
+          onToggle={() => setIsNearbyOpen((prev) => !prev)}
+          onNavigateToTile={(tx, ty) => {
+            setSearchFocusTile({ x: tx, y: ty });
+          }}
+          onAction={(action, item) => {
+            if (action === 'enter' && item.type === 'building') {
+              handleEnterCourtyard(item.name);
+            } else if (action === 'greet') {
+              setActionMessage(`Anda memberi hormat kepalan tangan kepada ${item.name}.`);
+              setTimeout(() => setActionMessage(null), 3000);
+            }
+          }}
+        />
       )}
 
       {/* Render Interior Properti Rumah Pemain as a Modal Overlay */}

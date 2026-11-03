@@ -42,6 +42,9 @@ export interface MapObjectInstance {
   scale?: number;
   state?: any;
   customLabel?: string;
+  tags?: string[];
+  spanWidth?: number;
+  spanHeight?: number;
 }
 
 export interface SpawnedMonsterData {
@@ -71,6 +74,7 @@ export interface TileData {
   settlementName?: string | null;
   chineseName?: string | null;
   isSettlementOrigin?: boolean;
+  isSettlementEntrance?: boolean;
   isSettlementTile?: boolean;
   settlementData?: any;
   isOccupied?: boolean;

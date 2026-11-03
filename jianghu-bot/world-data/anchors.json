@@ -14,7 +14,55 @@
     "description": "Desa bunga aprikot yang damai, tempat para pengembara muda memulai langkah kultivasi pertama.",
     "footprintWidth": 40,
     "footprintHeight": 40,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "village",
+      "markerDefId": "settlement_village_river",
+      "entrance": {
+        "x": 2051,
+        "y": 2652,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "village",
+      "residences": [
+        {
+          "id": "res_desa_xingcun_desa_xingcun_h01",
+          "fromAuthoredId": "auth_desa_xingcun_h01",
+          "npcId": "npc_desa_xingcun_desa_xingcun_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_desa_xingcun_desa_xingcun_h02",
+          "fromAuthoredId": "auth_desa_xingcun_h02",
+          "npcId": "npc_desa_xingcun_desa_xingcun_h02",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        },
+        {
+          "id": "res_desa_xingcun_desa_xingcun_h03",
+          "fromAuthoredId": "auth_desa_xingcun_h03",
+          "npcId": "npc_desa_xingcun_desa_xingcun_h03",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_desa_xingcun_desa_xingcun_h04",
+          "fromAuthoredId": "auth_desa_xingcun_h04",
+          "npcId": "npc_desa_xingcun_desa_xingcun_h04",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_desa_xingcun_desa_xingcun_h05",
+          "fromAuthoredId": "auth_desa_xingcun_h05",
+          "npcId": "npc_desa_xingcun_desa_xingcun_h05",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        }
+      ]
+    }
   },
   {
     "id": "dusun_mata_air_jernih",
@@ -31,7 +79,55 @@
     "description": "Dusun pertanian herba di tepi sungai jernih, terkenal dengan tanaman obat dan pemandangan tenang.",
     "footprintWidth": 20,
     "footprintHeight": 20,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "hamlet",
+      "markerDefId": "settlement_hamlet_river",
+      "entrance": {
+        "x": 2401,
+        "y": 2451,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_dusun_mata_air_jernih_dusun_mata_air_jernih_h01",
+          "fromAuthoredId": "auth_dusun_mata_air_jernih_h01",
+          "npcId": "npc_dusun_mata_air_jernih_dusun_mata_air_jernih_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_dusun_mata_air_jernih_dusun_mata_air_jernih_h02",
+          "fromAuthoredId": "auth_dusun_mata_air_jernih_h02",
+          "npcId": "npc_dusun_mata_air_jernih_dusun_mata_air_jernih_h02",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        },
+        {
+          "id": "res_dusun_mata_air_jernih_dusun_mata_air_jernih_h03",
+          "fromAuthoredId": "auth_dusun_mata_air_jernih_h03",
+          "npcId": "npc_dusun_mata_air_jernih_dusun_mata_air_jernih_h03",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_dusun_mata_air_jernih_dusun_mata_air_jernih_h04",
+          "fromAuthoredId": "auth_dusun_mata_air_jernih_h04",
+          "npcId": "npc_dusun_mata_air_jernih_dusun_mata_air_jernih_h04",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_dusun_mata_air_jernih_dusun_mata_air_jernih_h05",
+          "fromAuthoredId": "auth_dusun_mata_air_jernih_h05",
+          "npcId": "npc_dusun_mata_air_jernih_dusun_mata_air_jernih_h05",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        }
+      ]
+    }
   },
   {
     "id": "pos_perbatasan_qinghe",
@@ -48,7 +144,55 @@
     "description": "Pos pertahanan militer strategis yang mengawasi Jembatan Rantai menuju wilayah selatan.",
     "footprintWidth": 30,
     "footprintHeight": 30,
-    "buildBuffer": 6
+    "buildBuffer": 6,
+    "v20": {
+      "tierClass": "outpost",
+      "markerDefId": "settlement_outpost_gatehouse",
+      "entrance": {
+        "x": 2301,
+        "y": 1952,
+        "facing": "south"
+      },
+      "exclusionRadius": 8,
+      "facilitiesProfile": "outpost",
+      "residences": [
+        {
+          "id": "res_pos_perbatasan_qinghe_pos_perbatasan_qinghe_h01",
+          "fromAuthoredId": "auth_pos_perbatasan_qinghe_h01",
+          "npcId": "npc_pos_perbatasan_qinghe_pos_perbatasan_qinghe_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_pos_perbatasan_qinghe_pos_perbatasan_qinghe_h02",
+          "fromAuthoredId": "auth_pos_perbatasan_qinghe_h02",
+          "npcId": "npc_pos_perbatasan_qinghe_pos_perbatasan_qinghe_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_pos_perbatasan_qinghe_pos_perbatasan_qinghe_h03",
+          "fromAuthoredId": "auth_pos_perbatasan_qinghe_h03",
+          "npcId": "npc_pos_perbatasan_qinghe_pos_perbatasan_qinghe_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_pos_perbatasan_qinghe_pos_perbatasan_qinghe_h04",
+          "fromAuthoredId": "auth_pos_perbatasan_qinghe_h04",
+          "npcId": "npc_pos_perbatasan_qinghe_pos_perbatasan_qinghe_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_pos_perbatasan_qinghe_pos_perbatasan_qinghe_h05",
+          "fromAuthoredId": "auth_pos_perbatasan_qinghe_h05",
+          "npcId": "npc_pos_perbatasan_qinghe_pos_perbatasan_qinghe_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        }
+      ]
+    }
   },
   {
     "id": "oase_shadi",
@@ -65,7 +209,48 @@
     "description": "Pemukiman sejuk di tengah hamparan pasir emas, persinggahan utama para kafilah dan peziarah.",
     "footprintWidth": 40,
     "footprintHeight": 40,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "village",
+      "markerDefId": "settlement_village_desert",
+      "entrance": {
+        "x": 821,
+        "y": 2222,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "village",
+      "residences": [
+        {
+          "id": "res_oase_shadi_oase_shadi_h01",
+          "fromAuthoredId": "auth_oase_shadi_h01",
+          "npcId": "npc_oase_shadi_oase_shadi_h01",
+          "homeKind": "desert_adobe",
+          "label": "Pondok desert_adobe"
+        },
+        {
+          "id": "res_oase_shadi_oase_shadi_h02",
+          "fromAuthoredId": "auth_oase_shadi_h02",
+          "npcId": "npc_oase_shadi_oase_shadi_h02",
+          "homeKind": "desert_adobe",
+          "label": "Pondok desert_adobe"
+        },
+        {
+          "id": "res_oase_shadi_oase_shadi_h03",
+          "fromAuthoredId": "auth_oase_shadi_h03",
+          "npcId": "npc_oase_shadi_oase_shadi_h03",
+          "homeKind": "abandoned_stone_overgrown",
+          "label": "Pondok abandoned_stone_overgrown"
+        },
+        {
+          "id": "res_oase_shadi_oase_shadi_h04",
+          "fromAuthoredId": "auth_oase_shadi_h04",
+          "npcId": "npc_oase_shadi_oase_shadi_h04",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        }
+      ]
+    }
   },
   {
     "id": "dermaga_donghai",
@@ -82,7 +267,19 @@
     "description": "Pelabuhan dagang utama di pesisir samudra timur tempat bertambatnya kapal feri dan rakit nelayan.",
     "footprintWidth": 40,
     "footprintHeight": 40,
-    "buildBuffer": 8
+    "buildBuffer": 8,
+    "v20": {
+      "tierClass": "port",
+      "markerDefId": "settlement_port_donghai",
+      "entrance": {
+        "x": 3922,
+        "y": 2702,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "port",
+      "residences": []
+    }
   },
   {
     "id": "desa_heiyan",
@@ -99,7 +296,69 @@
     "description": "Desa adat ramah di perbatasan wilayah iblis, tempat berlindungnya para praktisi kultivator bebas.",
     "footprintWidth": 40,
     "footprintHeight": 40,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "village",
+      "markerDefId": "settlement_village_default",
+      "entrance": {
+        "x": 1901,
+        "y": 1402,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "village",
+      "residences": [
+        {
+          "id": "res_desa_heiyan_desa_heiyan_h01",
+          "fromAuthoredId": "auth_desa_heiyan_h01",
+          "npcId": "npc_desa_heiyan_desa_heiyan_h01",
+          "homeKind": "obsidian_stone",
+          "label": "Pondok obsidian_stone"
+        },
+        {
+          "id": "res_desa_heiyan_desa_heiyan_h02",
+          "fromAuthoredId": "auth_desa_heiyan_h02",
+          "npcId": "npc_desa_heiyan_desa_heiyan_h02",
+          "homeKind": "obsidian_stone",
+          "label": "Pondok obsidian_stone"
+        },
+        {
+          "id": "res_desa_heiyan_desa_heiyan_h03",
+          "fromAuthoredId": "auth_desa_heiyan_h03",
+          "npcId": "npc_desa_heiyan_desa_heiyan_h03",
+          "homeKind": "hunter_thatched",
+          "label": "Pondok hunter_thatched"
+        },
+        {
+          "id": "res_desa_heiyan_desa_heiyan_h04",
+          "fromAuthoredId": "auth_desa_heiyan_h04",
+          "npcId": "npc_desa_heiyan_desa_heiyan_h04",
+          "homeKind": "hunter_thatched",
+          "label": "Pondok hunter_thatched"
+        },
+        {
+          "id": "res_desa_heiyan_desa_heiyan_h05",
+          "fromAuthoredId": "auth_desa_heiyan_h05",
+          "npcId": "npc_desa_heiyan_desa_heiyan_h05",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_desa_heiyan_desa_heiyan_h06",
+          "fromAuthoredId": "auth_desa_heiyan_h06",
+          "npcId": "npc_desa_heiyan_desa_heiyan_h06",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_desa_heiyan_desa_heiyan_h07",
+          "fromAuthoredId": "auth_desa_heiyan_h07",
+          "npcId": "npc_desa_heiyan_desa_heiyan_h07",
+          "homeKind": "obsidian_stone",
+          "label": "Pondok obsidian_stone"
+        }
+      ]
+    }
   },
   {
     "id": "kemah_dataran_tinggi_petapa",
@@ -116,7 +375,62 @@
     "description": "Kemah pertapaan di dekat mata air panas alami, dikelilingi kabut tebal dan ketenangan Dao.",
     "footprintWidth": 20,
     "footprintHeight": 20,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "hamlet",
+      "markerDefId": "settlement_hamlet_hill",
+      "entrance": {
+        "x": 1201,
+        "y": 4201,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_kemah_dataran_tinggi_petapa_kemah_dataran_tinggi_petapa_h01",
+          "fromAuthoredId": "auth_kemah_dataran_tinggi_petapa_h01",
+          "npcId": "npc_kemah_dataran_tinggi_petapa_kemah_dataran_tinggi_petapa_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_kemah_dataran_tinggi_petapa_kemah_dataran_tinggi_petapa_h02",
+          "fromAuthoredId": "auth_kemah_dataran_tinggi_petapa_h02",
+          "npcId": "npc_kemah_dataran_tinggi_petapa_kemah_dataran_tinggi_petapa_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_kemah_dataran_tinggi_petapa_kemah_dataran_tinggi_petapa_h03",
+          "fromAuthoredId": "auth_kemah_dataran_tinggi_petapa_h03",
+          "npcId": "npc_kemah_dataran_tinggi_petapa_kemah_dataran_tinggi_petapa_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_kemah_dataran_tinggi_petapa_kemah_dataran_tinggi_petapa_h04",
+          "fromAuthoredId": "auth_kemah_dataran_tinggi_petapa_h04",
+          "npcId": "npc_kemah_dataran_tinggi_petapa_kemah_dataran_tinggi_petapa_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_kemah_dataran_tinggi_petapa_kemah_dataran_tinggi_petapa_h05",
+          "fromAuthoredId": "auth_kemah_dataran_tinggi_petapa_h05",
+          "npcId": "npc_kemah_dataran_tinggi_petapa_kemah_dataran_tinggi_petapa_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_kemah_dataran_tinggi_petapa_kemah_dataran_tinggi_petapa_h06",
+          "fromAuthoredId": "auth_kemah_dataran_tinggi_petapa_h06",
+          "npcId": "npc_kemah_dataran_tinggi_petapa_kemah_dataran_tinggi_petapa_h06",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        }
+      ]
+    }
   },
   {
     "id": "kaki_gunung_azure",
@@ -133,7 +447,48 @@
     "description": "Pos lereng pegunungan tempat murid sekte pedang bertapa dan mempersiapkan perbekalan pendakian.",
     "footprintWidth": 30,
     "footprintHeight": 30,
-    "buildBuffer": 6
+    "buildBuffer": 6,
+    "v20": {
+      "tierClass": "outpost",
+      "markerDefId": "settlement_outpost_watchtower",
+      "entrance": {
+        "x": 2201,
+        "y": 3342,
+        "facing": "south"
+      },
+      "exclusionRadius": 8,
+      "facilitiesProfile": "outpost",
+      "residences": [
+        {
+          "id": "res_kaki_gunung_azure_kaki_gunung_azure_h01",
+          "fromAuthoredId": "auth_kaki_gunung_azure_h01",
+          "npcId": "npc_kaki_gunung_azure_kaki_gunung_azure_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_kaki_gunung_azure_kaki_gunung_azure_h02",
+          "fromAuthoredId": "auth_kaki_gunung_azure_h02",
+          "npcId": "npc_kaki_gunung_azure_kaki_gunung_azure_h02",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_kaki_gunung_azure_kaki_gunung_azure_h03",
+          "fromAuthoredId": "auth_kaki_gunung_azure_h03",
+          "npcId": "npc_kaki_gunung_azure_kaki_gunung_azure_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_kaki_gunung_azure_kaki_gunung_azure_h04",
+          "fromAuthoredId": "auth_kaki_gunung_azure_h04",
+          "npcId": "npc_kaki_gunung_azure_kaki_gunung_azure_h04",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        }
+      ]
+    }
   },
   {
     "id": "tianjing",
@@ -150,7 +505,55 @@
     "description": "Ibukota megah Benua Tianyuan dengan istana agung, paviliun lelang, dan dinding pertahanan kokoh.",
     "footprintWidth": 220,
     "footprintHeight": 220,
-    "buildBuffer": 20
+    "buildBuffer": 20,
+    "v20": {
+      "tierClass": "capital_city",
+      "markerDefId": "settlement_capital_tianjing",
+      "entrance": {
+        "x": 2702,
+        "y": 2804,
+        "facing": "south"
+      },
+      "exclusionRadius": 36,
+      "facilitiesProfile": "capital",
+      "residences": [
+        {
+          "id": "res_tianjing_tianjing_h01",
+          "fromAuthoredId": "auth_tianjing_h01",
+          "npcId": "npc_tianjing_tianjing_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_tianjing_tianjing_h02",
+          "fromAuthoredId": "auth_tianjing_h02",
+          "npcId": "npc_tianjing_tianjing_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_tianjing_tianjing_h03",
+          "fromAuthoredId": "auth_tianjing_h03",
+          "npcId": "npc_tianjing_tianjing_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_tianjing_tianjing_h04",
+          "fromAuthoredId": "auth_tianjing_h04",
+          "npcId": "npc_tianjing_tianjing_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_tianjing_tianjing_h05",
+          "fromAuthoredId": "auth_tianjing_h05",
+          "npcId": "npc_tianjing_tianjing_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        }
+      ]
+    }
   },
   {
     "id": "xitong_city",
@@ -167,7 +570,69 @@
     "description": "Kota metropolitan dagang utama di tengah benua dengan pasar terlengkap dan akademi kultivasi.",
     "footprintWidth": 140,
     "footprintHeight": 140,
-    "buildBuffer": 12
+    "buildBuffer": 12,
+    "v20": {
+      "tierClass": "major_city",
+      "markerDefId": "settlement_city_imperial",
+      "entrance": {
+        "x": 2352,
+        "y": 2903,
+        "facing": "south"
+      },
+      "exclusionRadius": 24,
+      "facilitiesProfile": "major_city",
+      "residences": [
+        {
+          "id": "res_xitong_city_xitong_city_h01",
+          "fromAuthoredId": "auth_xitong_city_h01",
+          "npcId": "npc_xitong_city_xitong_city_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_xitong_city_xitong_city_h02",
+          "fromAuthoredId": "auth_xitong_city_h02",
+          "npcId": "npc_xitong_city_xitong_city_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_xitong_city_xitong_city_h03",
+          "fromAuthoredId": "auth_xitong_city_h03",
+          "npcId": "npc_xitong_city_xitong_city_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_xitong_city_xitong_city_h04",
+          "fromAuthoredId": "auth_xitong_city_h04",
+          "npcId": "npc_xitong_city_xitong_city_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_xitong_city_xitong_city_h05",
+          "fromAuthoredId": "auth_xitong_city_h05",
+          "npcId": "npc_xitong_city_xitong_city_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_xitong_city_xitong_city_h06",
+          "fromAuthoredId": "auth_xitong_city_h06",
+          "npcId": "npc_xitong_city_xitong_city_h06",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_xitong_city_xitong_city_h07",
+          "fromAuthoredId": "auth_xitong_city_h07",
+          "npcId": "npc_xitong_city_xitong_city_h07",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        }
+      ]
+    }
   },
   {
     "id": "kota_fengyang",
@@ -184,7 +649,48 @@
     "description": "Kota dagang besar penghubung jalur kafilah timur laut.",
     "footprintWidth": 140,
     "footprintHeight": 140,
-    "buildBuffer": 12
+    "buildBuffer": 12,
+    "v20": {
+      "tierClass": "major_city",
+      "markerDefId": "settlement_city_trade",
+      "entrance": {
+        "x": 2952,
+        "y": 2603,
+        "facing": "south"
+      },
+      "exclusionRadius": 24,
+      "facilitiesProfile": "major_city",
+      "residences": [
+        {
+          "id": "res_kota_fengyang_kota_fengyang_h01",
+          "fromAuthoredId": "auth_kota_fengyang_h01",
+          "npcId": "npc_kota_fengyang_kota_fengyang_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_kota_fengyang_kota_fengyang_h02",
+          "fromAuthoredId": "auth_kota_fengyang_h02",
+          "npcId": "npc_kota_fengyang_kota_fengyang_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_kota_fengyang_kota_fengyang_h03",
+          "fromAuthoredId": "auth_kota_fengyang_h03",
+          "npcId": "npc_kota_fengyang_kota_fengyang_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_kota_fengyang_kota_fengyang_h04",
+          "fromAuthoredId": "auth_kota_fengyang_h04",
+          "npcId": "npc_kota_fengyang_kota_fengyang_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        }
+      ]
+    }
   },
   {
     "id": "luoyang_kecil",
@@ -201,7 +707,48 @@
     "description": "Kota garnisun pertahanan dengan benteng batu granit tinggi.",
     "footprintWidth": 140,
     "footprintHeight": 140,
-    "buildBuffer": 12
+    "buildBuffer": 12,
+    "v20": {
+      "tierClass": "major_city",
+      "markerDefId": "settlement_city_trade",
+      "entrance": {
+        "x": 2602,
+        "y": 2203,
+        "facing": "south"
+      },
+      "exclusionRadius": 24,
+      "facilitiesProfile": "major_city",
+      "residences": [
+        {
+          "id": "res_luoyang_kecil_luoyang_kecil_h01",
+          "fromAuthoredId": "auth_luoyang_kecil_h01",
+          "npcId": "npc_luoyang_kecil_luoyang_kecil_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_luoyang_kecil_luoyang_kecil_h02",
+          "fromAuthoredId": "auth_luoyang_kecil_h02",
+          "npcId": "npc_luoyang_kecil_luoyang_kecil_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_luoyang_kecil_luoyang_kecil_h03",
+          "fromAuthoredId": "auth_luoyang_kecil_h03",
+          "npcId": "npc_luoyang_kecil_luoyang_kecil_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_luoyang_kecil_luoyang_kecil_h04",
+          "fromAuthoredId": "auth_luoyang_kecil_h04",
+          "npcId": "npc_luoyang_kecil_luoyang_kecil_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        }
+      ]
+    }
   },
   {
     "id": "desa_tiedao",
@@ -218,7 +765,55 @@
     "description": "Desa pandai besi dekat gunung bijih dengan bengkel tempa tertua.",
     "footprintWidth": 40,
     "footprintHeight": 40,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "village",
+      "markerDefId": "settlement_village_default",
+      "entrance": {
+        "x": 3101,
+        "y": 2851,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "village",
+      "residences": [
+        {
+          "id": "res_desa_tiedao_desa_tiedao_h01",
+          "fromAuthoredId": "auth_desa_tiedao_h01",
+          "npcId": "npc_desa_tiedao_desa_tiedao_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_desa_tiedao_desa_tiedao_h02",
+          "fromAuthoredId": "auth_desa_tiedao_h02",
+          "npcId": "npc_desa_tiedao_desa_tiedao_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_desa_tiedao_desa_tiedao_h03",
+          "fromAuthoredId": "auth_desa_tiedao_h03",
+          "npcId": "npc_desa_tiedao_desa_tiedao_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_desa_tiedao_desa_tiedao_h04",
+          "fromAuthoredId": "auth_desa_tiedao_h04",
+          "npcId": "npc_desa_tiedao_desa_tiedao_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_desa_tiedao_desa_tiedao_h05",
+          "fromAuthoredId": "auth_desa_tiedao_h05",
+          "npcId": "npc_desa_tiedao_desa_tiedao_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        }
+      ]
+    }
   },
   {
     "id": "pos_tundra_utara",
@@ -236,7 +831,62 @@
     "footprintWidth": 30,
     "footprintHeight": 30,
     "buildBuffer": 6,
-    "regionWas": "northern_desolate"
+    "regionWas": "northern_desolate",
+    "v20": {
+      "tierClass": "outpost",
+      "markerDefId": "settlement_outpost_watchtower",
+      "entrance": {
+        "x": 2121,
+        "y": 4182,
+        "facing": "south"
+      },
+      "exclusionRadius": 8,
+      "facilitiesProfile": "outpost",
+      "residences": [
+        {
+          "id": "res_pos_tundra_utara_pos_tundra_utara_h01",
+          "fromAuthoredId": "auth_pos_tundra_utara_h01",
+          "npcId": "npc_pos_tundra_utara_pos_tundra_utara_h01",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_pos_tundra_utara_pos_tundra_utara_h02",
+          "fromAuthoredId": "auth_pos_tundra_utara_h02",
+          "npcId": "npc_pos_tundra_utara_pos_tundra_utara_h02",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_pos_tundra_utara_pos_tundra_utara_h03",
+          "fromAuthoredId": "auth_pos_tundra_utara_h03",
+          "npcId": "npc_pos_tundra_utara_pos_tundra_utara_h03",
+          "homeKind": "pine_woodcutter",
+          "label": "Pondok pine_woodcutter"
+        },
+        {
+          "id": "res_pos_tundra_utara_pos_tundra_utara_h04",
+          "fromAuthoredId": "auth_pos_tundra_utara_h04",
+          "npcId": "npc_pos_tundra_utara_pos_tundra_utara_h04",
+          "homeKind": "pine_woodcutter",
+          "label": "Pondok pine_woodcutter"
+        },
+        {
+          "id": "res_pos_tundra_utara_pos_tundra_utara_h05",
+          "fromAuthoredId": "auth_pos_tundra_utara_h05",
+          "npcId": "npc_pos_tundra_utara_pos_tundra_utara_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_pos_tundra_utara_pos_tundra_utara_h06",
+          "fromAuthoredId": "auth_pos_tundra_utara_h06",
+          "npcId": "npc_pos_tundra_utara_pos_tundra_utara_h06",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        }
+      ]
+    }
   },
   {
     "id": "pulau_penyu_raksasa",
@@ -254,7 +904,48 @@
     "footprintWidth": 40,
     "footprintHeight": 40,
     "buildBuffer": 8,
-    "regionWas": "eastern_sea"
+    "regionWas": "eastern_sea",
+    "v20": {
+      "tierClass": "island",
+      "markerDefId": "settlement_island_turtle",
+      "entrance": {
+        "x": 4352,
+        "y": 2753,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "port",
+      "residences": [
+        {
+          "id": "res_pulau_penyu_raksasa_pulau_penyu_raksasa_h01",
+          "fromAuthoredId": "auth_pulau_penyu_raksasa_h01",
+          "npcId": "npc_pulau_penyu_raksasa_pulau_penyu_raksasa_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_pulau_penyu_raksasa_pulau_penyu_raksasa_h02",
+          "fromAuthoredId": "auth_pulau_penyu_raksasa_h02",
+          "npcId": "npc_pulau_penyu_raksasa_pulau_penyu_raksasa_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_pulau_penyu_raksasa_pulau_penyu_raksasa_h03",
+          "fromAuthoredId": "auth_pulau_penyu_raksasa_h03",
+          "npcId": "npc_pulau_penyu_raksasa_pulau_penyu_raksasa_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_pulau_penyu_raksasa_pulau_penyu_raksasa_h04",
+          "fromAuthoredId": "auth_pulau_penyu_raksasa_h04",
+          "npcId": "npc_pulau_penyu_raksasa_pulau_penyu_raksasa_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        }
+      ]
+    }
   },
   {
     "id": "benteng_gerbang_iblis",
@@ -272,7 +963,62 @@
     "footprintWidth": 30,
     "footprintHeight": 30,
     "buildBuffer": 15,
-    "regionWas": "southern_demon_domain"
+    "regionWas": "southern_demon_domain",
+    "v20": {
+      "tierClass": "danger_zone",
+      "markerDefId": "entrance_danger_gate",
+      "entrance": {
+        "x": 2501,
+        "y": 802,
+        "facing": "south"
+      },
+      "exclusionRadius": 8,
+      "facilitiesProfile": "outpost",
+      "residences": [
+        {
+          "id": "res_benteng_gerbang_iblis_benteng_gerbang_iblis_h01",
+          "fromAuthoredId": "auth_benteng_gerbang_iblis_h01",
+          "npcId": "npc_benteng_gerbang_iblis_benteng_gerbang_iblis_h01",
+          "homeKind": "obsidian_stone",
+          "label": "Pondok obsidian_stone"
+        },
+        {
+          "id": "res_benteng_gerbang_iblis_benteng_gerbang_iblis_h02",
+          "fromAuthoredId": "auth_benteng_gerbang_iblis_h02",
+          "npcId": "npc_benteng_gerbang_iblis_benteng_gerbang_iblis_h02",
+          "homeKind": "obsidian_stone",
+          "label": "Pondok obsidian_stone"
+        },
+        {
+          "id": "res_benteng_gerbang_iblis_benteng_gerbang_iblis_h03",
+          "fromAuthoredId": "auth_benteng_gerbang_iblis_h03",
+          "npcId": "npc_benteng_gerbang_iblis_benteng_gerbang_iblis_h03",
+          "homeKind": "hunter_thatched",
+          "label": "Pondok hunter_thatched"
+        },
+        {
+          "id": "res_benteng_gerbang_iblis_benteng_gerbang_iblis_h04",
+          "fromAuthoredId": "auth_benteng_gerbang_iblis_h04",
+          "npcId": "npc_benteng_gerbang_iblis_benteng_gerbang_iblis_h04",
+          "homeKind": "hunter_thatched",
+          "label": "Pondok hunter_thatched"
+        },
+        {
+          "id": "res_benteng_gerbang_iblis_benteng_gerbang_iblis_h05",
+          "fromAuthoredId": "auth_benteng_gerbang_iblis_h05",
+          "npcId": "npc_benteng_gerbang_iblis_benteng_gerbang_iblis_h05",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_benteng_gerbang_iblis_benteng_gerbang_iblis_h06",
+          "fromAuthoredId": "auth_benteng_gerbang_iblis_h06",
+          "npcId": "npc_benteng_gerbang_iblis_benteng_gerbang_iblis_h06",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        }
+      ]
+    }
   },
   {
     "id": "lembah_kabut_merah",
@@ -289,7 +1035,55 @@
     "description": "Lembah lembab diselimuti kabut racun tempat bertumbuhnya tanaman langka.",
     "footprintWidth": 30,
     "footprintHeight": 30,
-    "buildBuffer": 15
+    "buildBuffer": 15,
+    "v20": {
+      "tierClass": "danger_zone",
+      "markerDefId": "entrance_danger_swamp",
+      "entrance": {
+        "x": 2351,
+        "y": 2422,
+        "facing": "south"
+      },
+      "exclusionRadius": 8,
+      "facilitiesProfile": "outpost",
+      "residences": [
+        {
+          "id": "res_lembah_kabut_merah_lembah_kabut_merah_h01",
+          "fromAuthoredId": "auth_lembah_kabut_merah_h01",
+          "npcId": "npc_lembah_kabut_merah_lembah_kabut_merah_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_lembah_kabut_merah_lembah_kabut_merah_h02",
+          "fromAuthoredId": "auth_lembah_kabut_merah_h02",
+          "npcId": "npc_lembah_kabut_merah_lembah_kabut_merah_h02",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        },
+        {
+          "id": "res_lembah_kabut_merah_lembah_kabut_merah_h03",
+          "fromAuthoredId": "auth_lembah_kabut_merah_h03",
+          "npcId": "npc_lembah_kabut_merah_lembah_kabut_merah_h03",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_lembah_kabut_merah_lembah_kabut_merah_h04",
+          "fromAuthoredId": "auth_lembah_kabut_merah_h04",
+          "npcId": "npc_lembah_kabut_merah_lembah_kabut_merah_h04",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_lembah_kabut_merah_lembah_kabut_merah_h05",
+          "fromAuthoredId": "auth_lembah_kabut_merah_h05",
+          "npcId": "npc_lembah_kabut_merah_lembah_kabut_merah_h05",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        }
+      ]
+    }
   },
   {
     "id": "sekte_awan_pedang",
@@ -306,7 +1100,48 @@
     "description": "Sekte aliran pedang ternama di lereng Pegunungan Azure, tempat ditempanya hati pedang sejati.",
     "footprintWidth": 60,
     "footprintHeight": 60,
-    "buildBuffer": 15
+    "buildBuffer": 15,
+    "v20": {
+      "tierClass": "sect",
+      "markerDefId": "settlement_sect_sword",
+      "entrance": {
+        "x": 2202,
+        "y": 3353,
+        "facing": "south"
+      },
+      "exclusionRadius": 16,
+      "facilitiesProfile": "sect",
+      "residences": [
+        {
+          "id": "res_sekte_awan_pedang_sekte_awan_pedang_h01",
+          "fromAuthoredId": "auth_sekte_awan_pedang_h01",
+          "npcId": "npc_sekte_awan_pedang_sekte_awan_pedang_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_sekte_awan_pedang_sekte_awan_pedang_h02",
+          "fromAuthoredId": "auth_sekte_awan_pedang_h02",
+          "npcId": "npc_sekte_awan_pedang_sekte_awan_pedang_h02",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_sekte_awan_pedang_sekte_awan_pedang_h03",
+          "fromAuthoredId": "auth_sekte_awan_pedang_h03",
+          "npcId": "npc_sekte_awan_pedang_sekte_awan_pedang_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_sekte_awan_pedang_sekte_awan_pedang_h04",
+          "fromAuthoredId": "auth_sekte_awan_pedang_h04",
+          "npcId": "npc_sekte_awan_pedang_sekte_awan_pedang_h04",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        }
+      ]
+    }
   },
   {
     "id": "sekte_pedang_langit",
@@ -323,7 +1158,62 @@
     "description": "Sekte Daois ortodoks tertua di Dataran Tengah yang menguasai teknik formasi sembilan bilah pedang.",
     "footprintWidth": 60,
     "footprintHeight": 60,
-    "buildBuffer": 15
+    "buildBuffer": 15,
+    "v20": {
+      "tierClass": "sect",
+      "markerDefId": "settlement_sect_sword",
+      "entrance": {
+        "x": 2152,
+        "y": 2803,
+        "facing": "south"
+      },
+      "exclusionRadius": 16,
+      "facilitiesProfile": "sect",
+      "residences": [
+        {
+          "id": "res_sekte_pedang_langit_sekte_pedang_langit_h01",
+          "fromAuthoredId": "auth_sekte_pedang_langit_h01",
+          "npcId": "npc_sekte_pedang_langit_sekte_pedang_langit_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_sekte_pedang_langit_sekte_pedang_langit_h02",
+          "fromAuthoredId": "auth_sekte_pedang_langit_h02",
+          "npcId": "npc_sekte_pedang_langit_sekte_pedang_langit_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_sekte_pedang_langit_sekte_pedang_langit_h03",
+          "fromAuthoredId": "auth_sekte_pedang_langit_h03",
+          "npcId": "npc_sekte_pedang_langit_sekte_pedang_langit_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_sekte_pedang_langit_sekte_pedang_langit_h04",
+          "fromAuthoredId": "auth_sekte_pedang_langit_h04",
+          "npcId": "npc_sekte_pedang_langit_sekte_pedang_langit_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_sekte_pedang_langit_sekte_pedang_langit_h05",
+          "fromAuthoredId": "auth_sekte_pedang_langit_h05",
+          "npcId": "npc_sekte_pedang_langit_sekte_pedang_langit_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_sekte_pedang_langit_sekte_pedang_langit_h06",
+          "fromAuthoredId": "auth_sekte_pedang_langit_h06",
+          "npcId": "npc_sekte_pedang_langit_sekte_pedang_langit_h06",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        }
+      ]
+    }
   },
   {
     "id": "kuil_lonceng_emas",
@@ -340,7 +1230,62 @@
     "description": "Kuil pertapaan di atas awan yang mengasah teknik perlindungan tubuh kebal vajra.",
     "footprintWidth": 60,
     "footprintHeight": 60,
-    "buildBuffer": 15
+    "buildBuffer": 15,
+    "v20": {
+      "tierClass": "sect",
+      "markerDefId": "settlement_sect_bell",
+      "entrance": {
+        "x": 1402,
+        "y": 4403,
+        "facing": "south"
+      },
+      "exclusionRadius": 16,
+      "facilitiesProfile": "sect",
+      "residences": [
+        {
+          "id": "res_kuil_lonceng_emas_kuil_lonceng_emas_h01",
+          "fromAuthoredId": "auth_kuil_lonceng_emas_h01",
+          "npcId": "npc_kuil_lonceng_emas_kuil_lonceng_emas_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_kuil_lonceng_emas_kuil_lonceng_emas_h02",
+          "fromAuthoredId": "auth_kuil_lonceng_emas_h02",
+          "npcId": "npc_kuil_lonceng_emas_kuil_lonceng_emas_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_kuil_lonceng_emas_kuil_lonceng_emas_h03",
+          "fromAuthoredId": "auth_kuil_lonceng_emas_h03",
+          "npcId": "npc_kuil_lonceng_emas_kuil_lonceng_emas_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_kuil_lonceng_emas_kuil_lonceng_emas_h04",
+          "fromAuthoredId": "auth_kuil_lonceng_emas_h04",
+          "npcId": "npc_kuil_lonceng_emas_kuil_lonceng_emas_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_kuil_lonceng_emas_kuil_lonceng_emas_h05",
+          "fromAuthoredId": "auth_kuil_lonceng_emas_h05",
+          "npcId": "npc_kuil_lonceng_emas_kuil_lonceng_emas_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_kuil_lonceng_emas_kuil_lonceng_emas_h06",
+          "fromAuthoredId": "auth_kuil_lonceng_emas_h06",
+          "npcId": "npc_kuil_lonceng_emas_kuil_lonceng_emas_h06",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        }
+      ]
+    }
   },
   {
     "id": "lembah_racun_bayangan",
@@ -357,7 +1302,69 @@
     "description": "Sekte esoterik penguasa rahasia racun, seni miasma, dan pemurnian gu mistis.",
     "footprintWidth": 60,
     "footprintHeight": 60,
-    "buildBuffer": 15
+    "buildBuffer": 15,
+    "v20": {
+      "tierClass": "sect",
+      "markerDefId": "settlement_sect_lotus",
+      "entrance": {
+        "x": 1802,
+        "y": 1103,
+        "facing": "south"
+      },
+      "exclusionRadius": 16,
+      "facilitiesProfile": "sect",
+      "residences": [
+        {
+          "id": "res_lembah_racun_bayangan_lembah_racun_bayangan_h01",
+          "fromAuthoredId": "auth_lembah_racun_bayangan_h01",
+          "npcId": "npc_lembah_racun_bayangan_lembah_racun_bayangan_h01",
+          "homeKind": "obsidian_stone",
+          "label": "Pondok obsidian_stone"
+        },
+        {
+          "id": "res_lembah_racun_bayangan_lembah_racun_bayangan_h02",
+          "fromAuthoredId": "auth_lembah_racun_bayangan_h02",
+          "npcId": "npc_lembah_racun_bayangan_lembah_racun_bayangan_h02",
+          "homeKind": "obsidian_stone",
+          "label": "Pondok obsidian_stone"
+        },
+        {
+          "id": "res_lembah_racun_bayangan_lembah_racun_bayangan_h03",
+          "fromAuthoredId": "auth_lembah_racun_bayangan_h03",
+          "npcId": "npc_lembah_racun_bayangan_lembah_racun_bayangan_h03",
+          "homeKind": "hunter_thatched",
+          "label": "Pondok hunter_thatched"
+        },
+        {
+          "id": "res_lembah_racun_bayangan_lembah_racun_bayangan_h04",
+          "fromAuthoredId": "auth_lembah_racun_bayangan_h04",
+          "npcId": "npc_lembah_racun_bayangan_lembah_racun_bayangan_h04",
+          "homeKind": "hunter_thatched",
+          "label": "Pondok hunter_thatched"
+        },
+        {
+          "id": "res_lembah_racun_bayangan_lembah_racun_bayangan_h05",
+          "fromAuthoredId": "auth_lembah_racun_bayangan_h05",
+          "npcId": "npc_lembah_racun_bayangan_lembah_racun_bayangan_h05",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_lembah_racun_bayangan_lembah_racun_bayangan_h06",
+          "fromAuthoredId": "auth_lembah_racun_bayangan_h06",
+          "npcId": "npc_lembah_racun_bayangan_lembah_racun_bayangan_h06",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_lembah_racun_bayangan_lembah_racun_bayangan_h07",
+          "fromAuthoredId": "auth_lembah_racun_bayangan_h07",
+          "npcId": "npc_lembah_racun_bayangan_lembah_racun_bayangan_h07",
+          "homeKind": "obsidian_stone",
+          "label": "Pondok obsidian_stone"
+        }
+      ]
+    }
   },
   {
     "id": "istana_giok_laut_timur",
@@ -374,7 +1381,48 @@
     "description": "Sekte kultivator air lentur yang bersemayam di atas karang giok pesisir timur.",
     "footprintWidth": 60,
     "footprintHeight": 60,
-    "buildBuffer": 15
+    "buildBuffer": 15,
+    "v20": {
+      "tierClass": "sect",
+      "markerDefId": "settlement_sect_generic",
+      "entrance": {
+        "x": 3902,
+        "y": 2853,
+        "facing": "south"
+      },
+      "exclusionRadius": 16,
+      "facilitiesProfile": "sect",
+      "residences": [
+        {
+          "id": "res_istana_giok_laut_timur_istana_giok_laut_timur_h01",
+          "fromAuthoredId": "auth_istana_giok_laut_timur_h01",
+          "npcId": "npc_istana_giok_laut_timur_istana_giok_laut_timur_h01",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_istana_giok_laut_timur_istana_giok_laut_timur_h02",
+          "fromAuthoredId": "auth_istana_giok_laut_timur_h02",
+          "npcId": "npc_istana_giok_laut_timur_istana_giok_laut_timur_h02",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_istana_giok_laut_timur_istana_giok_laut_timur_h03",
+          "fromAuthoredId": "auth_istana_giok_laut_timur_h03",
+          "npcId": "npc_istana_giok_laut_timur_istana_giok_laut_timur_h03",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_istana_giok_laut_timur_istana_giok_laut_timur_h04",
+          "fromAuthoredId": "auth_istana_giok_laut_timur_h04",
+          "npcId": "npc_istana_giok_laut_timur_istana_giok_laut_timur_h04",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        }
+      ]
+    }
   },
   {
     "id": "sekte_petir_ilahiah",
@@ -391,7 +1439,62 @@
     "description": "Pusat kultivasi petir langit yang menyerap energi halilintar alam untuk meremukkan kejahatan.",
     "footprintWidth": 60,
     "footprintHeight": 60,
-    "buildBuffer": 15
+    "buildBuffer": 15,
+    "v20": {
+      "tierClass": "sect",
+      "markerDefId": "settlement_sect_sword",
+      "entrance": {
+        "x": 2402,
+        "y": 4003,
+        "facing": "south"
+      },
+      "exclusionRadius": 16,
+      "facilitiesProfile": "sect",
+      "residences": [
+        {
+          "id": "res_sekte_petir_ilahiah_sekte_petir_ilahiah_h01",
+          "fromAuthoredId": "auth_sekte_petir_ilahiah_h01",
+          "npcId": "npc_sekte_petir_ilahiah_sekte_petir_ilahiah_h01",
+          "homeKind": "steppe_shepherd",
+          "label": "Pondok steppe_shepherd"
+        },
+        {
+          "id": "res_sekte_petir_ilahiah_sekte_petir_ilahiah_h02",
+          "fromAuthoredId": "auth_sekte_petir_ilahiah_h02",
+          "npcId": "npc_sekte_petir_ilahiah_sekte_petir_ilahiah_h02",
+          "homeKind": "steppe_shepherd",
+          "label": "Pondok steppe_shepherd"
+        },
+        {
+          "id": "res_sekte_petir_ilahiah_sekte_petir_ilahiah_h03",
+          "fromAuthoredId": "auth_sekte_petir_ilahiah_h03",
+          "npcId": "npc_sekte_petir_ilahiah_sekte_petir_ilahiah_h03",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_sekte_petir_ilahiah_sekte_petir_ilahiah_h04",
+          "fromAuthoredId": "auth_sekte_petir_ilahiah_h04",
+          "npcId": "npc_sekte_petir_ilahiah_sekte_petir_ilahiah_h04",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_sekte_petir_ilahiah_sekte_petir_ilahiah_h05",
+          "fromAuthoredId": "auth_sekte_petir_ilahiah_h05",
+          "npcId": "npc_sekte_petir_ilahiah_sekte_petir_ilahiah_h05",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_sekte_petir_ilahiah_sekte_petir_ilahiah_h06",
+          "fromAuthoredId": "auth_sekte_petir_ilahiah_h06",
+          "npcId": "npc_sekte_petir_ilahiah_sekte_petir_ilahiah_h06",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        }
+      ]
+    }
   },
   {
     "id": "sekte_pasir_suci",
@@ -408,7 +1511,62 @@
     "description": "Sekte penjaga oase kuno yang mengendalikan badai pasir dan formasi ilusi gurun.",
     "footprintWidth": 60,
     "footprintHeight": 60,
-    "buildBuffer": 15
+    "buildBuffer": 15,
+    "v20": {
+      "tierClass": "sect",
+      "markerDefId": "settlement_sect_generic",
+      "entrance": {
+        "x": 652,
+        "y": 2403,
+        "facing": "south"
+      },
+      "exclusionRadius": 16,
+      "facilitiesProfile": "sect",
+      "residences": [
+        {
+          "id": "res_sekte_pasir_suci_sekte_pasir_suci_h01",
+          "fromAuthoredId": "auth_sekte_pasir_suci_h01",
+          "npcId": "npc_sekte_pasir_suci_sekte_pasir_suci_h01",
+          "homeKind": "desert_adobe",
+          "label": "Pondok desert_adobe"
+        },
+        {
+          "id": "res_sekte_pasir_suci_sekte_pasir_suci_h02",
+          "fromAuthoredId": "auth_sekte_pasir_suci_h02",
+          "npcId": "npc_sekte_pasir_suci_sekte_pasir_suci_h02",
+          "homeKind": "desert_adobe",
+          "label": "Pondok desert_adobe"
+        },
+        {
+          "id": "res_sekte_pasir_suci_sekte_pasir_suci_h03",
+          "fromAuthoredId": "auth_sekte_pasir_suci_h03",
+          "npcId": "npc_sekte_pasir_suci_sekte_pasir_suci_h03",
+          "homeKind": "abandoned_stone_overgrown",
+          "label": "Pondok abandoned_stone_overgrown"
+        },
+        {
+          "id": "res_sekte_pasir_suci_sekte_pasir_suci_h04",
+          "fromAuthoredId": "auth_sekte_pasir_suci_h04",
+          "npcId": "npc_sekte_pasir_suci_sekte_pasir_suci_h04",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_sekte_pasir_suci_sekte_pasir_suci_h05",
+          "fromAuthoredId": "auth_sekte_pasir_suci_h05",
+          "npcId": "npc_sekte_pasir_suci_sekte_pasir_suci_h05",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_sekte_pasir_suci_sekte_pasir_suci_h06",
+          "fromAuthoredId": "auth_sekte_pasir_suci_h06",
+          "npcId": "npc_sekte_pasir_suci_sekte_pasir_suci_h06",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        }
+      ]
+    }
   },
   {
     "id": "istana_es_abadi",
@@ -425,7 +1583,69 @@
     "description": "Istana beku yang diukir dari gletser abadi ribuan tahun di ujung utara benua.",
     "footprintWidth": 60,
     "footprintHeight": 60,
-    "buildBuffer": 15
+    "buildBuffer": 15,
+    "v20": {
+      "tierClass": "sect",
+      "markerDefId": "settlement_sect_generic",
+      "entrance": {
+        "x": 1952,
+        "y": 4703,
+        "facing": "south"
+      },
+      "exclusionRadius": 16,
+      "facilitiesProfile": "sect",
+      "residences": [
+        {
+          "id": "res_istana_es_abadi_istana_es_abadi_h01",
+          "fromAuthoredId": "auth_istana_es_abadi_h01",
+          "npcId": "npc_istana_es_abadi_istana_es_abadi_h01",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_istana_es_abadi_istana_es_abadi_h02",
+          "fromAuthoredId": "auth_istana_es_abadi_h02",
+          "npcId": "npc_istana_es_abadi_istana_es_abadi_h02",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_istana_es_abadi_istana_es_abadi_h03",
+          "fromAuthoredId": "auth_istana_es_abadi_h03",
+          "npcId": "npc_istana_es_abadi_istana_es_abadi_h03",
+          "homeKind": "pine_woodcutter",
+          "label": "Pondok pine_woodcutter"
+        },
+        {
+          "id": "res_istana_es_abadi_istana_es_abadi_h04",
+          "fromAuthoredId": "auth_istana_es_abadi_h04",
+          "npcId": "npc_istana_es_abadi_istana_es_abadi_h04",
+          "homeKind": "pine_woodcutter",
+          "label": "Pondok pine_woodcutter"
+        },
+        {
+          "id": "res_istana_es_abadi_istana_es_abadi_h05",
+          "fromAuthoredId": "auth_istana_es_abadi_h05",
+          "npcId": "npc_istana_es_abadi_istana_es_abadi_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_istana_es_abadi_istana_es_abadi_h06",
+          "fromAuthoredId": "auth_istana_es_abadi_h06",
+          "npcId": "npc_istana_es_abadi_istana_es_abadi_h06",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_istana_es_abadi_istana_es_abadi_h07",
+          "fromAuthoredId": "auth_istana_es_abadi_h07",
+          "npcId": "npc_istana_es_abadi_istana_es_abadi_h07",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        }
+      ]
+    }
   },
   {
     "id": "gua_purba_bunga_aprikot",
@@ -442,7 +1662,69 @@
     "description": "Mulut gua labirin purba tempat pengembara muda menguji ketangkasan dan memburu pusaka fana.",
     "footprintWidth": 12,
     "footprintHeight": 12,
-    "buildBuffer": 12
+    "buildBuffer": 12,
+    "v20": {
+      "tierClass": "secret_realm",
+      "markerDefId": "entrance_secret_cave",
+      "entrance": {
+        "x": 2101,
+        "y": 2601,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h01",
+          "fromAuthoredId": "auth_gua_purba_bunga_aprikot_h01",
+          "npcId": "npc_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h02",
+          "fromAuthoredId": "auth_gua_purba_bunga_aprikot_h02",
+          "npcId": "npc_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h03",
+          "fromAuthoredId": "auth_gua_purba_bunga_aprikot_h03",
+          "npcId": "npc_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h04",
+          "fromAuthoredId": "auth_gua_purba_bunga_aprikot_h04",
+          "npcId": "npc_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h05",
+          "fromAuthoredId": "auth_gua_purba_bunga_aprikot_h05",
+          "npcId": "npc_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h06",
+          "fromAuthoredId": "auth_gua_purba_bunga_aprikot_h06",
+          "npcId": "npc_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h06",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h07",
+          "fromAuthoredId": "auth_gua_purba_bunga_aprikot_h07",
+          "npcId": "npc_gua_purba_bunga_aprikot_gua_purba_bunga_aprikot_h07",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        }
+      ]
+    }
   },
   {
     "id": "makam_kaisar_pedang_purba",
@@ -459,7 +1741,69 @@
     "description": "Makam bawah tanah kaisar pedang purba dengan jebakan bilah pedang dan penjaga batu kuno.",
     "footprintWidth": 12,
     "footprintHeight": 12,
-    "buildBuffer": 12
+    "buildBuffer": 12,
+    "v20": {
+      "tierClass": "secret_realm",
+      "markerDefId": "entrance_secret_tomb",
+      "entrance": {
+        "x": 2201,
+        "y": 3362,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h01",
+          "fromAuthoredId": "auth_makam_kaisar_pedang_purba_h01",
+          "npcId": "npc_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h02",
+          "fromAuthoredId": "auth_makam_kaisar_pedang_purba_h02",
+          "npcId": "npc_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h02",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h03",
+          "fromAuthoredId": "auth_makam_kaisar_pedang_purba_h03",
+          "npcId": "npc_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h04",
+          "fromAuthoredId": "auth_makam_kaisar_pedang_purba_h04",
+          "npcId": "npc_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h04",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h05",
+          "fromAuthoredId": "auth_makam_kaisar_pedang_purba_h05",
+          "npcId": "npc_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h06",
+          "fromAuthoredId": "auth_makam_kaisar_pedang_purba_h06",
+          "npcId": "npc_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h06",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h07",
+          "fromAuthoredId": "auth_makam_kaisar_pedang_purba_h07",
+          "npcId": "npc_makam_kaisar_pedang_purba_makam_kaisar_pedang_purba_h07",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        }
+      ]
+    }
   },
   {
     "id": "reruntuhan_abadi_tianyuan",
@@ -476,7 +1820,69 @@
     "description": "Labirin raksasa peninggalan dewa purba yang tertutup kabut tebal dan gas racun mematikan.",
     "footprintWidth": 12,
     "footprintHeight": 12,
-    "buildBuffer": 12
+    "buildBuffer": 12,
+    "v20": {
+      "tierClass": "secret_realm",
+      "markerDefId": "entrance_secret_ruin",
+      "entrance": {
+        "x": 2401,
+        "y": 4102,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h01",
+          "fromAuthoredId": "auth_reruntuhan_abadi_tianyuan_h01",
+          "npcId": "npc_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h01",
+          "homeKind": "steppe_shepherd",
+          "label": "Pondok steppe_shepherd"
+        },
+        {
+          "id": "res_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h02",
+          "fromAuthoredId": "auth_reruntuhan_abadi_tianyuan_h02",
+          "npcId": "npc_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h02",
+          "homeKind": "steppe_shepherd",
+          "label": "Pondok steppe_shepherd"
+        },
+        {
+          "id": "res_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h03",
+          "fromAuthoredId": "auth_reruntuhan_abadi_tianyuan_h03",
+          "npcId": "npc_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h03",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h04",
+          "fromAuthoredId": "auth_reruntuhan_abadi_tianyuan_h04",
+          "npcId": "npc_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h04",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h05",
+          "fromAuthoredId": "auth_reruntuhan_abadi_tianyuan_h05",
+          "npcId": "npc_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h05",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h06",
+          "fromAuthoredId": "auth_reruntuhan_abadi_tianyuan_h06",
+          "npcId": "npc_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h06",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h07",
+          "fromAuthoredId": "auth_reruntuhan_abadi_tianyuan_h07",
+          "npcId": "npc_reruntuhan_abadi_tianyuan_reruntuhan_abadi_tianyuan_h07",
+          "homeKind": "steppe_shepherd",
+          "label": "Pondok steppe_shepherd"
+        }
+      ]
+    }
   },
   {
     "id": "sarang_naga_karang_timur",
@@ -494,7 +1900,62 @@
     "footprintWidth": 12,
     "footprintHeight": 12,
     "buildBuffer": 12,
-    "regionWas": "eastern_sea"
+    "regionWas": "eastern_sea",
+    "v20": {
+      "tierClass": "secret_realm",
+      "markerDefId": "entrance_secret_portal",
+      "entrance": {
+        "x": 3881,
+        "y": 2752,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_sarang_naga_karang_timur_sarang_naga_karang_timur_h01",
+          "fromAuthoredId": "auth_sarang_naga_karang_timur_h01",
+          "npcId": "npc_sarang_naga_karang_timur_sarang_naga_karang_timur_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_sarang_naga_karang_timur_sarang_naga_karang_timur_h02",
+          "fromAuthoredId": "auth_sarang_naga_karang_timur_h02",
+          "npcId": "npc_sarang_naga_karang_timur_sarang_naga_karang_timur_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_sarang_naga_karang_timur_sarang_naga_karang_timur_h03",
+          "fromAuthoredId": "auth_sarang_naga_karang_timur_h03",
+          "npcId": "npc_sarang_naga_karang_timur_sarang_naga_karang_timur_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_sarang_naga_karang_timur_sarang_naga_karang_timur_h04",
+          "fromAuthoredId": "auth_sarang_naga_karang_timur_h04",
+          "npcId": "npc_sarang_naga_karang_timur_sarang_naga_karang_timur_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_sarang_naga_karang_timur_sarang_naga_karang_timur_h05",
+          "fromAuthoredId": "auth_sarang_naga_karang_timur_h05",
+          "npcId": "npc_sarang_naga_karang_timur_sarang_naga_karang_timur_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_sarang_naga_karang_timur_sarang_naga_karang_timur_h06",
+          "fromAuthoredId": "auth_sarang_naga_karang_timur_h06",
+          "npcId": "npc_sarang_naga_karang_timur_sarang_naga_karang_timur_h06",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        }
+      ]
+    }
   },
   {
     "id": "kota_jinling",
@@ -512,7 +1973,48 @@
     "footprintWidth": 40,
     "footprintHeight": 40,
     "buildBuffer": 5,
-    "regionWas": "nine_springs_delta"
+    "regionWas": "nine_springs_delta",
+    "v20": {
+      "tierClass": "major_city",
+      "markerDefId": "settlement_city_imperial",
+      "entrance": {
+        "x": 2752,
+        "y": 2354,
+        "facing": "south"
+      },
+      "exclusionRadius": 24,
+      "facilitiesProfile": "major_city",
+      "residences": [
+        {
+          "id": "res_kota_jinling_kota_jinling_h01",
+          "fromAuthoredId": "auth_kota_jinling_h01",
+          "npcId": "npc_kota_jinling_kota_jinling_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_kota_jinling_kota_jinling_h02",
+          "fromAuthoredId": "auth_kota_jinling_h02",
+          "npcId": "npc_kota_jinling_kota_jinling_h02",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        },
+        {
+          "id": "res_kota_jinling_kota_jinling_h03",
+          "fromAuthoredId": "auth_kota_jinling_h03",
+          "npcId": "npc_kota_jinling_kota_jinling_h03",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_kota_jinling_kota_jinling_h04",
+          "fromAuthoredId": "auth_kota_jinling_h04",
+          "npcId": "npc_kota_jinling_kota_jinling_h04",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        }
+      ]
+    }
   },
   {
     "id": "kota_yunxi",
@@ -530,7 +2032,62 @@
     "footprintWidth": 30,
     "footprintHeight": 30,
     "buildBuffer": 5,
-    "regionWas": "central_plains"
+    "regionWas": "central_plains",
+    "v20": {
+      "tierClass": "town",
+      "markerDefId": "settlement_town_plain",
+      "entrance": {
+        "x": 2201,
+        "y": 2502,
+        "facing": "south"
+      },
+      "exclusionRadius": 14,
+      "facilitiesProfile": "town",
+      "residences": [
+        {
+          "id": "res_kota_yunxi_kota_yunxi_h01",
+          "fromAuthoredId": "auth_kota_yunxi_h01",
+          "npcId": "npc_kota_yunxi_kota_yunxi_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_kota_yunxi_kota_yunxi_h02",
+          "fromAuthoredId": "auth_kota_yunxi_h02",
+          "npcId": "npc_kota_yunxi_kota_yunxi_h02",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        },
+        {
+          "id": "res_kota_yunxi_kota_yunxi_h03",
+          "fromAuthoredId": "auth_kota_yunxi_h03",
+          "npcId": "npc_kota_yunxi_kota_yunxi_h03",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_kota_yunxi_kota_yunxi_h04",
+          "fromAuthoredId": "auth_kota_yunxi_h04",
+          "npcId": "npc_kota_yunxi_kota_yunxi_h04",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_kota_yunxi_kota_yunxi_h05",
+          "fromAuthoredId": "auth_kota_yunxi_h05",
+          "npcId": "npc_kota_yunxi_kota_yunxi_h05",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        },
+        {
+          "id": "res_kota_yunxi_kota_yunxi_h06",
+          "fromAuthoredId": "auth_kota_yunxi_h06",
+          "npcId": "npc_kota_yunxi_kota_yunxi_h06",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        }
+      ]
+    }
   },
   {
     "id": "kota_hanhai",
@@ -547,7 +2104,48 @@
     "description": "Pos persinggahan karavan unta dan pedagang giok gurun.",
     "footprintWidth": 30,
     "footprintHeight": 30,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "town",
+      "markerDefId": "settlement_town_desert",
+      "entrance": {
+        "x": 1101,
+        "y": 2402,
+        "facing": "south"
+      },
+      "exclusionRadius": 14,
+      "facilitiesProfile": "town",
+      "residences": [
+        {
+          "id": "res_kota_hanhai_kota_hanhai_h01",
+          "fromAuthoredId": "auth_kota_hanhai_h01",
+          "npcId": "npc_kota_hanhai_kota_hanhai_h01",
+          "homeKind": "desert_adobe",
+          "label": "Pondok desert_adobe"
+        },
+        {
+          "id": "res_kota_hanhai_kota_hanhai_h02",
+          "fromAuthoredId": "auth_kota_hanhai_h02",
+          "npcId": "npc_kota_hanhai_kota_hanhai_h02",
+          "homeKind": "desert_adobe",
+          "label": "Pondok desert_adobe"
+        },
+        {
+          "id": "res_kota_hanhai_kota_hanhai_h03",
+          "fromAuthoredId": "auth_kota_hanhai_h03",
+          "npcId": "npc_kota_hanhai_kota_hanhai_h03",
+          "homeKind": "abandoned_stone_overgrown",
+          "label": "Pondok abandoned_stone_overgrown"
+        },
+        {
+          "id": "res_kota_hanhai_kota_hanhai_h04",
+          "fromAuthoredId": "auth_kota_hanhai_h04",
+          "npcId": "npc_kota_hanhai_kota_hanhai_h04",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        }
+      ]
+    }
   },
   {
     "id": "kota_leiyin",
@@ -565,7 +2163,48 @@
     "footprintWidth": 30,
     "footprintHeight": 30,
     "buildBuffer": 5,
-    "regionWas": "thundersteppe"
+    "regionWas": "thundersteppe",
+    "v20": {
+      "tierClass": "town",
+      "markerDefId": "settlement_town_plain",
+      "entrance": {
+        "x": 2601,
+        "y": 3802,
+        "facing": "south"
+      },
+      "exclusionRadius": 14,
+      "facilitiesProfile": "town",
+      "residences": [
+        {
+          "id": "res_kota_leiyin_kota_leiyin_h01",
+          "fromAuthoredId": "auth_kota_leiyin_h01",
+          "npcId": "npc_kota_leiyin_kota_leiyin_h01",
+          "homeKind": "steppe_shepherd",
+          "label": "Pondok steppe_shepherd"
+        },
+        {
+          "id": "res_kota_leiyin_kota_leiyin_h02",
+          "fromAuthoredId": "auth_kota_leiyin_h02",
+          "npcId": "npc_kota_leiyin_kota_leiyin_h02",
+          "homeKind": "steppe_shepherd",
+          "label": "Pondok steppe_shepherd"
+        },
+        {
+          "id": "res_kota_leiyin_kota_leiyin_h03",
+          "fromAuthoredId": "auth_kota_leiyin_h03",
+          "npcId": "npc_kota_leiyin_kota_leiyin_h03",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_kota_leiyin_kota_leiyin_h04",
+          "fromAuthoredId": "auth_kota_leiyin_h04",
+          "npcId": "npc_kota_leiyin_kota_leiyin_h04",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        }
+      ]
+    }
   },
   {
     "id": "kota_canghai",
@@ -583,7 +2222,48 @@
     "footprintWidth": 30,
     "footprintHeight": 30,
     "buildBuffer": 5,
-    "regionWas": "eastern_sea"
+    "regionWas": "eastern_sea",
+    "v20": {
+      "tierClass": "town",
+      "markerDefId": "settlement_town_coast",
+      "entrance": {
+        "x": 3701,
+        "y": 2552,
+        "facing": "south"
+      },
+      "exclusionRadius": 14,
+      "facilitiesProfile": "town",
+      "residences": [
+        {
+          "id": "res_kota_canghai_kota_canghai_h01",
+          "fromAuthoredId": "auth_kota_canghai_h01",
+          "npcId": "npc_kota_canghai_kota_canghai_h01",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_kota_canghai_kota_canghai_h02",
+          "fromAuthoredId": "auth_kota_canghai_h02",
+          "npcId": "npc_kota_canghai_kota_canghai_h02",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_kota_canghai_kota_canghai_h03",
+          "fromAuthoredId": "auth_kota_canghai_h03",
+          "npcId": "npc_kota_canghai_kota_canghai_h03",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_kota_canghai_kota_canghai_h04",
+          "fromAuthoredId": "auth_kota_canghai_h04",
+          "npcId": "npc_kota_canghai_kota_canghai_h04",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        }
+      ]
+    }
   },
   {
     "id": "kota_binghu",
@@ -601,7 +2281,48 @@
     "footprintWidth": 30,
     "footprintHeight": 30,
     "buildBuffer": 5,
-    "regionWas": "northern_desolate"
+    "regionWas": "northern_desolate",
+    "v20": {
+      "tierClass": "town",
+      "markerDefId": "settlement_town_frost",
+      "entrance": {
+        "x": 1801,
+        "y": 4352,
+        "facing": "south"
+      },
+      "exclusionRadius": 14,
+      "facilitiesProfile": "town",
+      "residences": [
+        {
+          "id": "res_kota_binghu_kota_binghu_h01",
+          "fromAuthoredId": "auth_kota_binghu_h01",
+          "npcId": "npc_kota_binghu_kota_binghu_h01",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_kota_binghu_kota_binghu_h02",
+          "fromAuthoredId": "auth_kota_binghu_h02",
+          "npcId": "npc_kota_binghu_kota_binghu_h02",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_kota_binghu_kota_binghu_h03",
+          "fromAuthoredId": "auth_kota_binghu_h03",
+          "npcId": "npc_kota_binghu_kota_binghu_h03",
+          "homeKind": "pine_woodcutter",
+          "label": "Pondok pine_woodcutter"
+        },
+        {
+          "id": "res_kota_binghu_kota_binghu_h04",
+          "fromAuthoredId": "auth_kota_binghu_h04",
+          "npcId": "npc_kota_binghu_kota_binghu_h04",
+          "homeKind": "pine_woodcutter",
+          "label": "Pondok pine_woodcutter"
+        }
+      ]
+    }
   },
   {
     "id": "kota_moyun",
@@ -618,7 +2339,55 @@
     "description": "Pasar netral bagi pedagang terlarang di perbatasan domain iblis.",
     "footprintWidth": 30,
     "footprintHeight": 30,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "town",
+      "markerDefId": "settlement_town_plain",
+      "entrance": {
+        "x": 2151,
+        "y": 1252,
+        "facing": "south"
+      },
+      "exclusionRadius": 14,
+      "facilitiesProfile": "town",
+      "residences": [
+        {
+          "id": "res_kota_moyun_kota_moyun_h01",
+          "fromAuthoredId": "auth_kota_moyun_h01",
+          "npcId": "npc_kota_moyun_kota_moyun_h01",
+          "homeKind": "obsidian_stone",
+          "label": "Pondok obsidian_stone"
+        },
+        {
+          "id": "res_kota_moyun_kota_moyun_h02",
+          "fromAuthoredId": "auth_kota_moyun_h02",
+          "npcId": "npc_kota_moyun_kota_moyun_h02",
+          "homeKind": "obsidian_stone",
+          "label": "Pondok obsidian_stone"
+        },
+        {
+          "id": "res_kota_moyun_kota_moyun_h03",
+          "fromAuthoredId": "auth_kota_moyun_h03",
+          "npcId": "npc_kota_moyun_kota_moyun_h03",
+          "homeKind": "hunter_thatched",
+          "label": "Pondok hunter_thatched"
+        },
+        {
+          "id": "res_kota_moyun_kota_moyun_h04",
+          "fromAuthoredId": "auth_kota_moyun_h04",
+          "npcId": "npc_kota_moyun_kota_moyun_h04",
+          "homeKind": "hunter_thatched",
+          "label": "Pondok hunter_thatched"
+        },
+        {
+          "id": "res_kota_moyun_kota_moyun_h05",
+          "fromAuthoredId": "auth_kota_moyun_h05",
+          "npcId": "npc_kota_moyun_kota_moyun_h05",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        }
+      ]
+    }
   },
   {
     "id": "kota_shuijing",
@@ -636,7 +2405,48 @@
     "footprintWidth": 30,
     "footprintHeight": 30,
     "buildBuffer": 5,
-    "regionWas": "mirror_lake"
+    "regionWas": "mirror_lake",
+    "v20": {
+      "tierClass": "town",
+      "markerDefId": "settlement_town_plain",
+      "entrance": {
+        "x": 3101,
+        "y": 3102,
+        "facing": "south"
+      },
+      "exclusionRadius": 14,
+      "facilitiesProfile": "town",
+      "residences": [
+        {
+          "id": "res_kota_shuijing_kota_shuijing_h01",
+          "fromAuthoredId": "auth_kota_shuijing_h01",
+          "npcId": "npc_kota_shuijing_kota_shuijing_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_kota_shuijing_kota_shuijing_h02",
+          "fromAuthoredId": "auth_kota_shuijing_h02",
+          "npcId": "npc_kota_shuijing_kota_shuijing_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_kota_shuijing_kota_shuijing_h03",
+          "fromAuthoredId": "auth_kota_shuijing_h03",
+          "npcId": "npc_kota_shuijing_kota_shuijing_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_kota_shuijing_kota_shuijing_h04",
+          "fromAuthoredId": "auth_kota_shuijing_h04",
+          "npcId": "npc_kota_shuijing_kota_shuijing_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        }
+      ]
+    }
   },
   {
     "id": "desa_bamboo_grove",
@@ -653,7 +2463,55 @@
     "description": "Desa tenang penghasil kerajinan bambu dan rebung manis.",
     "footprintWidth": 30,
     "footprintHeight": 30,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "village",
+      "markerDefId": "settlement_village_bamboo",
+      "entrance": {
+        "x": 1851,
+        "y": 2802,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "village",
+      "residences": [
+        {
+          "id": "res_desa_bamboo_grove_desa_bamboo_grove_h01",
+          "fromAuthoredId": "auth_desa_bamboo_grove_h01",
+          "npcId": "npc_desa_bamboo_grove_desa_bamboo_grove_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_desa_bamboo_grove_desa_bamboo_grove_h02",
+          "fromAuthoredId": "auth_desa_bamboo_grove_h02",
+          "npcId": "npc_desa_bamboo_grove_desa_bamboo_grove_h02",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        },
+        {
+          "id": "res_desa_bamboo_grove_desa_bamboo_grove_h03",
+          "fromAuthoredId": "auth_desa_bamboo_grove_h03",
+          "npcId": "npc_desa_bamboo_grove_desa_bamboo_grove_h03",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_desa_bamboo_grove_desa_bamboo_grove_h04",
+          "fromAuthoredId": "auth_desa_bamboo_grove_h04",
+          "npcId": "npc_desa_bamboo_grove_desa_bamboo_grove_h04",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_desa_bamboo_grove_desa_bamboo_grove_h05",
+          "fromAuthoredId": "auth_desa_bamboo_grove_h05",
+          "npcId": "npc_desa_bamboo_grove_desa_bamboo_grove_h05",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        }
+      ]
+    }
   },
   {
     "id": "desa_lingquan",
@@ -670,7 +2528,48 @@
     "description": "Desa penghasil air mineral kaya Qi spiritual untuk pembuatan pil.",
     "footprintWidth": 30,
     "footprintHeight": 30,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "village",
+      "markerDefId": "settlement_village_river",
+      "entrance": {
+        "x": 2551,
+        "y": 2552,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "village",
+      "residences": [
+        {
+          "id": "res_desa_lingquan_desa_lingquan_h01",
+          "fromAuthoredId": "auth_desa_lingquan_h01",
+          "npcId": "npc_desa_lingquan_desa_lingquan_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_desa_lingquan_desa_lingquan_h02",
+          "fromAuthoredId": "auth_desa_lingquan_h02",
+          "npcId": "npc_desa_lingquan_desa_lingquan_h02",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        },
+        {
+          "id": "res_desa_lingquan_desa_lingquan_h03",
+          "fromAuthoredId": "auth_desa_lingquan_h03",
+          "npcId": "npc_desa_lingquan_desa_lingquan_h03",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_desa_lingquan_desa_lingquan_h04",
+          "fromAuthoredId": "auth_desa_lingquan_h04",
+          "npcId": "npc_desa_lingquan_desa_lingquan_h04",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        }
+      ]
+    }
   },
   {
     "id": "desa_shaquan",
@@ -687,7 +2586,48 @@
     "description": "Permukiman oase kecil di pedalaman gurun suci barat.",
     "footprintWidth": 30,
     "footprintHeight": 30,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "village",
+      "markerDefId": "settlement_village_desert",
+      "entrance": {
+        "x": 601,
+        "y": 2102,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "village",
+      "residences": [
+        {
+          "id": "res_desa_shaquan_desa_shaquan_h01",
+          "fromAuthoredId": "auth_desa_shaquan_h01",
+          "npcId": "npc_desa_shaquan_desa_shaquan_h01",
+          "homeKind": "desert_adobe",
+          "label": "Pondok desert_adobe"
+        },
+        {
+          "id": "res_desa_shaquan_desa_shaquan_h02",
+          "fromAuthoredId": "auth_desa_shaquan_h02",
+          "npcId": "npc_desa_shaquan_desa_shaquan_h02",
+          "homeKind": "desert_adobe",
+          "label": "Pondok desert_adobe"
+        },
+        {
+          "id": "res_desa_shaquan_desa_shaquan_h03",
+          "fromAuthoredId": "auth_desa_shaquan_h03",
+          "npcId": "npc_desa_shaquan_desa_shaquan_h03",
+          "homeKind": "abandoned_stone_overgrown",
+          "label": "Pondok abandoned_stone_overgrown"
+        },
+        {
+          "id": "res_desa_shaquan_desa_shaquan_h04",
+          "fromAuthoredId": "auth_desa_shaquan_h04",
+          "npcId": "npc_desa_shaquan_desa_shaquan_h04",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        }
+      ]
+    }
   },
   {
     "id": "desa_tianhe",
@@ -704,7 +2644,62 @@
     "description": "Desa peternak kuda kilat di hamparan padang badai.",
     "footprintWidth": 30,
     "footprintHeight": 30,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "village",
+      "markerDefId": "settlement_village_default",
+      "entrance": {
+        "x": 2201,
+        "y": 3952,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "village",
+      "residences": [
+        {
+          "id": "res_desa_tianhe_desa_tianhe_h01",
+          "fromAuthoredId": "auth_desa_tianhe_h01",
+          "npcId": "npc_desa_tianhe_desa_tianhe_h01",
+          "homeKind": "steppe_shepherd",
+          "label": "Pondok steppe_shepherd"
+        },
+        {
+          "id": "res_desa_tianhe_desa_tianhe_h02",
+          "fromAuthoredId": "auth_desa_tianhe_h02",
+          "npcId": "npc_desa_tianhe_desa_tianhe_h02",
+          "homeKind": "steppe_shepherd",
+          "label": "Pondok steppe_shepherd"
+        },
+        {
+          "id": "res_desa_tianhe_desa_tianhe_h03",
+          "fromAuthoredId": "auth_desa_tianhe_h03",
+          "npcId": "npc_desa_tianhe_desa_tianhe_h03",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_desa_tianhe_desa_tianhe_h04",
+          "fromAuthoredId": "auth_desa_tianhe_h04",
+          "npcId": "npc_desa_tianhe_desa_tianhe_h04",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_desa_tianhe_desa_tianhe_h05",
+          "fromAuthoredId": "auth_desa_tianhe_h05",
+          "npcId": "npc_desa_tianhe_desa_tianhe_h05",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_desa_tianhe_desa_tianhe_h06",
+          "fromAuthoredId": "auth_desa_tianhe_h06",
+          "npcId": "npc_desa_tianhe_desa_tianhe_h06",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        }
+      ]
+    }
   },
   {
     "id": "desa_xueshan",
@@ -722,7 +2717,48 @@
     "footprintWidth": 30,
     "footprintHeight": 30,
     "buildBuffer": 5,
-    "regionWas": "northern_desolate"
+    "regionWas": "northern_desolate",
+    "v20": {
+      "tierClass": "village",
+      "markerDefId": "settlement_village_frost",
+      "entrance": {
+        "x": 2351,
+        "y": 4302,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "village",
+      "residences": [
+        {
+          "id": "res_desa_xueshan_desa_xueshan_h01",
+          "fromAuthoredId": "auth_desa_xueshan_h01",
+          "npcId": "npc_desa_xueshan_desa_xueshan_h01",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_desa_xueshan_desa_xueshan_h02",
+          "fromAuthoredId": "auth_desa_xueshan_h02",
+          "npcId": "npc_desa_xueshan_desa_xueshan_h02",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_desa_xueshan_desa_xueshan_h03",
+          "fromAuthoredId": "auth_desa_xueshan_h03",
+          "npcId": "npc_desa_xueshan_desa_xueshan_h03",
+          "homeKind": "pine_woodcutter",
+          "label": "Pondok pine_woodcutter"
+        },
+        {
+          "id": "res_desa_xueshan_desa_xueshan_h04",
+          "fromAuthoredId": "auth_desa_xueshan_h04",
+          "npcId": "npc_desa_xueshan_desa_xueshan_h04",
+          "homeKind": "pine_woodcutter",
+          "label": "Pondok pine_woodcutter"
+        }
+      ]
+    }
   },
   {
     "id": "desa_yougu",
@@ -739,7 +2775,55 @@
     "description": "Desa kebun teh tenang di dataran tinggi petapa.",
     "footprintWidth": 30,
     "footprintHeight": 30,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "village",
+      "markerDefId": "settlement_village_hill",
+      "entrance": {
+        "x": 1051,
+        "y": 4002,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "village",
+      "residences": [
+        {
+          "id": "res_desa_yougu_desa_yougu_h01",
+          "fromAuthoredId": "auth_desa_yougu_h01",
+          "npcId": "npc_desa_yougu_desa_yougu_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_desa_yougu_desa_yougu_h02",
+          "fromAuthoredId": "auth_desa_yougu_h02",
+          "npcId": "npc_desa_yougu_desa_yougu_h02",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_desa_yougu_desa_yougu_h03",
+          "fromAuthoredId": "auth_desa_yougu_h03",
+          "npcId": "npc_desa_yougu_desa_yougu_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_desa_yougu_desa_yougu_h04",
+          "fromAuthoredId": "auth_desa_yougu_h04",
+          "npcId": "npc_desa_yougu_desa_yougu_h04",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_desa_yougu_desa_yougu_h05",
+          "fromAuthoredId": "auth_desa_yougu_h05",
+          "npcId": "npc_desa_yougu_desa_yougu_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        }
+      ]
+    }
   },
   {
     "id": "dusun_kebun_persik",
@@ -756,7 +2840,48 @@
     "description": "Dusun petani buah persik manis dan nektar bunga.",
     "footprintWidth": 20,
     "footprintHeight": 20,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "hamlet",
+      "markerDefId": "settlement_hamlet_hill",
+      "entrance": {
+        "x": 2151,
+        "y": 2701,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_dusun_kebun_persik_dusun_kebun_persik_h01",
+          "fromAuthoredId": "auth_dusun_kebun_persik_h01",
+          "npcId": "npc_dusun_kebun_persik_dusun_kebun_persik_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_dusun_kebun_persik_dusun_kebun_persik_h02",
+          "fromAuthoredId": "auth_dusun_kebun_persik_h02",
+          "npcId": "npc_dusun_kebun_persik_dusun_kebun_persik_h02",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_dusun_kebun_persik_dusun_kebun_persik_h03",
+          "fromAuthoredId": "auth_dusun_kebun_persik_h03",
+          "npcId": "npc_dusun_kebun_persik_dusun_kebun_persik_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_dusun_kebun_persik_dusun_kebun_persik_h04",
+          "fromAuthoredId": "auth_dusun_kebun_persik_h04",
+          "npcId": "npc_dusun_kebun_persik_dusun_kebun_persik_h04",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        }
+      ]
+    }
   },
   {
     "id": "dusun_padi_emas",
@@ -773,7 +2898,55 @@
     "description": "Dusun lumbung pangan dan sawah bertingkat.",
     "footprintWidth": 20,
     "footprintHeight": 20,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "hamlet",
+      "markerDefId": "settlement_hamlet_river",
+      "entrance": {
+        "x": 2301,
+        "y": 2351,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_dusun_padi_emas_dusun_padi_emas_h01",
+          "fromAuthoredId": "auth_dusun_padi_emas_h01",
+          "npcId": "npc_dusun_padi_emas_dusun_padi_emas_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_dusun_padi_emas_dusun_padi_emas_h02",
+          "fromAuthoredId": "auth_dusun_padi_emas_h02",
+          "npcId": "npc_dusun_padi_emas_dusun_padi_emas_h02",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        },
+        {
+          "id": "res_dusun_padi_emas_dusun_padi_emas_h03",
+          "fromAuthoredId": "auth_dusun_padi_emas_h03",
+          "npcId": "npc_dusun_padi_emas_dusun_padi_emas_h03",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_dusun_padi_emas_dusun_padi_emas_h04",
+          "fromAuthoredId": "auth_dusun_padi_emas_h04",
+          "npcId": "npc_dusun_padi_emas_dusun_padi_emas_h04",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_dusun_padi_emas_dusun_padi_emas_h05",
+          "fromAuthoredId": "auth_dusun_padi_emas_h05",
+          "npcId": "npc_dusun_padi_emas_dusun_padi_emas_h05",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        }
+      ]
+    }
   },
   {
     "id": "dusun_oasis_tersembunyi",
@@ -790,7 +2963,55 @@
     "description": "Tempat peristirahatan kecil bagi musafir padang pasir.",
     "footprintWidth": 20,
     "footprintHeight": 20,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "hamlet",
+      "markerDefId": "settlement_hamlet_desert",
+      "entrance": {
+        "x": 751,
+        "y": 2301,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_dusun_oasis_tersembunyi_dusun_oasis_tersembunyi_h01",
+          "fromAuthoredId": "auth_dusun_oasis_tersembunyi_h01",
+          "npcId": "npc_dusun_oasis_tersembunyi_dusun_oasis_tersembunyi_h01",
+          "homeKind": "desert_adobe",
+          "label": "Pondok desert_adobe"
+        },
+        {
+          "id": "res_dusun_oasis_tersembunyi_dusun_oasis_tersembunyi_h02",
+          "fromAuthoredId": "auth_dusun_oasis_tersembunyi_h02",
+          "npcId": "npc_dusun_oasis_tersembunyi_dusun_oasis_tersembunyi_h02",
+          "homeKind": "desert_adobe",
+          "label": "Pondok desert_adobe"
+        },
+        {
+          "id": "res_dusun_oasis_tersembunyi_dusun_oasis_tersembunyi_h03",
+          "fromAuthoredId": "auth_dusun_oasis_tersembunyi_h03",
+          "npcId": "npc_dusun_oasis_tersembunyi_dusun_oasis_tersembunyi_h03",
+          "homeKind": "abandoned_stone_overgrown",
+          "label": "Pondok abandoned_stone_overgrown"
+        },
+        {
+          "id": "res_dusun_oasis_tersembunyi_dusun_oasis_tersembunyi_h04",
+          "fromAuthoredId": "auth_dusun_oasis_tersembunyi_h04",
+          "npcId": "npc_dusun_oasis_tersembunyi_dusun_oasis_tersembunyi_h04",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_dusun_oasis_tersembunyi_dusun_oasis_tersembunyi_h05",
+          "fromAuthoredId": "auth_dusun_oasis_tersembunyi_h05",
+          "npcId": "npc_dusun_oasis_tersembunyi_dusun_oasis_tersembunyi_h05",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        }
+      ]
+    }
   },
   {
     "id": "dusun_gembala_petir",
@@ -807,7 +3028,69 @@
     "description": "Pondok penggembala kuda di tengah padang petir.",
     "footprintWidth": 20,
     "footprintHeight": 20,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "hamlet",
+      "markerDefId": "settlement_hamlet_steppe",
+      "entrance": {
+        "x": 2501,
+        "y": 3901,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_dusun_gembala_petir_dusun_gembala_petir_h01",
+          "fromAuthoredId": "auth_dusun_gembala_petir_h01",
+          "npcId": "npc_dusun_gembala_petir_dusun_gembala_petir_h01",
+          "homeKind": "steppe_shepherd",
+          "label": "Pondok steppe_shepherd"
+        },
+        {
+          "id": "res_dusun_gembala_petir_dusun_gembala_petir_h02",
+          "fromAuthoredId": "auth_dusun_gembala_petir_h02",
+          "npcId": "npc_dusun_gembala_petir_dusun_gembala_petir_h02",
+          "homeKind": "steppe_shepherd",
+          "label": "Pondok steppe_shepherd"
+        },
+        {
+          "id": "res_dusun_gembala_petir_dusun_gembala_petir_h03",
+          "fromAuthoredId": "auth_dusun_gembala_petir_h03",
+          "npcId": "npc_dusun_gembala_petir_dusun_gembala_petir_h03",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_dusun_gembala_petir_dusun_gembala_petir_h04",
+          "fromAuthoredId": "auth_dusun_gembala_petir_h04",
+          "npcId": "npc_dusun_gembala_petir_dusun_gembala_petir_h04",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_dusun_gembala_petir_dusun_gembala_petir_h05",
+          "fromAuthoredId": "auth_dusun_gembala_petir_h05",
+          "npcId": "npc_dusun_gembala_petir_dusun_gembala_petir_h05",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_dusun_gembala_petir_dusun_gembala_petir_h06",
+          "fromAuthoredId": "auth_dusun_gembala_petir_h06",
+          "npcId": "npc_dusun_gembala_petir_dusun_gembala_petir_h06",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_dusun_gembala_petir_dusun_gembala_petir_h07",
+          "fromAuthoredId": "auth_dusun_gembala_petir_h07",
+          "npcId": "npc_dusun_gembala_petir_dusun_gembala_petir_h07",
+          "homeKind": "steppe_shepherd",
+          "label": "Pondok steppe_shepherd"
+        }
+      ]
+    }
   },
   {
     "id": "dusun_pondok_karang",
@@ -825,7 +3108,48 @@
     "footprintWidth": 20,
     "footprintHeight": 20,
     "buildBuffer": 5,
-    "regionWas": "eastern_sea"
+    "regionWas": "eastern_sea",
+    "v20": {
+      "tierClass": "hamlet",
+      "markerDefId": "settlement_hamlet_river",
+      "entrance": {
+        "x": 3801,
+        "y": 2651,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_dusun_pondok_karang_dusun_pondok_karang_h01",
+          "fromAuthoredId": "auth_dusun_pondok_karang_h01",
+          "npcId": "npc_dusun_pondok_karang_dusun_pondok_karang_h01",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_dusun_pondok_karang_dusun_pondok_karang_h02",
+          "fromAuthoredId": "auth_dusun_pondok_karang_h02",
+          "npcId": "npc_dusun_pondok_karang_dusun_pondok_karang_h02",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_dusun_pondok_karang_dusun_pondok_karang_h03",
+          "fromAuthoredId": "auth_dusun_pondok_karang_h03",
+          "npcId": "npc_dusun_pondok_karang_dusun_pondok_karang_h03",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_dusun_pondok_karang_dusun_pondok_karang_h04",
+          "fromAuthoredId": "auth_dusun_pondok_karang_h04",
+          "npcId": "npc_dusun_pondok_karang_dusun_pondok_karang_h04",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        }
+      ]
+    }
   },
   {
     "id": "dusun_pondok_es",
@@ -843,7 +3167,48 @@
     "footprintWidth": 20,
     "footprintHeight": 20,
     "buildBuffer": 5,
-    "regionWas": "northern_desolate"
+    "regionWas": "northern_desolate",
+    "v20": {
+      "tierClass": "hamlet",
+      "markerDefId": "settlement_hamlet_frost",
+      "entrance": {
+        "x": 2001,
+        "y": 4251,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_dusun_pondok_es_dusun_pondok_es_h01",
+          "fromAuthoredId": "auth_dusun_pondok_es_h01",
+          "npcId": "npc_dusun_pondok_es_dusun_pondok_es_h01",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_dusun_pondok_es_dusun_pondok_es_h02",
+          "fromAuthoredId": "auth_dusun_pondok_es_h02",
+          "npcId": "npc_dusun_pondok_es_dusun_pondok_es_h02",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_dusun_pondok_es_dusun_pondok_es_h03",
+          "fromAuthoredId": "auth_dusun_pondok_es_h03",
+          "npcId": "npc_dusun_pondok_es_dusun_pondok_es_h03",
+          "homeKind": "pine_woodcutter",
+          "label": "Pondok pine_woodcutter"
+        },
+        {
+          "id": "res_dusun_pondok_es_dusun_pondok_es_h04",
+          "fromAuthoredId": "auth_dusun_pondok_es_h04",
+          "npcId": "npc_dusun_pondok_es_dusun_pondok_es_h04",
+          "homeKind": "pine_woodcutter",
+          "label": "Pondok pine_woodcutter"
+        }
+      ]
+    }
   },
   {
     "id": "dusun_pondok_teh_kuno",
@@ -860,7 +3225,48 @@
     "description": "Perkebunan daun teh pencerahan Qi.",
     "footprintWidth": 20,
     "footprintHeight": 20,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "hamlet",
+      "markerDefId": "settlement_hamlet_hill",
+      "entrance": {
+        "x": 1301,
+        "y": 4101,
+        "facing": "south"
+      },
+      "exclusionRadius": 6,
+      "facilitiesProfile": "hamlet",
+      "residences": [
+        {
+          "id": "res_dusun_pondok_teh_kuno_dusun_pondok_teh_kuno_h01",
+          "fromAuthoredId": "auth_dusun_pondok_teh_kuno_h01",
+          "npcId": "npc_dusun_pondok_teh_kuno_dusun_pondok_teh_kuno_h01",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_dusun_pondok_teh_kuno_dusun_pondok_teh_kuno_h02",
+          "fromAuthoredId": "auth_dusun_pondok_teh_kuno_h02",
+          "npcId": "npc_dusun_pondok_teh_kuno_dusun_pondok_teh_kuno_h02",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_dusun_pondok_teh_kuno_dusun_pondok_teh_kuno_h03",
+          "fromAuthoredId": "auth_dusun_pondok_teh_kuno_h03",
+          "npcId": "npc_dusun_pondok_teh_kuno_dusun_pondok_teh_kuno_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_dusun_pondok_teh_kuno_dusun_pondok_teh_kuno_h04",
+          "fromAuthoredId": "auth_dusun_pondok_teh_kuno_h04",
+          "npcId": "npc_dusun_pondok_teh_kuno_dusun_pondok_teh_kuno_h04",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        }
+      ]
+    }
   },
   {
     "id": "pos_menara_pantau_danau",
@@ -878,7 +3284,69 @@
     "footprintWidth": 25,
     "footprintHeight": 25,
     "buildBuffer": 5,
-    "regionWas": "mirror_lake"
+    "regionWas": "mirror_lake",
+    "v20": {
+      "tierClass": "outpost",
+      "markerDefId": "settlement_outpost_watchtower",
+      "entrance": {
+        "x": 3251,
+        "y": 3002,
+        "facing": "south"
+      },
+      "exclusionRadius": 8,
+      "facilitiesProfile": "outpost",
+      "residences": [
+        {
+          "id": "res_pos_menara_pantau_danau_pos_menara_pantau_danau_h01",
+          "fromAuthoredId": "auth_pos_menara_pantau_danau_h01",
+          "npcId": "npc_pos_menara_pantau_danau_pos_menara_pantau_danau_h01",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        },
+        {
+          "id": "res_pos_menara_pantau_danau_pos_menara_pantau_danau_h02",
+          "fromAuthoredId": "auth_pos_menara_pantau_danau_h02",
+          "npcId": "npc_pos_menara_pantau_danau_pos_menara_pantau_danau_h02",
+          "homeKind": "daoist_shrine",
+          "label": "Pondok daoist_shrine"
+        },
+        {
+          "id": "res_pos_menara_pantau_danau_pos_menara_pantau_danau_h03",
+          "fromAuthoredId": "auth_pos_menara_pantau_danau_h03",
+          "npcId": "npc_pos_menara_pantau_danau_pos_menara_pantau_danau_h03",
+          "homeKind": "charcoal_burner",
+          "label": "Pondok charcoal_burner"
+        },
+        {
+          "id": "res_pos_menara_pantau_danau_pos_menara_pantau_danau_h04",
+          "fromAuthoredId": "auth_pos_menara_pantau_danau_h04",
+          "npcId": "npc_pos_menara_pantau_danau_pos_menara_pantau_danau_h04",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_pos_menara_pantau_danau_pos_menara_pantau_danau_h05",
+          "fromAuthoredId": "auth_pos_menara_pantau_danau_h05",
+          "npcId": "npc_pos_menara_pantau_danau_pos_menara_pantau_danau_h05",
+          "homeKind": "mountain_hermit",
+          "label": "Pondok mountain_hermit"
+        },
+        {
+          "id": "res_pos_menara_pantau_danau_pos_menara_pantau_danau_h06",
+          "fromAuthoredId": "auth_pos_menara_pantau_danau_h06",
+          "npcId": "npc_pos_menara_pantau_danau_pos_menara_pantau_danau_h06",
+          "homeKind": "snow_thatched",
+          "label": "Pondok snow_thatched"
+        },
+        {
+          "id": "res_pos_menara_pantau_danau_pos_menara_pantau_danau_h07",
+          "fromAuthoredId": "auth_pos_menara_pantau_danau_h07",
+          "npcId": "npc_pos_menara_pantau_danau_pos_menara_pantau_danau_h07",
+          "homeKind": "village_house_2x1",
+          "label": "Pondok village_house_2x1"
+        }
+      ]
+    }
   },
   {
     "id": "dermaga_teluk_sembilan",
@@ -895,6 +3363,54 @@
     "description": "Dermaga penyeberangan rakit bambu antar sungai.",
     "footprintWidth": 30,
     "footprintHeight": 30,
-    "buildBuffer": 5
+    "buildBuffer": 5,
+    "v20": {
+      "tierClass": "port",
+      "markerDefId": "settlement_port_bay",
+      "entrance": {
+        "x": 2501,
+        "y": 2302,
+        "facing": "south"
+      },
+      "exclusionRadius": 10,
+      "facilitiesProfile": "port",
+      "residences": [
+        {
+          "id": "res_dermaga_teluk_sembilan_dermaga_teluk_sembilan_h01",
+          "fromAuthoredId": "auth_dermaga_teluk_sembilan_h01",
+          "npcId": "npc_dermaga_teluk_sembilan_dermaga_teluk_sembilan_h01",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_dermaga_teluk_sembilan_dermaga_teluk_sembilan_h02",
+          "fromAuthoredId": "auth_dermaga_teluk_sembilan_h02",
+          "npcId": "npc_dermaga_teluk_sembilan_dermaga_teluk_sembilan_h02",
+          "homeKind": "stilt_fisher",
+          "label": "Pondok stilt_fisher"
+        },
+        {
+          "id": "res_dermaga_teluk_sembilan_dermaga_teluk_sembilan_h03",
+          "fromAuthoredId": "auth_dermaga_teluk_sembilan_h03",
+          "npcId": "npc_dermaga_teluk_sembilan_dermaga_teluk_sembilan_h03",
+          "homeKind": "tea_harvester",
+          "label": "Pondok tea_harvester"
+        },
+        {
+          "id": "res_dermaga_teluk_sembilan_dermaga_teluk_sembilan_h04",
+          "fromAuthoredId": "auth_dermaga_teluk_sembilan_h04",
+          "npcId": "npc_dermaga_teluk_sembilan_dermaga_teluk_sembilan_h04",
+          "homeKind": "bamboo_field",
+          "label": "Pondok bamboo_field"
+        },
+        {
+          "id": "res_dermaga_teluk_sembilan_dermaga_teluk_sembilan_h05",
+          "fromAuthoredId": "auth_dermaga_teluk_sembilan_h05",
+          "npcId": "npc_dermaga_teluk_sembilan_dermaga_teluk_sembilan_h05",
+          "homeKind": "pine_woodcutter",
+          "label": "Pondok pine_woodcutter"
+        }
+      ]
+    }
   }
 ]

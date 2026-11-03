@@ -6404,9 +6404,16 @@ export function renderL4ProceduralObject(
 
   // 1. Try rendering from WebP texture atlas first (Song Dynasty Shuimo asset)
   const atlasName = getAtlasNameForDefId(defId);
-  const drawn = atlasLoader.drawAtlasFrame(ctx, atlasName, defId, screenX, screenY, dw, dh, alpha, flipX);
+  let drawn = atlasLoader.drawAtlasFrame(ctx, atlasName, defId, screenX, screenY, dw, dh, alpha, flipX);
   if (drawn) {
     return;
+  }
+
+  // V20: For settlement markers with frameDefId fallback
+  if (!drawn && canon?.frameDefId) {
+    const fallbackAtlas = getAtlasNameForDefId(canon.frameDefId);
+    drawn = atlasLoader.drawAtlasFrame(ctx, fallbackAtlas, canon.frameDefId, screenX, screenY, dw, dh, alpha, flipX);
+    if (drawn) return;
   }
 
   // If the atlas index or this specific frame page is still loading, skip cleanly to await next frame

@@ -77,6 +77,7 @@ const pEngine = require('../../utils/proceduralWorldEngine');
 const PropertyStructure = require('../../models/PropertyStructure');
 const { generateDefaultEstateLayout, decompressLayoutRLE, TILE_METADATA } = require('../../utils/propertyManager');
 const { setPlayerAuthoritativePosition } = require('../../services/movementService');
+const settlementZones = require('../../utils/settlementZones');
 const { normalizeRegionSlug, getTerritoryInfo } = require('../../utils/worldRegionEngine');
 const chunkStreamingEngine = require('../../utils/chunkStreamingEngine');
 
@@ -323,13 +324,14 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Ranah Kultivasi (Realm) kamu belum cukup untuk memasuki wilayah ini.' });
         }
 
-        // Calculate distance
-        let distance = null;
-        if (travelConfig.distancesLi[fromLocation.settlementName] && travelConfig.distancesLi[fromLocation.settlementName][toSettlementName]) {
-            distance = travelConfig.distancesLi[fromLocation.settlementName][toSettlementName];
-        } else {
-             return res.status(400).json({ error: 'Rute tidak ditemukan.' });
+        // Calculate distance using TravelGraph (Dijkstra - V21 F4)
+        const { travelGraph } = require('../../utils/travelGraph');
+        const { resolveTravelEvent } = require('../../config/travelEvents');
+        const route = travelGraph.shortestPath(fromLocation.settlementName, toSettlementName);
+        if (!route.path || route.path.length === 0 || !isFinite(route.totalLi)) {
+            return res.status(400).json({ error: 'Rute tidak ditemukan antara kedua wilayah.' });
         }
+        let distance = route.totalLi;
 
         let baseHours = distance / travelConfig.LI_PER_HOUR;
         let realmIndex = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
@@ -403,6 +405,21 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
         });
 
         await travel.save();
+
+        // Sinkronisasi player.travel (V21 F4)
+        player.travel = {
+            from: fromLocation.settlementName,
+            to: toSettlementName,
+            path: route.path,
+            startedAt: new Date(),
+            arriveAt: arrivalTime,
+            active: true,
+            currentSegmentIndex: 0,
+            totalSegments: Math.max(1, route.path.length - 1),
+            eventResolved: false,
+            eventData: resolveTravelEvent(userId, `${route.path[0]}->${route.path[1] || toSettlementName}`, Date.now())
+        };
+        if (typeof player.markModified === 'function') player.markModified('travel');
 
         // Remove player from building when traveling
         if (player.currentLocation) {
@@ -2435,6 +2452,7 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             );
         }
 
+        const anchorAtEntrance = settlementZones.findAnchorByEntrance(currentX, currentY);
         const responsePayload = {
             success: true,
             stepsTaken,
@@ -2447,7 +2465,13 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             stoppedEarly,
             stopReason,
             encounter: encounterResult,
-            exploredChunks: player.exploredChunks || []
+            exploredChunks: player.exploredChunks || [],
+            settlementPrompt: anchorAtEntrance ? {
+                id: anchorAtEntrance.id,
+                name: anchorAtEntrance.name,
+                tier: anchorAtEntrance.tier || 1,
+                regionSlug: anchorAtEntrance.region || anchorAtEntrance.regionSlug || 'central_plains'
+            } : null
         };
 
         if (effectiveReqId) {

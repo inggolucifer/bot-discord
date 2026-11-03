@@ -10,7 +10,8 @@
 
 import { TileData, MapObjectInstance } from '@/types/world';
 import api from '@/lib/api';
-import { renderChunkGroundBitmap, renderChunkGridBitmap, GroundBisectFlags } from '@/lib/groundRenderer';
+import { renderChunkGroundBitmap, renderChunkGridBitmap, getBakedChunk } from '@/lib/groundRenderer';
+import { perfProbe } from '@/lib/perfProbe';
 export const GROUND_RENDER_VERSION = 'v18';
 import { groundTextures } from '@/lib/groundTextures';
 
@@ -39,6 +40,8 @@ export interface StaticChunkData {
     label?: string | null;
     terrainLabel?: string | null;
     isSettlementOrigin?: boolean;
+    isSettlementEntrance?: boolean;
+    settlementData?: any;
     settlementName?: string | null;
     chineseName?: string | null;
     autotileBitmask?: number;
@@ -135,20 +138,15 @@ export function chunkToBounds(cx: number, cy: number) {
 }
 
 export class ChunkManager {
+  public isTravelActive = false;
+
+  public setTravelActive(active: boolean) {
+    this.isTravelActive = active;
+  }
+
   private chunks = new Map<string, StaticChunkData>();
   private unpackedChunks = new Map<string, TileData[]>();
   private chunkBitmaps = new Map<string, HTMLCanvasElement | ImageBitmap>();
-  private currentRenderFlags: GroundBisectFlags = { groundOnly: false, layers: 'all', noRoad: false, noFarm: false };
-
-  public setRenderFlags(flags: Partial<GroundBisectFlags>) {
-    this.currentRenderFlags = { ...this.currentRenderFlags, ...flags };
-    this.chunkBitmaps.clear();
-    this.notifySubscribers();
-  }
-
-  public getRenderFlags(): GroundBisectFlags {
-    return this.currentRenderFlags;
-  }
   private chunkGridBitmaps = new Map<string, HTMLCanvasElement>();
   private liveData = new Map<string, LiveChunkData>();
 
@@ -323,6 +321,8 @@ export class ChunkManager {
    * Main camera update hook: updates active rings, evicts cold chunks, schedules fetches
    */
   public updateCamera(centerTileX: number, centerTileY: number, zoom = 1.0) {
+    if (this.isTravelActive) return;
+
     const { hot, warm, hotKeys, warmKeys, centerCx, centerCy } = this.computeRings(centerTileX, centerTileY, zoom);
 
     this.currentCenter = { cx: centerCx, cy: centerCy };
@@ -367,6 +367,7 @@ export class ChunkManager {
             (bitmap as any).close();
           } catch (_) {}
         }
+        perfProbe.count('chunks:disposed');
         this.chunkBitmaps.delete(key);
         this.unpackedChunks.delete(key);
         this.chunks.delete(key);
@@ -437,6 +438,7 @@ export class ChunkManager {
    * Ingests, unpacks, and caches a static chunk
    */
   public ingestStaticChunk(chunk: StaticChunkData) {
+    perfProbe.count('chunks:loaded');
     if (!chunk || typeof chunk.cx !== 'number' || typeof chunk.cy !== 'number') return;
     const key = `${chunk.cx}:${chunk.cy}`;
     this.chunks.set(key, chunk);
@@ -504,6 +506,8 @@ export class ChunkManager {
           settlementName: special.settlementName || null,
           chineseName: special.chineseName || null,
           isSettlementOrigin: special.isSettlementOrigin || false,
+          isSettlementEntrance: special.isSettlementEntrance || false,
+          settlementData: special.settlementData || null,
           objects: tileScatter
         };
 
@@ -607,13 +611,29 @@ export class ChunkManager {
   /**
    * Pre-renders and caches 32x32 chunk static terrain background onto an OffscreenCanvas
    */
-  public getChunkBitmap(cx: number, cy: number, tileSize = 54): HTMLCanvasElement | ImageBitmap | null {
+  public getChunkBitmap(cx: number, cy: number, tileSize = 54, tier = 0): HTMLCanvasElement | ImageBitmap | null {
     if (typeof document === 'undefined') return null;
+    if (this.isTravelActive) return null;
+
+    // V21 F1: Try baked chunk bitmap first (LOD tier according to current zoom)
+    if (process.env.NEXT_PUBLIC_LIGHT_WORLD !== '0') {
+      const baked = getBakedChunk(
+        cx,
+        cy,
+        tier,
+        this.currentCenter?.cx,
+        this.currentCenter?.cy,
+        () => {
+          this.notifySubscribers();
+        }
+      );
+      if (baked) {
+        return baked;
+      }
+    }
 
     const chunkKey = `${cx}:${cy}`;
-    const f = this.currentRenderFlags;
-    const flagsKey = `${f.groundOnly ? 'go' : 'norm'}_${f.layers || 'all'}_${f.noRoad ? 'nr' : 'r'}_${f.noFarm ? 'nf' : 'f'}`;
-    const bitmapKey = `${GROUND_RENDER_VERSION}:${cx}:${cy}:${tileSize}:${flagsKey}`;
+    const bitmapKey = `${GROUND_RENDER_VERSION}:${cx}:${cy}:${tileSize}`;
 
     if (this.chunkBitmaps.has(bitmapKey)) {
       return this.chunkBitmaps.get(bitmapKey)!;
@@ -636,8 +656,7 @@ export class ChunkManager {
         cy,
         tiles,
         tileSize,
-        (x, y) => this.getTile(x, y)?.terrainType,
-        this.currentRenderFlags
+        (x, y) => this.getTile(x, y)?.terrainType
       );
     }
 
@@ -646,8 +665,7 @@ export class ChunkManager {
       cy,
       tiles,
       tileSize,
-      (x, y) => this.getTile(x, y)?.terrainType,
-      this.currentRenderFlags
+      (x, y) => this.getTile(x, y)?.terrainType
     );
 
     // V19 F4: Determinism guarantee - only permanently cache bitmap if all 8 neighbors are resident in memory

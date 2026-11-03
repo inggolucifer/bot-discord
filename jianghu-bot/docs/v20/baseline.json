@@ -1,0 +1,1966 @@
+{
+  "createdAt": "2026-11-03T02:46:46.586Z",
+  "headCommit": "d15a950c",
+  "branch": "v20-map-rebuild",
+  "anchorsCount": 52,
+  "anchorsByType": {
+    "village": 10,
+    "hamlet": 9,
+    "outpost": 4,
+    "port": 2,
+    "capital_city": 1,
+    "major_city": 4,
+    "island": 1,
+    "danger_zone": 2,
+    "sect": 8,
+    "secret_realm": 4,
+    "town": 7
+  },
+  "authoredPropsCount": 576,
+  "authoredKinds": {
+    "bridge": 2,
+    "landmark": 48,
+    "house": 263,
+    "prop": 263
+  },
+  "totalAuthoredHouses": 263,
+  "housesByAnchorCount": {
+    "desa_xingcun": 5,
+    "dusun_mata_air_jernih": 5,
+    "pos_perbatasan_qinghe": 5,
+    "oase_shadi": 4,
+    "desa_heiyan": 7,
+    "kemah_dataran_tinggi_petapa": 6,
+    "kaki_gunung_azure": 4,
+    "tianjing": 5,
+    "xitong_city": 7,
+    "kota_fengyang": 4,
+    "luoyang_kecil": 4,
+    "desa_tiedao": 5,
+    "pos_tundra_utara": 6,
+    "pulau_penyu_raksasa": 4,
+    "benteng_gerbang_iblis": 6,
+    "lembah_kabut_merah": 5,
+    "sekte_awan_pedang": 4,
+    "sekte_pedang_langit": 6,
+    "kuil_lonceng_emas": 6,
+    "lembah_racun_bayangan": 7,
+    "istana_giok_laut_timur": 4,
+    "sekte_petir_ilahiah": 6,
+    "sekte_pasir_suci": 6,
+    "istana_es_abadi": 7,
+    "gua_purba_bunga_aprikot": 7,
+    "makam_kaisar_pedang_purba": 7,
+    "reruntuhan_abadi_tianyuan": 7,
+    "sarang_naga_karang_timur": 6,
+    "kota_jinling": 4,
+    "kota_yunxi": 6,
+    "kota_hanhai": 4,
+    "kota_leiyin": 4,
+    "kota_canghai": 4,
+    "kota_binghu": 4,
+    "kota_moyun": 5,
+    "kota_shuijing": 4,
+    "desa_bamboo_grove": 5,
+    "desa_lingquan": 4,
+    "desa_shaquan": 4,
+    "desa_tianhe": 6,
+    "desa_xueshan": 4,
+    "desa_yougu": 5,
+    "dusun_kebun_persik": 4,
+    "dusun_padi_emas": 5,
+    "dusun_oasis_tersembunyi": 5,
+    "dusun_gembala_petir": 7,
+    "dusun_pondok_karang": 4,
+    "dusun_pondok_es": 4,
+    "dusun_pondok_teh_kuno": 4,
+    "pos_menara_pantau_danau": 7,
+    "dermaga_teluk_sembilan": 5
+  },
+  "objectsPerAnchor": [
+    {
+      "id": "desa_xingcun",
+      "name": "Desa Xingcun",
+      "type": "village",
+      "x": 2050,
+      "y": 2650,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 38,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 55,
+        "other": 0,
+        "total": 93
+      }
+    },
+    {
+      "id": "dusun_mata_air_jernih",
+      "name": "Dusun Mata Air Jernih",
+      "type": "hamlet",
+      "x": 2400,
+      "y": 2450,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 15,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 4,
+        "other": 0,
+        "total": 19
+      }
+    },
+    {
+      "id": "pos_perbatasan_qinghe",
+      "name": "Pos Perbatasan Qinghe",
+      "type": "outpost",
+      "x": 2300,
+      "y": 1950,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 8,
+      "counts": {
+        "house": 18,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 23,
+        "other": 0,
+        "total": 41
+      }
+    },
+    {
+      "id": "oase_shadi",
+      "name": "Oase Shadi",
+      "type": "village",
+      "x": 820,
+      "y": 2220,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 25,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 36,
+        "other": 1,
+        "total": 62
+      }
+    },
+    {
+      "id": "dermaga_donghai",
+      "name": "Dermaga Donghai",
+      "type": "port",
+      "x": 3920,
+      "y": 2700,
+      "spanWidth": 4,
+      "spanHeight": 3,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 17,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 33,
+        "other": 0,
+        "total": 50
+      }
+    },
+    {
+      "id": "desa_heiyan",
+      "name": "Desa Heiyan",
+      "type": "village",
+      "x": 1900,
+      "y": 1400,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 33,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 16,
+        "other": 0,
+        "total": 49
+      }
+    },
+    {
+      "id": "kemah_dataran_tinggi_petapa",
+      "name": "Kemah Dataran Tinggi Petapa",
+      "type": "hamlet",
+      "x": 1200,
+      "y": 4200,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 11,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 10,
+        "other": 0,
+        "total": 21
+      }
+    },
+    {
+      "id": "kaki_gunung_azure",
+      "name": "Kaki Gunung Azure",
+      "type": "outpost",
+      "x": 2200,
+      "y": 3340,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 8,
+      "counts": {
+        "house": 2,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 17,
+        "other": 0,
+        "total": 19
+      }
+    },
+    {
+      "id": "tianjing",
+      "name": "Tianjing",
+      "type": "capital_city",
+      "x": 2700,
+      "y": 2800,
+      "spanWidth": 5,
+      "spanHeight": 5,
+      "exclusionRadius": 36,
+      "counts": {
+        "house": 114,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 581,
+        "other": 4,
+        "total": 699
+      }
+    },
+    {
+      "id": "xitong_city",
+      "name": "XiTong City",
+      "type": "major_city",
+      "x": 2350,
+      "y": 2900,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "exclusionRadius": 24,
+      "counts": {
+        "house": 91,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 243,
+        "other": 2,
+        "total": 336
+      }
+    },
+    {
+      "id": "kota_fengyang",
+      "name": "Kota Fengyang",
+      "type": "major_city",
+      "x": 2950,
+      "y": 2600,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "exclusionRadius": 24,
+      "counts": {
+        "house": 98,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 232,
+        "other": 1,
+        "total": 331
+      }
+    },
+    {
+      "id": "luoyang_kecil",
+      "name": "Kota Luoyang Kecil",
+      "type": "major_city",
+      "x": 2600,
+      "y": 2200,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "exclusionRadius": 24,
+      "counts": {
+        "house": 99,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 247,
+        "other": 0,
+        "total": 346
+      }
+    },
+    {
+      "id": "desa_tiedao",
+      "name": "Desa Tiedao",
+      "type": "village",
+      "x": 3100,
+      "y": 2850,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 33,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 39,
+        "other": 0,
+        "total": 72
+      }
+    },
+    {
+      "id": "pos_tundra_utara",
+      "name": "Pos Tundra Salju",
+      "type": "outpost",
+      "x": 2120,
+      "y": 4180,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 8,
+      "counts": {
+        "house": 22,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 18,
+        "other": 0,
+        "total": 40
+      }
+    },
+    {
+      "id": "pulau_penyu_raksasa",
+      "name": "Pulau Penyu Raksasa",
+      "type": "island",
+      "x": 4350,
+      "y": 2750,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 22,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 28,
+        "other": 0,
+        "total": 50
+      }
+    },
+    {
+      "id": "benteng_gerbang_iblis",
+      "name": "Benteng Gerbang Iblis",
+      "type": "danger_zone",
+      "x": 2500,
+      "y": 800,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 8,
+      "counts": {
+        "house": 30,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 10,
+        "other": 0,
+        "total": 40
+      }
+    },
+    {
+      "id": "lembah_kabut_merah",
+      "name": "Lembah Kabut Merah",
+      "type": "danger_zone",
+      "x": 2350,
+      "y": 2420,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 8,
+      "counts": {
+        "house": 28,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 31,
+        "other": 0,
+        "total": 59
+      }
+    },
+    {
+      "id": "sekte_awan_pedang",
+      "name": "Sekte Awan Pedang",
+      "type": "sect",
+      "x": 2200,
+      "y": 3350,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "exclusionRadius": 16,
+      "counts": {
+        "house": 19,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 65,
+        "other": 0,
+        "total": 84
+      }
+    },
+    {
+      "id": "sekte_pedang_langit",
+      "name": "Sekte Pedang Langit",
+      "type": "sect",
+      "x": 2150,
+      "y": 2800,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "exclusionRadius": 16,
+      "counts": {
+        "house": 62,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 113,
+        "other": 1,
+        "total": 176
+      }
+    },
+    {
+      "id": "kuil_lonceng_emas",
+      "name": "Kuil Lonceng Emas",
+      "type": "sect",
+      "x": 1400,
+      "y": 4400,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "exclusionRadius": 16,
+      "counts": {
+        "house": 58,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 94,
+        "other": 0,
+        "total": 152
+      }
+    },
+    {
+      "id": "lembah_racun_bayangan",
+      "name": "Lembah Racun Bayangan",
+      "type": "sect",
+      "x": 1800,
+      "y": 1100,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "exclusionRadius": 16,
+      "counts": {
+        "house": 67,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 47,
+        "other": 0,
+        "total": 114
+      }
+    },
+    {
+      "id": "istana_giok_laut_timur",
+      "name": "Istana Giok Laut Timur",
+      "type": "sect",
+      "x": 3900,
+      "y": 2850,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "exclusionRadius": 16,
+      "counts": {
+        "house": 34,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 82,
+        "other": 0,
+        "total": 116
+      }
+    },
+    {
+      "id": "sekte_petir_ilahiah",
+      "name": "Sekte Petir Ilahiah",
+      "type": "sect",
+      "x": 2400,
+      "y": 4000,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "exclusionRadius": 16,
+      "counts": {
+        "house": 74,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 60,
+        "other": 2,
+        "total": 136
+      }
+    },
+    {
+      "id": "sekte_pasir_suci",
+      "name": "Sekte Pasir Suci",
+      "type": "sect",
+      "x": 650,
+      "y": 2400,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "exclusionRadius": 16,
+      "counts": {
+        "house": 67,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 74,
+        "other": 1,
+        "total": 142
+      }
+    },
+    {
+      "id": "istana_es_abadi",
+      "name": "Istana Es Abadi",
+      "type": "sect",
+      "x": 1950,
+      "y": 4700,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "exclusionRadius": 16,
+      "counts": {
+        "house": 81,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 50,
+        "other": 2,
+        "total": 133
+      }
+    },
+    {
+      "id": "gua_purba_bunga_aprikot",
+      "name": "Gua Purba Bunga Aprikot",
+      "type": "secret_realm",
+      "x": 2100,
+      "y": 2600,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 23,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 11,
+        "other": 0,
+        "total": 34
+      }
+    },
+    {
+      "id": "makam_kaisar_pedang_purba",
+      "name": "Makam Kaisar Pedang Purba",
+      "type": "secret_realm",
+      "x": 2200,
+      "y": 3360,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 8,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 7,
+        "other": 0,
+        "total": 15
+      }
+    },
+    {
+      "id": "reruntuhan_abadi_tianyuan",
+      "name": "Reruntuhan Abadi Tianyuan",
+      "type": "secret_realm",
+      "x": 2400,
+      "y": 4100,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 23,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 5,
+        "other": 0,
+        "total": 28
+      }
+    },
+    {
+      "id": "sarang_naga_karang_timur",
+      "name": "Sarang Naga Karang Timur",
+      "type": "secret_realm",
+      "x": 3880,
+      "y": 2750,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 14,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 10,
+        "other": 0,
+        "total": 24
+      }
+    },
+    {
+      "id": "kota_jinling",
+      "name": "Kota Jinling",
+      "type": "major_city",
+      "x": 2750,
+      "y": 2350,
+      "spanWidth": 5,
+      "spanHeight": 5,
+      "exclusionRadius": 24,
+      "counts": {
+        "house": 102,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 201,
+        "other": 0,
+        "total": 303
+      }
+    },
+    {
+      "id": "kota_yunxi",
+      "name": "Kota Kecil Yunxi",
+      "type": "town",
+      "x": 2200,
+      "y": 2500,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 14,
+      "counts": {
+        "house": 67,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 60,
+        "other": 0,
+        "total": 127
+      }
+    },
+    {
+      "id": "kota_hanhai",
+      "name": "Kota Kecil Hanhai",
+      "type": "town",
+      "x": 1100,
+      "y": 2400,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 14,
+      "counts": {
+        "house": 46,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 49,
+        "other": 0,
+        "total": 95
+      }
+    },
+    {
+      "id": "kota_leiyin",
+      "name": "Kota Kecil Leiyin",
+      "type": "town",
+      "x": 2600,
+      "y": 3800,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 14,
+      "counts": {
+        "house": 57,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 28,
+        "other": 0,
+        "total": 85
+      }
+    },
+    {
+      "id": "kota_canghai",
+      "name": "Kota Kecil Canghai",
+      "type": "town",
+      "x": 3700,
+      "y": 2550,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 14,
+      "counts": {
+        "house": 41,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 69,
+        "other": 0,
+        "total": 110
+      }
+    },
+    {
+      "id": "kota_binghu",
+      "name": "Kota Kecil Binghu",
+      "type": "town",
+      "x": 1800,
+      "y": 4350,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 14,
+      "counts": {
+        "house": 53,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 33,
+        "other": 0,
+        "total": 86
+      }
+    },
+    {
+      "id": "kota_moyun",
+      "name": "Kota Kecil Moyun",
+      "type": "town",
+      "x": 2150,
+      "y": 1250,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 14,
+      "counts": {
+        "house": 64,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 15,
+        "other": 0,
+        "total": 79
+      }
+    },
+    {
+      "id": "kota_shuijing",
+      "name": "Kota Kecil Shuijing",
+      "type": "town",
+      "x": 3100,
+      "y": 3100,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 14,
+      "counts": {
+        "house": 46,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 62,
+        "other": 0,
+        "total": 108
+      }
+    },
+    {
+      "id": "desa_bamboo_grove",
+      "name": "Desa Rimbun Bambu",
+      "type": "village",
+      "x": 1850,
+      "y": 2800,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 29,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 50,
+        "other": 0,
+        "total": 79
+      }
+    },
+    {
+      "id": "desa_lingquan",
+      "name": "Desa Lingquan",
+      "type": "village",
+      "x": 2550,
+      "y": 2550,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 25,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 53,
+        "other": 0,
+        "total": 78
+      }
+    },
+    {
+      "id": "desa_shaquan",
+      "name": "Desa Shaquan",
+      "type": "village",
+      "x": 600,
+      "y": 2100,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 26,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 48,
+        "other": 0,
+        "total": 74
+      }
+    },
+    {
+      "id": "desa_tianhe",
+      "name": "Desa Tianhe",
+      "type": "village",
+      "x": 2200,
+      "y": 3950,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 35,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 27,
+        "other": 0,
+        "total": 62
+      }
+    },
+    {
+      "id": "desa_xueshan",
+      "name": "Desa Xueshan",
+      "type": "village",
+      "x": 2350,
+      "y": 4300,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 26,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 27,
+        "other": 0,
+        "total": 53
+      }
+    },
+    {
+      "id": "desa_yougu",
+      "name": "Desa Yougu",
+      "type": "village",
+      "x": 1050,
+      "y": 4000,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 29,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 42,
+        "other": 0,
+        "total": 71
+      }
+    },
+    {
+      "id": "dusun_kebun_persik",
+      "name": "Dusun Kebun Persik",
+      "type": "hamlet",
+      "x": 2150,
+      "y": 2700,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 11,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 19,
+        "other": 0,
+        "total": 30
+      }
+    },
+    {
+      "id": "dusun_padi_emas",
+      "name": "Dusun Padi Emas",
+      "type": "hamlet",
+      "x": 2300,
+      "y": 2350,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 18,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 16,
+        "other": 0,
+        "total": 34
+      }
+    },
+    {
+      "id": "dusun_oasis_tersembunyi",
+      "name": "Dusun Oase Tersembunyi",
+      "type": "hamlet",
+      "x": 750,
+      "y": 2300,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 24,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 11,
+        "other": 0,
+        "total": 35
+      }
+    },
+    {
+      "id": "dusun_gembala_petir",
+      "name": "Dusun Gembala Petir",
+      "type": "hamlet",
+      "x": 2500,
+      "y": 3900,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 21,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 15,
+        "other": 0,
+        "total": 36
+      }
+    },
+    {
+      "id": "dusun_pondok_karang",
+      "name": "Dusun Pondok Karang",
+      "type": "hamlet",
+      "x": 3800,
+      "y": 2650,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 14,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 7,
+        "other": 0,
+        "total": 21
+      }
+    },
+    {
+      "id": "dusun_pondok_es",
+      "name": "Dusun Pondok Es",
+      "type": "hamlet",
+      "x": 2000,
+      "y": 4250,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 14,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 4,
+        "other": 0,
+        "total": 18
+      }
+    },
+    {
+      "id": "dusun_pondok_teh_kuno",
+      "name": "Dusun Pondok Teh Kuno",
+      "type": "hamlet",
+      "x": 1300,
+      "y": 4100,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "exclusionRadius": 6,
+      "counts": {
+        "house": 16,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 32,
+        "other": 0,
+        "total": 48
+      }
+    },
+    {
+      "id": "pos_menara_pantau_danau",
+      "name": "Pos Menara Pantau Danau",
+      "type": "outpost",
+      "x": 3250,
+      "y": 3000,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 8,
+      "counts": {
+        "house": 21,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 17,
+        "other": 0,
+        "total": 38
+      }
+    },
+    {
+      "id": "dermaga_teluk_sembilan",
+      "name": "Dermaga Teluk Sembilan",
+      "type": "port",
+      "x": 2500,
+      "y": 2300,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "exclusionRadius": 10,
+      "counts": {
+        "house": 27,
+        "prop": 0,
+        "landmark": 0,
+        "nature": 59,
+        "other": 1,
+        "total": 87
+      }
+    }
+  ],
+  "fileStats": {
+    "totalFiles": 4806,
+    "totalBytes": 967119467,
+    "byDirectory": {
+      "root": {
+        "files": 11,
+        "bytes": 137290
+      },
+      "graphify-out": {
+        "files": 1191,
+        "bytes": 47398251
+      },
+      "jianghu-bot/other": {
+        "files": 369,
+        "bytes": 6294208
+      },
+      "jianghu-bot/assets_picked": {
+        "files": 584,
+        "bytes": 215069308
+      },
+      "jianghu-bot/review": {
+        "files": 1471,
+        "bytes": 566939388
+      },
+      "jianghu-bot/scripts/analyzeSuspects.js": {
+        "files": 1,
+        "bytes": 392
+      },
+      "jianghu-bot/scripts/assets": {
+        "files": 17,
+        "bytes": 460041
+      },
+      "jianghu-bot/scripts/auditAtlasSprites.js": {
+        "files": 1,
+        "bytes": 4020
+      },
+      "jianghu-bot/scripts/auditAtlasWhitePixels.js": {
+        "files": 1,
+        "bytes": 2279
+      },
+      "jianghu-bot/scripts/auditExistingPlots.js": {
+        "files": 1,
+        "bytes": 3202
+      },
+      "jianghu-bot/scripts/auditGridV10.js": {
+        "files": 1,
+        "bytes": 8174
+      },
+      "jianghu-bot/scripts/auditSpriteRes.js": {
+        "files": 1,
+        "bytes": 4085
+      },
+      "jianghu-bot/scripts/auditV10.js": {
+        "files": 1,
+        "bytes": 5396
+      },
+      "jianghu-bot/scripts/auditWorldVoids.js": {
+        "files": 1,
+        "bytes": 2099
+      },
+      "jianghu-bot/scripts/audit_atlas_issues.json": {
+        "files": 1,
+        "bytes": 1349
+      },
+      "jianghu-bot/scripts/audit_world_v9.js": {
+        "files": 1,
+        "bytes": 11520
+      },
+      "jianghu-bot/scripts/backfillLawItemTagsAndTier.js": {
+        "files": 1,
+        "bytes": 8931
+      },
+      "jianghu-bot/scripts/baseline_shots.json": {
+        "files": 1,
+        "bytes": 570
+      },
+      "jianghu-bot/scripts/build29Targets.js": {
+        "files": 1,
+        "bytes": 848
+      },
+      "jianghu-bot/scripts/buildKnownFrames.js": {
+        "files": 1,
+        "bytes": 1612
+      },
+      "jianghu-bot/scripts/buildLayoutRecipesAndBestiary.mjs": {
+        "files": 1,
+        "bytes": 7284
+      },
+      "jianghu-bot/scripts/buildRegionMap.mjs": {
+        "files": 1,
+        "bytes": 12559
+      },
+      "jianghu-bot/scripts/buildScaleCanon.mjs": {
+        "files": 1,
+        "bytes": 13956
+      },
+      "jianghu-bot/scripts/buildWorldRaster.mjs": {
+        "files": 1,
+        "bytes": 8481
+      },
+      "jianghu-bot/scripts/capture12ScaleShots.mjs": {
+        "files": 1,
+        "bytes": 4866
+      },
+      "jianghu-bot/scripts/captureAll29Regions.mjs": {
+        "files": 1,
+        "bytes": 11437
+      },
+      "jianghu-bot/scripts/captureAuthoredShots.mjs": {
+        "files": 1,
+        "bytes": 5852
+      },
+      "jianghu-bot/scripts/captureFreshZones.mjs": {
+        "files": 1,
+        "bytes": 7759
+      },
+      "jianghu-bot/scripts/captureGroundH2Shots.mjs": {
+        "files": 1,
+        "bytes": 3932
+      },
+      "jianghu-bot/scripts/captureGroundShots.mjs": {
+        "files": 1,
+        "bytes": 9426
+      },
+      "jianghu-bot/scripts/captureShowcaseShots.mjs": {
+        "files": 1,
+        "bytes": 6604
+      },
+      "jianghu-bot/scripts/captureUserZones.mjs": {
+        "files": 1,
+        "bytes": 7373
+      },
+      "jianghu-bot/scripts/captureWorld.cjs": {
+        "files": 1,
+        "bytes": 11620
+      },
+      "jianghu-bot/scripts/carve_roads.js": {
+        "files": 1,
+        "bytes": 1614
+      },
+      "jianghu-bot/scripts/checkAssetCoverage.js": {
+        "files": 1,
+        "bytes": 7364
+      },
+      "jianghu-bot/scripts/checkAuthored.js": {
+        "files": 1,
+        "bytes": 9846
+      },
+      "jianghu-bot/scripts/checkBestiaryUnique.js": {
+        "files": 1,
+        "bytes": 3461
+      },
+      "jianghu-bot/scripts/checkChallengeDressing.js": {
+        "files": 1,
+        "bytes": 2882
+      },
+      "jianghu-bot/scripts/checkCoreItems.js": {
+        "files": 1,
+        "bytes": 2586
+      },
+      "jianghu-bot/scripts/checkFerry.js": {
+        "files": 1,
+        "bytes": 2914
+      },
+      "jianghu-bot/scripts/checkGroundV10.mjs": {
+        "files": 1,
+        "bytes": 5046
+      },
+      "jianghu-bot/scripts/checkLairs.js": {
+        "files": 1,
+        "bytes": 2753
+      },
+      "jianghu-bot/scripts/checkLawItems.js": {
+        "files": 1,
+        "bytes": 671
+      },
+      "jianghu-bot/scripts/checkMissingDefsInFrontend.js": {
+        "files": 1,
+        "bytes": 819
+      },
+      "jianghu-bot/scripts/checkMissingSprites.js": {
+        "files": 1,
+        "bytes": 2379
+      },
+      "jianghu-bot/scripts/checkObjectsOnWater.js": {
+        "files": 1,
+        "bytes": 2604
+      },
+      "jianghu-bot/scripts/checkPlayerLandAndAltars.js": {
+        "files": 1,
+        "bytes": 1465
+      },
+      "jianghu-bot/scripts/checkRegionPalette.js": {
+        "files": 1,
+        "bytes": 5986
+      },
+      "jianghu-bot/scripts/checkRoadGrid.cjs": {
+        "files": 1,
+        "bytes": 12658
+      },
+      "jianghu-bot/scripts/checkRoadsV10.js": {
+        "files": 1,
+        "bytes": 7104
+      },
+      "jianghu-bot/scripts/cleanInggoTestTile.js": {
+        "files": 1,
+        "bytes": 1487
+      },
+      "jianghu-bot/scripts/cleanLegacyAtlasFrames.js": {
+        "files": 1,
+        "bytes": 3174
+      },
+      "jianghu-bot/scripts/cleanupPlayerInventoryDangling.js": {
+        "files": 1,
+        "bytes": 4325
+      },
+      "jianghu-bot/scripts/compareScaleObjects.mjs": {
+        "files": 1,
+        "bytes": 2283
+      },
+      "jianghu-bot/scripts/computeBBox.py": {
+        "files": 1,
+        "bytes": 1242
+      },
+      "jianghu-bot/scripts/deepCleanTransparency.py": {
+        "files": 1,
+        "bytes": 5520
+      },
+      "jianghu-bot/scripts/detectPlaceholderFrames.mjs": {
+        "files": 1,
+        "bytes": 8360
+      },
+      "jianghu-bot/scripts/diagnoseLawEcosystem.js": {
+        "files": 1,
+        "bytes": 1537
+      },
+      "jianghu-bot/scripts/diagnoseLawInventoryData.js": {
+        "files": 1,
+        "bytes": 3339
+      },
+      "jianghu-bot/scripts/estimate_law_combat_rank5.js": {
+        "files": 1,
+        "bytes": 5773
+      },
+      "jianghu-bot/scripts/estimate_law_days.js": {
+        "files": 1,
+        "bytes": 5107
+      },
+      "jianghu-bot/scripts/evalB6Shots.js": {
+        "files": 1,
+        "bytes": 2884
+      },
+      "jianghu-bot/scripts/expandSettlementAnchors.js": {
+        "files": 1,
+        "bytes": 15041
+      },
+      "jianghu-bot/scripts/exportCanonicalRegionsToDashboard.js": {
+        "files": 1,
+        "bytes": 1777
+      },
+      "jianghu-bot/scripts/findAnchorsPerRegion.js": {
+        "files": 1,
+        "bytes": 267
+      },
+      "jianghu-bot/scripts/findLandCoords.js": {
+        "files": 1,
+        "bytes": 1122
+      },
+      "jianghu-bot/scripts/findLandInEmptyRegions.js": {
+        "files": 1,
+        "bytes": 1376
+      },
+      "jianghu-bot/scripts/fixAnchorRegions.js": {
+        "files": 1,
+        "bytes": 1371
+      },
+      "jianghu-bot/scripts/gen": {
+        "files": 3,
+        "bytes": 69553
+      },
+      "jianghu-bot/scripts/generateBuildZoneReport.js": {
+        "files": 1,
+        "bytes": 3932
+      },
+      "jianghu-bot/scripts/generateManifestIcons.js": {
+        "files": 1,
+        "bytes": 1239
+      },
+      "jianghu-bot/scripts/generateP2AssetGapAudit.js": {
+        "files": 1,
+        "bytes": 7856
+      },
+      "jianghu-bot/scripts/ground": {
+        "files": 13,
+        "bytes": 104846
+      },
+      "jianghu-bot/scripts/identifyBatch4.js": {
+        "files": 1,
+        "bytes": 511
+      },
+      "jianghu-bot/scripts/identifyContents.js": {
+        "files": 1,
+        "bytes": 1123
+      },
+      "jianghu-bot/scripts/importSprite.js": {
+        "files": 1,
+        "bytes": 2402
+      },
+      "jianghu-bot/scripts/inspectCanvas.mjs": {
+        "files": 1,
+        "bytes": 4639
+      },
+      "jianghu-bot/scripts/inspectRegionTerrains.js": {
+        "files": 1,
+        "bytes": 2045
+      },
+      "jianghu-bot/scripts/inspectWhiteComponents.js": {
+        "files": 1,
+        "bytes": 2901
+      },
+      "jianghu-bot/scripts/list29Regions.js": {
+        "files": 1,
+        "bytes": 425
+      },
+      "jianghu-bot/scripts/listAllAnchors.js": {
+        "files": 1,
+        "bytes": 197
+      },
+      "jianghu-bot/scripts/listBiome7Frames.js": {
+        "files": 1,
+        "bytes": 361
+      },
+      "jianghu-bot/scripts/measure_scatter.js": {
+        "files": 1,
+        "bytes": 10730
+      },
+      "jianghu-bot/scripts/migrateCurrenciesField.js": {
+        "files": 1,
+        "bytes": 2156
+      },
+      "jianghu-bot/scripts/migratePlayerPositionDrift.js": {
+        "files": 1,
+        "bytes": 4132
+      },
+      "jianghu-bot/scripts/packHutsPrompt3Atlas.js": {
+        "files": 1,
+        "bytes": 9425
+      },
+      "jianghu-bot/scripts/packMasterV9Assets.js": {
+        "files": 1,
+        "bytes": 12589
+      },
+      "jianghu-bot/scripts/patchBatch3AndFixTrees.js": {
+        "files": 1,
+        "bytes": 13919
+      },
+      "jianghu-bot/scripts/patchBatch4Buildings.js": {
+        "files": 1,
+        "bytes": 9348
+      },
+      "jianghu-bot/scripts/patchLawSkillsTierSpCost.js": {
+        "files": 1,
+        "bytes": 1783
+      },
+      "jianghu-bot/scripts/patchMountainsAtlas.js": {
+        "files": 1,
+        "bytes": 9434
+      },
+      "jianghu-bot/scripts/patchProceduralObjectsOneGrid.mjs": {
+        "files": 1,
+        "bytes": 4935
+      },
+      "jianghu-bot/scripts/patchTreesAtlas.js": {
+        "files": 1,
+        "bytes": 9428
+      },
+      "jianghu-bot/scripts/patchVisualReview.mjs": {
+        "files": 1,
+        "bytes": 9337
+      },
+      "jianghu-bot/scripts/patchWillowAtlas.js": {
+        "files": 1,
+        "bytes": 3502
+      },
+      "jianghu-bot/scripts/processAssetsSesi2.py": {
+        "files": 1,
+        "bytes": 4312
+      },
+      "jianghu-bot/scripts/processAssetsSesi3.py": {
+        "files": 1,
+        "bytes": 4090
+      },
+      "jianghu-bot/scripts/processAssetsSesi4.py": {
+        "files": 1,
+        "bytes": 3918
+      },
+      "jianghu-bot/scripts/processWaterAssetsSesi1.py": {
+        "files": 1,
+        "bytes": 5059
+      },
+      "jianghu-bot/scripts/processWillowSprite.js": {
+        "files": 1,
+        "bytes": 2013
+      },
+      "jianghu-bot/scripts/process_hut_batch_1.js": {
+        "files": 1,
+        "bytes": 7776
+      },
+      "jianghu-bot/scripts/process_hut_batch_2.js": {
+        "files": 1,
+        "bytes": 7798
+      },
+      "jianghu-bot/scripts/process_hut_batch_3.js": {
+        "files": 1,
+        "bytes": 9073
+      },
+      "jianghu-bot/scripts/process_hut_batch_4.js": {
+        "files": 1,
+        "bytes": 9087
+      },
+      "jianghu-bot/scripts/process_hut_batch_5.js": {
+        "files": 1,
+        "bytes": 9064
+      },
+      "jianghu-bot/scripts/process_hut_batch_6.js": {
+        "files": 1,
+        "bytes": 9114
+      },
+      "jianghu-bot/scripts/process_hut_batch_7.js": {
+        "files": 1,
+        "bytes": 9061
+      },
+      "jianghu-bot/scripts/process_hut_batch_8.js": {
+        "files": 1,
+        "bytes": 8900
+      },
+      "jianghu-bot/scripts/process_hut_batch_9.js": {
+        "files": 1,
+        "bytes": 9123
+      },
+      "jianghu-bot/scripts/recaptureDonghai.mjs": {
+        "files": 1,
+        "bytes": 5185
+      },
+      "jianghu-bot/scripts/reproEnterBuilding.mjs": {
+        "files": 1,
+        "bytes": 10965
+      },
+      "jianghu-bot/scripts/reprocess_all_42_huts_cavities.js": {
+        "files": 1,
+        "bytes": 8895
+      },
+      "jianghu-bot/scripts/sanitizeArenaLadder.js": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "jianghu-bot/scripts/scanBatch3Frames.js": {
+        "files": 1,
+        "bytes": 793
+      },
+      "jianghu-bot/scripts/scanBatch4Frames.js": {
+        "files": 1,
+        "bytes": 740
+      },
+      "jianghu-bot/scripts/scanBuildings.mjs": {
+        "files": 1,
+        "bytes": 588
+      },
+      "jianghu-bot/scripts/scanOneGridObjects.mjs": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "jianghu-bot/scripts/scanSettlementFrames.js": {
+        "files": 1,
+        "bytes": 590
+      },
+      "jianghu-bot/scripts/seedAltarAssets.js": {
+        "files": 1,
+        "bytes": 2788
+      },
+      "jianghu-bot/scripts/seedArenaLadder.js": {
+        "files": 1,
+        "bytes": 11435
+      },
+      "jianghu-bot/scripts/seedChallengeItemsV9.js": {
+        "files": 1,
+        "bytes": 1222
+      },
+      "jianghu-bot/scripts/seedEconomyMasterOverhaul.js": {
+        "files": 1,
+        "bytes": 74510
+      },
+      "jianghu-bot/scripts/seedJianghuMasterEcosystem.js": {
+        "files": 1,
+        "bytes": 21751
+      },
+      "jianghu-bot/scripts/seedLawEssenceItems.js": {
+        "files": 1,
+        "bytes": 50695
+      },
+      "jianghu-bot/scripts/seedLawHardeningItems.js": {
+        "files": 1,
+        "bytes": 32176
+      },
+      "jianghu-bot/scripts/seedLawMasterEcosystem.js": {
+        "files": 1,
+        "bytes": 49487
+      },
+      "jianghu-bot/scripts/seedRegionalMonsters.js": {
+        "files": 1,
+        "bytes": 4917
+      },
+      "jianghu-bot/scripts/seedRighteousLawEcosystem.js": {
+        "files": 1,
+        "bytes": 14150
+      },
+      "jianghu-bot/scripts/seedTestMonster2452_2481.js": {
+        "files": 1,
+        "bytes": 7123
+      },
+      "jianghu-bot/scripts/snapCanonV10.js": {
+        "files": 1,
+        "bytes": 4741
+      },
+      "jianghu-bot/scripts/source_map.json": {
+        "files": 1,
+        "bytes": 2340
+      },
+      "jianghu-bot/scripts/syncGridCanonToDashboard.js": {
+        "files": 1,
+        "bytes": 742
+      },
+      "jianghu-bot/scripts/syntaxCheckAll.js": {
+        "files": 1,
+        "bytes": 1648
+      },
+      "jianghu-bot/scripts/testAltarBuildingLandIntegration.js": {
+        "files": 1,
+        "bytes": 5088
+      },
+      "jianghu-bot/scripts/testAntiAbuseCore.js": {
+        "files": 1,
+        "bytes": 4013
+      },
+      "jianghu-bot/scripts/testAvatarResolve.js": {
+        "files": 1,
+        "bytes": 3043
+      },
+      "jianghu-bot/scripts/testBatch3.js": {
+        "files": 1,
+        "bytes": 2592
+      },
+      "jianghu-bot/scripts/testBatch4Cavities.js": {
+        "files": 1,
+        "bytes": 2552
+      },
+      "jianghu-bot/scripts/testBuildZoneHttp.js": {
+        "files": 1,
+        "bytes": 8477
+      },
+      "jianghu-bot/scripts/testCavities.js": {
+        "files": 1,
+        "bytes": 1820
+      },
+      "jianghu-bot/scripts/testChallenge.js": {
+        "files": 1,
+        "bytes": 15511
+      },
+      "jianghu-bot/scripts/testCharacterCreationEndToEnd.js": {
+        "files": 1,
+        "bytes": 3792
+      },
+      "jianghu-bot/scripts/testChunkManagerHarness.js": {
+        "files": 1,
+        "bytes": 7064
+      },
+      "jianghu-bot/scripts/testCombatDepthComprehensive.js": {
+        "files": 1,
+        "bytes": 27227
+      },
+      "jianghu-bot/scripts/testCombatDotHp.js": {
+        "files": 1,
+        "bytes": 12694
+      },
+      "jianghu-bot/scripts/testCultivationTabTierBtPolish.js": {
+        "files": 1,
+        "bytes": 13343
+      },
+      "jianghu-bot/scripts/testCurrencyDeductFacility.js": {
+        "files": 1,
+        "bytes": 13165
+      },
+      "jianghu-bot/scripts/testCurrencyPills.js": {
+        "files": 1,
+        "bytes": 3372
+      },
+      "jianghu-bot/scripts/testCurrencyUnified.js": {
+        "files": 1,
+        "bytes": 3696
+      },
+      "jianghu-bot/scripts/testDemonicAltarOnly.js": {
+        "files": 1,
+        "bytes": 5065
+      },
+      "jianghu-bot/scripts/testEnterAuthoredHouse.js": {
+        "files": 1,
+        "bytes": 4034
+      },
+      "jianghu-bot/scripts/testFarmingHuntingZones.js": {
+        "files": 1,
+        "bytes": 3438
+      },
+      "jianghu-bot/scripts/testFase1TraversalSync.js": {
+        "files": 1,
+        "bytes": 4674
+      },
+      "jianghu-bot/scripts/testFase2SpawnKits.js": {
+        "files": 1,
+        "bytes": 1917
+      },
+      "jianghu-bot/scripts/testFishingGate.js": {
+        "files": 1,
+        "bytes": 9677
+      },
+      "jianghu-bot/scripts/testFishingRestartPersistence.js": {
+        "files": 1,
+        "bytes": 3991
+      },
+      "jianghu-bot/scripts/testGatherValidation.js": {
+        "files": 1,
+        "bytes": 7046
+      },
+      "jianghu-bot/scripts/testGridContract.js": {
+        "files": 1,
+        "bytes": 13234
+      },
+      "jianghu-bot/scripts/testGuFeedEligibleStrict.js": {
+        "files": 1,
+        "bytes": 13734
+      },
+      "jianghu-bot/scripts/testHardeningCurrencyAuthMarket.js": {
+        "files": 1,
+        "bytes": 17544
+      },
+      "jianghu-bot/scripts/testHazard.js": {
+        "files": 1,
+        "bytes": 2899
+      },
+      "jianghu-bot/scripts/testInventoryCategoryBuckets.js": {
+        "files": 1,
+        "bytes": 4633
+      },
+      "jianghu-bot/scripts/testInventoryLocksAndSlots.js": {
+        "files": 1,
+        "bytes": 6198
+      },
+      "jianghu-bot/scripts/testInventoryOrphanSlot.js": {
+        "files": 1,
+        "bytes": 4271
+      },
+      "jianghu-bot/scripts/testLandPurchaseRaces.js": {
+        "files": 1,
+        "bytes": 5304
+      },
+      "jianghu-bot/scripts/testLawCombatBattleWire.js": {
+        "files": 1,
+        "bytes": 13847
+      },
+      "jianghu-bot/scripts/testLawCultivationPureAndTier.js": {
+        "files": 1,
+        "bytes": 13368
+      },
+      "jianghu-bot/scripts/testLawEligibleDbAndBtParity.js": {
+        "files": 1,
+        "bytes": 10934
+      },
+      "jianghu-bot/scripts/testLawEligibleGuParity.js": {
+        "files": 1,
+        "bytes": 14679
+      },
+      "jianghu-bot/scripts/testLawInventoryConsume.js": {
+        "files": 1,
+        "bytes": 17093
+      },
+      "jianghu-bot/scripts/testLawOverhaulComplete.js": {
+        "files": 1,
+        "bytes": 3144
+      },
+      "jianghu-bot/scripts/testLawSkillTreePolish.js": {
+        "files": 1,
+        "bytes": 16370
+      },
+      "jianghu-bot/scripts/testLawSkillTreeScarcity.js": {
+        "files": 1,
+        "bytes": 18386
+      },
+      "jianghu-bot/scripts/testLawSkillTreeUniqueness.js": {
+        "files": 1,
+        "bytes": 16660
+      },
+      "jianghu-bot/scripts/testLawSkillsTabsAndTieredSp.js": {
+        "files": 1,
+        "bytes": 3049
+      },
+      "jianghu-bot/scripts/testLoadStress10Min.mjs": {
+        "files": 1,
+        "bytes": 14972
+      },
+      "jianghu-bot/scripts/testMapV4Bugs.js": {
+        "files": 1,
+        "bytes": 7157
+      },
+      "jianghu-bot/scripts/testMasterEcosystemVerification.js": {
+        "files": 1,
+        "bytes": 5505
+      },
+      "jianghu-bot/scripts/testModalManagerLogic.js": {
+        "files": 1,
+        "bytes": 4559
+      },
+      "jianghu-bot/scripts/testMonsterDensity.js": {
+        "files": 1,
+        "bytes": 3069
+      },
+      "jianghu-bot/scripts/testNightPixelAlpha.mjs": {
+        "files": 1,
+        "bytes": 5663
+      },
+      "jianghu-bot/scripts/testObjectScatterAndAutotile.js": {
+        "files": 1,
+        "bytes": 7019
+      },
+      "jianghu-bot/scripts/testPavilionInspection.js": {
+        "files": 1,
+        "bytes": 619
+      },
+      "jianghu-bot/scripts/testPhase1MovementEngine.js": {
+        "files": 1,
+        "bytes": 20771
+      },
+      "jianghu-bot/scripts/testPhase3TerrainAndBarriers.js": {
+        "files": 1,
+        "bytes": 6594
+      },
+      "jianghu-bot/scripts/testPhaseA_camera_labels.js": {
+        "files": 1,
+        "bytes": 9092
+      },
+      "jianghu-bot/scripts/testPhaseB_atlas_pipeline.js": {
+        "files": 1,
+        "bytes": 4717
+      },
+      "jianghu-bot/scripts/testPhaseC1_chunk_streaming.js": {
+        "files": 1,
+        "bytes": 10436
+      },
+      "jianghu-bot/scripts/testPhaseC2_client_chunks.js": {
+        "files": 1,
+        "bytes": 9031
+      },
+      "jianghu-bot/scripts/testPhaseD_asset_layout.js": {
+        "files": 1,
+        "bytes": 8027
+      },
+      "jianghu-bot/scripts/testPhaseE_visual_lod_qa.js": {
+        "files": 1,
+        "bytes": 9012
+      },
+      "jianghu-bot/scripts/testPolishAndArrivalBanner.js": {
+        "files": 1,
+        "bytes": 3194
+      },
+      "jianghu-bot/scripts/testRegionFocals.js": {
+        "files": 1,
+        "bytes": 1346
+      },
+      "jianghu-bot/scripts/testRenderRect.mjs": {
+        "files": 1,
+        "bytes": 4202
+      },
+      "jianghu-bot/scripts/testRendererV2Verification.js": {
+        "files": 1,
+        "bytes": 7801
+      },
+      "jianghu-bot/scripts/testRevolution15LawComplete.js": {
+        "files": 1,
+        "bytes": 31443
+      },
+      "jianghu-bot/scripts/testRighteousLawsComprehensive.js": {
+        "files": 1,
+        "bytes": 27126
+      },
+      "jianghu-bot/scripts/testSectsAndSecretRealms.js": {
+        "files": 1,
+        "bytes": 4684
+      },
+      "jianghu-bot/scripts/testSettlementPanoramaV2.js": {
+        "files": 1,
+        "bytes": 8426
+      },
+      "jianghu-bot/scripts/testSpamRaceConditionProtection.js": {
+        "files": 1,
+        "bytes": 15851
+      },
+      "jianghu-bot/scripts/testSpatialMonstersAndResources.js": {
+        "files": 1,
+        "bytes": 5447
+      },
+      "jianghu-bot/scripts/testSpatialQiChanneling.js": {
+        "files": 1,
+        "bytes": 1989
+      },
+      "jianghu-bot/scripts/testTechniquesAndArenaLogic.js": {
+        "files": 1,
+        "bytes": 2713
+      },
+      "jianghu-bot/scripts/testTotalWealthLabel.js": {
+        "files": 1,
+        "bytes": 1663
+      },
+      "jianghu-bot/scripts/testUnquarantine.js": {
+        "files": 1,
+        "bytes": 3025
+      },
+      "jianghu-bot/scripts/testWorldEcosystemFinalComplete.js": {
+        "files": 1,
+        "bytes": 7483
+      },
+      "jianghu-bot/scripts/testWorldInvariants.js": {
+        "files": 1,
+        "bytes": 28005
+      },
+      "jianghu-bot/scripts/updateBestiaryV9.js": {
+        "files": 1,
+        "bytes": 6868
+      },
+      "jianghu-bot/scripts/updateInggoToGuRealm2.js": {
+        "files": 1,
+        "bytes": 6240
+      },
+      "jianghu-bot/scripts/v11": {
+        "files": 10,
+        "bytes": 56171
+      },
+      "jianghu-bot/scripts/v12": {
+        "files": 9,
+        "bytes": 44101
+      },
+      "jianghu-bot/scripts/v13": {
+        "files": 12,
+        "bytes": 69828
+      },
+      "jianghu-bot/scripts/v14": {
+        "files": 17,
+        "bytes": 2114198
+      },
+      "jianghu-bot/scripts/v15": {
+        "files": 20,
+        "bytes": 114644
+      },
+      "jianghu-bot/scripts/v16": {
+        "files": 18,
+        "bytes": 118014
+      },
+      "jianghu-bot/scripts/v17": {
+        "files": 7,
+        "bytes": 66997
+      },
+      "jianghu-bot/scripts/v18": {
+        "files": 19,
+        "bytes": 85846
+      },
+      "jianghu-bot/scripts/v19": {
+        "files": 10,
+        "bytes": 47009
+      },
+      "jianghu-bot/scripts/validateGroundH2.mjs": {
+        "files": 1,
+        "bytes": 6464
+      },
+      "jianghu-bot/scripts/validateH3.mjs": {
+        "files": 1,
+        "bytes": 5452
+      },
+      "jianghu-bot/scripts/validateMinimapH5.mjs": {
+        "files": 1,
+        "bytes": 10378
+      },
+      "jianghu-bot/scripts/validateScaleCanon.mjs": {
+        "files": 1,
+        "bytes": 4358
+      },
+      "jianghu-bot/scripts/verify5Regions.mjs": {
+        "files": 1,
+        "bytes": 4102
+      },
+      "jianghu-bot/scripts/verifyAll29Counts.js": {
+        "files": 1,
+        "bytes": 2355
+      },
+      "jianghu-bot/scripts/verifyBatch4AtlasCrops.js": {
+        "files": 1,
+        "bytes": 2199
+      },
+      "jianghu-bot/scripts/verifyBiome7Crop.js": {
+        "files": 1,
+        "bytes": 1357
+      },
+      "jianghu-bot/scripts/verifyKeyedVisuals.js": {
+        "files": 1,
+        "bytes": 1131
+      },
+      "jianghu-bot/scripts/visualReview.mjs": {
+        "files": 1,
+        "bytes": 26851
+      },
+      "jianghu-bot/web-dashboard": {
+        "files": 702,
+        "bytes": 107631374
+      },
+      "jianghu-bot/world-data": {
+        "files": 93,
+        "bytes": 18316186
+      },
+      "v10_pack": {
+        "files": 10,
+        "bytes": 276774
+      },
+      "v9_extracted": {
+        "files": 9,
+        "bytes": 142663
+      }
+    }
+  },
+  "chunkBenchmark": {
+    "sampleCount": 200,
+    "p50Ms": 14.79,
+    "p95Ms": 39.3,
+    "meanMs": 15.16
+  },
+  "preExistingFailures": [
+    {
+      "tool": "syntaxCheckAll.js",
+      "status": "failed",
+      "reason": "scratch/test_cpf_time.js syntax error (untracked scratch file in .gitignore not skipped by syntaxCheckAll)",
+      "file": "scratch/test_cpf_time.js"
+    }
+  ]
+}

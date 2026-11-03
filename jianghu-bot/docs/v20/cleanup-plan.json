@@ -1,0 +1,186 @@
+[
+  {
+    "target": "jianghu-bot/scratch_cleaned_pillar.png",
+    "phase": "P1",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 414982,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/scratch_cropped.png",
+    "phase": "P1",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 533394,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/scratch_edge.png",
+    "phase": "P1",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 28122,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/scratch_refined_pillar.jpg",
+    "phase": "P1",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 103496,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/test_poll_dock.jpg",
+    "phase": "P1",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 53094,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/audit_plots_report.csv",
+    "phase": "P1",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 80,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/world-data/_unused",
+    "phase": "P1",
+    "existsOnDisk": true,
+    "trackedFilesCount": 4,
+    "totalBytes": 1187540,
+    "action": "git rm"
+  },
+  {
+    "target": "V9_PACK.zip",
+    "phase": "P1",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 38649,
+    "action": "git rm"
+  },
+  {
+    "target": "V10_PACK.zip",
+    "phase": "P1",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 42741,
+    "action": "git rm"
+  },
+  {
+    "target": "v10_pack",
+    "phase": "P1",
+    "existsOnDisk": true,
+    "trackedFilesCount": 10,
+    "totalBytes": 276774,
+    "action": "git rm"
+  },
+  {
+    "target": "v9_extracted",
+    "phase": "P1",
+    "existsOnDisk": true,
+    "trackedFilesCount": 9,
+    "totalBytes": 142663,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/review",
+    "phase": "P1",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1471,
+    "totalBytes": 566939388,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/web-dashboard/public/assets/atlas/biome_nature_3.webp.bak",
+    "phase": "P1-bak",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 624784,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/web-dashboard/public/assets/atlas/biome_nature_5.webp.bak",
+    "phase": "P1-bak",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 966776,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/web-dashboard/public/assets/atlas/biome_nature_6.webp.bak",
+    "phase": "P1-bak",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 979244,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/web-dashboard/public/assets/atlas/biome_nature_7.webp.bak",
+    "phase": "P1-bak",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 416606,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/web-dashboard/public/assets/atlas/core_0.webp.bak",
+    "phase": "P1-bak",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 862224,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/web-dashboard/public/assets/atlas/core_1.webp.bak",
+    "phase": "P1-bak",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 396450,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/web-dashboard/public/assets/atlas/settlement_0.webp.bak",
+    "phase": "P1-bak",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 887640,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/web-dashboard/public/assets/atlas/settlement_2.webp.bak",
+    "phase": "P1-bak",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 968656,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/web-dashboard/public/assets/atlas/settlement_3.webp.bak",
+    "phase": "P1-bak",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 903410,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/world-data/authored-props.v8.bak.json",
+    "phase": "P1-bak",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 268798,
+    "action": "git rm"
+  },
+  {
+    "target": "jianghu-bot/world-data/authored-props.v9.bak.json",
+    "phase": "P1-bak",
+    "existsOnDisk": true,
+    "trackedFilesCount": 1,
+    "totalBytes": 438049,
+    "action": "git rm"
+  }
+]
