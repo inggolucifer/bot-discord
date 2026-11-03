@@ -1,5 +1,0 @@
-[
-  { "name": "P01_xingcun", "x": 2050, "y": 2650, "zoom": 1.4, "grid": 0, "ground": "only", "allowDuplicate": true },
-  { "name": "P01_xingcun_grid", "x": 2050, "y": 2650, "zoom": 1.4, "grid": 1, "allowDuplicate": true },
-  { "name": "P01_xingcun_noroad", "x": 2050, "y": 2650, "zoom": 1.4, "grid": 0, "ground": "only", "noroad": 1, "allowDuplicate": true }
-]
