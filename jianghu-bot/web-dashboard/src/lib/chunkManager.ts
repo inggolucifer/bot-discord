@@ -11,6 +11,7 @@
 import { TileData, MapObjectInstance } from '@/types/world';
 import api from '@/lib/api';
 import { renderChunkGroundBitmap, renderChunkGridBitmap } from '@/lib/groundRenderer';
+import { perfProbe } from '@/lib/perfProbe';
 export const GROUND_RENDER_VERSION = 'v18';
 import { groundTextures } from '@/lib/groundTextures';
 
@@ -358,6 +359,7 @@ export class ChunkManager {
             (bitmap as any).close();
           } catch (_) {}
         }
+        perfProbe.count('chunks:disposed');
         this.chunkBitmaps.delete(key);
         this.unpackedChunks.delete(key);
         this.chunks.delete(key);
@@ -428,6 +430,7 @@ export class ChunkManager {
    * Ingests, unpacks, and caches a static chunk
    */
   public ingestStaticChunk(chunk: StaticChunkData) {
+    perfProbe.count('chunks:loaded');
     if (!chunk || typeof chunk.cx !== 'number' || typeof chunk.cy !== 'number') return;
     const key = `${chunk.cx}:${chunk.cy}`;
     this.chunks.set(key, chunk);

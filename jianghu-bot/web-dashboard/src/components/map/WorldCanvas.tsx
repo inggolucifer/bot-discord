@@ -31,6 +31,7 @@ import { atlasLoader } from '@/lib/atlasLoader';
 import { groundTextures } from '@/lib/groundTextures';
 import { isDefIdQuarantined } from '@/config/assetQuarantine';
 import { chunkManager, CHUNK_SIZE, MAX_CHUNK_X, MAX_CHUNK_Y } from '@/lib/chunkManager';
+import { perfProbe } from '@/lib/perfProbe';
 import {
   renderL1TerrainBase,
   renderL2BiomeTransitions,
@@ -683,6 +684,7 @@ export default function WorldCanvas({
       // ----------------------------------------------------------------------
       // L1: CHUNK GROUND BITMAPS (G0-G3 & Static G4 Autotiles)
       // ----------------------------------------------------------------------
+      const tGround0 = performance.now();
       const minChunkX = Math.max(0, Math.floor(minTileX / CHUNK_SIZE));
       const maxChunkX = Math.min(MAX_CHUNK_X, Math.floor(maxTileX / CHUNK_SIZE));
       const minChunkY = Math.max(0, Math.floor(minTileY / CHUNK_SIZE));
@@ -930,9 +932,12 @@ export default function WorldCanvas({
         ctx.restore();
       }
 
+      perfProbe.mark('render:ground', performance.now() - tGround0);
+
       // ----------------------------------------------------------------------
       // L3 & L4: Y-SORTED OBJECTS & ENTITIES (Frustum Culling & 1,500 Sprite Budget - Fase G)
       // ----------------------------------------------------------------------
+      const tObj0 = performance.now();
       const ySortQueue: YSortEntry[] = [];
       const MAX_SPRITE_BUDGET = 1500;
       const candidateObjects: Array<{
@@ -1299,6 +1304,9 @@ export default function WorldCanvas({
         ctx.restore();
       }
 
+      perfProbe.mark('render:objects', performance.now() - tObj0);
+      const tOverlay0 = performance.now();
+
       // ----------------------------------------------------------------------
       // L5: KABUT ATMOSFER (Cinematic Edge Vignette - Crystal Clear Center)
       // ----------------------------------------------------------------------
@@ -1340,6 +1348,7 @@ export default function WorldCanvas({
       // ----------------------------------------------------------------------
       // L7: MARKER UI (NPC Badges, Monster Rings, Path Glow, Player Frame)
       // ----------------------------------------------------------------------
+      const tPlayer0 = performance.now();
 
       // 1. NPC Badges (Black circle #1B1F1E, diameter 0.34 tile at top-right, white text, visible if count >= 1 and zoom >= 0.8)
       if (camera.zoom >= 0.8) {
@@ -1671,6 +1680,8 @@ export default function WorldCanvas({
       ctx.shadowBlur = 0;
       ctx.strokeRect(pTileSx + 3 * camera.zoom, pTileSy + 3 * camera.zoom, currentTileSize - 6 * camera.zoom, currentTileSize - 6 * camera.zoom);
       ctx.restore();
+
+      perfProbe.mark('render:players', performance.now() - tPlayer0);
 
       // ----------------------------------------------------------------------
       // L8: WEATHER OVERLAY (Rain, Snow, Miasma)
@@ -2103,6 +2114,11 @@ export default function WorldCanvas({
       }
 
       
+
+      perfProbe.mark('render:overlay', performance.now() - tOverlay0);
+      const frameTotal = performance.now() - frameStartTime;
+      perfProbe.mark('raf:frameTotal', frameTotal);
+      perfProbe.recordFrame();
 
       animationFrameId = requestAnimationFrame(render);
     };

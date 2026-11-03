@@ -14,6 +14,7 @@
 import { CANONICAL_REGIONS } from '@/config/canonicalRegions';
 import { atlasLoader } from './atlasLoader';
 import { groundTextures } from './groundTextures';
+import { perfProbe } from './perfProbe';
 
 export interface TerrainWashPalette {
   baseColor: string;
@@ -1113,12 +1114,15 @@ function buildRoadAlphaMask(
   // 1) Blur sigma = 0.28 cell = 1.12 px (rounds right angles, removes 1-cell staircases)
   const gB = scratchRB.ctx;
   gB.clearRect(0, 0, W, W);
-  gB.filter = 'blur(1.4px)';
-  gB.drawImage(scratchR.canvas, 0, 0);
-  gB.filter = 'none';
+  perfProbe.measure('ground:roadBlur', () => {
+    gB.filter = 'blur(1.4px)';
+    gB.drawImage(scratchR.canvas, 0, 0);
+    gB.filter = 'none';
+  });
 
   // 2) World domain-warp sampling
-  const srcImgData = gB.getImageData(0, 0, W, W);
+  perfProbe.count('ground:getImageData');
+  const srcImgData = perfProbe.measure('ground:getImageDataMs', () => gB.getImageData(0, 0, W, W));
   const src = srcImgData.data;
   const dstImgData = scratchRW.ctx.createImageData(W, W);
   const dst = dstImgData.data;
@@ -1165,7 +1169,8 @@ function buildRoadAlphaMask(
       pIdx += 4;
     }
   }
-  scratchRW.ctx.putImageData(dstImgData, 0, 0);
+  perfProbe.count('ground:putImageData');
+  perfProbe.measure('ground:putImageDataMs', () => scratchRW.ctx.putImageData(dstImgData, 0, 0));
 
   // 3) Upscale to ctxMB2
   ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
@@ -1205,19 +1210,21 @@ function applyRoadInnerShadow(
   // 2. destination-out with blurred mask keeps only the ~1.5px inner boundary rim
   sCtx.save();
   sCtx.globalCompositeOperation = 'destination-out';
-  sCtx.filter = 'blur(1.5px)';
-  sCtx.drawImage(
-    scratchMB2.canvas,
-    BORDER * tileSize,
-    BORDER * tileSize,
-    canvasWidth,
-    canvasHeight,
-    0,
-    0,
-    canvasWidth,
-    canvasHeight
-  );
-  sCtx.filter = 'none';
+  perfProbe.measure('ground:rimBlur', () => {
+    sCtx.filter = 'blur(1.5px)';
+    sCtx.drawImage(
+      scratchMB2.canvas,
+      BORDER * tileSize,
+      BORDER * tileSize,
+      canvasWidth,
+      canvasHeight,
+      0,
+      0,
+      canvasWidth,
+      canvasHeight
+    );
+    sCtx.filter = 'none';
+  });
 
   // Tint only the rim pixels with dark brown (source-in fills only existing rim alpha)
   sCtx.globalCompositeOperation = 'source-in';
@@ -1408,7 +1415,8 @@ export function renderChunkGroundBitmapTextured(
         }
       }
     }
-    ctxM.putImageData(imgData, 0, 0);
+    perfProbe.count('ground:putImageData');
+    perfProbe.measure('ground:putImageDataMs', () => ctxM.putImageData(imgData, 0, 0));
 
     // 4c: Upscale M to MB (single continuous raster corridor for road_stone, feathered for organic terrain)
     ctxMB.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
@@ -1424,9 +1432,11 @@ export function renderChunkGroundBitmapTextured(
       // Water shorelines use a crisp 0.35 * tileSize blur to prevent over-extended cyan edge bands
       const isWaterFam = F === 'river' || F === 'lake' || F === 'pond_lotus' || F === 'ocean' || F === 'sea' || F === 'water';
       const blurPx = F === 'settlement_floor' ? tileSize * 0.45 : (isWaterFam ? tileSize * 0.35 : tileSize * 1.5);
-      ctxMB2.filter = `blur(${blurPx.toFixed(1)}px)`;
-      ctxMB2.drawImage(scratchMB.canvas, 0, 0);
-      ctxMB2.filter = 'none';
+      perfProbe.measure('ground:transitionBlur', () => {
+        ctxMB2.filter = `blur(${blurPx.toFixed(1)}px)`;
+        ctxMB2.drawImage(scratchMB.canvas, 0, 0);
+        ctxMB2.filter = 'none';
+      });
 
       // Organic transition mask overlay (ink splatter edges)
       const transMask = groundTextures.getTransitionMask(Math.abs(hash2d(cx * 17 + cy, cy * 31)));
@@ -1620,25 +1630,28 @@ function getRadialMaskCanvas(size: number): HTMLCanvasElement | null {
           }
 
           if (!hasAny) continue;
-          ctxVM.putImageData(vmImgData, 0, 0);
+          perfProbe.count('ground:putImageData');
+          perfProbe.measure('ground:putImageDataMs', () => ctxVM.putImageData(vmImgData, 0, 0));
 
           // 2b. Upscale & blur variant mask with continuous border padding
           ctxVMB.clearRect(0, 0, canvasWidth, canvasHeight);
           ctxVMB.imageSmoothingEnabled = true;
           ctxVMB.imageSmoothingQuality = 'high';
-          ctxVMB.filter = `blur(${(tileSize * 0.9).toFixed(1)}px)`; // ~50px organic soft blend
-          ctxVMB.drawImage(
-            scratchVM.canvas,
-            0,
-            0,
-            V_GRID_DIM,
-            V_GRID_DIM,
-            -padPx,
-            -padPx,
-            canvasWidth + 2 * padPx,
-            canvasHeight + 2 * padPx
-          );
-          ctxVMB.filter = 'none';
+          perfProbe.measure('ground:variantBlur', () => {
+            ctxVMB.filter = `blur(${(tileSize * 0.9).toFixed(1)}px)`; // ~50px organic soft blend
+            ctxVMB.drawImage(
+              scratchVM.canvas,
+              0,
+              0,
+              V_GRID_DIM,
+              V_GRID_DIM,
+              -padPx,
+              -padPx,
+              canvasWidth + 2 * padPx,
+              canvasHeight + 2 * padPx
+            );
+            ctxVMB.filter = 'none';
+          });
 
           // 2c. Render secondary variant pattern masked by blurred mask
           ctxVT.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -1959,7 +1972,8 @@ function compositeAzureKarst(
       d32[rowOffset + px] = 0xff000000 | (gray << 16) | (gray << 8) | gray;
     }
   }
-  scratch.ctx.putImageData(imgData, 0, 0);
+  perfProbe.count('ground:putImageData');
+  perfProbe.measure('ground:putImageDataMs', () => scratch.ctx.putImageData(imgData, 0, 0));
 
   ctx.save();
   ctx.globalCompositeOperation = 'soft-light';
@@ -2118,6 +2132,7 @@ function compositeAzureKarst(
 
   // Step 7: Performance profiling
   const elapsed = performance.now() - t0;
+  perfProbe.mark('ground:buildChunkBitmap', elapsed);
   perfRing.push(elapsed);
   if (perfRing.length > 20) perfRing.shift();
   if (perfRing.length === 20 && Math.random() < 0.05) {
