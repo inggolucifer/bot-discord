@@ -145,6 +145,7 @@ export default function ZoneGridView({
   // View Mode: 'map' | 'settlement' | 'courtyard'
   const [viewMode, setViewMode] = useState<'map' | 'settlement' | 'courtyard'>('map');
   const [activeSettlementName, setActiveSettlementName] = useState<string>('XiTong City');
+  const [settlementPrompt, setSettlementPrompt] = useState<{ id: string; name: string; tier?: number; regionSlug?: string } | null>(null);
   const [activeCourtyardName, setActiveCourtyardName] = useState<string>('Paviliun Gazebo Puncak Pinus');
 
   // State lainnya
@@ -637,6 +638,9 @@ export default function ZoneGridView({
         isOpenToPublic: true
       });
       if (res.data?.success) {
+        if (res.data.settlementPrompt) {
+          setSettlementPrompt(res.data.settlementPrompt);
+        }
         showMessage(`Pembangunan ${assetName} dimulai! Pekerja mulai beraksi.`);
         setBuildModalTile(null);
         fetchZoneData();

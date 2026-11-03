@@ -1003,7 +1003,7 @@ export default function WorldCanvas({
           }
         }
       }
-
+
       // If budget exceeded, sort by priority (1=Landmark > 2=Building > 3=Tree > 4=Rock > 5=Decor) and trim
       if (candidateObjects.length > MAX_SPRITE_BUDGET) {
         candidateObjects.sort((a, b) => a.priority - b.priority);
@@ -1174,25 +1174,29 @@ export default function WorldCanvas({
           // L4: Render Procedural Tall Object (undistorted aspect ratio, 100% solid buildings)
           renderL4ProceduralObject(ctx, def.id, drawX, drawY, dw, time, objAlpha, instance.flipX, dh);
 
-          // Building Label
+          // Building & V20 Settlement Marker Label
           const t = tileMap.get(`${instance.x},${instance.y}`) || chunkManager.getTile(instance.x, instance.y);
-          if (t && t.buildingName && (camera.zoom >= 0.65 || t.isSettlementOrigin)) {
-            const bLabel = t.buildingName;
-            ctx.font = `bold ${Math.max(7, 8.5 * camera.zoom)}px sans-serif`;
+          const isMarker = Boolean(instance.tags?.includes('settlement_marker') || t?.isSettlementOrigin);
+          const labelText = isMarker ? (instance.customLabel || t?.settlementName || t?.buildingName) : (t?.buildingName);
+
+          if (labelText && (camera.zoom >= 0.65 || isMarker)) {
+            const bLabel = labelText;
+            const fontSize = Math.max(isMarker ? 9 : 7, (isMarker ? 11 : 8.5) * camera.zoom);
+            ctx.font = `bold ${fontSize}px sans-serif`;
             ctx.textAlign = 'center';
             const textW = ctx.measureText(bLabel).width;
-            const pillW = textW + 8 * camera.zoom;
-            const pillH = 11 * camera.zoom;
+            const pillW = textW + (isMarker ? 16 : 8) * camera.zoom;
+            const pillH = (isMarker ? 16 : 11) * camera.zoom;
             const pillX = footX - pillW / 2;
-            const pillY = footY + 4 * camera.zoom;
+            const pillY = footY + (isMarker ? 6 : 4) * camera.zoom;
 
-            ctx.fillStyle = 'rgba(10, 14, 23, 0.85)';
+            ctx.fillStyle = isMarker ? 'rgba(15, 10, 5, 0.92)' : 'rgba(10, 14, 23, 0.85)';
             ctx.fillRect(pillX, pillY, pillW, pillH);
-            ctx.strokeStyle = '#D97706';
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = isMarker ? '#C5A880' : '#D97706';
+            ctx.lineWidth = isMarker ? 1.5 : 1;
             ctx.strokeRect(pillX, pillY, pillW, pillH);
-            ctx.fillStyle = '#FEF08A';
-            ctx.fillText(bLabel, pillX + pillW / 2, pillY + pillH - 2.5 * camera.zoom);
+            ctx.fillStyle = isMarker ? '#F5E6C8' : '#FEF08A';
+            ctx.fillText(bLabel, pillX + pillW / 2, pillY + pillH - (isMarker ? 4 : 2.5) * camera.zoom);
           }
         } else if (item.type === 'player') {
           // Render Player Character (Standardized to human height 0.9 cell, width 0.55 cell)

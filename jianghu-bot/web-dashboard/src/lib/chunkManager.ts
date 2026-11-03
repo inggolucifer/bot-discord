@@ -39,6 +39,8 @@ export interface StaticChunkData {
     label?: string | null;
     terrainLabel?: string | null;
     isSettlementOrigin?: boolean;
+    isSettlementEntrance?: boolean;
+    settlementData?: any;
     settlementName?: string | null;
     chineseName?: string | null;
     autotileBitmask?: number;
@@ -493,6 +495,8 @@ export class ChunkManager {
           settlementName: special.settlementName || null,
           chineseName: special.chineseName || null,
           isSettlementOrigin: special.isSettlementOrigin || false,
+          isSettlementEntrance: special.isSettlementEntrance || false,
+          settlementData: special.settlementData || null,
           objects: tileScatter
         };
 

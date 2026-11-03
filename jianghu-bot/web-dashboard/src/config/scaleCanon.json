@@ -10404,5 +10404,830 @@
       "y": 0.5054
     },
     "light": null
+  },
+  "settlement_village_river": {
+    "id": "settlement_village_river",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 4.6,
+    "visualH": 4,
+    "ratio": 0.8696,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_hamlet_river": {
+    "id": "settlement_hamlet_river",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 3,
+    "visualH": 2.6,
+    "ratio": 0.8667,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_outpost_gatehouse": {
+    "id": "settlement_outpost_gatehouse",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 5,
+    "visualH": 3.6,
+    "ratio": 0.72,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "landmark_border_march_iron_garrison_gatehouse",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_village_desert": {
+    "id": "settlement_village_desert",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 4.6,
+    "visualH": 4,
+    "ratio": 0.8696,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_port_donghai": {
+    "id": "settlement_port_donghai",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 6.5,
+    "visualH": 5,
+    "ratio": 0.7692,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_village_default": {
+    "id": "settlement_village_default",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 4.6,
+    "visualH": 4,
+    "ratio": 0.8696,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_hamlet_hill": {
+    "id": "settlement_hamlet_hill",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 3,
+    "visualH": 2.6,
+    "ratio": 0.8667,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_outpost_watchtower": {
+    "id": "settlement_outpost_watchtower",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 5,
+    "visualH": 3.6,
+    "ratio": 0.72,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "landmark_border_march_iron_garrison_gatehouse",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_capital_tianjing": {
+    "id": "settlement_capital_tianjing",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 11,
+    "visualH": 8.5,
+    "ratio": 0.7727,
+    "collision": {
+      "w": 5,
+      "h": 4,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "landmark_border_march_iron_garrison_gatehouse",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_city_imperial": {
+    "id": "settlement_city_imperial",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 8,
+    "visualH": 6.5,
+    "ratio": 0.8125,
+    "collision": {
+      "w": 4,
+      "h": 3,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "landmark_border_march_iron_garrison_gatehouse",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_city_trade": {
+    "id": "settlement_city_trade",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 8,
+    "visualH": 6.5,
+    "ratio": 0.8125,
+    "collision": {
+      "w": 4,
+      "h": 3,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "landmark_border_march_iron_garrison_gatehouse",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_island_turtle": {
+    "id": "settlement_island_turtle",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 6,
+    "visualH": 5,
+    "ratio": 0.8333,
+    "collision": {
+      "w": 4,
+      "h": 3,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "building_spirit_pagoda",
+    "placeholder": true,
+    "light": null
+  },
+  "entrance_danger_gate": {
+    "id": "entrance_danger_gate",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 5,
+    "visualH": 4,
+    "ratio": 0.8,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "landmark_border_march_iron_garrison_gatehouse",
+    "placeholder": true,
+    "light": null
+  },
+  "entrance_danger_swamp": {
+    "id": "entrance_danger_swamp",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 5,
+    "visualH": 4,
+    "ratio": 0.8,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "landmark_border_march_iron_garrison_gatehouse",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_sect_sword": {
+    "id": "settlement_sect_sword",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 8,
+    "visualH": 7,
+    "ratio": 0.875,
+    "collision": {
+      "w": 4,
+      "h": 3,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "building_spirit_pagoda",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_sect_bell": {
+    "id": "settlement_sect_bell",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 8,
+    "visualH": 7,
+    "ratio": 0.875,
+    "collision": {
+      "w": 4,
+      "h": 3,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "building_spirit_pagoda",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_sect_lotus": {
+    "id": "settlement_sect_lotus",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 8,
+    "visualH": 7,
+    "ratio": 0.875,
+    "collision": {
+      "w": 4,
+      "h": 3,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "building_spirit_pagoda",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_sect_generic": {
+    "id": "settlement_sect_generic",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 8,
+    "visualH": 7,
+    "ratio": 0.875,
+    "collision": {
+      "w": 4,
+      "h": 3,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "building_spirit_pagoda",
+    "placeholder": true,
+    "light": null
+  },
+  "entrance_secret_cave": {
+    "id": "entrance_secret_cave",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 3.5,
+    "visualH": 3,
+    "ratio": 0.8571,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "building_spirit_pagoda",
+    "placeholder": true,
+    "light": null
+  },
+  "entrance_secret_tomb": {
+    "id": "entrance_secret_tomb",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 3.5,
+    "visualH": 3,
+    "ratio": 0.8571,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "building_spirit_pagoda",
+    "placeholder": true,
+    "light": null
+  },
+  "entrance_secret_ruin": {
+    "id": "entrance_secret_ruin",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 3.5,
+    "visualH": 3,
+    "ratio": 0.8571,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "building_spirit_pagoda",
+    "placeholder": true,
+    "light": null
+  },
+  "entrance_secret_portal": {
+    "id": "entrance_secret_portal",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 3.5,
+    "visualH": 3,
+    "ratio": 0.8571,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "building_spirit_pagoda",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_town_plain": {
+    "id": "settlement_town_plain",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 5.6,
+    "visualH": 4.6,
+    "ratio": 0.8214,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_town_desert": {
+    "id": "settlement_town_desert",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 5.6,
+    "visualH": 4.6,
+    "ratio": 0.8214,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_town_coast": {
+    "id": "settlement_town_coast",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 5.6,
+    "visualH": 4.6,
+    "ratio": 0.8214,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_town_frost": {
+    "id": "settlement_town_frost",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 5.6,
+    "visualH": 4.6,
+    "ratio": 0.8214,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_village_bamboo": {
+    "id": "settlement_village_bamboo",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 4.6,
+    "visualH": 4,
+    "ratio": 0.8696,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_village_frost": {
+    "id": "settlement_village_frost",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 4.6,
+    "visualH": 4,
+    "ratio": 0.8696,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_village_hill": {
+    "id": "settlement_village_hill",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 4.6,
+    "visualH": 4,
+    "ratio": 0.8696,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_hamlet_desert": {
+    "id": "settlement_hamlet_desert",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 3,
+    "visualH": 2.6,
+    "ratio": 0.8667,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_hamlet_steppe": {
+    "id": "settlement_hamlet_steppe",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 3,
+    "visualH": 2.6,
+    "ratio": 0.8667,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_hamlet_frost": {
+    "id": "settlement_hamlet_frost",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 3,
+    "visualH": 2.6,
+    "ratio": 0.8667,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
+  },
+  "settlement_port_bay": {
+    "id": "settlement_port_bay",
+    "page": "core_0",
+    "category": "settlement_marker",
+    "class": "settlement_marker",
+    "srcW": 1024,
+    "srcH": 768,
+    "visualW": 6.5,
+    "visualH": 5,
+    "ratio": 0.7692,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "mode": "solid",
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "frameDefId": "xitong_city_landmark",
+    "placeholder": true,
+    "light": null
   }
 }
