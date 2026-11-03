@@ -219,6 +219,8 @@ const setupServer = (client) => {
     app.use('/api/battle', battleRoutes);
     app.use('/api/admin', adminRoutes);
     app.use('/api/pve', pveRoutes);
+    const nearbyRoutes = require('./routes/nearby');
+    app.use('/api/world/nearby', nearbyRoutes);
     app.use('/api/world', worldRoutes);
     app.use('/api/world/quests', questRoutes);
     app.use('/api/map', mapRoutes);
@@ -378,7 +380,9 @@ const setupServer = (client) => {
         });
 
         // ==========================================
-        // CHUNK STREAMING SOCKET ROOMS (Fase C1)
+        // CHUNK STREAMING SOCKET ROOMS & NEARBY DELTA BATCHING (V21 F3)
+        const { nearbyBroadcaster } = require('../services/nearbyBroadcaster');
+        nearbyBroadcaster.start(io, 500);
         // ==========================================
         socket.on('subscribe_chunks', (data) => {
             try {
@@ -404,6 +408,33 @@ const setupServer = (client) => {
             } catch (err) {
                 console.warn('[SOCKET] unsubscribe_chunks error:', err.message);
             }
+        });
+
+        socket.on('player_position_update', (data) => {
+            try {
+                if (data && Number.isInteger(data.cx) && Number.isInteger(data.cy)) {
+                    nearbyBroadcaster.updateEntity(
+                        {
+                            id: socket.user?.userId || socket.id,
+                            name: socket.user?.username || 'Kultivator',
+                            type: 'player',
+                            x: data.x,
+                            y: data.y,
+                            status: data.status || 'aktif'
+                        },
+                        data.cx,
+                        data.cy,
+                        data.oldCx,
+                        data.oldCy
+                    );
+                }
+            } catch (err) {
+                console.warn('[SOCKET] player_position_update error:', err.message);
+            }
+        });
+
+        socket.on('disconnect', () => {
+            nearbyBroadcaster.removeSocketAll(socket.id);
         });
 
     });
