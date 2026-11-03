@@ -380,6 +380,11 @@ async function setPlayerAuthoritativePosition(player, coords = {}, options = {})
   // 5. Bersihkan travel status jika diminta
   if (options.clearTravelStatus && player.travel) {
     player.travel.status = 'idle';
+    player.travel.active = false;
+    player.travel.from = null;
+    player.travel.to = null;
+    player.travel.path = [];
+    player.travel.eventResolved = true;
   }
 
   // 6. Reset gridMove

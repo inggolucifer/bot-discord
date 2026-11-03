@@ -453,6 +453,18 @@ const playerSchema = new mongoose.Schema({
     moveStartedAt: { type: Date, default: null },
     moveArrivesAt: { type: Date, default: null }
   },
+  travel: {
+    from: { type: String, default: null },
+    to: { type: String, default: null },
+    path: { type: [String], default: [] },
+    startedAt: { type: Date, default: null },
+    arriveAt: { type: Date, default: null },
+    active: { type: Boolean, default: false },
+    currentSegmentIndex: { type: Number, default: 0 },
+    totalSegments: { type: Number, default: 0 },
+    eventResolved: { type: Boolean, default: false },
+    eventData: { type: Object, default: null }
+  },
 
   discoveredSecretTileIds: { type: [String], default: [] },
   lastGridSearchAt: { type: Date, default: null },

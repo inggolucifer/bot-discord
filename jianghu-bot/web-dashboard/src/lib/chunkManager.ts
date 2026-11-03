@@ -138,6 +138,12 @@ export function chunkToBounds(cx: number, cy: number) {
 }
 
 export class ChunkManager {
+  public isTravelActive = false;
+
+  public setTravelActive(active: boolean) {
+    this.isTravelActive = active;
+  }
+
   private chunks = new Map<string, StaticChunkData>();
   private unpackedChunks = new Map<string, TileData[]>();
   private chunkBitmaps = new Map<string, HTMLCanvasElement | ImageBitmap>();
@@ -315,6 +321,8 @@ export class ChunkManager {
    * Main camera update hook: updates active rings, evicts cold chunks, schedules fetches
    */
   public updateCamera(centerTileX: number, centerTileY: number, zoom = 1.0) {
+    if (this.isTravelActive) return;
+
     const { hot, warm, hotKeys, warmKeys, centerCx, centerCy } = this.computeRings(centerTileX, centerTileY, zoom);
 
     this.currentCenter = { cx: centerCx, cy: centerCy };
@@ -605,6 +613,7 @@ export class ChunkManager {
    */
   public getChunkBitmap(cx: number, cy: number, tileSize = 54, tier = 0): HTMLCanvasElement | ImageBitmap | null {
     if (typeof document === 'undefined') return null;
+    if (this.isTravelActive) return null;
 
     // V21 F1: Try baked chunk bitmap first (LOD tier according to current zoom)
     if (process.env.NEXT_PUBLIC_LIGHT_WORLD !== '0') {
