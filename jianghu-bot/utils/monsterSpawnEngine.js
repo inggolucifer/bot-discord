@@ -471,8 +471,130 @@ function getMonstersInBounds(minX, minY, maxX, maxY) {
   return result;
 }
 
+// =========================================================================
+// V23 G4: SISTEM JIMAT, GERBANG BOSS, DROP MATERIAL & DETEKSI BAHAYA
+// =========================================================================
+
+const fixedZonesData = require('../world-data/zones-v23.json');
+const allFixedZones = fixedZonesData.zones || [];
+const worldRegionEngine = require('./worldRegionEngine');
+
+/**
+ * Menghitung laju risiko ambush efektif dengan jimat mitigasi (R7).
+ * Rumus: Risk_final = Risk_base * (1 - repellentBonus) * (1 + attractionBonus)
+ */
+function calculateEffectiveAmbushRisk(baseRisk, charms = {}) {
+  const c = charms || {};
+  const repellentBonus = c.repellentActive ? 0.50 : 0;
+  const attractionBonus = c.attractionActive ? 0.75 : 0;
+  const effective = baseRisk * (1 - repellentBonus) * (1 + attractionBonus);
+  return Math.max(0, Math.min(1.0, Math.round(effective * 10000) / 10000));
+}
+
+/**
+ * Pemetaan tingkat grade drop material monster (R6, R10).
+ * Monster biasa -> Grade 3, Elite -> Grade 2, World Boss -> Grade 1 (Breakthrough)
+ */
+function getMonsterMaterialDropGrade(monsterType) {
+  if (monsterType === 'boss' || monsterType === 'world_boss') return 1;
+  if (monsterType === 'elite') return 2;
+  return 3;
+}
+
+/**
+ * Validasi gerbang penantang sarang World Boss (R9).
+ */
+function checkBossLairGate(bossData, playerRealmIndex = 0) {
+  const requiredRealmIndex = bossData.requiredRealmIndex || 1;
+  return {
+    allowed: true,
+    requiresWarning: playerRealmIndex < requiredRealmIndex,
+    requiredRealmIndex,
+    warningMessage: playerRealmIndex < requiredRealmIndex
+      ? `Aura membunuh Siluman Raja ini melampaui kapasitas kultivasimu (Syarat Ranah: Index ${requiredRealmIndex}). Pertarungan ini sangat berisiko fatal!`
+      : null
+  };
+}
+
+/**
+ * Pengganda status saat World Event Mode Chaos Semesta aktif (R9).
+ * HP x 1.35, DMG x 1.25
+ */
+function applyChaosModeToBoss(bossData, isChaosActive = false) {
+  if (!isChaosActive) return { ...bossData };
+  return {
+    ...bossData,
+    hp: Math.round(bossData.hp * 1.35),
+    maxHp: Math.round((bossData.maxHp || bossData.hp) * 1.35),
+    atk: Math.round(bossData.atk * 1.25),
+    isChaosMode: true
+  };
+}
+
+function getQualitativeDirection(dx, dy) {
+  if (Math.abs(dx) <= 1 && Math.abs(dy) <= 1) return 'di sini';
+  let dir = '';
+  if (dy < -1) dir += 'Utara';
+  else if (dy > 1) dir += 'Selatan';
+  if (dx > 1) dir += ' Timur';
+  else if (dx < -1) dir += ' Barat';
+  return dir.trim();
+}
+
+function getDistanceLabel(dist) {
+  if (dist <= 3) return 'sangat dekat';
+  if (dist <= 7) return 'dekat';
+  return 'sedang';
+}
+
+/**
+ * Mendapatkan daftar bahaya tetap (Lair, Elite, Elemental, dll) dalam radius R (default 14 petak)
+ */
+function getNearbyHazards(x, y, radius = 14) {
+  const hazards = [];
+  for (const z of allFixedZones) {
+    const zcx = z.x + Math.floor((z.w || 3) / 2);
+    const zcy = z.y + Math.floor((z.h || 3) / 2);
+    const dCheb = Math.max(Math.abs(x - zcx), Math.abs(y - zcy));
+    if (dCheb <= radius) {
+      const dx = zcx - x;
+      const dy = zcy - y;
+      hazards.push({
+        id: z.id,
+        name: z.name,
+        type: z.type,
+        dangerTier: z.dangerTier,
+        distance: dCheb,
+        direction: getQualitativeDirection(dx, dy),
+        distanceLabel: getDistanceLabel(dCheb),
+        x: zcx,
+        y: zcy
+      });
+    }
+  }
+  hazards.sort((a, b) => a.distance - b.distance);
+  return hazards;
+}
+
+/**
+ * Perhitungan level monster terinterpolasi di dekat perbatasan wilayah
+ */
+function getInterpolatedMonsterLevel(x, y, baseLevel) {
+  const effDanger = worldRegionEngine.getEffectiveDanger(x, y);
+  const region = worldData.getRegionAt(x, y);
+  const baseTier = region.dangerTier || 1;
+  const ratio = effDanger / baseTier;
+  return Math.max(1, Math.round(baseLevel * ratio));
+}
+
 module.exports = {
   getMonstersInChunk,
   getMonstersInBounds,
-  CHUNK_BUDGET
+  CHUNK_BUDGET,
+  calculateEffectiveAmbushRisk,
+  getMonsterMaterialDropGrade,
+  checkBossLairGate,
+  applyChaosModeToBoss,
+  getNearbyHazards,
+  getInterpolatedMonsterLevel
 };

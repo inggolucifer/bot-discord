@@ -178,6 +178,44 @@ const CORE_ITEMS_DEFINITIONS = [
     description: 'Ikan jinak yang dibudidayakan di kolam buatan dalam interior hunian pendekar.',
     weight: 0.2,
     isTradeable: true
+  },
+
+  // 3. Jimat Spasial & Pertemuan Monster (V23 R7)
+  {
+    name: 'Jimat Pengusir Monster',
+    itemKey: 'item_monster_repellent_charm',
+    category: 'talisman',
+    type: 'talisman',
+    rarity: 'uncommon',
+    rank: 'Uncommon',
+    tier: 2,
+    basePrice: 100,
+    buyPrice: 100,
+    sellPrice: 20,
+    priceCurrency: 'silver',
+    description: 'Jimat penangkal aura buas. Mengurangi peluang pertemuan monster di alam liar sebesar 50% selama durasi aktif.',
+    weight: 0.05,
+    isTradeable: true,
+    effectType: 'repellent_charm',
+    effectValue: 0.50
+  },
+  {
+    name: 'Jimat Penarik Monster',
+    itemKey: 'item_monster_attraction_charm',
+    category: 'talisman',
+    type: 'talisman',
+    rarity: 'uncommon',
+    rank: 'Uncommon',
+    tier: 2,
+    basePrice: 100,
+    buyPrice: 100,
+    sellPrice: 20,
+    priceCurrency: 'silver',
+    description: 'Jimat beraroma darah roh pemikat siluman. Meningkatkan peluang pertemuan monster di alam liar sebesar 75% untuk keperluan panen material.',
+    weight: 0.05,
+    isTradeable: true,
+    effectType: 'attraction_charm',
+    effectValue: 0.75
   }
 ];
 

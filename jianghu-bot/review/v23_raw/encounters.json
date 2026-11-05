@@ -1,0 +1,89 @@
+{
+  "gate": "E1",
+  "description": "Simulasi encounter 20.000 langkah per tier dalam toleransi +- 15%",
+  "seed": 1618,
+  "stepsPerTier": 20000,
+  "tiers": {
+    "1": {
+      "target": 0,
+      "actual": 0,
+      "encounters": 0,
+      "totalSteps": 20000,
+      "allowedMin": 0,
+      "allowedMax": 0,
+      "deviationPct": 0,
+      "passed": true
+    },
+    "2": {
+      "target": 0.04,
+      "actual": 0.0396,
+      "encounters": 791,
+      "totalSteps": 20000,
+      "allowedMin": 0.034,
+      "allowedMax": 0.046,
+      "deviationPct": -1.1,
+      "passed": true
+    },
+    "3": {
+      "target": 0.08,
+      "actual": 0.0789,
+      "encounters": 1577,
+      "totalSteps": 20000,
+      "allowedMin": 0.068,
+      "allowedMax": 0.092,
+      "deviationPct": -1.4,
+      "passed": true
+    },
+    "4": {
+      "target": 0.15,
+      "actual": 0.1517,
+      "encounters": 3034,
+      "totalSteps": 20000,
+      "allowedMin": 0.1275,
+      "allowedMax": 0.1725,
+      "deviationPct": 1.1,
+      "passed": true
+    },
+    "5": {
+      "target": 0.25,
+      "actual": 0.2493,
+      "encounters": 4985,
+      "totalSteps": 20000,
+      "allowedMin": 0.2125,
+      "allowedMax": 0.2875,
+      "deviationPct": -0.3,
+      "passed": true
+    },
+    "6": {
+      "target": 0.35,
+      "actual": 0.3504,
+      "encounters": 7008,
+      "totalSteps": 20000,
+      "allowedMin": 0.2975,
+      "allowedMax": 0.4025,
+      "deviationPct": 0.1,
+      "passed": true
+    }
+  },
+  "charms": {
+    "repellent": {
+      "expected": 0.075,
+      "actual": 0.0745,
+      "encounters": 1489,
+      "allowedMin": 0.0638,
+      "allowedMax": 0.0862,
+      "deviationPct": -0.7,
+      "passed": true
+    },
+    "attraction": {
+      "expected": 0.2625,
+      "actual": 0.2625,
+      "encounters": 5249,
+      "allowedMin": 0.2231,
+      "allowedMax": 0.3019,
+      "deviationPct": 0,
+      "passed": true
+    }
+  },
+  "passed": true
+}
