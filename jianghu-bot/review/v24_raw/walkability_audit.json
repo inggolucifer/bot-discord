@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-11-05T13:21:42.117Z",
+  "step": 25,
+  "totalSampled": 40000,
+  "metrics": {
+    "lakeTotal": 101,
+    "solidLakeTotal": 0,
+    "glacierTotal": 44,
+    "solidGlacierTotal": 0,
+    "passesWalkable": 4,
+    "totalPasses": 4
+  },
+  "passDetails": [
+    {
+      "name": "Celah Lembah Barat",
+      "x": 1800,
+      "y": 2500,
+      "terrain": "herb_field",
+      "isSolid": false,
+      "isWalkable": true
+    },
+    {
+      "name": "Celah Kabut Azure",
+      "x": 2600,
+      "y": 3350,
+      "terrain": "mountain_pass",
+      "isSolid": false,
+      "isWalkable": true
+    },
+    {
+      "name": "Celah Jurang Pedang",
+      "x": 2201,
+      "y": 3354,
+      "terrain": "mountain_pass",
+      "isSolid": false,
+      "isWalkable": true
+    },
+    {
+      "name": "Celah Perbatasan Utara",
+      "x": 2300,
+      "y": 1948,
+      "terrain": "mountain_pass",
+      "isSolid": false,
+      "isWalkable": true
+    }
+  ],
+  "solidTerrainsDistribution": {
+    "sea": 338,
+    "mountain": 22,
+    "lava_flow": 23,
+    "abyss_edge": 1602,
+    "volcanic": 1089,
+    "mountain_rock": 236,
+    "ocean": 4326,
+    "cliff": 463,
+    "azure_mountain": 3255,
+    "lake_deep": 500,
+    "mountain_peak": 899
+  },
+  "pass": true
+}

@@ -392,16 +392,17 @@ function getTerrainStaminaCost(terrainType) {
     case 'western_desert':
     case 'desert':
     case 'desert_sand':
-    case 'dune': return 2.0;
+    case 'dune':
+    case 'lake': return 2.0; // V24 H4: Danau dangkal
     case 'mountain':
     case 'azure_mountain':
     case 'mountain_rock':
     case 'mountain_peak':
-    case 'cliff': return 2.5;
+    case 'cliff':
+    case 'glacier': return 2.5; // V24 H4: Gletser es abadi
     case 'glacial':
     case 'northern_glacial':
     case 'snow':
-    case 'glacier':
     case 'ice_crack':
     case 'volcanic':
     case 'lava_spine':
@@ -413,7 +414,6 @@ function getTerrainStaminaCost(terrainType) {
     case 'ocean':
     case 'sea':
     case 'sea_reef':
-    case 'lake':
     case 'lake_deep':
     case 'ice_sea':
     case 'river':

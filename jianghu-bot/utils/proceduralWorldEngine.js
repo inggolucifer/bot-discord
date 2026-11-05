@@ -432,7 +432,7 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
     case 'mirror_lake': {
       if (elevation < 0.60) {
         terrainType = 'lake';
-        isSolid = true;
+        isSolid = false; // V24 H4: De-solidifikasi danau (cost 2.0)
         label = 'Perairan Danau Cermin';
       } else if (elevation < 0.70) {
         terrainType = 'river_shallow';
@@ -505,7 +505,7 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
       if (tileY >= 4150 || elevation > 0.75) {
         if (elevation > 0.82) {
           terrainType = 'glacier';
-          isSolid = true;
+          isSolid = false; // V24 H4: De-solidifikasi gletser (cost 2.5)
           label = 'Gletser Es Abadi';
         } else if (elevation > 0.68) {
           terrainType = 'ice_crack';
@@ -651,7 +651,7 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
     case 'northern_desolate': {
       if (elevation > 0.80) {
         terrainType = 'glacier';
-        isSolid = true;
+        isSolid = false; // V24 H4: De-solidifikasi gletser (cost 2.5)
         label = 'Gletser Es Abadi';
       } else if (elevation > 0.70) {
         terrainType = 'ice_crack';

@@ -1,0 +1,35 @@
+{
+  "version": "v24",
+  "policy": {
+    "solid": [
+      "ocean",
+      "sea",
+      "lake_deep",
+      "abyss_edge",
+      "cliff",
+      "azure_mountain",
+      "mountain_peak",
+      "mountain_rock",
+      "mountain",
+      "lava_flow",
+      "volcanic",
+      "boundary"
+    ],
+    "walkable_with_cost": {
+      "lake": {
+        "isSolid": false,
+        "staminaCost": 2.0,
+        "description": "Danau dangkal berair tenang (dapat diseberangi dengan konsumsi stamina 2.0x)"
+      },
+      "glacier": {
+        "isSolid": false,
+        "staminaCost": 2.5,
+        "description": "Gletser es abadi dingin dan licin (dapat dilintasi dengan konsumsi stamina 2.5x)"
+      }
+    },
+    "mountain_passes": [
+      "mountain_pass",
+      "sword_gorge_pass"
+    ]
+  }
+}
