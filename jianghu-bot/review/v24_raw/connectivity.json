@@ -1,0 +1,490 @@
+{
+  "timestamp": "2026-11-05T13:23:30.160Z",
+  "gridScale": 4,
+  "macroDimensions": [
+    1250,
+    1250
+  ],
+  "mainComponentBlocks": 990659,
+  "metrics": {
+    "totalAnchors": 52,
+    "connectedCount": 51,
+    "allowedUnreachableCount": 1,
+    "unexpectedUnreachableCount": 0
+  },
+  "allowedUnreachable": [
+    "pulau_penyu_raksasa"
+  ],
+  "unexpectedUnreachable": [],
+  "pass": true,
+  "settlementsReport": [
+    {
+      "id": "desa_xingcun",
+      "name": "Desa Xingcun",
+      "status": "connected",
+      "block": [
+        512,
+        663
+      ]
+    },
+    {
+      "id": "dusun_mata_air_jernih",
+      "name": "Dusun Mata Air Jernih",
+      "status": "connected",
+      "block": [
+        600,
+        612
+      ]
+    },
+    {
+      "id": "pos_perbatasan_qinghe",
+      "name": "Pos Perbatasan Qinghe",
+      "status": "connected",
+      "block": [
+        575,
+        488
+      ]
+    },
+    {
+      "id": "oase_shadi",
+      "name": "Oase Shadi",
+      "status": "connected",
+      "block": [
+        205,
+        555
+      ]
+    },
+    {
+      "id": "dermaga_donghai",
+      "name": "Dermaga Donghai",
+      "status": "connected",
+      "block": [
+        980,
+        675
+      ]
+    },
+    {
+      "id": "desa_heiyan",
+      "name": "Desa Heiyan",
+      "status": "connected",
+      "block": [
+        475,
+        350
+      ]
+    },
+    {
+      "id": "kemah_dataran_tinggi_petapa",
+      "name": "Kemah Dataran Tinggi Petapa",
+      "status": "connected",
+      "block": [
+        300,
+        1050
+      ]
+    },
+    {
+      "id": "kaki_gunung_azure",
+      "name": "Kaki Gunung Azure",
+      "status": "connected",
+      "block": [
+        550,
+        835
+      ]
+    },
+    {
+      "id": "tianjing",
+      "name": "Tianjing",
+      "status": "connected",
+      "block": [
+        675,
+        701
+      ]
+    },
+    {
+      "id": "xitong_city",
+      "name": "XiTong City",
+      "status": "connected",
+      "block": [
+        588,
+        725
+      ]
+    },
+    {
+      "id": "kota_fengyang",
+      "name": "Kota Fengyang",
+      "status": "connected",
+      "block": [
+        738,
+        650
+      ]
+    },
+    {
+      "id": "luoyang_kecil",
+      "name": "Kota Luoyang Kecil",
+      "status": "connected",
+      "block": [
+        650,
+        550
+      ]
+    },
+    {
+      "id": "desa_tiedao",
+      "name": "Desa Tiedao",
+      "status": "connected",
+      "block": [
+        775,
+        712
+      ]
+    },
+    {
+      "id": "pos_tundra_utara",
+      "name": "Pos Tundra Salju",
+      "status": "connected",
+      "block": [
+        530,
+        1045
+      ]
+    },
+    {
+      "id": "pulau_penyu_raksasa",
+      "name": "Pulau Penyu Raksasa",
+      "status": "allowed_unreachable",
+      "block": [
+        1088,
+        688
+      ]
+    },
+    {
+      "id": "benteng_gerbang_iblis",
+      "name": "Benteng Gerbang Iblis",
+      "status": "connected",
+      "block": [
+        625,
+        200
+      ]
+    },
+    {
+      "id": "lembah_kabut_merah",
+      "name": "Lembah Kabut Merah",
+      "status": "connected",
+      "block": [
+        587,
+        605
+      ]
+    },
+    {
+      "id": "sekte_awan_pedang",
+      "name": "Sekte Awan Pedang",
+      "status": "connected",
+      "block": [
+        550,
+        838
+      ]
+    },
+    {
+      "id": "sekte_pedang_langit",
+      "name": "Sekte Pedang Langit",
+      "status": "connected",
+      "block": [
+        538,
+        700
+      ]
+    },
+    {
+      "id": "kuil_lonceng_emas",
+      "name": "Kuil Lonceng Emas",
+      "status": "connected",
+      "block": [
+        350,
+        1100
+      ]
+    },
+    {
+      "id": "lembah_racun_bayangan",
+      "name": "Lembah Racun Bayangan",
+      "status": "connected",
+      "block": [
+        450,
+        275
+      ]
+    },
+    {
+      "id": "istana_giok_laut_timur",
+      "name": "Istana Giok Laut Timur",
+      "status": "connected",
+      "block": [
+        975,
+        713
+      ]
+    },
+    {
+      "id": "sekte_petir_ilahiah",
+      "name": "Sekte Petir Ilahiah",
+      "status": "connected",
+      "block": [
+        600,
+        1000
+      ]
+    },
+    {
+      "id": "sekte_pasir_suci",
+      "name": "Sekte Pasir Suci",
+      "status": "connected",
+      "block": [
+        163,
+        600
+      ]
+    },
+    {
+      "id": "istana_es_abadi",
+      "name": "Istana Es Abadi",
+      "status": "connected",
+      "block": [
+        488,
+        1175
+      ]
+    },
+    {
+      "id": "gua_purba_bunga_aprikot",
+      "name": "Gua Purba Bunga Aprikot",
+      "status": "connected",
+      "block": [
+        525,
+        650
+      ]
+    },
+    {
+      "id": "makam_kaisar_pedang_purba",
+      "name": "Makam Kaisar Pedang Purba",
+      "status": "connected",
+      "block": [
+        550,
+        840
+      ]
+    },
+    {
+      "id": "reruntuhan_abadi_tianyuan",
+      "name": "Reruntuhan Abadi Tianyuan",
+      "status": "connected",
+      "block": [
+        600,
+        1025
+      ]
+    },
+    {
+      "id": "sarang_naga_karang_timur",
+      "name": "Sarang Naga Karang Timur",
+      "status": "connected",
+      "block": [
+        970,
+        688
+      ]
+    },
+    {
+      "id": "kota_jinling",
+      "name": "Kota Jinling",
+      "status": "connected",
+      "block": [
+        688,
+        588
+      ]
+    },
+    {
+      "id": "kota_yunxi",
+      "name": "Kota Kecil Yunxi",
+      "status": "connected",
+      "block": [
+        550,
+        625
+      ]
+    },
+    {
+      "id": "kota_hanhai",
+      "name": "Kota Kecil Hanhai",
+      "status": "connected",
+      "block": [
+        275,
+        600
+      ]
+    },
+    {
+      "id": "kota_leiyin",
+      "name": "Kota Kecil Leiyin",
+      "status": "connected",
+      "block": [
+        650,
+        950
+      ]
+    },
+    {
+      "id": "kota_canghai",
+      "name": "Kota Kecil Canghai",
+      "status": "connected",
+      "block": [
+        925,
+        638
+      ]
+    },
+    {
+      "id": "kota_binghu",
+      "name": "Kota Kecil Binghu",
+      "status": "connected",
+      "block": [
+        450,
+        1088
+      ]
+    },
+    {
+      "id": "kota_moyun",
+      "name": "Kota Kecil Moyun",
+      "status": "connected",
+      "block": [
+        537,
+        313
+      ]
+    },
+    {
+      "id": "kota_shuijing",
+      "name": "Kota Kecil Shuijing",
+      "status": "connected",
+      "block": [
+        775,
+        775
+      ]
+    },
+    {
+      "id": "desa_bamboo_grove",
+      "name": "Desa Rimbun Bambu",
+      "status": "connected",
+      "block": [
+        462,
+        700
+      ]
+    },
+    {
+      "id": "desa_lingquan",
+      "name": "Desa Lingquan",
+      "status": "connected",
+      "block": [
+        637,
+        638
+      ]
+    },
+    {
+      "id": "desa_shaquan",
+      "name": "Desa Shaquan",
+      "status": "connected",
+      "block": [
+        150,
+        525
+      ]
+    },
+    {
+      "id": "desa_tianhe",
+      "name": "Desa Tianhe",
+      "status": "connected",
+      "block": [
+        550,
+        988
+      ]
+    },
+    {
+      "id": "desa_xueshan",
+      "name": "Desa Xueshan",
+      "status": "connected",
+      "block": [
+        587,
+        1075
+      ]
+    },
+    {
+      "id": "desa_yougu",
+      "name": "Desa Yougu",
+      "status": "connected",
+      "block": [
+        262,
+        1000
+      ]
+    },
+    {
+      "id": "dusun_kebun_persik",
+      "name": "Dusun Kebun Persik",
+      "status": "connected",
+      "block": [
+        537,
+        675
+      ]
+    },
+    {
+      "id": "dusun_padi_emas",
+      "name": "Dusun Padi Emas",
+      "status": "connected",
+      "block": [
+        575,
+        587
+      ]
+    },
+    {
+      "id": "dusun_oasis_tersembunyi",
+      "name": "Dusun Oase Tersembunyi",
+      "status": "connected",
+      "block": [
+        187,
+        575
+      ]
+    },
+    {
+      "id": "dusun_gembala_petir",
+      "name": "Dusun Gembala Petir",
+      "status": "connected",
+      "block": [
+        625,
+        975
+      ]
+    },
+    {
+      "id": "dusun_pondok_karang",
+      "name": "Dusun Pondok Karang",
+      "status": "connected",
+      "block": [
+        950,
+        662
+      ]
+    },
+    {
+      "id": "dusun_pondok_es",
+      "name": "Dusun Pondok Es",
+      "status": "connected",
+      "block": [
+        500,
+        1062
+      ]
+    },
+    {
+      "id": "dusun_pondok_teh_kuno",
+      "name": "Dusun Pondok Teh Kuno",
+      "status": "connected",
+      "block": [
+        325,
+        1025
+      ]
+    },
+    {
+      "id": "pos_menara_pantau_danau",
+      "name": "Pos Menara Pantau Danau",
+      "status": "connected",
+      "block": [
+        812,
+        750
+      ]
+    },
+    {
+      "id": "dermaga_teluk_sembilan",
+      "name": "Dermaga Teluk Sembilan",
+      "status": "connected",
+      "block": [
+        625,
+        575
+      ]
+    }
+  ]
+}
