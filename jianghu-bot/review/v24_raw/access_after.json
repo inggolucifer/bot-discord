@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-05T13:05:43.939Z",
+  "timestamp": "2026-11-05T13:40:30.306Z",
   "mode": "after",
   "summary": {
     "totalFootprintTiles": 532,
@@ -22,8 +22,6 @@
     "cliff": 31,
     "azure_mountain": 216,
     "lake_deep": 35,
-    "lake": 4,
-    "glacier": 3,
     "mountain_peak": 51
   },
   "settlements": [

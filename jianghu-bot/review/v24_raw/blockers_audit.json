@@ -1,15 +1,15 @@
 {
-  "timestamp": "2026-11-05T13:10:33.834Z",
+  "timestamp": "2026-11-05T13:40:36.957Z",
   "targetSamples": 500,
   "totalSampled": 500,
   "causeBreakdown": {
-    "terrain": 296,
-    "water": 200,
+    "terrain": 298,
+    "water": 202,
     "object": 0,
     "barrier": 0,
     "wall": 0,
     "world_edge": 0,
-    "custom": 4
+    "custom": 0
   },
   "metrics": {
     "emptyLabels": 0,

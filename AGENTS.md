@@ -70,22 +70,23 @@ d:\gitub\bot-discord\
 
 ## 3. Aturan Inti & Formula Authoritative
 
-### 3.0. Arsitektur Peta Dunia V20 ("Satu Pemukiman = SATU Bangunan Besar")
+### 3.0. Arsitektur Peta Dunia V24 ("Seluruh Footprint Pemukiman Walkable & Bebas Rintangan")
 - **Prinsip Utama (Keputusan Otoritatif Pemilik)**:
   1. **Satu Pemukiman = SATU Bangunan Besar**: Setiap desa, dusun, kota, sekte, pos, dan dermaga (52 anchor) di peta dunia 5000x5000 HANYA dirender sebagai **satu sprite marker besar** (gerbang/kompleks megah). Dilarang keras memunculkan gugusan rumah kecil, sumur, tumpukan kayu, atau fasilitas terpisah di sekitarnya.
-  2. **Zona Eksklusi Pemukiman (No Clutter Policy)**: Di dalam radius eksklusi pemukiman (Chebyshev $R_{\text{exclusion}}$, misal dusun 6, desa 10, kota 14..36 tile), **DILARANG KERAS** memuat objek buatan manusia apa pun selain marker pemukiman itu sendiri. Objek alam (pohon, rumput, batu) diperbolehkan maksimal 4–12 objek.
-  3. **Collision & Forecourt Gerbang**:
-     - Area span anchor (`spanWidth` × `spanHeight`): baris atas (`spanWidth` × `spanHeight - 1`) adalah solid (`isSolid: true`).
-     - Baris terbawah adalah halaman depan / forecourt (`isSolid: false`, walkable).
-     - Tile pintu masuk (entrance) terletak di tengah baris forecourt: $(x + \lfloor\text{spanW}/2\rfloor, y + \text{spanH} - 1)$ dengan atribut `isSettlementEntrance: true`.
-  4. **Pemicu Dialog & Masuk Interior**: Melangkah ke tile entrance memicu server mengembalikan `settlementPrompt: { id, name, tier, regionSlug }`. Klien menampilkan modal dialog *"Masuk ke {nama}? [Masuk] [Tetap di Luar]"*. Mengeklik marker pemukiman membuka dialog yang sama.
-  5. **Interior Gaya Tale of Immortal (`SettlementPanoramaView.tsx`)**:
+  2. **Seluruh Footprint Walkable (V24)**: Seluruh petak di dalam area footprint pemukiman (`spanWidth` × `spanHeight`) berstatus **walkable** (`isSolid: false`), memiliki `settlementId` dan `label` pemukiman. Melangkah ke petak footprint mana pun langsung memicu dialog masuk pemukiman (`settlementPrompt: { id, name, tier, regionSlug }`).
+  3. **Zona Eksklusi Pemukiman & Area Clearance Pintu**:
+     - Di dalam radius eksklusi pemukiman ($R_{\text{exclusion}}$, misal dusun 6, desa 10, kota 14..36 tile), **DILARANG KERAS** memuat objek buatan manusia apa pun selain marker pemukiman itu sendiri. Objek alam (pohon, rumput, batu) diperbolehkan maksimal 4–12 objek.
+     - Area clearance $(spanWidth + 2) \times 3$ di sekeliling halaman depan dan koridor pintu masuk $3 \times 8$ petak dijamin 100% bebas dari objek scatter padat untuk memastikan akses masuk tak terhalang.
+  4. **Pemicu Dialog & Masuk Interior**: Melangkah ke petak footprint mana pun atau mengeklik marker pemukiman membuka dialog *"Masuk ke {nama}? [Masuk] [Tetap di Luar]"*.
+  5. **Kejujuran Pesan Rintangan (`utils/blockerDescriber.js`)**: Setiap petak rintangan melaporkan kategori penyebab riil (`terrain`, `water`, `object`, `wall`, `barrier`, `world_edge`, `custom`) dan label yang jelas. Dilarang keras menyebut seluruh rintangan sebagai "Tebing Batu Curam".
+  6. **De-solidifikasi Danau & Gletser (`world-data/walkability-policy-v24.json`)**: Danau (`lake`, stamina 2.0x) dan gletser (`glacier`, stamina 2.5x) dapat dilintasi pemain dengan biaya stamina proporsional. Samudra dalam, tebing, dan jurang tetap padat (`isSolid: true`).
+  7. **Interior Gaya Tale of Immortal (`SettlementPanoramaView.tsx`)**:
      - Seluruh fasilitas pemukiman (Penginapan, Kedai, Pasar, Bengkel, Papan Hadiah, Balai Sekte, Dermaga) berada di dalam interior, bersumber dari SSOT `world-data/settlement-facilities-v20.json`.
      - **Panel Rumah Penduduk**: Seluruh rumah warga/NPC yang dulunya tersebar di peta telah dimigrasikan ke dalam panel modal *"Rumah Penduduk"* (`residences`) di dalam pemukiman.
      - Fasilitas dalam persiapan (Balai Lelang, Gudang Jianmu, Array Teleportasi) menampilkan badge *"Segera Hadir"* tanpa error 404/500.
      - Tombol keluar kota (City Gate) mengembalikan pemain secara presisi ke tile entrance pemukiman.
-  6. **Rumah Menyendiri & Reruntuhan 1 Grid**: Rumah kecil 1x1 HANYA diizinkan di alam liar untuk: (a) NPC pertapa/pemburu/penebang/nelayan menyendiri (`world-data/standalone-homes-v20.json`), dan (b) reruntuhan kuno (`world-data/ruins-v20.json`). Keduanya berjarak $\ge 6$ tile di luar batas zona eksklusi pemukiman dan $\ge 25-30$ tile satu sama lain.
-  7. **Kebijakan Nol Tangkapan Layar (Zero Screenshot Policy)**: Dilarang keras membuat atau mengandalkan Playwright/Puppeteer/page.screenshot untuk pengujian/gate. Semua verifikasi wajib menggunakan audit data mentah, tes unit Vitest, kompilasi TypeScript/Next.js, dan visualisasi ASCII terminal (`scripts/v20/asciiMap.js`).
+  8. **Rumah Menyendiri & Reruntuhan 1 Grid**: Rumah kecil 1x1 HANYA diizinkan di alam liar untuk: (a) NPC pertapa/pemburu/penebang/nelayan menyendiri (`world-data/standalone-homes-v20.json`), dan (b) reruntuhan kuno (`world-data/ruins-v20.json`). Keduanya berjarak $\ge 6$ tile di luar batas zona eksklusi pemukiman dan $\ge 25-30$ tile satu sama lain.
+  9. **Kebijakan Nol Tangkapan Layar (Zero Screenshot Policy)**: Dilarang keras membuat atau mengandalkan Playwright/Puppeteer/page.screenshot untuk pengujian/gate. Semua verifikasi wajib menggunakan audit data mentah, tes unit Vitest, kompilasi TypeScript/Next.js, dan visualisasi ASCII terminal (`scripts/v20/asciiMap.js`).
 
 ### 3.1. Sistem Mount & Efisiensi Stamina
 - **Slot Equipment**: `equipment.mount` (menyimpan referensi ke item kategori `'mount'`).
