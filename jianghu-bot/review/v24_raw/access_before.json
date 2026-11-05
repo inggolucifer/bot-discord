@@ -1,0 +1,4458 @@
+{
+  "timestamp": "2026-11-05T12:46:37.358Z",
+  "mode": "before",
+  "summary": {
+    "totalFootprintTiles": 532,
+    "totalSolidTiles": 370,
+    "solidPercentage": 69.5,
+    "totalPromptTiles": 52,
+    "totalSimulations": 208,
+    "blockedSimulations": 134,
+    "tebingMessagesCount": 134,
+    "arrivedSimulations": 63
+  },
+  "solidTerrainsSample": {
+    "sea": 14,
+    "volcanic": 81,
+    "abyss_edge": 89,
+    "lava_flow": 1,
+    "mountain": 2,
+    "swamp": 1,
+    "mountain_rock": 12,
+    "ocean": 238,
+    "settlement": 17,
+    "cliff": 31,
+    "azure_mountain": 216,
+    "lake_deep": 35,
+    "lake": 4,
+    "glacier": 3,
+    "mountain_peak": 51
+  },
+  "settlements": [
+    {
+      "id": "desa_xingcun",
+      "name": "Desa Xingcun",
+      "x": 2050,
+      "y": 2650,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "dusun_mata_air_jernih",
+      "name": "Dusun Mata Air Jernih",
+      "x": 2400,
+      "y": 2450,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "totalTiles": 4,
+      "solidTiles": 2,
+      "promptTiles": 1
+    },
+    {
+      "id": "pos_perbatasan_qinghe",
+      "name": "Pos Perbatasan Qinghe",
+      "x": 2300,
+      "y": 1950,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "oase_shadi",
+      "name": "Oase Shadi",
+      "x": 820,
+      "y": 2220,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "dermaga_donghai",
+      "name": "Dermaga Donghai",
+      "x": 3920,
+      "y": 2700,
+      "spanWidth": 4,
+      "spanHeight": 3,
+      "totalTiles": 12,
+      "solidTiles": 8,
+      "promptTiles": 1
+    },
+    {
+      "id": "desa_heiyan",
+      "name": "Desa Heiyan",
+      "x": 1900,
+      "y": 1400,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "kemah_dataran_tinggi_petapa",
+      "name": "Kemah Dataran Tinggi Petapa",
+      "x": 1200,
+      "y": 4200,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "totalTiles": 4,
+      "solidTiles": 2,
+      "promptTiles": 1
+    },
+    {
+      "id": "kaki_gunung_azure",
+      "name": "Kaki Gunung Azure",
+      "x": 2200,
+      "y": 3340,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "tianjing",
+      "name": "Tianjing",
+      "x": 2700,
+      "y": 2800,
+      "spanWidth": 5,
+      "spanHeight": 5,
+      "totalTiles": 25,
+      "solidTiles": 20,
+      "promptTiles": 1
+    },
+    {
+      "id": "xitong_city",
+      "name": "XiTong City",
+      "x": 2350,
+      "y": 2900,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "totalTiles": 16,
+      "solidTiles": 12,
+      "promptTiles": 1
+    },
+    {
+      "id": "kota_fengyang",
+      "name": "Kota Fengyang",
+      "x": 2950,
+      "y": 2600,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "totalTiles": 16,
+      "solidTiles": 12,
+      "promptTiles": 1
+    },
+    {
+      "id": "luoyang_kecil",
+      "name": "Kota Luoyang Kecil",
+      "x": 2600,
+      "y": 2200,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "totalTiles": 16,
+      "solidTiles": 12,
+      "promptTiles": 1
+    },
+    {
+      "id": "desa_tiedao",
+      "name": "Desa Tiedao",
+      "x": 3100,
+      "y": 2850,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "totalTiles": 4,
+      "solidTiles": 2,
+      "promptTiles": 1
+    },
+    {
+      "id": "pos_tundra_utara",
+      "name": "Pos Tundra Salju",
+      "x": 2120,
+      "y": 4180,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "pulau_penyu_raksasa",
+      "name": "Pulau Penyu Raksasa",
+      "x": 4350,
+      "y": 2750,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "totalTiles": 16,
+      "solidTiles": 12,
+      "promptTiles": 1
+    },
+    {
+      "id": "benteng_gerbang_iblis",
+      "name": "Benteng Gerbang Iblis",
+      "x": 2500,
+      "y": 800,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "lembah_kabut_merah",
+      "name": "Lembah Kabut Merah",
+      "x": 2350,
+      "y": 2420,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "sekte_awan_pedang",
+      "name": "Sekte Awan Pedang",
+      "x": 2200,
+      "y": 3350,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "totalTiles": 16,
+      "solidTiles": 12,
+      "promptTiles": 1
+    },
+    {
+      "id": "sekte_pedang_langit",
+      "name": "Sekte Pedang Langit",
+      "x": 2150,
+      "y": 2800,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "totalTiles": 16,
+      "solidTiles": 12,
+      "promptTiles": 1
+    },
+    {
+      "id": "kuil_lonceng_emas",
+      "name": "Kuil Lonceng Emas",
+      "x": 1400,
+      "y": 4400,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "totalTiles": 16,
+      "solidTiles": 12,
+      "promptTiles": 1
+    },
+    {
+      "id": "lembah_racun_bayangan",
+      "name": "Lembah Racun Bayangan",
+      "x": 1800,
+      "y": 1100,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "totalTiles": 16,
+      "solidTiles": 12,
+      "promptTiles": 1
+    },
+    {
+      "id": "istana_giok_laut_timur",
+      "name": "Istana Giok Laut Timur",
+      "x": 3900,
+      "y": 2850,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "totalTiles": 16,
+      "solidTiles": 12,
+      "promptTiles": 1
+    },
+    {
+      "id": "sekte_petir_ilahiah",
+      "name": "Sekte Petir Ilahiah",
+      "x": 2400,
+      "y": 4000,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "totalTiles": 16,
+      "solidTiles": 12,
+      "promptTiles": 1
+    },
+    {
+      "id": "sekte_pasir_suci",
+      "name": "Sekte Pasir Suci",
+      "x": 650,
+      "y": 2400,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "totalTiles": 16,
+      "solidTiles": 12,
+      "promptTiles": 1
+    },
+    {
+      "id": "istana_es_abadi",
+      "name": "Istana Es Abadi",
+      "x": 1950,
+      "y": 4700,
+      "spanWidth": 4,
+      "spanHeight": 4,
+      "totalTiles": 16,
+      "solidTiles": 12,
+      "promptTiles": 1
+    },
+    {
+      "id": "gua_purba_bunga_aprikot",
+      "name": "Gua Purba Bunga Aprikot",
+      "x": 2100,
+      "y": 2600,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "totalTiles": 4,
+      "solidTiles": 2,
+      "promptTiles": 1
+    },
+    {
+      "id": "makam_kaisar_pedang_purba",
+      "name": "Makam Kaisar Pedang Purba",
+      "x": 2200,
+      "y": 3360,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "reruntuhan_abadi_tianyuan",
+      "name": "Reruntuhan Abadi Tianyuan",
+      "x": 2400,
+      "y": 4100,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "sarang_naga_karang_timur",
+      "name": "Sarang Naga Karang Timur",
+      "x": 3880,
+      "y": 2750,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "kota_jinling",
+      "name": "Kota Jinling",
+      "x": 2750,
+      "y": 2350,
+      "spanWidth": 5,
+      "spanHeight": 5,
+      "totalTiles": 25,
+      "solidTiles": 20,
+      "promptTiles": 1
+    },
+    {
+      "id": "kota_yunxi",
+      "name": "Kota Kecil Yunxi",
+      "x": 2200,
+      "y": 2500,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "kota_hanhai",
+      "name": "Kota Kecil Hanhai",
+      "x": 1100,
+      "y": 2400,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "kota_leiyin",
+      "name": "Kota Kecil Leiyin",
+      "x": 2600,
+      "y": 3800,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "kota_canghai",
+      "name": "Kota Kecil Canghai",
+      "x": 3700,
+      "y": 2550,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "kota_binghu",
+      "name": "Kota Kecil Binghu",
+      "x": 1800,
+      "y": 4350,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "kota_moyun",
+      "name": "Kota Kecil Moyun",
+      "x": 2150,
+      "y": 1250,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "kota_shuijing",
+      "name": "Kota Kecil Shuijing",
+      "x": 3100,
+      "y": 3100,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "desa_bamboo_grove",
+      "name": "Desa Rimbun Bambu",
+      "x": 1850,
+      "y": 2800,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "desa_lingquan",
+      "name": "Desa Lingquan",
+      "x": 2550,
+      "y": 2550,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "desa_shaquan",
+      "name": "Desa Shaquan",
+      "x": 600,
+      "y": 2100,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "desa_tianhe",
+      "name": "Desa Tianhe",
+      "x": 2200,
+      "y": 3950,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "desa_xueshan",
+      "name": "Desa Xueshan",
+      "x": 2350,
+      "y": 4300,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "desa_yougu",
+      "name": "Desa Yougu",
+      "x": 1050,
+      "y": 4000,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "dusun_kebun_persik",
+      "name": "Dusun Kebun Persik",
+      "x": 2150,
+      "y": 2700,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "totalTiles": 4,
+      "solidTiles": 2,
+      "promptTiles": 1
+    },
+    {
+      "id": "dusun_padi_emas",
+      "name": "Dusun Padi Emas",
+      "x": 2300,
+      "y": 2350,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "totalTiles": 4,
+      "solidTiles": 2,
+      "promptTiles": 1
+    },
+    {
+      "id": "dusun_oasis_tersembunyi",
+      "name": "Dusun Oase Tersembunyi",
+      "x": 750,
+      "y": 2300,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "totalTiles": 4,
+      "solidTiles": 2,
+      "promptTiles": 1
+    },
+    {
+      "id": "dusun_gembala_petir",
+      "name": "Dusun Gembala Petir",
+      "x": 2500,
+      "y": 3900,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "totalTiles": 4,
+      "solidTiles": 2,
+      "promptTiles": 1
+    },
+    {
+      "id": "dusun_pondok_karang",
+      "name": "Dusun Pondok Karang",
+      "x": 3800,
+      "y": 2650,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "totalTiles": 4,
+      "solidTiles": 2,
+      "promptTiles": 1
+    },
+    {
+      "id": "dusun_pondok_es",
+      "name": "Dusun Pondok Es",
+      "x": 2000,
+      "y": 4250,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "totalTiles": 4,
+      "solidTiles": 2,
+      "promptTiles": 1
+    },
+    {
+      "id": "dusun_pondok_teh_kuno",
+      "name": "Dusun Pondok Teh Kuno",
+      "x": 1300,
+      "y": 4100,
+      "spanWidth": 2,
+      "spanHeight": 2,
+      "totalTiles": 4,
+      "solidTiles": 2,
+      "promptTiles": 1
+    },
+    {
+      "id": "pos_menara_pantau_danau",
+      "name": "Pos Menara Pantau Danau",
+      "x": 3250,
+      "y": 3000,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    },
+    {
+      "id": "dermaga_teluk_sembilan",
+      "name": "Dermaga Teluk Sembilan",
+      "x": 2500,
+      "y": 2300,
+      "spanWidth": 3,
+      "spanHeight": 3,
+      "totalTiles": 9,
+      "solidTiles": 6,
+      "promptTiles": 1
+    }
+  ],
+  "simulations": [
+    {
+      "settlementId": "desa_xingcun",
+      "direction": "North",
+      "from": {
+        "x": 2051,
+        "y": 2649
+      },
+      "target": {
+        "x": 2051,
+        "y": 2650
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_xingcun",
+      "direction": "South",
+      "from": {
+        "x": 2051,
+        "y": 2653
+      },
+      "target": {
+        "x": 2051,
+        "y": 2652
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "desa_xingcun",
+        "name": "Desa Xingcun",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_xingcun",
+      "direction": "West",
+      "from": {
+        "x": 2049,
+        "y": 2651
+      },
+      "target": {
+        "x": 2050,
+        "y": 2651
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_xingcun",
+      "direction": "East",
+      "from": {
+        "x": 2053,
+        "y": 2651
+      },
+      "target": {
+        "x": 2052,
+        "y": 2651
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_mata_air_jernih",
+      "direction": "North",
+      "from": {
+        "x": 2401,
+        "y": 2449
+      },
+      "target": {
+        "x": 2401,
+        "y": 2450
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_mata_air_jernih",
+      "direction": "South",
+      "from": {
+        "x": 2401,
+        "y": 2452
+      },
+      "target": {
+        "x": 2401,
+        "y": 2451
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_mata_air_jernih",
+        "name": "Dusun Mata Air Jernih",
+        "tier": 1,
+        "regionSlug": "nine_springs_delta"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_mata_air_jernih",
+      "direction": "West",
+      "from": {
+        "x": 2399,
+        "y": 2451
+      },
+      "target": {
+        "x": 2400,
+        "y": 2451
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": null,
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_mata_air_jernih",
+      "direction": "East",
+      "from": {
+        "x": 2402,
+        "y": 2451
+      },
+      "target": {
+        "x": 2401,
+        "y": 2451
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_mata_air_jernih",
+        "name": "Dusun Mata Air Jernih",
+        "tier": 1,
+        "regionSlug": "nine_springs_delta"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pos_perbatasan_qinghe",
+      "direction": "North",
+      "from": {
+        "x": 2301,
+        "y": 1949
+      },
+      "target": {
+        "x": 2301,
+        "y": 1950
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pos_perbatasan_qinghe",
+      "direction": "South",
+      "from": {
+        "x": 2301,
+        "y": 1953
+      },
+      "target": {
+        "x": 2301,
+        "y": 1952
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "pos_perbatasan_qinghe",
+        "name": "Pos Perbatasan Qinghe",
+        "tier": 2,
+        "regionSlug": "border_march"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pos_perbatasan_qinghe",
+      "direction": "West",
+      "from": {
+        "x": 2299,
+        "y": 1951
+      },
+      "target": {
+        "x": 2300,
+        "y": 1951
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pos_perbatasan_qinghe",
+      "direction": "East",
+      "from": {
+        "x": 2303,
+        "y": 1951
+      },
+      "target": {
+        "x": 2302,
+        "y": 1951
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "oase_shadi",
+      "direction": "North",
+      "from": {
+        "x": 821,
+        "y": 2219
+      },
+      "target": {
+        "x": 821,
+        "y": 2220
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "oase_shadi",
+      "direction": "South",
+      "from": {
+        "x": 821,
+        "y": 2223
+      },
+      "target": {
+        "x": 821,
+        "y": 2222
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "oase_shadi",
+        "name": "Oase Shadi",
+        "tier": 2,
+        "regionSlug": "western_sacred_desert"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "oase_shadi",
+      "direction": "West",
+      "from": {
+        "x": 819,
+        "y": 2221
+      },
+      "target": {
+        "x": 820,
+        "y": 2221
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "oase_shadi",
+      "direction": "East",
+      "from": {
+        "x": 823,
+        "y": 2221
+      },
+      "target": {
+        "x": 822,
+        "y": 2221
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dermaga_donghai",
+      "direction": "North",
+      "from": {
+        "x": 3922,
+        "y": 2699
+      },
+      "target": {
+        "x": 3922,
+        "y": 2700
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dermaga_donghai",
+      "direction": "South",
+      "from": {
+        "x": 3922,
+        "y": 2703
+      },
+      "target": {
+        "x": 3922,
+        "y": 2702
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dermaga_donghai",
+        "name": "Dermaga Donghai",
+        "tier": 2,
+        "regionSlug": "eastern_sea"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dermaga_donghai",
+      "direction": "West",
+      "from": {
+        "x": 3919,
+        "y": 2701
+      },
+      "target": {
+        "x": 3920,
+        "y": 2701
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dermaga_donghai",
+      "direction": "East",
+      "from": {
+        "x": 3924,
+        "y": 2701
+      },
+      "target": {
+        "x": 3923,
+        "y": 2701
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_heiyan",
+      "direction": "North",
+      "from": {
+        "x": 1901,
+        "y": 1399
+      },
+      "target": {
+        "x": 1901,
+        "y": 1400
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_heiyan",
+      "direction": "South",
+      "from": {
+        "x": 1901,
+        "y": 1403
+      },
+      "target": {
+        "x": 1901,
+        "y": 1402
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "desa_heiyan",
+        "name": "Desa Heiyan",
+        "tier": 2,
+        "regionSlug": "southern_demon_domain"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_heiyan",
+      "direction": "West",
+      "from": {
+        "x": 1899,
+        "y": 1401
+      },
+      "target": {
+        "x": 1900,
+        "y": 1401
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_heiyan",
+      "direction": "East",
+      "from": {
+        "x": 1903,
+        "y": 1401
+      },
+      "target": {
+        "x": 1902,
+        "y": 1401
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kemah_dataran_tinggi_petapa",
+      "direction": "North",
+      "from": {
+        "x": 1201,
+        "y": 4199
+      },
+      "target": {
+        "x": 1201,
+        "y": 4200
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kemah_dataran_tinggi_petapa",
+      "direction": "South",
+      "from": {
+        "x": 1201,
+        "y": 4202
+      },
+      "target": {
+        "x": 1201,
+        "y": 4201
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kemah_dataran_tinggi_petapa",
+        "name": "Kemah Dataran Tinggi Petapa",
+        "tier": 2,
+        "regionSlug": "hermit_highlands"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kemah_dataran_tinggi_petapa",
+      "direction": "West",
+      "from": {
+        "x": 1199,
+        "y": 4201
+      },
+      "target": {
+        "x": 1200,
+        "y": 4201
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": null,
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kemah_dataran_tinggi_petapa",
+      "direction": "East",
+      "from": {
+        "x": 1202,
+        "y": 4201
+      },
+      "target": {
+        "x": 1201,
+        "y": 4201
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kemah_dataran_tinggi_petapa",
+        "name": "Kemah Dataran Tinggi Petapa",
+        "tier": 2,
+        "regionSlug": "hermit_highlands"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kaki_gunung_azure",
+      "direction": "North",
+      "from": {
+        "x": 2201,
+        "y": 3339
+      },
+      "target": {
+        "x": 2201,
+        "y": 3340
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kaki_gunung_azure",
+      "direction": "South",
+      "from": {
+        "x": 2201,
+        "y": 3343
+      },
+      "target": {
+        "x": 2201,
+        "y": 3342
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kaki_gunung_azure",
+        "name": "Kaki Gunung Azure",
+        "tier": 2,
+        "regionSlug": "azure_mountain_range"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kaki_gunung_azure",
+      "direction": "West",
+      "from": {
+        "x": 2199,
+        "y": 3341
+      },
+      "target": {
+        "x": 2200,
+        "y": 3341
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kaki_gunung_azure",
+      "direction": "East",
+      "from": {
+        "x": 2203,
+        "y": 3341
+      },
+      "target": {
+        "x": 2202,
+        "y": 3341
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "tianjing",
+      "direction": "North",
+      "from": {
+        "x": 2702,
+        "y": 2799
+      },
+      "target": {
+        "x": 2702,
+        "y": 2800
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "tianjing",
+      "direction": "South",
+      "from": {
+        "x": 2702,
+        "y": 2805
+      },
+      "target": {
+        "x": 2702,
+        "y": 2804
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "tianjing",
+        "name": "Tianjing",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "tianjing",
+      "direction": "West",
+      "from": {
+        "x": 2699,
+        "y": 2802
+      },
+      "target": {
+        "x": 2700,
+        "y": 2802
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "tianjing",
+      "direction": "East",
+      "from": {
+        "x": 2705,
+        "y": 2802
+      },
+      "target": {
+        "x": 2704,
+        "y": 2802
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "xitong_city",
+      "direction": "North",
+      "from": {
+        "x": 2352,
+        "y": 2899
+      },
+      "target": {
+        "x": 2352,
+        "y": 2900
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "xitong_city",
+      "direction": "South",
+      "from": {
+        "x": 2352,
+        "y": 2904
+      },
+      "target": {
+        "x": 2352,
+        "y": 2903
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "xitong_city",
+        "name": "XiTong City",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "xitong_city",
+      "direction": "West",
+      "from": {
+        "x": 2349,
+        "y": 2902
+      },
+      "target": {
+        "x": 2350,
+        "y": 2902
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "xitong_city",
+      "direction": "East",
+      "from": {
+        "x": 2354,
+        "y": 2902
+      },
+      "target": {
+        "x": 2353,
+        "y": 2902
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_fengyang",
+      "direction": "North",
+      "from": {
+        "x": 2952,
+        "y": 2599
+      },
+      "target": {
+        "x": 2952,
+        "y": 2600
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_fengyang",
+      "direction": "South",
+      "from": {
+        "x": 2952,
+        "y": 2604
+      },
+      "target": {
+        "x": 2952,
+        "y": 2603
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kota_fengyang",
+        "name": "Kota Fengyang",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_fengyang",
+      "direction": "West",
+      "from": {
+        "x": 2949,
+        "y": 2602
+      },
+      "target": {
+        "x": 2950,
+        "y": 2602
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_fengyang",
+      "direction": "East",
+      "from": {
+        "x": 2954,
+        "y": 2602
+      },
+      "target": {
+        "x": 2953,
+        "y": 2602
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "luoyang_kecil",
+      "direction": "North",
+      "from": {
+        "x": 2602,
+        "y": 2199
+      },
+      "target": {
+        "x": 2602,
+        "y": 2200
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "luoyang_kecil",
+      "direction": "South",
+      "from": {
+        "x": 2602,
+        "y": 2204
+      },
+      "target": {
+        "x": 2602,
+        "y": 2203
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "luoyang_kecil",
+        "name": "Kota Luoyang Kecil",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "luoyang_kecil",
+      "direction": "West",
+      "from": {
+        "x": 2599,
+        "y": 2202
+      },
+      "target": {
+        "x": 2600,
+        "y": 2202
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "luoyang_kecil",
+      "direction": "East",
+      "from": {
+        "x": 2604,
+        "y": 2202
+      },
+      "target": {
+        "x": 2603,
+        "y": 2202
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_tiedao",
+      "direction": "North",
+      "from": {
+        "x": 3101,
+        "y": 2849
+      },
+      "target": {
+        "x": 3101,
+        "y": 2850
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_tiedao",
+      "direction": "South",
+      "from": {
+        "x": 3101,
+        "y": 2852
+      },
+      "target": {
+        "x": 3101,
+        "y": 2851
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "desa_tiedao",
+        "name": "Desa Tiedao",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_tiedao",
+      "direction": "West",
+      "from": {
+        "x": 3099,
+        "y": 2851
+      },
+      "target": {
+        "x": 3100,
+        "y": 2851
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": null,
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_tiedao",
+      "direction": "East",
+      "from": {
+        "x": 3102,
+        "y": 2851
+      },
+      "target": {
+        "x": 3101,
+        "y": 2851
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "desa_tiedao",
+        "name": "Desa Tiedao",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pos_tundra_utara",
+      "direction": "North",
+      "from": {
+        "x": 2121,
+        "y": 4179
+      },
+      "target": {
+        "x": 2121,
+        "y": 4180
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pos_tundra_utara",
+      "direction": "South",
+      "from": {
+        "x": 2121,
+        "y": 4183
+      },
+      "target": {
+        "x": 2121,
+        "y": 4182
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "pos_tundra_utara",
+        "name": "Pos Tundra Salju",
+        "tier": 3,
+        "regionSlug": "thundersteppe"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pos_tundra_utara",
+      "direction": "West",
+      "from": {
+        "x": 2119,
+        "y": 4181
+      },
+      "target": {
+        "x": 2120,
+        "y": 4181
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pos_tundra_utara",
+      "direction": "East",
+      "from": {
+        "x": 2123,
+        "y": 4181
+      },
+      "target": {
+        "x": 2122,
+        "y": 4181
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pulau_penyu_raksasa",
+      "direction": "North",
+      "from": {
+        "x": 4352,
+        "y": 2749
+      },
+      "target": {
+        "x": 4352,
+        "y": 2750
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pulau_penyu_raksasa",
+      "direction": "South",
+      "from": {
+        "x": 4352,
+        "y": 2754
+      },
+      "target": {
+        "x": 4352,
+        "y": 2753
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "pulau_penyu_raksasa",
+        "name": "Pulau Penyu Raksasa",
+        "tier": 3,
+        "regionSlug": "floating_wind_isles"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pulau_penyu_raksasa",
+      "direction": "West",
+      "from": {
+        "x": 4349,
+        "y": 2752
+      },
+      "target": {
+        "x": 4350,
+        "y": 2752
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pulau_penyu_raksasa",
+      "direction": "East",
+      "from": {
+        "x": 4354,
+        "y": 2752
+      },
+      "target": {
+        "x": 4353,
+        "y": 2752
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "benteng_gerbang_iblis",
+      "direction": "North",
+      "from": {
+        "x": 2501,
+        "y": 799
+      },
+      "target": {
+        "x": 2501,
+        "y": 800
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "benteng_gerbang_iblis",
+      "direction": "South",
+      "from": {
+        "x": 2501,
+        "y": 803
+      },
+      "target": {
+        "x": 2501,
+        "y": 802
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "benteng_gerbang_iblis",
+        "name": "Benteng Gerbang Iblis",
+        "tier": 4,
+        "regionSlug": "crimson_battlefield"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "benteng_gerbang_iblis",
+      "direction": "West",
+      "from": {
+        "x": 2499,
+        "y": 801
+      },
+      "target": {
+        "x": 2500,
+        "y": 801
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "benteng_gerbang_iblis",
+      "direction": "East",
+      "from": {
+        "x": 2503,
+        "y": 801
+      },
+      "target": {
+        "x": 2502,
+        "y": 801
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "lembah_kabut_merah",
+      "direction": "North",
+      "from": {
+        "x": 2351,
+        "y": 2419
+      },
+      "target": {
+        "x": 2351,
+        "y": 2420
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "lembah_kabut_merah",
+      "direction": "South",
+      "from": {
+        "x": 2351,
+        "y": 2423
+      },
+      "target": {
+        "x": 2351,
+        "y": 2422
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "lembah_kabut_merah",
+        "name": "Lembah Kabut Merah",
+        "tier": 3,
+        "regionSlug": "nine_springs_delta"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "lembah_kabut_merah",
+      "direction": "West",
+      "from": {
+        "x": 2349,
+        "y": 2421
+      },
+      "target": {
+        "x": 2350,
+        "y": 2421
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "lembah_kabut_merah",
+      "direction": "East",
+      "from": {
+        "x": 2353,
+        "y": 2421
+      },
+      "target": {
+        "x": 2352,
+        "y": 2421
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_awan_pedang",
+      "direction": "North",
+      "from": {
+        "x": 2202,
+        "y": 3349
+      },
+      "target": {
+        "x": 2202,
+        "y": 3350
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_awan_pedang",
+      "direction": "South",
+      "from": {
+        "x": 2202,
+        "y": 3354
+      },
+      "target": {
+        "x": 2202,
+        "y": 3353
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "sekte_awan_pedang",
+        "name": "Sekte Awan Pedang",
+        "tier": 2,
+        "regionSlug": "azure_mountain_range"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_awan_pedang",
+      "direction": "West",
+      "from": {
+        "x": 2199,
+        "y": 3352
+      },
+      "target": {
+        "x": 2200,
+        "y": 3352
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_awan_pedang",
+      "direction": "East",
+      "from": {
+        "x": 2204,
+        "y": 3352
+      },
+      "target": {
+        "x": 2203,
+        "y": 3352
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_pedang_langit",
+      "direction": "North",
+      "from": {
+        "x": 2152,
+        "y": 2799
+      },
+      "target": {
+        "x": 2152,
+        "y": 2800
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_pedang_langit",
+      "direction": "South",
+      "from": {
+        "x": 2152,
+        "y": 2804
+      },
+      "target": {
+        "x": 2152,
+        "y": 2803
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "sekte_pedang_langit",
+        "name": "Sekte Pedang Langit",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_pedang_langit",
+      "direction": "West",
+      "from": {
+        "x": 2149,
+        "y": 2802
+      },
+      "target": {
+        "x": 2150,
+        "y": 2802
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_pedang_langit",
+      "direction": "East",
+      "from": {
+        "x": 2154,
+        "y": 2802
+      },
+      "target": {
+        "x": 2153,
+        "y": 2802
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kuil_lonceng_emas",
+      "direction": "North",
+      "from": {
+        "x": 1402,
+        "y": 4399
+      },
+      "target": {
+        "x": 1402,
+        "y": 4400
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kuil_lonceng_emas",
+      "direction": "South",
+      "from": {
+        "x": 1402,
+        "y": 4404
+      },
+      "target": {
+        "x": 1402,
+        "y": 4403
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kuil_lonceng_emas",
+        "name": "Kuil Lonceng Emas",
+        "tier": 2,
+        "regionSlug": "hermit_highlands"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kuil_lonceng_emas",
+      "direction": "West",
+      "from": {
+        "x": 1399,
+        "y": 4402
+      },
+      "target": {
+        "x": 1400,
+        "y": 4402
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kuil_lonceng_emas",
+      "direction": "East",
+      "from": {
+        "x": 1404,
+        "y": 4402
+      },
+      "target": {
+        "x": 1403,
+        "y": 4402
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "lembah_racun_bayangan",
+      "direction": "North",
+      "from": {
+        "x": 1802,
+        "y": 1099
+      },
+      "target": {
+        "x": 1802,
+        "y": 1100
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "lembah_racun_bayangan",
+      "direction": "South",
+      "from": {
+        "x": 1802,
+        "y": 1104
+      },
+      "target": {
+        "x": 1802,
+        "y": 1103
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "lembah_racun_bayangan",
+        "name": "Lembah Racun Bayangan",
+        "tier": 3,
+        "regionSlug": "southern_demon_domain"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "lembah_racun_bayangan",
+      "direction": "West",
+      "from": {
+        "x": 1799,
+        "y": 1102
+      },
+      "target": {
+        "x": 1800,
+        "y": 1102
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "lembah_racun_bayangan",
+      "direction": "East",
+      "from": {
+        "x": 1804,
+        "y": 1102
+      },
+      "target": {
+        "x": 1803,
+        "y": 1102
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "istana_giok_laut_timur",
+      "direction": "North",
+      "from": {
+        "x": 3902,
+        "y": 2849
+      },
+      "target": {
+        "x": 3902,
+        "y": 2850
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "istana_giok_laut_timur",
+      "direction": "South",
+      "from": {
+        "x": 3902,
+        "y": 2854
+      },
+      "target": {
+        "x": 3902,
+        "y": 2853
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "istana_giok_laut_timur",
+        "name": "Istana Giok Laut Timur",
+        "tier": 3,
+        "regionSlug": "eastern_sea"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "istana_giok_laut_timur",
+      "direction": "West",
+      "from": {
+        "x": 3899,
+        "y": 2852
+      },
+      "target": {
+        "x": 3900,
+        "y": 2852
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "istana_giok_laut_timur",
+      "direction": "East",
+      "from": {
+        "x": 3904,
+        "y": 2852
+      },
+      "target": {
+        "x": 3903,
+        "y": 2852
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_petir_ilahiah",
+      "direction": "North",
+      "from": {
+        "x": 2402,
+        "y": 3999
+      },
+      "target": {
+        "x": 2402,
+        "y": 4000
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_petir_ilahiah",
+      "direction": "South",
+      "from": {
+        "x": 2402,
+        "y": 4004
+      },
+      "target": {
+        "x": 2402,
+        "y": 4003
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "sekte_petir_ilahiah",
+        "name": "Sekte Petir Ilahiah",
+        "tier": 4,
+        "regionSlug": "thundersteppe"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_petir_ilahiah",
+      "direction": "West",
+      "from": {
+        "x": 2399,
+        "y": 4002
+      },
+      "target": {
+        "x": 2400,
+        "y": 4002
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_petir_ilahiah",
+      "direction": "East",
+      "from": {
+        "x": 2404,
+        "y": 4002
+      },
+      "target": {
+        "x": 2403,
+        "y": 4002
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_pasir_suci",
+      "direction": "North",
+      "from": {
+        "x": 652,
+        "y": 2399
+      },
+      "target": {
+        "x": 652,
+        "y": 2400
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_pasir_suci",
+      "direction": "South",
+      "from": {
+        "x": 652,
+        "y": 2404
+      },
+      "target": {
+        "x": 652,
+        "y": 2403
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "sekte_pasir_suci",
+        "name": "Sekte Pasir Suci",
+        "tier": 2,
+        "regionSlug": "western_sacred_desert"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_pasir_suci",
+      "direction": "West",
+      "from": {
+        "x": 649,
+        "y": 2402
+      },
+      "target": {
+        "x": 650,
+        "y": 2402
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sekte_pasir_suci",
+      "direction": "East",
+      "from": {
+        "x": 654,
+        "y": 2402
+      },
+      "target": {
+        "x": 653,
+        "y": 2402
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "istana_es_abadi",
+      "direction": "North",
+      "from": {
+        "x": 1952,
+        "y": 4699
+      },
+      "target": {
+        "x": 1952,
+        "y": 4700
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "istana_es_abadi",
+      "direction": "South",
+      "from": {
+        "x": 1952,
+        "y": 4704
+      },
+      "target": {
+        "x": 1952,
+        "y": 4703
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "istana_es_abadi",
+        "name": "Istana Es Abadi",
+        "tier": 4,
+        "regionSlug": "northern_desolate"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "istana_es_abadi",
+      "direction": "West",
+      "from": {
+        "x": 1949,
+        "y": 4702
+      },
+      "target": {
+        "x": 1950,
+        "y": 4702
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "istana_es_abadi",
+      "direction": "East",
+      "from": {
+        "x": 1954,
+        "y": 4702
+      },
+      "target": {
+        "x": 1953,
+        "y": 4702
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "gua_purba_bunga_aprikot",
+      "direction": "North",
+      "from": {
+        "x": 2101,
+        "y": 2599
+      },
+      "target": {
+        "x": 2101,
+        "y": 2600
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "gua_purba_bunga_aprikot",
+      "direction": "South",
+      "from": {
+        "x": 2101,
+        "y": 2602
+      },
+      "target": {
+        "x": 2101,
+        "y": 2601
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "gua_purba_bunga_aprikot",
+        "name": "Gua Purba Bunga Aprikot",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "gua_purba_bunga_aprikot",
+      "direction": "West",
+      "from": {
+        "x": 2099,
+        "y": 2601
+      },
+      "target": {
+        "x": 2100,
+        "y": 2601
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": null,
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "gua_purba_bunga_aprikot",
+      "direction": "East",
+      "from": {
+        "x": 2102,
+        "y": 2601
+      },
+      "target": {
+        "x": 2101,
+        "y": 2601
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "gua_purba_bunga_aprikot",
+        "name": "Gua Purba Bunga Aprikot",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "makam_kaisar_pedang_purba",
+      "direction": "North",
+      "from": {
+        "x": 2201,
+        "y": 3359
+      },
+      "target": {
+        "x": 2201,
+        "y": 3360
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "makam_kaisar_pedang_purba",
+      "direction": "South",
+      "from": {
+        "x": 2201,
+        "y": 3363
+      },
+      "target": {
+        "x": 2201,
+        "y": 3362
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "makam_kaisar_pedang_purba",
+        "name": "Makam Kaisar Pedang Purba",
+        "tier": 3,
+        "regionSlug": "azure_mountain_range"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "makam_kaisar_pedang_purba",
+      "direction": "West",
+      "from": {
+        "x": 2199,
+        "y": 3361
+      },
+      "target": {
+        "x": 2200,
+        "y": 3361
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "makam_kaisar_pedang_purba",
+      "direction": "East",
+      "from": {
+        "x": 2203,
+        "y": 3361
+      },
+      "target": {
+        "x": 2202,
+        "y": 3361
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "reruntuhan_abadi_tianyuan",
+      "direction": "North",
+      "from": {
+        "x": 2401,
+        "y": 4099
+      },
+      "target": {
+        "x": 2401,
+        "y": 4100
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "reruntuhan_abadi_tianyuan",
+      "direction": "South",
+      "from": {
+        "x": 2401,
+        "y": 4103
+      },
+      "target": {
+        "x": 2401,
+        "y": 4102
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "reruntuhan_abadi_tianyuan",
+        "name": "Reruntuhan Abadi Tianyuan",
+        "tier": 4,
+        "regionSlug": "thundersteppe"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "reruntuhan_abadi_tianyuan",
+      "direction": "West",
+      "from": {
+        "x": 2399,
+        "y": 4101
+      },
+      "target": {
+        "x": 2400,
+        "y": 4101
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "reruntuhan_abadi_tianyuan",
+      "direction": "East",
+      "from": {
+        "x": 2403,
+        "y": 4101
+      },
+      "target": {
+        "x": 2402,
+        "y": 4101
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sarang_naga_karang_timur",
+      "direction": "North",
+      "from": {
+        "x": 3881,
+        "y": 2749
+      },
+      "target": {
+        "x": 3881,
+        "y": 2750
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sarang_naga_karang_timur",
+      "direction": "South",
+      "from": {
+        "x": 3881,
+        "y": 2753
+      },
+      "target": {
+        "x": 3881,
+        "y": 2752
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "sarang_naga_karang_timur",
+        "name": "Sarang Naga Karang Timur",
+        "tier": 3,
+        "regionSlug": "ore_teeth_range"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sarang_naga_karang_timur",
+      "direction": "West",
+      "from": {
+        "x": 3879,
+        "y": 2751
+      },
+      "target": {
+        "x": 3880,
+        "y": 2751
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "sarang_naga_karang_timur",
+      "direction": "East",
+      "from": {
+        "x": 3883,
+        "y": 2751
+      },
+      "target": {
+        "x": 3882,
+        "y": 2751
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_jinling",
+      "direction": "North",
+      "from": {
+        "x": 2752,
+        "y": 2349
+      },
+      "target": {
+        "x": 2752,
+        "y": 2350
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_jinling",
+      "direction": "South",
+      "from": {
+        "x": 2752,
+        "y": 2355
+      },
+      "target": {
+        "x": 2752,
+        "y": 2354
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kota_jinling",
+        "name": "Kota Jinling",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_jinling",
+      "direction": "West",
+      "from": {
+        "x": 2749,
+        "y": 2352
+      },
+      "target": {
+        "x": 2750,
+        "y": 2352
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_jinling",
+      "direction": "East",
+      "from": {
+        "x": 2755,
+        "y": 2352
+      },
+      "target": {
+        "x": 2754,
+        "y": 2352
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_yunxi",
+      "direction": "North",
+      "from": {
+        "x": 2201,
+        "y": 2499
+      },
+      "target": {
+        "x": 2201,
+        "y": 2500
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_yunxi",
+      "direction": "South",
+      "from": {
+        "x": 2201,
+        "y": 2503
+      },
+      "target": {
+        "x": 2201,
+        "y": 2502
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kota_yunxi",
+        "name": "Kota Kecil Yunxi",
+        "tier": 1,
+        "regionSlug": "nine_springs_delta"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_yunxi",
+      "direction": "West",
+      "from": {
+        "x": 2199,
+        "y": 2501
+      },
+      "target": {
+        "x": 2200,
+        "y": 2501
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_yunxi",
+      "direction": "East",
+      "from": {
+        "x": 2203,
+        "y": 2501
+      },
+      "target": {
+        "x": 2202,
+        "y": 2501
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_hanhai",
+      "direction": "North",
+      "from": {
+        "x": 1101,
+        "y": 2399
+      },
+      "target": {
+        "x": 1101,
+        "y": 2400
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_hanhai",
+      "direction": "South",
+      "from": {
+        "x": 1101,
+        "y": 2403
+      },
+      "target": {
+        "x": 1101,
+        "y": 2402
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kota_hanhai",
+        "name": "Kota Kecil Hanhai",
+        "tier": 2,
+        "regionSlug": "western_sacred_desert"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_hanhai",
+      "direction": "West",
+      "from": {
+        "x": 1099,
+        "y": 2401
+      },
+      "target": {
+        "x": 1100,
+        "y": 2401
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_hanhai",
+      "direction": "East",
+      "from": {
+        "x": 1103,
+        "y": 2401
+      },
+      "target": {
+        "x": 1102,
+        "y": 2401
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_leiyin",
+      "direction": "North",
+      "from": {
+        "x": 2601,
+        "y": 3799
+      },
+      "target": {
+        "x": 2601,
+        "y": 3800
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_leiyin",
+      "direction": "South",
+      "from": {
+        "x": 2601,
+        "y": 3803
+      },
+      "target": {
+        "x": 2601,
+        "y": 3802
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kota_leiyin",
+        "name": "Kota Kecil Leiyin",
+        "tier": 2,
+        "regionSlug": "northern_desolate"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_leiyin",
+      "direction": "West",
+      "from": {
+        "x": 2599,
+        "y": 3801
+      },
+      "target": {
+        "x": 2600,
+        "y": 3801
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_leiyin",
+      "direction": "East",
+      "from": {
+        "x": 2603,
+        "y": 3801
+      },
+      "target": {
+        "x": 2602,
+        "y": 3801
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_canghai",
+      "direction": "North",
+      "from": {
+        "x": 3701,
+        "y": 2549
+      },
+      "target": {
+        "x": 3701,
+        "y": 2550
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_canghai",
+      "direction": "South",
+      "from": {
+        "x": 3701,
+        "y": 2553
+      },
+      "target": {
+        "x": 3701,
+        "y": 2552
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kota_canghai",
+        "name": "Kota Kecil Canghai",
+        "tier": 1,
+        "regionSlug": "ore_teeth_range"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_canghai",
+      "direction": "West",
+      "from": {
+        "x": 3699,
+        "y": 2551
+      },
+      "target": {
+        "x": 3700,
+        "y": 2551
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_canghai",
+      "direction": "East",
+      "from": {
+        "x": 3703,
+        "y": 2551
+      },
+      "target": {
+        "x": 3702,
+        "y": 2551
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_binghu",
+      "direction": "North",
+      "from": {
+        "x": 1801,
+        "y": 4349
+      },
+      "target": {
+        "x": 1801,
+        "y": 4350
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_binghu",
+      "direction": "South",
+      "from": {
+        "x": 1801,
+        "y": 4353
+      },
+      "target": {
+        "x": 1801,
+        "y": 4352
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kota_binghu",
+        "name": "Kota Kecil Binghu",
+        "tier": 3,
+        "regionSlug": "thundersteppe"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_binghu",
+      "direction": "West",
+      "from": {
+        "x": 1799,
+        "y": 4351
+      },
+      "target": {
+        "x": 1800,
+        "y": 4351
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_binghu",
+      "direction": "East",
+      "from": {
+        "x": 1803,
+        "y": 4351
+      },
+      "target": {
+        "x": 1802,
+        "y": 4351
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_moyun",
+      "direction": "North",
+      "from": {
+        "x": 2151,
+        "y": 1249
+      },
+      "target": {
+        "x": 2151,
+        "y": 1250
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_moyun",
+      "direction": "South",
+      "from": {
+        "x": 2151,
+        "y": 1253
+      },
+      "target": {
+        "x": 2151,
+        "y": 1252
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kota_moyun",
+        "name": "Kota Kecil Moyun",
+        "tier": 3,
+        "regionSlug": "southern_demon_domain"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_moyun",
+      "direction": "West",
+      "from": {
+        "x": 2149,
+        "y": 1251
+      },
+      "target": {
+        "x": 2150,
+        "y": 1251
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_moyun",
+      "direction": "East",
+      "from": {
+        "x": 2153,
+        "y": 1251
+      },
+      "target": {
+        "x": 2152,
+        "y": 1251
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_shuijing",
+      "direction": "North",
+      "from": {
+        "x": 3101,
+        "y": 3099
+      },
+      "target": {
+        "x": 3101,
+        "y": 3100
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_shuijing",
+      "direction": "South",
+      "from": {
+        "x": 3101,
+        "y": 3103
+      },
+      "target": {
+        "x": 3101,
+        "y": 3102
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "kota_shuijing",
+        "name": "Kota Kecil Shuijing",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_shuijing",
+      "direction": "West",
+      "from": {
+        "x": 3099,
+        "y": 3101
+      },
+      "target": {
+        "x": 3100,
+        "y": 3101
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "kota_shuijing",
+      "direction": "East",
+      "from": {
+        "x": 3103,
+        "y": 3101
+      },
+      "target": {
+        "x": 3102,
+        "y": 3101
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_bamboo_grove",
+      "direction": "North",
+      "from": {
+        "x": 1851,
+        "y": 2799
+      },
+      "target": {
+        "x": 1851,
+        "y": 2800
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_bamboo_grove",
+      "direction": "South",
+      "from": {
+        "x": 1851,
+        "y": 2803
+      },
+      "target": {
+        "x": 1851,
+        "y": 2802
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "desa_bamboo_grove",
+        "name": "Desa Rimbun Bambu",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_bamboo_grove",
+      "direction": "West",
+      "from": {
+        "x": 1849,
+        "y": 2801
+      },
+      "target": {
+        "x": 1850,
+        "y": 2801
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_bamboo_grove",
+      "direction": "East",
+      "from": {
+        "x": 1853,
+        "y": 2801
+      },
+      "target": {
+        "x": 1852,
+        "y": 2801
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_lingquan",
+      "direction": "North",
+      "from": {
+        "x": 2551,
+        "y": 2549
+      },
+      "target": {
+        "x": 2551,
+        "y": 2550
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_lingquan",
+      "direction": "South",
+      "from": {
+        "x": 2551,
+        "y": 2553
+      },
+      "target": {
+        "x": 2551,
+        "y": 2552
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "desa_lingquan",
+        "name": "Desa Lingquan",
+        "tier": 1,
+        "regionSlug": "nine_springs_delta"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_lingquan",
+      "direction": "West",
+      "from": {
+        "x": 2549,
+        "y": 2551
+      },
+      "target": {
+        "x": 2550,
+        "y": 2551
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_lingquan",
+      "direction": "East",
+      "from": {
+        "x": 2553,
+        "y": 2551
+      },
+      "target": {
+        "x": 2552,
+        "y": 2551
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_shaquan",
+      "direction": "North",
+      "from": {
+        "x": 601,
+        "y": 2099
+      },
+      "target": {
+        "x": 601,
+        "y": 2100
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_shaquan",
+      "direction": "South",
+      "from": {
+        "x": 601,
+        "y": 2103
+      },
+      "target": {
+        "x": 601,
+        "y": 2102
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "desa_shaquan",
+        "name": "Desa Shaquan",
+        "tier": 2,
+        "regionSlug": "western_sacred_desert"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_shaquan",
+      "direction": "West",
+      "from": {
+        "x": 599,
+        "y": 2101
+      },
+      "target": {
+        "x": 600,
+        "y": 2101
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_shaquan",
+      "direction": "East",
+      "from": {
+        "x": 603,
+        "y": 2101
+      },
+      "target": {
+        "x": 602,
+        "y": 2101
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_tianhe",
+      "direction": "North",
+      "from": {
+        "x": 2201,
+        "y": 3949
+      },
+      "target": {
+        "x": 2201,
+        "y": 3950
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_tianhe",
+      "direction": "South",
+      "from": {
+        "x": 2201,
+        "y": 3953
+      },
+      "target": {
+        "x": 2201,
+        "y": 3952
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "desa_tianhe",
+        "name": "Desa Tianhe",
+        "tier": 2,
+        "regionSlug": "thundersteppe"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_tianhe",
+      "direction": "West",
+      "from": {
+        "x": 2199,
+        "y": 3951
+      },
+      "target": {
+        "x": 2200,
+        "y": 3951
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_tianhe",
+      "direction": "East",
+      "from": {
+        "x": 2203,
+        "y": 3951
+      },
+      "target": {
+        "x": 2202,
+        "y": 3951
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_xueshan",
+      "direction": "North",
+      "from": {
+        "x": 2351,
+        "y": 4299
+      },
+      "target": {
+        "x": 2351,
+        "y": 4300
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_xueshan",
+      "direction": "South",
+      "from": {
+        "x": 2351,
+        "y": 4303
+      },
+      "target": {
+        "x": 2351,
+        "y": 4302
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "desa_xueshan",
+        "name": "Desa Xueshan",
+        "tier": 3,
+        "regionSlug": "thundersteppe"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_xueshan",
+      "direction": "West",
+      "from": {
+        "x": 2349,
+        "y": 4301
+      },
+      "target": {
+        "x": 2350,
+        "y": 4301
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_xueshan",
+      "direction": "East",
+      "from": {
+        "x": 2353,
+        "y": 4301
+      },
+      "target": {
+        "x": 2352,
+        "y": 4301
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_yougu",
+      "direction": "North",
+      "from": {
+        "x": 1051,
+        "y": 3999
+      },
+      "target": {
+        "x": 1051,
+        "y": 4000
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_yougu",
+      "direction": "South",
+      "from": {
+        "x": 1051,
+        "y": 4003
+      },
+      "target": {
+        "x": 1051,
+        "y": 4002
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "desa_yougu",
+        "name": "Desa Yougu",
+        "tier": 2,
+        "regionSlug": "hermit_highlands"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_yougu",
+      "direction": "West",
+      "from": {
+        "x": 1049,
+        "y": 4001
+      },
+      "target": {
+        "x": 1050,
+        "y": 4001
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "desa_yougu",
+      "direction": "East",
+      "from": {
+        "x": 1053,
+        "y": 4001
+      },
+      "target": {
+        "x": 1052,
+        "y": 4001
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_kebun_persik",
+      "direction": "North",
+      "from": {
+        "x": 2151,
+        "y": 2699
+      },
+      "target": {
+        "x": 2151,
+        "y": 2700
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_kebun_persik",
+      "direction": "South",
+      "from": {
+        "x": 2151,
+        "y": 2702
+      },
+      "target": {
+        "x": 2151,
+        "y": 2701
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_kebun_persik",
+        "name": "Dusun Kebun Persik",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_kebun_persik",
+      "direction": "West",
+      "from": {
+        "x": 2149,
+        "y": 2701
+      },
+      "target": {
+        "x": 2150,
+        "y": 2701
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": null,
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_kebun_persik",
+      "direction": "East",
+      "from": {
+        "x": 2152,
+        "y": 2701
+      },
+      "target": {
+        "x": 2151,
+        "y": 2701
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_kebun_persik",
+        "name": "Dusun Kebun Persik",
+        "tier": 1,
+        "regionSlug": "central_plains"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_padi_emas",
+      "direction": "North",
+      "from": {
+        "x": 2301,
+        "y": 2349
+      },
+      "target": {
+        "x": 2301,
+        "y": 2350
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_padi_emas",
+      "direction": "South",
+      "from": {
+        "x": 2301,
+        "y": 2352
+      },
+      "target": {
+        "x": 2301,
+        "y": 2351
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_padi_emas",
+        "name": "Dusun Padi Emas",
+        "tier": 1,
+        "regionSlug": "nine_springs_delta"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_padi_emas",
+      "direction": "West",
+      "from": {
+        "x": 2299,
+        "y": 2351
+      },
+      "target": {
+        "x": 2300,
+        "y": 2351
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": null,
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_padi_emas",
+      "direction": "East",
+      "from": {
+        "x": 2302,
+        "y": 2351
+      },
+      "target": {
+        "x": 2301,
+        "y": 2351
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_padi_emas",
+        "name": "Dusun Padi Emas",
+        "tier": 1,
+        "regionSlug": "nine_springs_delta"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_oasis_tersembunyi",
+      "direction": "North",
+      "from": {
+        "x": 751,
+        "y": 2299
+      },
+      "target": {
+        "x": 751,
+        "y": 2300
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_oasis_tersembunyi",
+      "direction": "South",
+      "from": {
+        "x": 751,
+        "y": 2302
+      },
+      "target": {
+        "x": 751,
+        "y": 2301
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_oasis_tersembunyi",
+        "name": "Dusun Oase Tersembunyi",
+        "tier": 2,
+        "regionSlug": "western_sacred_desert"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_oasis_tersembunyi",
+      "direction": "West",
+      "from": {
+        "x": 749,
+        "y": 2301
+      },
+      "target": {
+        "x": 750,
+        "y": 2301
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": null,
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_oasis_tersembunyi",
+      "direction": "East",
+      "from": {
+        "x": 752,
+        "y": 2301
+      },
+      "target": {
+        "x": 751,
+        "y": 2301
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_oasis_tersembunyi",
+        "name": "Dusun Oase Tersembunyi",
+        "tier": 2,
+        "regionSlug": "western_sacred_desert"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_gembala_petir",
+      "direction": "North",
+      "from": {
+        "x": 2501,
+        "y": 3899
+      },
+      "target": {
+        "x": 2501,
+        "y": 3900
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_gembala_petir",
+      "direction": "South",
+      "from": {
+        "x": 2501,
+        "y": 3902
+      },
+      "target": {
+        "x": 2501,
+        "y": 3901
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_gembala_petir",
+        "name": "Dusun Gembala Petir",
+        "tier": 2,
+        "regionSlug": "thundersteppe"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_gembala_petir",
+      "direction": "West",
+      "from": {
+        "x": 2499,
+        "y": 3901
+      },
+      "target": {
+        "x": 2500,
+        "y": 3901
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": null,
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_gembala_petir",
+      "direction": "East",
+      "from": {
+        "x": 2502,
+        "y": 3901
+      },
+      "target": {
+        "x": 2501,
+        "y": 3901
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_gembala_petir",
+        "name": "Dusun Gembala Petir",
+        "tier": 2,
+        "regionSlug": "thundersteppe"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_pondok_karang",
+      "direction": "North",
+      "from": {
+        "x": 3801,
+        "y": 2649
+      },
+      "target": {
+        "x": 3801,
+        "y": 2650
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_pondok_karang",
+      "direction": "South",
+      "from": {
+        "x": 3801,
+        "y": 2652
+      },
+      "target": {
+        "x": 3801,
+        "y": 2651
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_pondok_karang",
+        "name": "Dusun Pondok Karang",
+        "tier": 1,
+        "regionSlug": "ore_teeth_range"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_pondok_karang",
+      "direction": "West",
+      "from": {
+        "x": 3799,
+        "y": 2651
+      },
+      "target": {
+        "x": 3800,
+        "y": 2651
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": null,
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_pondok_karang",
+      "direction": "East",
+      "from": {
+        "x": 3802,
+        "y": 2651
+      },
+      "target": {
+        "x": 3801,
+        "y": 2651
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_pondok_karang",
+        "name": "Dusun Pondok Karang",
+        "tier": 1,
+        "regionSlug": "ore_teeth_range"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_pondok_es",
+      "direction": "North",
+      "from": {
+        "x": 2001,
+        "y": 4249
+      },
+      "target": {
+        "x": 2001,
+        "y": 4250
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_pondok_es",
+      "direction": "South",
+      "from": {
+        "x": 2001,
+        "y": 4252
+      },
+      "target": {
+        "x": 2001,
+        "y": 4251
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_pondok_es",
+        "name": "Dusun Pondok Es",
+        "tier": 3,
+        "regionSlug": "thundersteppe"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_pondok_es",
+      "direction": "West",
+      "from": {
+        "x": 1999,
+        "y": 4251
+      },
+      "target": {
+        "x": 2000,
+        "y": 4251
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": null,
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_pondok_es",
+      "direction": "East",
+      "from": {
+        "x": 2002,
+        "y": 4251
+      },
+      "target": {
+        "x": 2001,
+        "y": 4251
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_pondok_es",
+        "name": "Dusun Pondok Es",
+        "tier": 3,
+        "regionSlug": "thundersteppe"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_pondok_teh_kuno",
+      "direction": "North",
+      "from": {
+        "x": 1301,
+        "y": 4099
+      },
+      "target": {
+        "x": 1301,
+        "y": 4100
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_pondok_teh_kuno",
+      "direction": "South",
+      "from": {
+        "x": 1301,
+        "y": 4102
+      },
+      "target": {
+        "x": 1301,
+        "y": 4101
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_pondok_teh_kuno",
+        "name": "Dusun Pondok Teh Kuno",
+        "tier": 2,
+        "regionSlug": "hermit_highlands"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_pondok_teh_kuno",
+      "direction": "West",
+      "from": {
+        "x": 1299,
+        "y": 4101
+      },
+      "target": {
+        "x": 1300,
+        "y": 4101
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": null,
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dusun_pondok_teh_kuno",
+      "direction": "East",
+      "from": {
+        "x": 1302,
+        "y": 4101
+      },
+      "target": {
+        "x": 1301,
+        "y": 4101
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dusun_pondok_teh_kuno",
+        "name": "Dusun Pondok Teh Kuno",
+        "tier": 2,
+        "regionSlug": "hermit_highlands"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pos_menara_pantau_danau",
+      "direction": "North",
+      "from": {
+        "x": 3251,
+        "y": 2999
+      },
+      "target": {
+        "x": 3251,
+        "y": 3000
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pos_menara_pantau_danau",
+      "direction": "South",
+      "from": {
+        "x": 3251,
+        "y": 3003
+      },
+      "target": {
+        "x": 3251,
+        "y": 3002
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "pos_menara_pantau_danau",
+        "name": "Pos Menara Pantau Danau",
+        "tier": 1,
+        "regionSlug": "sword_gorge"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pos_menara_pantau_danau",
+      "direction": "West",
+      "from": {
+        "x": 3249,
+        "y": 3001
+      },
+      "target": {
+        "x": 3250,
+        "y": 3001
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "pos_menara_pantau_danau",
+      "direction": "East",
+      "from": {
+        "x": 3253,
+        "y": 3001
+      },
+      "target": {
+        "x": 3252,
+        "y": 3001
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dermaga_teluk_sembilan",
+      "direction": "North",
+      "from": {
+        "x": 2501,
+        "y": 2299
+      },
+      "target": {
+        "x": 2501,
+        "y": 2300
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dermaga_teluk_sembilan",
+      "direction": "South",
+      "from": {
+        "x": 2501,
+        "y": 2303
+      },
+      "target": {
+        "x": 2501,
+        "y": 2302
+      },
+      "stoppedEarly": false,
+      "stopReason": null,
+      "settlementPrompt": {
+        "id": "dermaga_teluk_sembilan",
+        "name": "Dermaga Teluk Sembilan",
+        "tier": 1,
+        "regionSlug": "nine_springs_delta"
+      },
+      "tileSolid": false,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dermaga_teluk_sembilan",
+      "direction": "West",
+      "from": {
+        "x": 2499,
+        "y": 2301
+      },
+      "target": {
+        "x": 2500,
+        "y": 2301
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    },
+    {
+      "settlementId": "dermaga_teluk_sembilan",
+      "direction": "East",
+      "from": {
+        "x": 2503,
+        "y": 2301
+      },
+      "target": {
+        "x": 2502,
+        "y": 2301
+      },
+      "stoppedEarly": true,
+      "stopReason": "Jalur terhalang oleh Tebing Batu Curam! Membutuhkan artefak pedang terbang.",
+      "settlementPrompt": null,
+      "tileSolid": true,
+      "tileLabel": null
+    }
+  ]
+}
