@@ -15,7 +15,7 @@ import api from '@/lib/api';
 
 export interface NearbyEntityItem {
   id: string;
-  type: 'player' | 'building' | 'monster' | 'npc' | 'poi' | string;
+  type: 'player' | 'building' | 'monster' | 'npc' | 'poi' | 'hazard' | string;
   name: string;
   x: number;
   y: number;
@@ -58,7 +58,7 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
   const [entities, setEntities] = useState<NearbyEntityItem[]>([]);
   const [countOthers, setCountOthers] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [filter, setFilter] = useState<'all' | 'player' | 'building'>('all');
+  const [filter, setFilter] = useState<'all' | 'player' | 'building' | 'hazard'>('all');
   const [lastFetchedAt, setLastFetchedAt] = useState<number>(0);
   const [greetedIds, setGreetedIds] = useState<Set<string>>(new Set());
 
@@ -185,6 +185,8 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
         return '🏛️';
       case 'monster':
         return '👹';
+      case 'hazard':
+        return '⚠️';
       case 'npc':
         return '👤';
       default:
@@ -249,7 +251,8 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
             [
               { key: 'all', label: 'Semua' },
               { key: 'player', label: 'Kultivator' },
-              { key: 'building', label: 'Bangunan' }
+              { key: 'building', label: 'Bangunan' },
+              { key: 'hazard', label: 'Bahaya' }
             ] as const
           ).map((tab) => (
             <button
@@ -299,7 +302,7 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
                         </span>
                       </div>
                       <div className="text-[10px] text-stone-400 truncate">
-                        {item.status || (isPlayer ? 'Mengembara' : isBuilding ? 'Bangunan Mandiri' : 'Entitas')}
+                        {item.status || (isPlayer ? 'Mengembara' : isBuilding ? 'Bangunan Mandiri' : item.type === 'hazard' ? 'Zona Bahaya' : 'Entitas')}
                       </div>
                     </div>
                   </div>

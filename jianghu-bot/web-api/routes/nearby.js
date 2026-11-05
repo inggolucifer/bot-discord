@@ -5,6 +5,7 @@ const { authenticateToken } = require('../middlewares/auth');
 const PlayerBuilding = require('../../models/PlayerBuilding');
 const Player = require('../../models/Player');
 const { computeNearbyEntities } = require('../../utils/nearbyEngine');
+const { getNearbyHazards } = require('../../utils/monsterSpawnEngine');
 
 // In-memory rate limiting map: userId -> timestamp ms
 const rateLimitMap = new Map();
@@ -129,6 +130,22 @@ router.get('/', authenticateToken, async (req, res) => {
       });
     }
 
+// 5b. Agregasi Bahaya Tetap (Radius 14 Petak)
+    const hazards = getNearbyHazards(centerTileX, centerTileY, 14);
+    for (const h of hazards) {
+      rawEntities.push({
+        id: `hazard_${h.id}`,
+        type: 'hazard',
+        name: h.name,
+        x: h.x,
+        y: h.y,
+        chunkX: Math.floor(h.x / 32),
+        chunkY: Math.floor(h.y / 32),
+        status: `Tier ${h.dangerTier} • ${h.type.replace('_', ' ').toUpperCase()}`,
+        visibility: 'public'
+      });
+    }
+
     // 6. Hitung & Urutkan Spasial
     const result = computeNearbyEntities({
       fromX: centerTileX,
@@ -146,7 +163,8 @@ router.get('/', authenticateToken, async (req, res) => {
       radiusChunks: r,
       totalCount: result.totalCount,
       countOthers: result.countOthers,
-      items: result.items
+      items: result.items,
+      nearbyHazards: hazards
     };
 
     // 7. ETag Generation & 304 Handling

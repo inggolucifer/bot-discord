@@ -17,6 +17,9 @@ import ZoneGridView from "@/components/map/ZoneGridView";
 import WorldMapLoadingScreen from "@/components/map/WorldMapLoadingScreen";
 import LandscapeOrientationPrompt from "@/components/ui/LandscapeOrientationPrompt";
 import { useUIStore } from "@/lib/store";
+import regionRolesData from "@/config/region-roles-v23.json";
+import regionLadderData from "@/config/region-ladder-v23.json";
+import { AlertTriangle } from "lucide-react";
 
 function DebugCamMode({ debugCamParam }: { debugCamParam: string }) {
   const searchParams = useSearchParams();
@@ -150,6 +153,30 @@ function NormalWorldContent() {
   const [mapView, setMapView] = useState<'grid' | 'world' | 'region'>('grid');
   const [selectedRegionSlug, setSelectedRegionSlug] = useState<string | null>(null);
   const [subViewMode, setSubViewMode] = useState<'map' | 'settlement' | 'courtyard'>('map');
+
+  // V23 Realm Boundary Warning Modal State
+  const [realmWarning, setRealmWarning] = useState<{
+    isOpen: boolean;
+    destName: string;
+    regionName: string;
+    requiredRealm: number;
+    stageName: string;
+    onConfirm: () => void;
+  }>({
+    isOpen: false,
+    destName: '',
+    regionName: '',
+    requiredRealm: 0,
+    stageName: '',
+    onConfirm: () => {}
+  });
+
+  const getDestinationRegionLadder = (destName: string) => {
+    const targetSettlement = settlements.find((s: any) => s.name === destName);
+    const regSlug = targetSettlement?.regionSlug;
+    if (!regSlug) return null;
+    return (regionLadderData.regions as Record<string, any>)[regSlug] || null;
+  };
 
   useEffect(() => {
     fetchData();
@@ -292,34 +319,58 @@ function NormalWorldContent() {
       setSelectedNpc(npc);
   };
 
-  const handleStartTravel = async () => {
-    if (!travelDestination) return;
+  const executeTravel = async (destination: string, escort: boolean) => {
     setError(null); setMessage(null);
     try {
       const res = await api.post('/world/travel/start', {
-        toSettlementName: travelDestination,
-        useEscortLetter: useEscort
+        toSettlementName: destination,
+        useEscortLetter: escort
       });
       setTravelStatus(res.data.travel);
       if (res.data.currentStamina !== undefined) setStamina(res.data.currentStamina, res.data.maxStamina);
-      setMessage('Perjalanan dimulai!');
+      setMessage(`Perjalanan ke ${destination} dimulai!`);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Gagal memulai perjalanan');
     }
   };
 
+  const handleStartTravel = async () => {
+    if (!travelDestination) return;
+    const ladder = getDestinationRegionLadder(travelDestination);
+    if (ladder && ladder.requiredRealmIndex > playerRealmIndex) {
+      setRealmWarning({
+        isOpen: true,
+        destName: travelDestination,
+        regionName: ladder.name,
+        requiredRealm: ladder.requiredRealmIndex,
+        stageName: ladder.stage,
+        onConfirm: () => {
+          setRealmWarning(prev => ({ ...prev, isOpen: false }));
+          executeTravel(travelDestination, useEscort);
+        }
+      });
+      return;
+    }
+    executeTravel(travelDestination, useEscort);
+  };
+
   const handleStartTravelTo = async (destinationName: string) => {
-      try {
-          const res = await api.post('/world/travel/start', {
-              toSettlementName: destinationName,
-              useEscortLetter: false // Default to false from map UI click for now
-          });
-          setTravelStatus(res.data.travel);
-          if (res.data.currentStamina !== undefined) setStamina(res.data.currentStamina, res.data.maxStamina);
-          setMessage(`Perjalanan ke ${destinationName} dimulai!`);
-      } catch (err: any) {
-          setError(err.response?.data?.error || 'Gagal memulai perjalanan');
-      }
+    const ladder = getDestinationRegionLadder(destinationName);
+    if (ladder && ladder.requiredRealmIndex > playerRealmIndex) {
+      setRealmWarning({
+        isOpen: true,
+        destName: destinationName,
+        regionName: ladder.name,
+        requiredRealm: ladder.requiredRealmIndex,
+        stageName: ladder.stage,
+        onConfirm: () => {
+          setRealmWarning(prev => ({ ...prev, isOpen: false }));
+          executeTravel(destinationName, false);
+        }
+      });
+      return;
+    }
+    executeTravel(destinationName, false);
   };
 
   if (loading) return (
@@ -446,6 +497,27 @@ function NormalWorldContent() {
                 <span className="text-gray-400 text-[10px]">({climateData.weather})</span>
               </div>
             )}
+
+            {/* V23 Region Role Pill */}
+            {(() => {
+              const rSlug = locationData?.currentLocation?.regionSlug;
+              const rRole = rSlug ? (regionRolesData.roles as Record<string, any>)[rSlug]?.role : null;
+              if (!rRole) return null;
+              const badgeMap: Record<string, { label: string; cls: string; icon: string }> = {
+                hub: { label: 'Wilayah Hub', cls: 'bg-blue-950/80 text-blue-300 border-blue-700/60', icon: '🏛️' },
+                frontier: { label: 'Pos Perbatasan', cls: 'bg-emerald-950/80 text-emerald-300 border-emerald-700/60', icon: '🚩' },
+                transition: { label: 'Zona Transisi', cls: 'bg-amber-950/80 text-amber-300 border-amber-700/60', icon: '⚡' },
+                danger: { label: 'Zona Bahaya', cls: 'bg-rose-950/80 text-rose-300 border-rose-700/60', icon: '💀' },
+                sealed: { label: 'Wilayah Tersegel', cls: 'bg-purple-950/80 text-purple-300 border-purple-700/60', icon: '🔒' }
+              };
+              const b = badgeMap[rRole] || { label: rRole, cls: 'bg-stone-900 text-stone-300 border-stone-700', icon: '📍' };
+              return (
+                <div className={`hidden sm:flex items-center gap-1.5 backdrop-blur-md border rounded-xl px-2.5 py-1.5 shadow-xl text-xs font-serif ${b.cls}`}>
+                  <span>{b.icon}</span>
+                  <span className="font-semibold">{b.label}</span>
+                </div>
+              );
+            })()}
           </div>
 
           {/* Notifications / Alerts beneath HUD */}
@@ -792,6 +864,52 @@ function NormalWorldContent() {
                   fetchData();
               }}
           />
+      )}
+
+      {/* V23: Realm Boundary Warning Dialog */}
+      {realmWarning.isOpen && (
+        <div className="fixed inset-0 z-[100000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 font-serif">
+          <div className="w-full max-w-md bg-[#0c0e14] border-2 border-red-900/80 rounded-xl shadow-[0_0_50px_rgba(239,68,68,0.2)] p-6 space-y-4">
+            <div className="flex items-center gap-3 border-b border-red-900/40 pb-3">
+              <span className="text-3xl text-rose-500">⚠️</span>
+              <div>
+                <h3 className="text-base font-bold text-rose-300 tracking-wide">
+                  PERINGATAN AURAMAGETIS & BATAS RANAH
+                </h3>
+                <p className="text-[11px] text-stone-400">
+                  Tujuan: {realmWarning.destName} ({realmWarning.regionName})
+                </p>
+              </div>
+            </div>
+
+            <div className="text-xs text-stone-300 space-y-2 leading-relaxed bg-red-950/30 border border-red-900/30 rounded-lg p-3">
+              <p>
+                Wilayah ini berada pada tahap <span className="text-amber-300 font-bold">{realmWarning.stageName}</span> (Ranah {realmWarning.requiredRealm} ke atas).
+              </p>
+              <p>
+                Ranah kultivasi Anda saat ini adalah <span className="text-emerald-400 font-bold">Ranah {playerRealmIndex}</span>. Hawa pembunuh dan monster buas di wilayah ini sangat berbahaya bagi kultivator dengan ranah di bawah persyaratan!
+              </p>
+              <p className="text-stone-400 italic text-[11px]">
+                Apakah Anda yakin ingin tetap melangkah ke wilayah ini?
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                onClick={() => setRealmWarning(prev => ({ ...prev, isOpen: false }))}
+                className="px-4 py-2 bg-stone-900 hover:bg-stone-800 text-stone-300 border border-stone-700 rounded-lg text-xs font-semibold transition"
+              >
+                Kembali
+              </button>
+              <button
+                onClick={realmWarning.onConfirm}
+                className="px-4 py-2 bg-gradient-to-r from-red-950 to-rose-900 hover:from-red-900 hover:to-rose-800 text-rose-100 border border-rose-600 rounded-lg text-xs font-bold transition shadow-lg"
+              >
+                Tetap Masuk
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Peringatan Orientasi Landscape Mobile */}

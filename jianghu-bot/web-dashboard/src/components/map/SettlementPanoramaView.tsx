@@ -419,9 +419,9 @@ export default function SettlementPanoramaView({
                       <span>{bannerText}</span>
                     </span>
                     <div className="flex items-center gap-1.5 text-[9px] text-gray-300">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className={`w-1.5 h-1.5 rounded-full ${(b.status === 'coming_soon' || ['auction', 'storage', 'teleport_array'].includes(b.id)) ? 'bg-amber-400' : 'bg-emerald-400 animate-pulse'}`} />
                       <span className="text-gray-400 group-hover:text-gray-200">
-                        {b.openStatus === 'closed' ? 'Tutup' : 'Beroperasi'}
+                        {(b.status === 'coming_soon' || ['auction', 'storage', 'teleport_array'].includes(b.id)) ? 'Segera Hadir' : (b.openStatus === 'closed' ? 'Tutup' : 'Beroperasi')}
                       </span>
                     </div>
                   </div>
