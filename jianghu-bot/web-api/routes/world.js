@@ -50,6 +50,7 @@ const GC = require('../../utils/gridContract');
 const autotileEngine = require('../../utils/autotileEngine');
 const settlementEngine = require('../../utils/settlementEngine');
 const sparseFogManager = require('../../utils/sparseFogManager');
+const { describeBlocker } = require('../../utils/blockerDescriber');
 const {
     getTileIndex,
     getCoordinatesFromIndex,
@@ -1911,6 +1912,7 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
         // Resolusi status pergerakan (Read-Only preview, tanpa mutasi database pada GET - B-10 Fix)
         let moveStatus = { resolved: false, moving: false };
         let encounterResult = null;
+        let blockerInfo = null;
         try {
             if (player.gridMove && player.gridMove.isMoving) {
                 moveStatus = { resolved: false, moving: true };
@@ -2335,27 +2337,34 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             // Dapatkan info medan tile efektif (B-03 Fix)
             const tileInfo = getEffectiveTile(targetX, targetY);
 
-            // Obstruksi batas dunia / hazard mutlak
-            if (tileInfo.tileType === 'hazard') {
+            // Obstruksi batas dunia / hazard mutlak (V24 H2)
+            if (tileInfo.tileType === 'hazard' || targetX < 0 || targetX >= zoneConfig.gridWidth || targetY < 0 || targetY >= zoneConfig.gridHeight) {
+                blockerInfo = describeBlocker(tileInfo, targetX, targetY);
                 stoppedEarly = true;
-                stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Batas Benua / Jurang Tak Berdasar'}!`;
+                stopReason = blockerInfo.message;
                 break;
             }
 
-            // Obstruksi lautan atau tebing batu tanpa pedang terbang / kapal
+            // Obstruksi lautan, tebing batu, atau rintangan scatter kontekstual (V24 H2)
             if (tileInfo.isSolid) {
-                if (tileInfo.terrainType === 'ocean') {
+                blockerInfo = describeBlocker(tileInfo, targetX, targetY);
+                if (blockerInfo.cause === 'water') {
                     if (!isWaterMount && !isFlyingMount) {
                         stoppedEarly = true;
-                        stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Lautan Dalam'}! Membutuhkan perahu, kapal, atau pedang terbang.`;
+                        stopReason = blockerInfo.message;
+                        break;
+                    }
+                } else if (blockerInfo.cause === 'terrain') {
+                    if (!isFlyingMount) {
+                        stoppedEarly = true;
+                        stopReason = blockerInfo.message;
                         break;
                     }
                 } else {
-                    if (!isFlyingMount) {
-                        stoppedEarly = true;
-                        stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Tebing Batu Curam'}! Membutuhkan artefak pedang terbang.`;
-                        break;
-                    }
+                    // Rintangan fisik (objek scatter, pagar, properti, batas)
+                    stoppedEarly = true;
+                    stopReason = blockerInfo.message;
+                    break;
                 }
             }
 
@@ -2479,6 +2488,7 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             currentLocation: player.currentLocation,
             stoppedEarly,
             stopReason,
+            blocker: blockerInfo || null,
             encounter: encounterResult,
             exploredChunks: player.exploredChunks || [],
             settlementPrompt: promptAnchor ? {

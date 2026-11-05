@@ -1,0 +1,157 @@
+{
+  "timestamp": "2026-11-05T13:10:33.834Z",
+  "targetSamples": 500,
+  "totalSampled": 500,
+  "causeBreakdown": {
+    "terrain": 296,
+    "water": 200,
+    "object": 0,
+    "barrier": 0,
+    "wall": 0,
+    "world_edge": 0,
+    "custom": 4
+  },
+  "metrics": {
+    "emptyLabels": 0,
+    "tebingOnNonMountain": 0,
+    "flyingSwordOnNonMountain": 0
+  },
+  "pass": true,
+  "samplePreview": [
+    {
+      "x": 140,
+      "y": 4394,
+      "terrainType": "abyss_edge",
+      "cause": "terrain",
+      "label": "Tepian Jurang Hampa Mutlak",
+      "hint": "Membutuhkan artefak pedang terbang untuk melintasi.",
+      "isMountain": true
+    },
+    {
+      "x": 748,
+      "y": 3234,
+      "terrainType": "azure_mountain",
+      "cause": "terrain",
+      "label": "Tembok Pegunungan Azure",
+      "hint": "Membutuhkan artefak pedang terbang untuk melintasi.",
+      "isMountain": true
+    },
+    {
+      "x": 3465,
+      "y": 3338,
+      "terrainType": "azure_mountain",
+      "cause": "terrain",
+      "label": "Tembok Pegunungan Azure",
+      "hint": "Membutuhkan artefak pedang terbang untuk melintasi.",
+      "isMountain": true
+    },
+    {
+      "x": 4715,
+      "y": 3663,
+      "terrainType": "ocean",
+      "cause": "water",
+      "label": "Samudra Luas",
+      "hint": "Membutuhkan perahu, kapal, atau pedang terbang untuk menyeberang.",
+      "isMountain": false
+    },
+    {
+      "x": 99,
+      "y": 3186,
+      "terrainType": "azure_mountain",
+      "cause": "terrain",
+      "label": "Tembok Pegunungan Azure",
+      "hint": "Membutuhkan artefak pedang terbang untuk melintasi.",
+      "isMountain": true
+    },
+    {
+      "x": 4154,
+      "y": 2490,
+      "terrainType": "ocean",
+      "cause": "water",
+      "label": "Samudra Biru Tak Bertepi",
+      "hint": "Membutuhkan perahu, kapal, atau pedang terbang untuk menyeberang.",
+      "isMountain": false
+    },
+    {
+      "x": 4940,
+      "y": 3369,
+      "terrainType": "ocean",
+      "cause": "water",
+      "label": "Samudra Luas",
+      "hint": "Membutuhkan perahu, kapal, atau pedang terbang untuk menyeberang.",
+      "isMountain": false
+    },
+    {
+      "x": 2276,
+      "y": 364,
+      "terrainType": "abyss_edge",
+      "cause": "terrain",
+      "label": "Tebing Jurang Neraka Tianyuan",
+      "hint": "Membutuhkan artefak pedang terbang untuk melintasi.",
+      "isMountain": true
+    },
+    {
+      "x": 529,
+      "y": 3127,
+      "terrainType": "azure_mountain",
+      "cause": "terrain",
+      "label": "Tembok Pegunungan Azure",
+      "hint": "Membutuhkan artefak pedang terbang untuk melintasi.",
+      "isMountain": true
+    },
+    {
+      "x": 1049,
+      "y": 3137,
+      "terrainType": "azure_mountain",
+      "cause": "terrain",
+      "label": "Tembok Pegunungan Azure",
+      "hint": "Membutuhkan artefak pedang terbang untuk melintasi.",
+      "isMountain": true
+    },
+    {
+      "x": 891,
+      "y": 742,
+      "terrainType": "volcanic",
+      "cause": "terrain",
+      "label": "Danau Magma Membara",
+      "hint": "Membutuhkan artefak pedang terbang untuk melintasi.",
+      "isMountain": true
+    },
+    {
+      "x": 3996,
+      "y": 3262,
+      "terrainType": "ocean",
+      "cause": "water",
+      "label": "Samudra Biru Tak Bertepi",
+      "hint": "Membutuhkan perahu, kapal, atau pedang terbang untuk menyeberang.",
+      "isMountain": false
+    },
+    {
+      "x": 1740,
+      "y": 95,
+      "terrainType": "sea",
+      "cause": "water",
+      "label": "Perairan Pesisir Laut Tulang",
+      "hint": "Membutuhkan perahu, kapal, atau pedang terbang untuk menyeberang.",
+      "isMountain": false
+    },
+    {
+      "x": 3742,
+      "y": 3229,
+      "terrainType": "azure_mountain",
+      "cause": "terrain",
+      "label": "Tembok Pegunungan Azure",
+      "hint": "Membutuhkan artefak pedang terbang untuk melintasi.",
+      "isMountain": true
+    },
+    {
+      "x": 4354,
+      "y": 2921,
+      "terrainType": "ocean",
+      "cause": "water",
+      "label": "Samudra Awan Luas",
+      "hint": "Membutuhkan perahu, kapal, atau pedang terbang untuk menyeberang.",
+      "isMountain": false
+    }
+  ]
+}

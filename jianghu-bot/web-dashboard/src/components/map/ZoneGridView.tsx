@@ -366,7 +366,14 @@ export default function ZoneGridView({
       setActivePath([]);
       setPathSteps(0);
       if (tile.isSolid) {
-        showMessage('Jalur terhalang oleh tebing batu yang mustahil ditembus!');
+        const objName = tile.label || tile.terrainLabel || 'rintangan padat';
+        if (tile.terrainType?.includes('ocean') || tile.terrainType?.includes('sea') || tile.terrainType?.includes('lake_deep')) {
+          showMessage(`Jalur terhalang oleh ${objName}! Membutuhkan perahu atau pedang terbang.`);
+        } else if (tile.terrainType?.includes('cliff') || tile.terrainType?.includes('mountain')) {
+          showMessage(`Jalur terhalang oleh ${objName}! Membutuhkan artefak pedang terbang.`);
+        } else {
+          showMessage(`Jalur terhalang oleh ${objName}! Cari jalan lain di sekeliling rintangan.`);
+        }
       }
     }
   };
@@ -515,7 +522,15 @@ export default function ZoneGridView({
 
     // Cek rintangan
     if (solidTilesSet.has(`${nextX},${nextY}`)) {
-        showMessage('Jalur terhalang!');
+        const blockedTile = tiles.find(t => t.tileX === nextX && t.tileY === nextY);
+        const objName = blockedTile?.label || blockedTile?.terrainLabel || 'rintangan';
+        if (blockedTile?.terrainType?.includes('ocean') || blockedTile?.terrainType?.includes('sea') || blockedTile?.terrainType?.includes('lake_deep')) {
+          showMessage(`Jalur terhalang oleh ${objName}! Membutuhkan perahu atau pedang terbang.`);
+        } else if (blockedTile?.terrainType?.includes('cliff') || blockedTile?.terrainType?.includes('mountain')) {
+          showMessage(`Jalur terhalang oleh ${objName}! Membutuhkan artefak pedang terbang.`);
+        } else {
+          showMessage(`Jalur terhalang oleh ${objName}! Cari jalan lain.`);
+        }
         return;
     }
 
