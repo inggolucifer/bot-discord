@@ -1,0 +1,245 @@
+{
+  "timestamp": "2026-11-05T04:30:46.056Z",
+  "gates": {
+    "Z1": {
+      "gate": "Z1",
+      "description": "Tile jalan (road*) dengan ambush > 0 (sampel langkah 3)",
+      "threshold": 0,
+      "totalSampled": 1826,
+      "violationCount": 130,
+      "passed": false,
+      "sampleViolations": [
+        {
+          "x": 2300,
+          "y": 1939,
+          "terrain": "mountain_pass",
+          "ambush": 0.05,
+          "region": "border_march"
+        },
+        {
+          "x": 2300,
+          "y": 1942,
+          "terrain": "mountain_pass",
+          "ambush": 0.05,
+          "region": "border_march"
+        },
+        {
+          "x": 2300,
+          "y": 1945,
+          "terrain": "mountain_pass",
+          "ambush": 0.05,
+          "region": "border_march"
+        },
+        {
+          "x": 2300,
+          "y": 1940,
+          "terrain": "mountain_pass",
+          "ambush": 0.05,
+          "region": "border_march"
+        },
+        {
+          "x": 2300,
+          "y": 1943,
+          "terrain": "mountain_pass",
+          "ambush": 0.05,
+          "region": "border_march"
+        }
+      ]
+    },
+    "Z2": {
+      "gate": "Z2",
+      "description": "Titik lair/elite/hazard di tile terlarang, region salah, safe_zone tier>=2, atau terlalu dekat",
+      "threshold": 0,
+      "violationCount": 63,
+      "passed": false,
+      "sampleViolations": [
+        {
+          "regId": "nine_springs_delta",
+          "pt": {
+            "kind": "lair",
+            "x": 2412,
+            "y": 2406,
+            "terrain": "pond_lotus",
+            "fromNearestAnchorTiles": 46
+          },
+          "reason": "Tile perairan / air"
+        },
+        {
+          "regId": "nine_springs_delta",
+          "pt": {
+            "kind": "lair",
+            "x": 2412,
+            "y": 2406,
+            "terrain": "pond_lotus",
+            "fromNearestAnchorTiles": 46
+          },
+          "reason": "Terlalu dekat pemukiman dusun_mata_air_jernih (jarak 44 < 46)"
+        },
+        {
+          "regId": "nine_springs_delta",
+          "pt": {
+            "kind": "elite_1",
+            "x": 2520,
+            "y": 2502,
+            "terrain": "farmland",
+            "fromNearestAnchorTiles": 57
+          },
+          "reason": "Terlalu dekat pemukiman desa_lingquan (jarak 48 < 50)"
+        },
+        {
+          "regId": "azure_mountain_range",
+          "pt": {
+            "kind": "hazardZone",
+            "x": 2200,
+            "y": 3300,
+            "terrain": "mountain_pass"
+          },
+          "reason": "Terlalu dekat pemukiman kaki_gunung_azure (jarak 40 < 48)"
+        },
+        {
+          "regId": "azure_mountain_range",
+          "p1": {
+            "kind": "elite_0",
+            "x": 2200,
+            "y": 3250,
+            "terrain": "mountain_pass"
+          },
+          "p2": {
+            "kind": "hazardZone",
+            "x": 2200,
+            "y": 3300,
+            "terrain": "mountain_pass"
+          },
+          "reason": "Jarak antar-titik sewilayah terlalu dekat (50 < 60)"
+        }
+      ]
+    },
+    "Z3": {
+      "gate": "Z3",
+      "description": "Simpul travel = 52 anchor; graf 1 komponen; jalur 52x51 ada; simpul non-anchor = 0",
+      "threshold": "52 / 1 / 2652 / 0",
+      "actual": "16 / 1 / 6 / 13",
+      "totalNodes": 16,
+      "components": 1,
+      "validRoutePairs": 6,
+      "nonAnchorCount": 13,
+      "nonAnchorNodes": [
+        "Luoyang Kecil",
+        "Fengyang",
+        "Ibukota Central",
+        "Tri-Sect Mountain Outpost",
+        "Azure Sect Approach",
+        "Pelabuhan Timur",
+        "Eastern Market Port",
+        "Scar of Heaven Camp",
+        "Southern Watch",
+        "Oasis Barat",
+        "Desert Relay",
+        "Pos Tundra Utara",
+        "Northern Caravan Post"
+      ],
+      "passed": false
+    },
+    "Z4": {
+      "gate": "Z4",
+      "description": "Tier monsters/*.json = regions.json (29/29) & level maks tier t < level min tier t+1",
+      "threshold": "29/29; benar",
+      "matchedTiersCount": 28,
+      "totalRegions": 29,
+      "mismatches": [
+        {
+          "regionId": "void_rift",
+          "expectedTier": 6,
+          "fileTier": 5
+        }
+      ],
+      "orderPassed": false,
+      "orderErrors": [
+        {
+          "tierA": 5,
+          "maxA": 100,
+          "tierB": 6,
+          "minB": 90
+        }
+      ],
+      "tierLevels": {
+        "1": {
+          "min": 1,
+          "max": 10
+        },
+        "2": {
+          "min": 15,
+          "max": 35
+        },
+        "3": {
+          "min": 40,
+          "max": 65
+        },
+        "4": {
+          "min": 70,
+          "max": 88
+        },
+        "5": {
+          "min": 90,
+          "max": 100
+        },
+        "6": {
+          "min": 90,
+          "max": 100
+        }
+      },
+      "passed": false
+    },
+    "Z5": {
+      "gate": "Z5",
+      "description": "Cincin R..R+12 tiap pemukiman: ambush di R = 0, tidak menurun ke luar, tier <= tier pemukiman + 1",
+      "threshold": "52/52 lulus",
+      "passedCount": 18,
+      "totalSettlements": 52,
+      "passed": false,
+      "failedSettlements": [
+        {
+          "id": "pos_perbatasan_qinghe",
+          "reason": "Ambush pada jarak R (8) > 0: 0.4"
+        },
+        {
+          "id": "oase_shadi",
+          "reason": "Ambush pada jarak R (10) > 0: 0.25"
+        },
+        {
+          "id": "dermaga_donghai",
+          "reason": "Ambush pada jarak R (10) > 0: 0.18"
+        },
+        {
+          "id": "desa_heiyan",
+          "reason": "Ambush pada jarak R (10) > 0: 0.28"
+        },
+        {
+          "id": "kemah_dataran_tinggi_petapa",
+          "reason": "Ambush pada jarak R (6) > 0: 0.18"
+        }
+      ]
+    },
+    "Z6": {
+      "gate": "Z6",
+      "description": "Klasifikasi peran 29 wilayah",
+      "threshold": "0 pelanggaran",
+      "passed": false,
+      "reason": "Berkas world-data/region-roles-v23.json belum dibuat"
+    },
+    "Z7": {
+      "gate": "Z7",
+      "description": "Gradasi tier efektif perbatasan <= 1 per 12 petak",
+      "threshold": "<= 1 per 12 petak",
+      "passed": false,
+      "reason": "Fungsi worldRegionEngine.getEffectiveDanger belum diimplementasikan"
+    },
+    "Z8": {
+      "gate": "Z8",
+      "description": "Zona tetap: keterjangkauan 100%, 0 di eksklusi, 0 tumpang tindih, entryCost valid",
+      "threshold": "100% / 0 / 0 / 0",
+      "passed": false,
+      "reason": "Berkas world-data/zones-v23.json belum dibuat"
+    }
+  }
+}
