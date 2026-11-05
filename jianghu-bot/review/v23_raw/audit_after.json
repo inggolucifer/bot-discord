@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-11-05T09:41:55.719Z",
+  "timestamp": "2026-11-05T13:26:59.891Z",
   "gates": {
     "Z1": {
       "gate": "Z1",
       "description": "Tile jalan (road*) dengan ambush > 0 (sampel langkah 3)",
       "threshold": 0,
-      "totalSampled": 1438,
+      "totalSampled": 1444,
       "violationCount": 0,
       "passed": true,
       "sampleViolations": []

@@ -226,6 +226,14 @@ function resolveStepAction(session, action, params = {}) {
       return { ok: true, trapTriggered: true, damageIgnoringDef: damage };
     }
 
+    if (action === 'disarm_trap') {
+      if (!room.hasTrap || room.trapTriggered) {
+        return { ok: true, trapDisarmed: false, message: 'Tidak ada jebakan aktif' };
+      }
+      room.hasTrap = false;
+      return { ok: true, trapDisarmed: true };
+    }
+
     if (action === 'clear_room') {
       room.cleared = true;
       room.eliteMonster.defeated = true;

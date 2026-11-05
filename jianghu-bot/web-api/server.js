@@ -252,6 +252,9 @@ const setupServer = (client) => {
     const clientLogRoutes = require('./routes/clientLog');
     app.use('/api/client-log', clientLogRoutes);
 
+    const instancedZoneRoutes = require('./routes/instancedZones');
+    app.use('/api/instanced-zones', instancedZoneRoutes);
+
     // Root test endpoint
     app.get('/api/health', (req, res) => {
         res.json({ status: 'OK', message: 'Jianghu API Server is running', antiCheat: 'Active' });
@@ -390,6 +393,7 @@ const setupServer = (client) => {
                 for (const c of chunks) {
                     if (Number.isInteger(c.cx) && Number.isInteger(c.cy)) {
                         socket.join(`chunk:${c.cx}:${c.cy}`);
+                        nearbyBroadcaster.addSubscriber(socket.id, c.cx, c.cy);
                     }
                 }
             } catch (err) {
@@ -403,33 +407,11 @@ const setupServer = (client) => {
                 for (const c of chunks) {
                     if (Number.isInteger(c.cx) && Number.isInteger(c.cy)) {
                         socket.leave(`chunk:${c.cx}:${c.cy}`);
+                        nearbyBroadcaster.removeSubscriber(socket.id, c.cx, c.cy);
                     }
                 }
             } catch (err) {
                 console.warn('[SOCKET] unsubscribe_chunks error:', err.message);
-            }
-        });
-
-        socket.on('player_position_update', (data) => {
-            try {
-                if (data && Number.isInteger(data.cx) && Number.isInteger(data.cy)) {
-                    nearbyBroadcaster.updateEntity(
-                        {
-                            id: socket.user?.userId || socket.id,
-                            name: socket.user?.username || 'Kultivator',
-                            type: 'player',
-                            x: data.x,
-                            y: data.y,
-                            status: data.status || 'aktif'
-                        },
-                        data.cx,
-                        data.cy,
-                        data.oldCx,
-                        data.oldCy
-                    );
-                }
-            } catch (err) {
-                console.warn('[SOCKET] player_position_update error:', err.message);
             }
         });
 

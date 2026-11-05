@@ -2426,9 +2426,14 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             // Ungkap kabut di sekitar langkah baru
             sparseFogManager.revealFogAtPosition(player, currentX, currentY, 4);
 
-            // B-01 & B-09 Fix: Single-roll encounter per langkah dengan tier otoritatif
+            // B-01 & B-09 Fix: Single-roll encounter per langkah dengan tier otoritatif & jimat aktif (V24 H6)
+            const baseAmbushRate = typeof tileInfo.ambushRiskRate === 'number' ? tileInfo.ambushRiskRate : 0;
+            const playerCharms = player.activeCharms || player.charms || {
+                repellentActive: Boolean(player.buffs?.some(b => b.type === 'repellent') || player.activeBuffs?.some(b => b.buffType === 'repellent')),
+                attractionActive: Boolean(player.buffs?.some(b => b.type === 'attraction') || player.activeBuffs?.some(b => b.buffType === 'attraction'))
+            };
+            const ambushRate = monsterSpawnEngine.calculateEffectiveAmbushRisk(baseAmbushRate, playerCharms);
             const encounterRoll = Math.random();
-            const ambushRate = typeof tileInfo.ambushRiskRate === 'number' ? tileInfo.ambushRiskRate : 0;
             if (ambushRate > 0 && encounterRoll < ambushRate) {
                 try {
                     const isHazard = tileInfo.terrainType === 'swamp' || tileInfo.terrainType === 'demonic_swamp' || tileInfo.tileType === 'hazard';
@@ -2453,6 +2458,31 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
         }, {
             save: false
         });
+
+        // V24 H6: Sinkronisasi posisi otoritatif ke nearbyBroadcaster
+        try {
+            const { nearbyBroadcaster } = require('../../services/nearbyBroadcaster');
+            const oldCx = Math.floor((player.gridPosition?.tileX ?? currentX) / 32);
+            const oldCy = Math.floor((player.gridPosition?.tileY ?? currentY) / 32);
+            const newCx = Math.floor(currentX / 32);
+            const newCy = Math.floor(currentY / 32);
+            nearbyBroadcaster.updateEntity(
+                {
+                    id: String(player._id || userId),
+                    name: player.characterName || 'Kultivator',
+                    type: 'player',
+                    x: currentX,
+                    y: currentY,
+                    status: 'aktif'
+                },
+                newCx,
+                newCy,
+                oldCx,
+                oldCy
+            );
+        } catch (nbErr) {
+            console.warn('[STEP-MOVE] nearbyBroadcaster sync error:', nbErr.message);
+        }
 
         try {
             await player.save();

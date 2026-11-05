@@ -319,7 +319,7 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
                       </button>
                     )}
 
-                    {isBuilding && onAction && (
+                    {(isBuilding || item.type === 'hazard' || item.type === 'poi' || item.id?.startsWith('inst_')) && onAction && (
                       <button
                         onClick={() => onAction('enter', item)}
                         className="px-2 py-0.5 bg-amber-900/40 hover:bg-amber-800/60 text-amber-200 border border-amber-700/50 rounded text-[10px] transition font-bold"

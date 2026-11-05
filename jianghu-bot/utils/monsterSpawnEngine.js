@@ -485,8 +485,8 @@ const worldRegionEngine = require('./worldRegionEngine');
  */
 function calculateEffectiveAmbushRisk(baseRisk, charms = {}) {
   const c = charms || {};
-  const repellentBonus = c.repellentActive ? 0.50 : 0;
-  const attractionBonus = c.attractionActive ? 0.75 : 0;
+  const repellentBonus = c.repellentActive ? (typeof c.repellentRate === 'number' ? c.repellentRate : 0.50) : 0;
+  const attractionBonus = c.attractionActive ? (typeof c.attractionRate === 'number' ? c.attractionRate : 0.75) : 0;
   const effective = baseRisk * (1 - repellentBonus) * (1 + attractionBonus);
   return Math.max(0, Math.min(1.0, Math.round(effective * 10000) / 10000));
 }
