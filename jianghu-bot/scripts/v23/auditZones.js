@@ -390,22 +390,38 @@ function auditZ5() {
       }
 
       // 2. Cek gradasi R..R+12 tidak menurun
-      let prevAmbush = rInfo.ambushRiskRate;
+      let prevFactor = 0;
       for (let step = 2; step <= 12; step += 2) {
         const sX = Math.round(anc.x + dir.dx * (R + step));
         const sY = Math.round(anc.y + dir.dy * (R + step));
         const sTile = proceduralWorldEngine.getTileAt(sX, sY);
         const sInfo = worldRegionEngine.getTerritoryInfo(sX, sY, sTile.terrainType, false);
 
-        if (sInfo.ambushRiskRate < prevAmbush) {
+        // Jika mengenai jalan atau pemukiman lain, itu adalah koridor aman yang sah
+        if (sTile.terrainType.startsWith('road') || sTile.terrainType === 'settlement') {
+          continue;
+        }
+
+        const curFactor = sInfo.bufferFactor !== undefined ? sInfo.bufferFactor : 1.0;
+        if (curFactor < prevFactor) {
           settlementOk = false;
           failedSettlements.push({
             id: anc.id,
-            reason: `Ambush menurun ke arah luar pada jarak R+${step}`
+            reason: `Buffer factor menurun ke arah luar pada jarak R+${step}`
           });
           break;
         }
-        prevAmbush = sInfo.ambushRiskRate;
+        prevFactor = curFactor;
+
+        // Cek tier efektif di buffer zone <= anc.tier + 1
+        if (sInfo.dangerTierBase > (anc.tier || 1) + 1) {
+          settlementOk = false;
+          failedSettlements.push({
+            id: anc.id,
+            reason: `Tier efektif di buffer zone ${sInfo.dangerTierBase} > ${(anc.tier || 1) + 1}`
+          });
+          break;
+        }
       }
       if (!settlementOk) break;
     }

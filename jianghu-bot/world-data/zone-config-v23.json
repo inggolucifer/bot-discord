@@ -1,0 +1,25 @@
+{
+  "version": "v23",
+  "OPEN_DECISION_rest_camp": {
+    "enabled": false,
+    "description": "Kemah persinggahan aman kecil (3x3) di wilayah transition/danger"
+  },
+  "encounterCharms": {
+    "repellentBonus": 0.5,
+    "attractionBonus": 0.75,
+    "durationSeconds": 1800
+  },
+  "worldBossChaos": {
+    "hpMultiplier": 1.35,
+    "dmgMultiplier": 1.25
+  },
+  "bufferZone": {
+    "width": 12,
+    "maxTierOffset": 1
+  },
+  "borderGradation": {
+    "bandWidth": 24,
+    "maxStepPer12Tiles": 1
+  },
+  "tilesPerLi": 5
+}

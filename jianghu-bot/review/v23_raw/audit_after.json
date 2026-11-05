@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-05T04:50:21.194Z",
+  "timestamp": "2026-11-05T05:33:21.365Z",
   "gates": {
     "Z1": {
       "gate": "Z1",
@@ -71,45 +71,27 @@
       "gate": "Z5",
       "description": "Cincin R..R+12 tiap pemukiman: ambush di R = 0, tidak menurun ke luar, tier <= tier pemukiman + 1",
       "threshold": "52/52 lulus",
-      "passedCount": 17,
+      "passedCount": 52,
       "totalSettlements": 52,
-      "passed": false,
-      "failedSettlements": [
-        {
-          "id": "pos_perbatasan_qinghe",
-          "reason": "Ambush pada jarak R (8) > 0: 0.4"
-        },
-        {
-          "id": "oase_shadi",
-          "reason": "Ambush pada jarak R (10) > 0: 0.25"
-        },
-        {
-          "id": "dermaga_donghai",
-          "reason": "Ambush pada jarak R (10) > 0: 0.18"
-        },
-        {
-          "id": "desa_heiyan",
-          "reason": "Ambush pada jarak R (10) > 0: 0.28"
-        },
-        {
-          "id": "kemah_dataran_tinggi_petapa",
-          "reason": "Ambush pada jarak R (6) > 0: 0.18"
-        }
-      ]
+      "passed": true,
+      "failedSettlements": []
     },
     "Z6": {
       "gate": "Z6",
-      "description": "Klasifikasi peran 29 wilayah",
+      "description": "Peran wilayah: 29/29 terklasifikasi; transition/danger tanpa kota/sekte/ibukota",
       "threshold": "0 pelanggaran",
-      "passed": false,
-      "reason": "Berkas world-data/region-roles-v23.json belum dibuat"
+      "classifiedCount": 29,
+      "violationCount": 0,
+      "passed": true,
+      "violations": []
     },
     "Z7": {
       "gate": "Z7",
-      "description": "Gradasi tier efektif perbatasan <= 1 per 12 petak",
+      "description": "Lompatan tier efektif antar petak bertetangga <= 1 per 12 petak",
       "threshold": "<= 1 per 12 petak",
-      "passed": false,
-      "reason": "Fungsi worldRegionEngine.getEffectiveDanger belum diimplementasikan"
+      "violationCount": 0,
+      "passed": true,
+      "violations": []
     },
     "Z8": {
       "gate": "Z8",

@@ -1,0 +1,266 @@
+{
+  "version": "v23",
+  "regions": {
+    "central_plains": {
+      "regionId": "central_plains",
+      "name": "Central Plains",
+      "tier": 1,
+      "stage": "Fondasi Fana",
+      "requiredRealmIndex": 0,
+      "tierMaterialGrade": 4,
+      "role": "hub"
+    },
+    "nine_springs_delta": {
+      "regionId": "nine_springs_delta",
+      "name": "Nine Springs Delta",
+      "tier": 1,
+      "stage": "Fondasi Fana",
+      "requiredRealmIndex": 0,
+      "tierMaterialGrade": 4,
+      "role": "hub"
+    },
+    "azure_mountain_range": {
+      "regionId": "azure_mountain_range",
+      "name": "Azure Mountain Range",
+      "tier": 3,
+      "stage": "Pondasi Spiritual",
+      "requiredRealmIndex": 2,
+      "tierMaterialGrade": 2,
+      "role": "hub"
+    },
+    "northern_desolate": {
+      "regionId": "northern_desolate",
+      "name": "Northern Desolate",
+      "tier": 4,
+      "stage": "Inti Emas",
+      "requiredRealmIndex": 3,
+      "tierMaterialGrade": 1,
+      "role": "frontier"
+    },
+    "thundersteppe": {
+      "regionId": "thundersteppe",
+      "name": "Thundersteppe",
+      "tier": 4,
+      "stage": "Inti Emas",
+      "requiredRealmIndex": 3,
+      "tierMaterialGrade": 1,
+      "role": "hub"
+    },
+    "godthunder_peaks": {
+      "regionId": "godthunder_peaks",
+      "name": "Godthunder Peaks",
+      "tier": 5,
+      "stage": "Jiwa Baru Lahir",
+      "requiredRealmIndex": 4,
+      "tierMaterialGrade": 1,
+      "role": "transition"
+    },
+    "mirror_lake": {
+      "regionId": "mirror_lake",
+      "name": "Mirror Lake",
+      "tier": 2,
+      "stage": "Penyempurnaan Qi",
+      "requiredRealmIndex": 1,
+      "tierMaterialGrade": 3,
+      "role": "transition"
+    },
+    "beast_prairies": {
+      "regionId": "beast_prairies",
+      "name": "Beast Prairies",
+      "tier": 3,
+      "stage": "Pondasi Spiritual",
+      "requiredRealmIndex": 2,
+      "tierMaterialGrade": 2,
+      "role": "transition"
+    },
+    "western_sacred_desert": {
+      "regionId": "western_sacred_desert",
+      "name": "Western Sacred Desert",
+      "tier": 3,
+      "stage": "Pondasi Spiritual",
+      "requiredRealmIndex": 2,
+      "tierMaterialGrade": 2,
+      "role": "hub"
+    },
+    "western_gorge_labyrinth": {
+      "regionId": "western_gorge_labyrinth",
+      "name": "Western Gorge Labyrinth",
+      "tier": 4,
+      "stage": "Inti Emas",
+      "requiredRealmIndex": 3,
+      "tierMaterialGrade": 1,
+      "role": "danger"
+    },
+    "hermit_highlands": {
+      "regionId": "hermit_highlands",
+      "name": "Hermit Highlands",
+      "tier": 2,
+      "stage": "Penyempurnaan Qi",
+      "requiredRealmIndex": 1,
+      "tierMaterialGrade": 3,
+      "role": "hub"
+    },
+    "border_march": {
+      "regionId": "border_march",
+      "name": "Border March",
+      "tier": 2,
+      "stage": "Penyempurnaan Qi",
+      "requiredRealmIndex": 1,
+      "tierMaterialGrade": 3,
+      "role": "frontier"
+    },
+    "lava_spine": {
+      "regionId": "lava_spine",
+      "name": "Lava Spine",
+      "tier": 5,
+      "stage": "Jiwa Baru Lahir",
+      "requiredRealmIndex": 4,
+      "tierMaterialGrade": 1,
+      "role": "transition"
+    },
+    "venom_mire": {
+      "regionId": "venom_mire",
+      "name": "Venom Mire",
+      "tier": 4,
+      "stage": "Inti Emas",
+      "requiredRealmIndex": 3,
+      "tierMaterialGrade": 1,
+      "role": "transition"
+    },
+    "southern_demon_domain": {
+      "regionId": "southern_demon_domain",
+      "name": "Southern Demon Domain",
+      "tier": 4,
+      "stage": "Inti Emas",
+      "requiredRealmIndex": 3,
+      "tierMaterialGrade": 1,
+      "role": "hub"
+    },
+    "crimson_battlefield": {
+      "regionId": "crimson_battlefield",
+      "name": "Crimson Battlefield",
+      "tier": 5,
+      "stage": "Jiwa Baru Lahir",
+      "requiredRealmIndex": 4,
+      "tierMaterialGrade": 1,
+      "role": "frontier"
+    },
+    "abyssal_scar": {
+      "regionId": "abyssal_scar",
+      "name": "Abyssal Scar",
+      "tier": 5,
+      "stage": "Jiwa Baru Lahir",
+      "requiredRealmIndex": 4,
+      "tierMaterialGrade": 1,
+      "role": "transition"
+    },
+    "southern_plague_woods": {
+      "regionId": "southern_plague_woods",
+      "name": "Southern Plague Woods",
+      "tier": 4,
+      "stage": "Inti Emas",
+      "requiredRealmIndex": 3,
+      "tierMaterialGrade": 1,
+      "role": "danger"
+    },
+    "bone_sea_coast": {
+      "regionId": "bone_sea_coast",
+      "name": "Bone Sea Coast",
+      "tier": 3,
+      "stage": "Pondasi Spiritual",
+      "requiredRealmIndex": 2,
+      "tierMaterialGrade": 2,
+      "role": "danger"
+    },
+    "spirit_wood_sea": {
+      "regionId": "spirit_wood_sea",
+      "name": "Spirit Wood Sea",
+      "tier": 3,
+      "stage": "Pondasi Spiritual",
+      "requiredRealmIndex": 2,
+      "tierMaterialGrade": 2,
+      "role": "transition"
+    },
+    "mist_insect_valley": {
+      "regionId": "mist_insect_valley",
+      "name": "Mist Insect Valley",
+      "tier": 4,
+      "stage": "Inti Emas",
+      "requiredRealmIndex": 3,
+      "tierMaterialGrade": 1,
+      "role": "danger"
+    },
+    "formation_barrens": {
+      "regionId": "formation_barrens",
+      "name": "Formation Barrens",
+      "tier": 3,
+      "stage": "Pondasi Spiritual",
+      "requiredRealmIndex": 2,
+      "tierMaterialGrade": 2,
+      "role": "transition"
+    },
+    "sword_gorge": {
+      "regionId": "sword_gorge",
+      "name": "Sword Gorge",
+      "tier": 4,
+      "stage": "Inti Emas",
+      "requiredRealmIndex": 3,
+      "tierMaterialGrade": 1,
+      "role": "frontier"
+    },
+    "ore_teeth_range": {
+      "regionId": "ore_teeth_range",
+      "name": "Ore Teeth Range",
+      "tier": 3,
+      "stage": "Pondasi Spiritual",
+      "requiredRealmIndex": 2,
+      "tierMaterialGrade": 2,
+      "role": "hub"
+    },
+    "eastern_sea": {
+      "regionId": "eastern_sea",
+      "name": "Eastern Sea",
+      "tier": 3,
+      "stage": "Pondasi Spiritual",
+      "requiredRealmIndex": 2,
+      "tierMaterialGrade": 2,
+      "role": "frontier"
+    },
+    "frostmoon_sea": {
+      "regionId": "frostmoon_sea",
+      "name": "Frostmoon Sea",
+      "tier": 4,
+      "stage": "Inti Emas",
+      "requiredRealmIndex": 3,
+      "tierMaterialGrade": 1,
+      "role": "sealed"
+    },
+    "floating_wind_isles": {
+      "regionId": "floating_wind_isles",
+      "name": "Floating Wind Isles",
+      "tier": 5,
+      "stage": "Jiwa Baru Lahir",
+      "requiredRealmIndex": 4,
+      "tierMaterialGrade": 1,
+      "role": "sealed"
+    },
+    "immortal_ruins_valley": {
+      "regionId": "immortal_ruins_valley",
+      "name": "Immortal Ruins Valley",
+      "tier": 4,
+      "stage": "Inti Emas",
+      "requiredRealmIndex": 3,
+      "tierMaterialGrade": 1,
+      "role": "danger"
+    },
+    "void_rift": {
+      "regionId": "void_rift",
+      "name": "Void Rift",
+      "tier": 6,
+      "stage": "Peleburan Hampa",
+      "requiredRealmIndex": 5,
+      "tierMaterialGrade": 0,
+      "role": "sealed"
+    }
+  }
+}

@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 const dns = require('dns');
+const path = require('path');
+try {
+  require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+  require('dotenv').config();
+} catch (_) {}
 
 async function connectDB() {
   try {

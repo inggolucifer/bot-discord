@@ -1,0 +1,539 @@
+{
+  "version": "v23",
+  "needs_owner_review": true,
+  "summary": {
+    "hub": 8,
+    "frontier": 5,
+    "transition": 8,
+    "danger": 5,
+    "sealed": 3,
+    "total": 29
+  },
+  "roles": {
+    "central_plains": {
+      "id": "central_plains",
+      "name": "Central Plains",
+      "dangerTier": 1,
+      "role": "hub",
+      "settlementCount": 12,
+      "settlementTypes": [
+        "village",
+        "capital_city",
+        "major_city",
+        "major_city",
+        "major_city",
+        "village",
+        "sect",
+        "secret_realm",
+        "major_city",
+        "town",
+        "village",
+        "hamlet"
+      ],
+      "neighbors": [
+        "border_march",
+        "nine_springs_delta",
+        "beast_prairies",
+        "azure_mountain_range",
+        "formation_barrens",
+        "ore_teeth_range",
+        "sword_gorge"
+      ],
+      "adjacentHubFrontierCount": 5
+    },
+    "nine_springs_delta": {
+      "id": "nine_springs_delta",
+      "name": "Nine Springs Delta",
+      "dangerTier": 1,
+      "role": "hub",
+      "settlementCount": 6,
+      "settlementTypes": [
+        "hamlet",
+        "danger_zone",
+        "town",
+        "village",
+        "hamlet",
+        "port"
+      ],
+      "neighbors": [
+        "western_sacred_desert",
+        "border_march",
+        "beast_prairies",
+        "central_plains"
+      ],
+      "adjacentHubFrontierCount": 3
+    },
+    "azure_mountain_range": {
+      "id": "azure_mountain_range",
+      "name": "Azure Mountain Range",
+      "dangerTier": 3,
+      "role": "hub",
+      "settlementCount": 3,
+      "settlementTypes": [
+        "outpost",
+        "sect",
+        "secret_realm"
+      ],
+      "neighbors": [
+        "western_sacred_desert",
+        "beast_prairies",
+        "central_plains",
+        "northern_desolate",
+        "mirror_lake",
+        "sword_gorge",
+        "ore_teeth_range",
+        "eastern_sea"
+      ],
+      "adjacentHubFrontierCount": 6
+    },
+    "northern_desolate": {
+      "id": "northern_desolate",
+      "name": "Northern Desolate",
+      "dangerTier": 4,
+      "role": "frontier",
+      "settlementCount": 2,
+      "settlementTypes": [
+        "sect",
+        "town"
+      ],
+      "neighbors": [
+        "hermit_highlands",
+        "beast_prairies",
+        "azure_mountain_range",
+        "thundersteppe",
+        "mirror_lake",
+        "godthunder_peaks"
+      ],
+      "adjacentHubFrontierCount": 3
+    },
+    "thundersteppe": {
+      "id": "thundersteppe",
+      "name": "Thundersteppe",
+      "dangerTier": 4,
+      "role": "hub",
+      "settlementCount": 8,
+      "settlementTypes": [
+        "outpost",
+        "sect",
+        "secret_realm",
+        "town",
+        "village",
+        "village",
+        "hamlet",
+        "hamlet"
+      ],
+      "neighbors": [
+        "beast_prairies",
+        "northern_desolate"
+      ],
+      "adjacentHubFrontierCount": 1
+    },
+    "godthunder_peaks": {
+      "id": "godthunder_peaks",
+      "name": "Godthunder Peaks",
+      "dangerTier": 5,
+      "role": "transition",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "northern_desolate",
+        "mirror_lake",
+        "eastern_sea",
+        "frostmoon_sea"
+      ],
+      "adjacentHubFrontierCount": 2
+    },
+    "mirror_lake": {
+      "id": "mirror_lake",
+      "name": "Mirror Lake",
+      "dangerTier": 2,
+      "role": "transition",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "northern_desolate",
+        "azure_mountain_range",
+        "godthunder_peaks",
+        "eastern_sea"
+      ],
+      "adjacentHubFrontierCount": 3
+    },
+    "beast_prairies": {
+      "id": "beast_prairies",
+      "name": "Beast Prairies",
+      "dangerTier": 3,
+      "role": "transition",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "western_sacred_desert",
+        "void_rift",
+        "hermit_highlands",
+        "azure_mountain_range",
+        "nine_springs_delta",
+        "northern_desolate",
+        "central_plains",
+        "thundersteppe"
+      ],
+      "adjacentHubFrontierCount": 7
+    },
+    "western_sacred_desert": {
+      "id": "western_sacred_desert",
+      "name": "Western Sacred Desert",
+      "dangerTier": 3,
+      "role": "hub",
+      "settlementCount": 5,
+      "settlementTypes": [
+        "village",
+        "sect",
+        "town",
+        "village",
+        "hamlet"
+      ],
+      "neighbors": [
+        "western_gorge_labyrinth",
+        "void_rift",
+        "beast_prairies",
+        "lava_spine",
+        "azure_mountain_range",
+        "southern_demon_domain",
+        "border_march",
+        "nine_springs_delta"
+      ],
+      "adjacentHubFrontierCount": 4
+    },
+    "western_gorge_labyrinth": {
+      "id": "western_gorge_labyrinth",
+      "name": "Western Gorge Labyrinth",
+      "dangerTier": 4,
+      "role": "danger",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "immortal_ruins_valley",
+        "western_sacred_desert",
+        "lava_spine"
+      ],
+      "adjacentHubFrontierCount": 1
+    },
+    "hermit_highlands": {
+      "id": "hermit_highlands",
+      "name": "Hermit Highlands",
+      "dangerTier": 2,
+      "role": "hub",
+      "settlementCount": 4,
+      "settlementTypes": [
+        "hamlet",
+        "sect",
+        "village",
+        "hamlet"
+      ],
+      "neighbors": [
+        "void_rift",
+        "beast_prairies",
+        "northern_desolate"
+      ],
+      "adjacentHubFrontierCount": 1
+    },
+    "border_march": {
+      "id": "border_march",
+      "name": "Border March",
+      "dangerTier": 2,
+      "role": "frontier",
+      "settlementCount": 1,
+      "settlementTypes": [
+        "outpost"
+      ],
+      "neighbors": [
+        "western_sacred_desert",
+        "southern_demon_domain",
+        "nine_springs_delta",
+        "central_plains",
+        "spirit_wood_sea",
+        "formation_barrens"
+      ],
+      "adjacentHubFrontierCount": 4
+    },
+    "lava_spine": {
+      "id": "lava_spine",
+      "name": "Lava Spine",
+      "dangerTier": 5,
+      "role": "transition",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "immortal_ruins_valley",
+        "bone_sea_coast",
+        "western_gorge_labyrinth",
+        "western_sacred_desert",
+        "southern_demon_domain",
+        "abyssal_scar"
+      ],
+      "adjacentHubFrontierCount": 2
+    },
+    "venom_mire": {
+      "id": "venom_mire",
+      "name": "Venom Mire",
+      "dangerTier": 4,
+      "role": "transition",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "abyssal_scar",
+        "southern_demon_domain",
+        "crimson_battlefield",
+        "spirit_wood_sea"
+      ],
+      "adjacentHubFrontierCount": 2
+    },
+    "southern_demon_domain": {
+      "id": "southern_demon_domain",
+      "name": "Southern Demon Domain",
+      "dangerTier": 4,
+      "role": "hub",
+      "settlementCount": 3,
+      "settlementTypes": [
+        "village",
+        "sect",
+        "town"
+      ],
+      "neighbors": [
+        "lava_spine",
+        "western_sacred_desert",
+        "border_march",
+        "abyssal_scar",
+        "venom_mire",
+        "spirit_wood_sea"
+      ],
+      "adjacentHubFrontierCount": 2
+    },
+    "crimson_battlefield": {
+      "id": "crimson_battlefield",
+      "name": "Crimson Battlefield",
+      "dangerTier": 5,
+      "role": "frontier",
+      "settlementCount": 1,
+      "settlementTypes": [
+        "danger_zone"
+      ],
+      "neighbors": [
+        "bone_sea_coast",
+        "abyssal_scar",
+        "venom_mire",
+        "spirit_wood_sea",
+        "southern_plague_woods"
+      ],
+      "adjacentHubFrontierCount": 0
+    },
+    "abyssal_scar": {
+      "id": "abyssal_scar",
+      "name": "Abyssal Scar",
+      "dangerTier": 5,
+      "role": "transition",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "lava_spine",
+        "bone_sea_coast",
+        "southern_demon_domain",
+        "venom_mire",
+        "crimson_battlefield"
+      ],
+      "adjacentHubFrontierCount": 2
+    },
+    "southern_plague_woods": {
+      "id": "southern_plague_woods",
+      "name": "Southern Plague Woods",
+      "dangerTier": 4,
+      "role": "danger",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "crimson_battlefield",
+        "bone_sea_coast",
+        "spirit_wood_sea",
+        "mist_insect_valley"
+      ],
+      "adjacentHubFrontierCount": 1
+    },
+    "bone_sea_coast": {
+      "id": "bone_sea_coast",
+      "name": "Bone Sea Coast",
+      "dangerTier": 3,
+      "role": "danger",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "immortal_ruins_valley",
+        "lava_spine",
+        "abyssal_scar",
+        "crimson_battlefield",
+        "southern_plague_woods"
+      ],
+      "adjacentHubFrontierCount": 1
+    },
+    "spirit_wood_sea": {
+      "id": "spirit_wood_sea",
+      "name": "Spirit Wood Sea",
+      "dangerTier": 3,
+      "role": "transition",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "southern_demon_domain",
+        "venom_mire",
+        "border_march",
+        "crimson_battlefield",
+        "formation_barrens",
+        "southern_plague_woods",
+        "mist_insect_valley",
+        "eastern_sea"
+      ],
+      "adjacentHubFrontierCount": 4
+    },
+    "mist_insect_valley": {
+      "id": "mist_insect_valley",
+      "name": "Mist Insect Valley",
+      "dangerTier": 4,
+      "role": "danger",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "southern_plague_woods",
+        "spirit_wood_sea",
+        "eastern_sea"
+      ],
+      "adjacentHubFrontierCount": 1
+    },
+    "formation_barrens": {
+      "id": "formation_barrens",
+      "name": "Formation Barrens",
+      "dangerTier": 3,
+      "role": "transition",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "border_march",
+        "spirit_wood_sea",
+        "central_plains",
+        "ore_teeth_range",
+        "eastern_sea"
+      ],
+      "adjacentHubFrontierCount": 4
+    },
+    "sword_gorge": {
+      "id": "sword_gorge",
+      "name": "Sword Gorge",
+      "dangerTier": 4,
+      "role": "frontier",
+      "settlementCount": 1,
+      "settlementTypes": [
+        "outpost"
+      ],
+      "neighbors": [
+        "central_plains",
+        "ore_teeth_range",
+        "azure_mountain_range"
+      ],
+      "adjacentHubFrontierCount": 3
+    },
+    "ore_teeth_range": {
+      "id": "ore_teeth_range",
+      "name": "Ore Teeth Range",
+      "dangerTier": 3,
+      "role": "hub",
+      "settlementCount": 3,
+      "settlementTypes": [
+        "secret_realm",
+        "town",
+        "hamlet"
+      ],
+      "neighbors": [
+        "central_plains",
+        "formation_barrens",
+        "sword_gorge",
+        "azure_mountain_range",
+        "eastern_sea"
+      ],
+      "adjacentHubFrontierCount": 4
+    },
+    "eastern_sea": {
+      "id": "eastern_sea",
+      "name": "Eastern Sea",
+      "dangerTier": 3,
+      "role": "frontier",
+      "settlementCount": 2,
+      "settlementTypes": [
+        "port",
+        "sect"
+      ],
+      "neighbors": [
+        "azure_mountain_range",
+        "mirror_lake",
+        "ore_teeth_range",
+        "godthunder_peaks",
+        "formation_barrens",
+        "frostmoon_sea",
+        "spirit_wood_sea",
+        "floating_wind_isles",
+        "mist_insect_valley"
+      ],
+      "adjacentHubFrontierCount": 2
+    },
+    "frostmoon_sea": {
+      "id": "frostmoon_sea",
+      "name": "Frostmoon Sea",
+      "dangerTier": 4,
+      "role": "sealed",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "godthunder_peaks",
+        "eastern_sea"
+      ],
+      "adjacentHubFrontierCount": 1
+    },
+    "floating_wind_isles": {
+      "id": "floating_wind_isles",
+      "name": "Floating Wind Isles",
+      "dangerTier": 5,
+      "role": "sealed",
+      "settlementCount": 1,
+      "settlementTypes": [
+        "island"
+      ],
+      "neighbors": [
+        "eastern_sea"
+      ],
+      "adjacentHubFrontierCount": 1
+    },
+    "immortal_ruins_valley": {
+      "id": "immortal_ruins_valley",
+      "name": "Immortal Ruins Valley",
+      "dangerTier": 4,
+      "role": "danger",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "bone_sea_coast",
+        "western_gorge_labyrinth",
+        "lava_spine"
+      ],
+      "adjacentHubFrontierCount": 0
+    },
+    "void_rift": {
+      "id": "void_rift",
+      "name": "Void Rift",
+      "dangerTier": 6,
+      "role": "sealed",
+      "settlementCount": 0,
+      "settlementTypes": [],
+      "neighbors": [
+        "western_sacred_desert",
+        "beast_prairies",
+        "hermit_highlands"
+      ],
+      "adjacentHubFrontierCount": 2
+    }
+  }
+}
