@@ -71,7 +71,7 @@ function isCellBlocked(x, y, getChunkObjectsFn, resolveFn) {
   const cx = Math.floor(x / 32), cy = Math.floor(y / 32);
   for (const dx of [0, -1]) for (const dy of [0, -1]) {
     for (const o of getChunkObjectsFn(cx + dx, cy + dy)) {
-      if (o.collision === 'none' || o.collision === 'open') continue;
+      if (o.collision === 'none' || o.collision === 'open' || o.collision === 'walkable' || (o.tags && o.tags.includes('settlement_marker'))) continue;
       const g = getGrid(resolveFn ? (resolveFn(o.defId) || o.defId) : o.defId);
       if (!g) continue;
       const isSolid = o.collision === 'solid' || g.mode === 'solid';

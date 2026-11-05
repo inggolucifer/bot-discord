@@ -298,7 +298,8 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
     // Upper rows (y < sY + spanHeight - 1) are solid (collision marker)
     const spanH = settlementInfo.spanHeight || 2;
     const isForecourt = spanH > 1 ? (tileY === sY + spanH - 1) : true;
-    const isSolid = !isForecourt;
+    // V24 H1: Seluruh footprint pemukiman walkable
+    const isSolid = false;
 
     // Entrance tile coordinate
     const entX = settlementInfo.v20?.entrance?.x ?? (sX + Math.floor(settlementInfo.spanWidth / 2));
@@ -316,7 +317,8 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
       chineseName: settlementInfo.chineseName,
       isSettlementOrigin: isOrigin,
       settlementData: (isOrigin || isEntrance) ? settlementInfo : null,
-      label: isOrigin ? settlementInfo.name : null,
+      settlementId: settlementInfo.id || settlementInfo.slug || settlementInfo.name,
+      label: settlementInfo.name,
       baseTemperature: 22,
       spiritualQiDensity: (settlementInfo.type === 'sect' ? 50 : 25) * (region.qiDensityModifier || 1.0),
       ambientDangerTier: isDanger ? 4 : (settlementInfo.tier || 1),

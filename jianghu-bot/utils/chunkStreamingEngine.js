@@ -198,6 +198,7 @@ function getStaticChunk(cx, cy, version = WORLD_VERSION) {
 
   // Mark footprint collisions in specialTiles and occupancy bitmask
   for (const obj of scatter) {
+    if (obj.collision === 'none' || obj.collision === 'open' || obj.collision === 'walkable' || (obj.tags && obj.tags.includes('settlement_marker'))) continue;
     const col = objectScatter.getCanonCollision
       ? objectScatter.getCanonCollision(obj.defId, obj.cw || 1, obj.ch || 1)
       : { w: 1, h: 1, offsetX: 0 };

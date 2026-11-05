@@ -2397,9 +2397,22 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             }
 
             // Maju ke tile ini
+            const prevStepX = currentX;
+            const prevStepY = currentY;
             currentX = targetX;
             currentY = targetY;
             stepsTaken++;
+
+            // V24 H1: Cek kedatangan di footprint pemukiman (findAnchorBySpan)
+            const spanAnchorAtStep = settlementZones.findAnchorBySpan(currentX, currentY);
+            if (spanAnchorAtStep) {
+                const prevAnchorAtStep = settlementZones.findAnchorBySpan(prevStepX, prevStepY);
+                if (!prevAnchorAtStep || prevAnchorAtStep.id !== spanAnchorAtStep.id) {
+                    stoppedEarly = true;
+                    stopReason = `Tiba di gerbang ${spanAnchorAtStep.name}.`;
+                    break;
+                }
+            }
 
             // Ungkap kabut di sekitar langkah baru
             sparseFogManager.revealFogAtPosition(player, currentX, currentY, 4);
@@ -2453,6 +2466,8 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
         }
 
         const anchorAtEntrance = settlementZones.findAnchorByEntrance(currentX, currentY);
+        const anchorAtSpan = settlementZones.findAnchorBySpan(currentX, currentY);
+        const promptAnchor = anchorAtSpan || anchorAtEntrance;
         const responsePayload = {
             success: true,
             stepsTaken,
@@ -2466,11 +2481,11 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             stopReason,
             encounter: encounterResult,
             exploredChunks: player.exploredChunks || [],
-            settlementPrompt: anchorAtEntrance ? {
-                id: anchorAtEntrance.id,
-                name: anchorAtEntrance.name,
-                tier: anchorAtEntrance.tier || 1,
-                regionSlug: anchorAtEntrance.region || anchorAtEntrance.regionSlug || 'central_plains'
+            settlementPrompt: promptAnchor ? {
+                id: promptAnchor.id,
+                name: promptAnchor.name,
+                tier: promptAnchor.tier || 1,
+                regionSlug: promptAnchor.region || promptAnchor.regionSlug || 'central_plains'
             } : null
         };
 

@@ -268,14 +268,16 @@ class MovementService {
     }
 
     // V20: Check if landing on a settlement entrance
+    const anchorAtSpan = settlementZones.findAnchorBySpan(targetX, targetY);
     const anchorAtEntrance = settlementZones.findAnchorByEntrance(targetX, targetY);
+    const promptAnchor = anchorAtSpan || anchorAtEntrance;
     let settlementPrompt = null;
-    if (anchorAtEntrance) {
+    if (promptAnchor) {
       settlementPrompt = {
-        id: anchorAtEntrance.id,
-        name: anchorAtEntrance.name,
-        tier: anchorAtEntrance.tier || 1,
-        regionSlug: anchorAtEntrance.region || anchorAtEntrance.regionSlug || 'central_plains'
+        id: promptAnchor.id,
+        name: promptAnchor.name,
+        tier: promptAnchor.tier || 1,
+        regionSlug: promptAnchor.region || promptAnchor.regionSlug || 'central_plains'
       };
     }
 

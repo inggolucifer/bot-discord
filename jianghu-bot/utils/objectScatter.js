@@ -1140,7 +1140,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       x: a.x,
       y: a.y,
       customLabel: a.name,
-      collision: 'solid',
+      collision: 'walkable',
       spanWidth: fw,
       spanHeight: fh,
       cw: fw,

@@ -448,6 +448,10 @@ export default function ZoneGridView({
             }));
           }
 
+          if (res.data.settlementPrompt) {
+            setSettlementPrompt(res.data.settlementPrompt);
+          }
+
           if (res.data.stoppedEarly) {
             sound.playSwordSlash();
             showMessage(`Perjalanan terhenti: ${res.data.stopReason || 'Disergap!'}`);
@@ -540,6 +544,10 @@ export default function ZoneGridView({
           ...prev,
           position: { ...prev?.position, tileX: res.data.arrivedPosition.tileX, tileY: res.data.arrivedPosition.tileY }
         }));
+      }
+
+      if (res.data.settlementPrompt) {
+        setSettlementPrompt(res.data.settlementPrompt);
       }
 
       if (res.data.staminaDepleted) {
@@ -1630,6 +1638,45 @@ export default function ZoneGridView({
             }}
           />
         </SafeBoundary>
+      )}
+
+      {/* Modal Dialog Masuk Pemukiman V24 */}
+      {settlementPrompt && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-200">
+          <div className="relative w-full max-w-md bg-[#0d131f] border border-amber-500/40 rounded-xl shadow-2xl p-6 text-center text-amber-100 flex flex-col items-center gap-4">
+            <div className="w-14 h-14 rounded-full bg-amber-950/60 border border-amber-500/50 flex items-center justify-center text-3xl shadow-inner">
+              🏛️
+            </div>
+            <div>
+              <h3 className="text-xl font-bold font-serif text-amber-300 tracking-wide">
+                Tiba di {settlementPrompt.name}
+              </h3>
+              <p className="text-xs text-amber-200/70 mt-1">
+                Apakah Anda ingin memasuki kawasan pemukiman ini?
+              </p>
+            </div>
+            <div className="flex items-center justify-center gap-3 w-full mt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  const targetName = settlementPrompt.name;
+                  setSettlementPrompt(null);
+                  handleEnterSettlement(targetName);
+                }}
+                className="flex-1 py-2.5 px-4 rounded-lg bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-stone-900 font-bold font-serif text-sm border border-amber-400 shadow-lg shadow-amber-900/30 transition-all cursor-pointer"
+              >
+                Masuk
+              </button>
+              <button
+                type="button"
+                onClick={() => setSettlementPrompt(null)}
+                className="flex-1 py-2.5 px-4 rounded-lg bg-stone-900/80 hover:bg-stone-800 text-amber-200/80 hover:text-amber-100 font-serif text-sm border border-stone-700 transition-all cursor-pointer"
+              >
+                Tetap di Luar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Virtual D-Pad dihapus sesuai permintaan user agar layar mobile bersih & luas */}

@@ -69,27 +69,36 @@ for (const a of anchors) {
 }
 
 // ---------------------------------------------------------------------------
-// G4.2: Collision Area (spanW x (spanH - 1) is solid)
+// G4.2: Footprint Walkability (All tiles in spanW x spanH are walkable: isSolid === false, settlementId, label)
 // ---------------------------------------------------------------------------
 for (const a of anchors) {
   const fw = a.spanWidth || 2;
   const fh = a.spanHeight || 2;
-  for (let dy = 0; dy < fh - 1; dy++) {
+  for (let dy = 0; dy < fh; dy++) {
     for (let dx = 0; dx < fw; dx++) {
       const tx = a.x + dx;
       const ty = a.y + dy;
       const tile = proceduralWorldEngine.getTileAt(tx, ty);
-      if (!tile.isSolid) {
+      if (tile.isSolid) {
         results.g4_2.pass = false;
-        results.g4_2.errors.push(`Anchor ${a.id} tile [${tx}, ${ty}] (dy=${dy}) isSolid is false (must be solid)`);
+        results.g4_2.errors.push(`Anchor ${a.id} footprint [${tx}, ${ty}] isSolid is true (must be walkable)`);
+      }
+      if (!tile.settlementId) {
+        results.g4_2.pass = false;
+        results.g4_2.errors.push(`Anchor ${a.id} footprint [${tx}, ${ty}] missing settlementId`);
+      }
+      if (!tile.label) {
+        results.g4_2.pass = false;
+        results.g4_2.errors.push(`Anchor ${a.id} footprint [${tx}, ${ty}] missing label`);
       }
     }
   }
 }
 
 // ---------------------------------------------------------------------------
-// G4.3: Forecourt Walkable (bottom row dy = spanH - 1 has isSolid=false)
+// G4.3: Forecourt Walkable & Span Resolvable (bottom row dy = spanH - 1 has isSolid=false and findAnchorBySpan)
 // ---------------------------------------------------------------------------
+const { findAnchorBySpan } = require('../../utils/settlementZones');
 for (const a of anchors) {
   const fw = a.spanWidth || 2;
   const fh = a.spanHeight || 2;
@@ -100,6 +109,11 @@ for (const a of anchors) {
     if (tile.isSolid) {
       results.g4_3.pass = false;
       results.g4_3.errors.push(`Anchor ${a.id} forecourt [${tx}, ${bottomY}] isSolid is true (must be walkable)`);
+    }
+    const spanAnchor = findAnchorBySpan(tx, bottomY);
+    if (!spanAnchor || spanAnchor.id !== a.id) {
+      results.g4_3.pass = false;
+      results.g4_3.errors.push(`Anchor ${a.id} forecourt [${tx}, ${bottomY}] findAnchorBySpan failed`);
     }
   }
 }
@@ -231,11 +245,24 @@ async function testMovementServicePrompt() {
   };
 
   // Test finding anchor by entrance function directly
-  const { findAnchorByEntrance } = require('../../utils/settlementZones');
+  const { findAnchorByEntrance, findAnchorBySpan } = require('../../utils/settlementZones');
   const found = findAnchorByEntrance(ent.x, ent.y);
   if (!found || found.id !== 'desa_xingcun') {
     results.g4_7.pass = false;
     results.g4_7.errors.push(`findAnchorByEntrance failed for [${ent.x}, ${ent.y}]`);
+  }
+  const fw = testAnchor.spanWidth || 2;
+  const fh = testAnchor.spanHeight || 2;
+  for (let dy = 0; dy < fh; dy++) {
+    for (let dx = 0; dx < fw; dx++) {
+      const tx = testAnchor.x + dx;
+      const ty = testAnchor.y + dy;
+      const foundSpan = findAnchorBySpan(tx, ty);
+      if (!foundSpan || foundSpan.id !== 'desa_xingcun') {
+        results.g4_7.pass = false;
+        results.g4_7.errors.push(`findAnchorBySpan failed for [${tx}, ${ty}]`);
+      }
+    }
   }
 }
 
@@ -244,7 +271,7 @@ testMovementServicePrompt().then(() => {
   console.log(`G4.1 (52 Entrances Walkable & Identified):  ${results.g4_1.pass ? '✅ PASS' : '❌ FAIL'}`);
   if (results.g4_1.errors.length) console.log('   Errors:', results.g4_1.errors.slice(0, 3));
 
-  console.log(`G4.2 (Collision Solid spanW x (spanH-1)):   ${results.g4_2.pass ? '✅ PASS' : '❌ FAIL'}`);
+  console.log(`G4.2 (Footprint Walkability spanW x spanH): ${results.g4_2.pass ? '✅ PASS' : '❌ FAIL'}`);
   if (results.g4_2.errors.length) console.log('   Errors:', results.g4_2.errors.slice(0, 3));
 
   console.log(`G4.3 (Forecourt Walkable bottom row):      ${results.g4_3.pass ? '✅ PASS' : '❌ FAIL'}`);
