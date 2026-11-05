@@ -23,7 +23,7 @@ const scaleCanon = require('../world-data/scale-canon.json');
 const frameSubstitutions = require('../world-data/frame-substitutions-v9.json');
 const GC = require('./gridContract');
 const assetPlacementV10 = require('./assetPlacementV10');
-const { isInSettlementExclusion } = require('./settlementZones');
+const { isInSettlementExclusion, isInSettlementClearance } = require('./settlementZones');
 const MANMADE_SET = new Set(require('../world-data/manmade-defids-v20.json'));
 
 const STANDALONE_HOMES = (() => {
@@ -693,6 +693,17 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
         return false;
       }
 
+      // V24 H3: Prohibit solid or manmade objects in settlement clearance zones
+      if (!isAnchor) {
+        const clr = isInSettlementClearance(tx, ty);
+        if (clr.inClearance) {
+          const col = collisionOverride ? { w: cw, h: ch, mode: 'solid' } : getCanonCollision(defId, cw, ch);
+          if (col.mode === 'solid' || isManmadeDefId(defId)) {
+            return false;
+          }
+        }
+      }
+
       // Do not block roads or passes (bridges exempt)
       if (!isBridge && !collisionOverride && (t.includes('road') || AUTHORED_ROAD_TILES.has(key) || (!isAnchor && t.includes('pass')) || barrierGenerator.isPassCorridor(tx, ty))) {
         return false;
@@ -838,6 +849,14 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       if (it.tags && it.tags.includes('settlement_marker')) {
         filtered.push(it);
       } else {
+        // V24 H3: Check settlement clearance area
+        const clr = isInSettlementClearance(it.x, it.y);
+        if (clr.inClearance) {
+          if (it.collision === 'solid' || isManmadeDefId(it.defId)) {
+            continue;
+          }
+        }
+
         // Check settlement exclusion zone
         const ex = isInSettlementExclusion(it.x, it.y);
         if (ex.inZone) {

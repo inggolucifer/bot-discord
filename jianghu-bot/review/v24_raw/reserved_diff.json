@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-11-05T13:17:55.693Z",
+  "totalClearanceCells": 2043,
+  "solidInClearance": 0,
+  "solidObjectsFound": [],
+  "unblockedDoorFronts": 52,
+  "doorFrontFailures": [],
+  "bfsReachableCount": 52,
+  "bfsFailures": [],
+  "pass": true
+}

@@ -272,9 +272,9 @@
       "tierClass": "port",
       "markerDefId": "settlement_port_donghai",
       "entrance": {
-        "x": 3922,
+        "x": 3920,
         "y": 2702,
-        "facing": "south"
+        "facing": "west"
       },
       "exclusionRadius": 10,
       "facilitiesProfile": "port",
@@ -1105,7 +1105,7 @@
       "tierClass": "sect",
       "markerDefId": "settlement_sect_sword",
       "entrance": {
-        "x": 2202,
+        "x": 2201,
         "y": 3353,
         "facing": "south"
       },
