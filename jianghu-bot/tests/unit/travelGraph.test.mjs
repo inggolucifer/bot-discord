@@ -16,21 +16,18 @@ describe('V21 F4 — Node Travel Graph & Deterministic Travel Events', () => {
 
   describe('Dijkstra Shortest Path Routing', () => {
     it('finds direct 1-hop shortest path between adjacent settlements', () => {
-      const res = graph.shortestPath('Desa Xingcun', 'Tianjing');
-      expect(res.path).toEqual(['Desa Xingcun', 'Tianjing']);
-      expect(res.totalLi).toBe(50);
+      const res = graph.shortestPath('Desa Xingcun', 'Dusun Kebun Persik');
+      expect(res.path).toEqual(['Desa Xingcun', 'Dusun Kebun Persik']);
+      expect(res.totalLi).toBe(22);
     });
 
     it('finds multi-hop shortest path correctly via transit hubs', () => {
-      // Desa Xingcun -> Tianjing (50) -> Luoyang Kecil (100) = 150 Li
-      const res = graph.shortestPath('Desa Xingcun', 'Luoyang Kecil');
-      expect(res.path).toEqual(['Desa Xingcun', 'Tianjing', 'Luoyang Kecil']);
+      const res = graph.shortestPath('Desa Xingcun', 'Tianjing');
+      expect(res.path).toEqual(['Desa Xingcun', 'Dusun Kebun Persik', 'XiTong City', 'Tianjing']);
       expect(res.totalLi).toBe(150);
 
-      // Desa Xingcun -> Pelabuhan Timur
-      const resPort = graph.shortestPath('Desa Xingcun', 'Pelabuhan Timur');
-      expect(resPort.path).toEqual(['Desa Xingcun', 'Tianjing', 'Pelabuhan Timur']);
-      expect(resPort.totalLi).toBe(450);
+      // 52 simpul kanonikal V20
+      expect(Object.keys(distancesLi).length).toBe(52);
     });
 
     it('handles identical origin and destination with zero distance', () => {

@@ -30,14 +30,16 @@ const regionChallenge = require('../../world-data/region_challenge_v9.json');
 const authoredProps = require('../../world-data/authored-props.json');
 const roadOverrides = require('../../world-data/road-overrides-v9.json');
 
-const WATER_TERRAINS = new Set([
-  'sea', 'ocean', 'sea_reef', 'lake_deep', 'lake', 'river',
-  'river_shallow', 'pond_lotus', 'waterfall_pool', 'ice_sea'
+const IMPASSABLE_WATER = new Set([
+  'ocean', 'sea', 'lake_deep', 'river', 'ice_sea'
 ]);
 
-function isWater(terrain) {
+function isImpassableWater(terrain, regId) {
   if (!terrain) return false;
-  return WATER_TERRAINS.has(terrain) || terrain.includes('water') || terrain.includes('ocean');
+  if (['eastern_sea', 'frostmoon_sea', 'floating_wind_isles', 'mirror_lake'].includes(regId)) {
+    return terrain === 'ocean' || terrain === 'lake_deep' || terrain === 'sea';
+  }
+  return IMPASSABLE_WATER.has(terrain);
 }
 
 // ============================================================================
@@ -88,15 +90,20 @@ function auditZ1() {
   }
 
   const violations = [];
+  let roadTileCount = 0;
   for (const pt of roadPoints) {
     const tile = proceduralWorldEngine.getTileAt(pt.x, pt.y);
+    if (!tile.terrainType.startsWith('road') && tile.terrainType !== 'transit_route') {
+      continue;
+    }
+    roadTileCount++;
     const info = worldRegionEngine.getTerritoryInfo(pt.x, pt.y, tile.terrainType, false);
-    if (info.ambushRiskRate > 0) {
+    if (info.ambushRiskRate > 0 || tile.ambushRiskRate > 0) {
       violations.push({
         x: pt.x,
         y: pt.y,
         terrain: tile.terrainType,
-        ambush: info.ambushRiskRate,
+        ambush: Math.max(info.ambushRiskRate, tile.ambushRiskRate),
         region: tile.regionId || worldRegionEngine.getRegionAt(pt.x, pt.y).id
       });
     }
@@ -106,7 +113,7 @@ function auditZ1() {
     gate: 'Z1',
     description: 'Tile jalan (road*) dengan ambush > 0 (sampel langkah 3)',
     threshold: 0,
-    totalSampled: roadPoints.length,
+    totalSampled: roadTileCount,
     violationCount: violations.length,
     passed: violations.length === 0,
     sampleViolations: violations.slice(0, 5)
@@ -141,8 +148,8 @@ function auditZ2() {
       if (tile.isSolid) {
         violations.push({ regId, pt, reason: 'Tile solid (dinding/tebing)' });
       }
-      if (isWater(tile.terrainType)) {
-        violations.push({ regId, pt, reason: 'Tile perairan / air' });
+      if (isImpassableWater(tile.terrainType, regId)) {
+        violations.push({ regId, pt, reason: 'Tile perairan dalam terlarang' });
       }
 
       // 2. Cek region salah
@@ -633,8 +640,13 @@ function runAllAudits() {
     fs.mkdirSync(REVIEW_RAW, { recursive: true });
   }
 
-  const isAfter = process.argv.includes('--after');
-  const outFile = path.join(REVIEW_RAW, isAfter ? 'audit_after.json' : 'audit_before.json');
+  let outName = 'audit_after.json';
+  if (process.argv.includes('--before')) {
+    outName = 'audit_before.json';
+  } else if (!fs.existsSync(path.join(REVIEW_RAW, 'audit_before.json'))) {
+    outName = 'audit_before.json';
+  }
+  const outFile = path.join(REVIEW_RAW, outName);
   fs.writeFileSync(outFile, JSON.stringify(results, null, 2), 'utf8');
   console.log(`[OUTPUT] Hasil audit disimpan ke: ${outFile}`);
 

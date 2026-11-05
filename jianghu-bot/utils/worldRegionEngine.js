@@ -42,7 +42,7 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
   }
 
   // 2. Jalan Raya Kerajaan / Jalur Transit: 100% AMAN MUTLAK (Zero Ambush)
-  if (terrainType === 'road') {
+  if (terrainType && (terrainType === 'road' || terrainType.startsWith('road_') || terrainType === 'transit_route')) {
     return {
       type: 'safe_zone',
       ambushRiskRate: 0,
@@ -111,7 +111,7 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
   }
 
   // F. Gurun Pasir Suci & Ngarai
-  if (terrainType === 'western_desert' || terrainType === 'desert' || terrainType === 'desert_sand' || terrainType === 'dune' || terrainType === 'canyon' || terrainType === 'canyon_floor') {
+  if (terrainType === 'western_desert' || terrainType === 'desert' || terrainType === 'desert_sand' || terrainType === 'dune' || terrainType === 'canyon' || terrainType === 'canyon_floor' || terrainType === 'lightning_scar') {
     return {
       type: 'hunting_zone',
       ambushRiskRate: 0.25,
@@ -128,11 +128,20 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
     };
   }
 
-  // H. Perairan Ombak Bebas, Danau & Samudra
-  if (terrainType === 'ocean' || terrainType === 'sea' || terrainType === 'sea_reef' || terrainType === 'lake' || terrainType === 'lake_deep' || terrainType === 'ice_sea' || terrainType === 'eastern_sea') {
+  // H. Perairan Ombak Bebas, Danau & Samudra, Pulau Karang
+  if (terrainType === 'ocean' || terrainType === 'sea' || terrainType === 'sea_reef' || terrainType === 'island_reef' || terrainType === 'lake' || terrainType === 'lake_deep' || terrainType === 'ice_sea' || terrainType === 'eastern_sea' || terrainType === 'river_shallow') {
     return {
       type: 'hunting_zone',
       ambushRiskRate: 0.18,
+      dangerTierBase: Math.max(3, region.dangerTier)
+    };
+  }
+
+  // H2. Formasi Rusak & Pulau Melayang
+  if (terrainType === 'formation_tile' || terrainType === 'floating_stone') {
+    return {
+      type: 'danger_zone',
+      ambushRiskRate: 0.28,
       dangerTierBase: Math.max(3, region.dangerTier)
     };
   }

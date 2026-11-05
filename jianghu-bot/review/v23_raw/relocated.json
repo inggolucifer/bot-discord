@@ -1,0 +1,498 @@
+[
+  {
+    "regionId": "nine_springs_delta",
+    "key": "lair",
+    "oldPoint": {
+      "x": 2412,
+      "y": 2406,
+      "terrain": "pond_lotus"
+    },
+    "newPoint": {
+      "x": 2407,
+      "y": 2403,
+      "terrain": "pond_lotus"
+    },
+    "reasons": "near_anchor:dusun_mata_air_jernih",
+    "fromNearestAnchorTiles": 47
+  },
+  {
+    "regionId": "nine_springs_delta",
+    "key": "elite_1",
+    "oldPoint": {
+      "x": 2520,
+      "y": 2502,
+      "terrain": "farmland"
+    },
+    "newPoint": {
+      "x": 2524,
+      "y": 2496,
+      "terrain": "farmland"
+    },
+    "reasons": "near_anchor:desa_lingquan",
+    "fromNearestAnchorTiles": 54
+  },
+  {
+    "regionId": "azure_mountain_range",
+    "key": "hazardZone",
+    "oldPoint": {
+      "x": 2200,
+      "y": 3300,
+      "terrain": "mountain_pass"
+    },
+    "newPoint": {
+      "x": 2201,
+      "y": 3180,
+      "terrain": "mountain_pass"
+    },
+    "reasons": "near_anchor:kaki_gunung_azure",
+    "fromNearestAnchorTiles": 160
+  },
+  {
+    "regionId": "thundersteppe",
+    "key": "lair",
+    "oldPoint": {
+      "x": 2300,
+      "y": 4204,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 2172,
+      "y": 3844,
+      "terrain": "ice_crack"
+    },
+    "reasons": "wrong_reg:northern_desolate",
+    "fromNearestAnchorTiles": 106
+  },
+  {
+    "regionId": "thundersteppe",
+    "key": "elite_0",
+    "oldPoint": {
+      "x": 2000,
+      "y": 4036,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 1994,
+      "y": 4028,
+      "terrain": "lightning_scar"
+    },
+    "reasons": "safe_zone_or_open:meadow",
+    "fromNearestAnchorTiles": 152
+  },
+  {
+    "regionId": "thundersteppe",
+    "key": "elite_1",
+    "oldPoint": {
+      "x": 2600,
+      "y": 4396,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 2453,
+      "y": 4080,
+      "terrain": "ice_crack"
+    },
+    "reasons": "wrong_reg:northern_desolate",
+    "fromNearestAnchorTiles": 53
+  },
+  {
+    "regionId": "thundersteppe",
+    "key": "elite_2",
+    "oldPoint": {
+      "x": 2300,
+      "y": 4480,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 1961,
+      "y": 3973,
+      "terrain": "ice_crack"
+    },
+    "reasons": "wrong_reg:northern_desolate",
+    "fromNearestAnchorTiles": 207
+  },
+  {
+    "regionId": "thundersteppe",
+    "key": "hazardZone",
+    "oldPoint": {
+      "x": 2504,
+      "y": 3964,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 2633,
+      "y": 4077,
+      "terrain": "lightning_scar"
+    },
+    "reasons": "safe_zone_or_open:meadow",
+    "fromNearestAnchorTiles": 177
+  },
+  {
+    "regionId": "godthunder_peaks",
+    "key": "hazardZone",
+    "oldPoint": {
+      "x": 3292,
+      "y": 4848,
+      "terrain": "crater"
+    },
+    "newPoint": {
+      "x": 3236,
+      "y": 4823,
+      "terrain": "crater"
+    },
+    "reasons": "near_peer_point",
+    "fromNearestAnchorTiles": 836
+  },
+  {
+    "regionId": "mirror_lake",
+    "key": "lair",
+    "oldPoint": {
+      "x": 3092,
+      "y": 3680,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 3096,
+      "y": 3675,
+      "terrain": "river_shallow"
+    },
+    "reasons": "safe_zone_or_open:meadow",
+    "fromNearestAnchorTiles": 496
+  },
+  {
+    "regionId": "mirror_lake",
+    "key": "elite_2",
+    "oldPoint": {
+      "x": 3032,
+      "y": 3656,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 3038,
+      "y": 3652,
+      "terrain": "river_shallow"
+    },
+    "reasons": "safe_zone_or_open:meadow",
+    "fromNearestAnchorTiles": 438
+  },
+  {
+    "regionId": "mirror_lake",
+    "key": "hazardZone",
+    "oldPoint": {
+      "x": 3032,
+      "y": 3656,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 3040,
+      "y": 3812,
+      "terrain": "river_shallow"
+    },
+    "reasons": "safe_zone_or_open:meadow",
+    "fromNearestAnchorTiles": 440
+  },
+  {
+    "regionId": "beast_prairies",
+    "key": "lair",
+    "oldPoint": {
+      "x": 1404,
+      "y": 3804,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 1412,
+      "y": 3798,
+      "terrain": "mountain"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 302
+  },
+  {
+    "regionId": "beast_prairies",
+    "key": "elite_0",
+    "oldPoint": {
+      "x": 1164,
+      "y": 3636,
+      "terrain": "plains"
+    },
+    "newPoint": {
+      "x": 1195,
+      "y": 3662,
+      "terrain": "forest"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 338
+  },
+  {
+    "regionId": "beast_prairies",
+    "key": "elite_1",
+    "oldPoint": {
+      "x": 1644,
+      "y": 3996,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 1598,
+      "y": 3994,
+      "terrain": "bamboo_forest"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 298
+  },
+  {
+    "regionId": "beast_prairies",
+    "key": "elite_2",
+    "oldPoint": {
+      "x": 1404,
+      "y": 4008,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 1415,
+      "y": 3968,
+      "terrain": "mountain"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 132
+  },
+  {
+    "regionId": "beast_prairies",
+    "key": "hazardZone",
+    "oldPoint": {
+      "x": 1560,
+      "y": 3612,
+      "terrain": "plains"
+    },
+    "newPoint": {
+      "x": 1601,
+      "y": 3620,
+      "terrain": "forest"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 480
+  },
+  {
+    "regionId": "hermit_highlands",
+    "key": "elite_2",
+    "oldPoint": {
+      "x": 1204,
+      "y": 4680,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 1210,
+      "y": 4677,
+      "terrain": "bamboo_grove"
+    },
+    "reasons": "safe_zone_or_open:meadow",
+    "fromNearestAnchorTiles": 277
+  },
+  {
+    "regionId": "mist_insect_valley",
+    "key": "lair",
+    "oldPoint": {
+      "x": 4404,
+      "y": 1100,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 4379,
+      "y": 1119,
+      "terrain": "forest"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 1431
+  },
+  {
+    "regionId": "mist_insect_valley",
+    "key": "elite_0",
+    "oldPoint": {
+      "x": 4164,
+      "y": 896,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 4192,
+      "y": 910,
+      "terrain": "forest"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 1442
+  },
+  {
+    "regionId": "mist_insect_valley",
+    "key": "elite_1",
+    "oldPoint": {
+      "x": 4644,
+      "y": 1352,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 4650,
+      "y": 1313,
+      "terrain": "forest"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 1237
+  },
+  {
+    "regionId": "mist_insect_valley",
+    "key": "elite_2",
+    "oldPoint": {
+      "x": 4404,
+      "y": 1448,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 4401,
+      "y": 1450,
+      "terrain": "forest"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 1100
+  },
+  {
+    "regionId": "mist_insect_valley",
+    "key": "hazardZone",
+    "oldPoint": {
+      "x": 4560,
+      "y": 800,
+      "terrain": "meadow"
+    },
+    "newPoint": {
+      "x": 4574,
+      "y": 794,
+      "terrain": "mountain"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 1756
+  },
+  {
+    "regionId": "formation_barrens",
+    "key": "lair",
+    "oldPoint": {
+      "x": 3604,
+      "y": 2204,
+      "terrain": "plains"
+    },
+    "newPoint": {
+      "x": 3542,
+      "y": 2263,
+      "terrain": "formation_tile"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 287
+  },
+  {
+    "regionId": "formation_barrens",
+    "key": "elite_0",
+    "oldPoint": {
+      "x": 3364,
+      "y": 2036,
+      "terrain": "plains"
+    },
+    "newPoint": {
+      "x": 3334,
+      "y": 2001,
+      "terrain": "formation_tile"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 549
+  },
+  {
+    "regionId": "formation_barrens",
+    "key": "elite_1",
+    "oldPoint": {
+      "x": 3844,
+      "y": 2384,
+      "terrain": "plains"
+    },
+    "newPoint": {
+      "x": 3783,
+      "y": 2348,
+      "terrain": "formation_tile"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 202
+  },
+  {
+    "regionId": "formation_barrens",
+    "key": "elite_2",
+    "oldPoint": {
+      "x": 3628,
+      "y": 2396,
+      "terrain": "plains"
+    },
+    "newPoint": {
+      "x": 3621,
+      "y": 2396,
+      "terrain": "formation_tile"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 154
+  },
+  {
+    "regionId": "formation_barrens",
+    "key": "hazardZone",
+    "oldPoint": {
+      "x": 3760,
+      "y": 1964,
+      "terrain": "plains"
+    },
+    "newPoint": {
+      "x": 3753,
+      "y": 1976,
+      "terrain": "formation_tile"
+    },
+    "reasons": "safe_zone_or_open:plains",
+    "fromNearestAnchorTiles": 574
+  },
+  {
+    "regionId": "ore_teeth_range",
+    "key": "hazardZone",
+    "oldPoint": {
+      "x": 3732,
+      "y": 2576,
+      "terrain": "hill"
+    },
+    "newPoint": {
+      "x": 3758,
+      "y": 2576,
+      "terrain": "hill"
+    },
+    "reasons": "near_anchor:kota_canghai",
+    "fromNearestAnchorTiles": 58
+  },
+  {
+    "regionId": "eastern_sea",
+    "key": "elite_1",
+    "oldPoint": {
+      "x": 3940,
+      "y": 2828,
+      "terrain": "island_reef"
+    },
+    "newPoint": {
+      "x": 3940,
+      "y": 2909,
+      "terrain": "island_reef"
+    },
+    "reasons": "near_anchor:istana_giok_laut_timur",
+    "fromNearestAnchorTiles": 59
+  },
+  {
+    "regionId": "eastern_sea",
+    "key": "elite_2",
+    "oldPoint": {
+      "x": 3916,
+      "y": 2756,
+      "terrain": "island_reef"
+    },
+    "newPoint": {
+      "x": 3926,
+      "y": 2753,
+      "terrain": "island_reef"
+    },
+    "reasons": "near_anchor:sarang_naga_karang_timur",
+    "fromNearestAnchorTiles": 46
+  }
+]

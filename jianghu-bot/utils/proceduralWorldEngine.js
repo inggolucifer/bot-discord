@@ -582,6 +582,10 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
         terrainType = 'mountain_rock';
         isSolid = true;
         label = 'Benteng Tebing Batu';
+      } else if (elevation > 0.55) {
+        terrainType = 'hill';
+        isSolid = false;
+        label = 'Bukit Pos Perbatasan';
       } else if (elevation < 0.28) {
         terrainType = 'road_stone';
         isSolid = false;
@@ -931,6 +935,9 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
     else label = 'Sumber Daya';
   }
 
+  // Integrasi ulang dengan World Region Engine untuk final terrainType (Road & overrides)
+  const finalTerritory = getTerritoryInfo(tileX, tileY, terrainType, isSettlementTile);
+
   return {
     tileX,
     tileY,
@@ -946,9 +953,9 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
     spiritualQiDensity,
     regionId: region.id,
     regionName: region.name,
-    territoryType: territoryInfo.type,
-    dangerTier: Math.max(region.dangerTier, territoryInfo.dangerTierBase),
-    ambushRiskRate: territoryInfo.ambushRiskRate,
+    territoryType: finalTerritory.type,
+    dangerTier: Math.max(region.dangerTier, finalTerritory.dangerTierBase),
+    ambushRiskRate: finalTerritory.ambushRiskRate,
     factionName: null,
     staminaCost: getTerrainStaminaCost(terrainType)
   };
