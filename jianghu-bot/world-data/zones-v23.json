@@ -1,0 +1,2663 @@
+{
+  "version": "v23",
+  "seed": 1618,
+  "summary": {
+    "elite_camp": 87,
+    "world_boss_lair": 27,
+    "elemental_land": 5,
+    "spirit_valley": 26,
+    "land_of_spirits": 3,
+    "defense_circle": 21,
+    "total": 169
+  },
+  "zones": [
+    {
+      "id": "elite_central_plains_1",
+      "name": "Kamp Siluman Elite Central Plains #1",
+      "type": "elite_camp",
+      "regionId": "central_plains",
+      "dangerTier": 1,
+      "x": 2083,
+      "y": 2331,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "plains"
+    },
+    {
+      "id": "elite_central_plains_2",
+      "name": "Kamp Siluman Elite Central Plains #2",
+      "type": "elite_camp",
+      "regionId": "central_plains",
+      "dangerTier": 1,
+      "x": 2923,
+      "y": 2823,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "plains"
+    },
+    {
+      "id": "elite_central_plains_3",
+      "name": "Kamp Siluman Elite Central Plains #3",
+      "type": "elite_camp",
+      "regionId": "central_plains",
+      "dangerTier": 1,
+      "x": 2503,
+      "y": 2931,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "elite_nine_springs_delta_1",
+      "name": "Kamp Siluman Elite Nine Springs Delta #1",
+      "type": "elite_camp",
+      "regionId": "nine_springs_delta",
+      "dangerTier": 1,
+      "x": 2279,
+      "y": 2405,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "farmland"
+    },
+    {
+      "id": "elite_nine_springs_delta_2",
+      "name": "Kamp Siluman Elite Nine Springs Delta #2",
+      "type": "elite_camp",
+      "regionId": "nine_springs_delta",
+      "dangerTier": 1,
+      "x": 2523,
+      "y": 2495,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "farmland"
+    },
+    {
+      "id": "elite_nine_springs_delta_3",
+      "name": "Kamp Siluman Elite Nine Springs Delta #3",
+      "type": "elite_camp",
+      "regionId": "nine_springs_delta",
+      "dangerTier": 1,
+      "x": 2399,
+      "y": 2513,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "meadow"
+    },
+    {
+      "id": "elite_azure_mountain_range_1",
+      "name": "Kamp Siluman Elite Azure Mountain Range #1",
+      "type": "elite_camp",
+      "regionId": "azure_mountain_range",
+      "dangerTier": 3,
+      "x": 2199,
+      "y": 3249,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "mountain_pass"
+    },
+    {
+      "id": "elite_azure_mountain_range_2",
+      "name": "Kamp Siluman Elite Azure Mountain Range #2",
+      "type": "elite_camp",
+      "regionId": "azure_mountain_range",
+      "dangerTier": 3,
+      "x": 2599,
+      "y": 3199,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "mountain_pass"
+    },
+    {
+      "id": "elite_azure_mountain_range_3",
+      "name": "Kamp Siluman Elite Azure Mountain Range #3",
+      "type": "elite_camp",
+      "regionId": "azure_mountain_range",
+      "dangerTier": 3,
+      "x": 3099,
+      "y": 3199,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "sword_gorge_pass"
+    },
+    {
+      "id": "elite_northern_desolate_1",
+      "name": "Kamp Siluman Elite Northern Desolate #1",
+      "type": "elite_camp",
+      "regionId": "northern_desolate",
+      "dangerTier": 4,
+      "x": 1619,
+      "y": 4219,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "ice_crack"
+    },
+    {
+      "id": "elite_northern_desolate_2",
+      "name": "Kamp Siluman Elite Northern Desolate #2",
+      "type": "elite_camp",
+      "regionId": "northern_desolate",
+      "dangerTier": 4,
+      "x": 2759,
+      "y": 4651,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "snow"
+    },
+    {
+      "id": "elite_northern_desolate_3",
+      "name": "Kamp Siluman Elite Northern Desolate #3",
+      "type": "elite_camp",
+      "regionId": "northern_desolate",
+      "dangerTier": 4,
+      "x": 2099,
+      "y": 4783,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "snow"
+    },
+    {
+      "id": "elite_thundersteppe_1",
+      "name": "Kamp Siluman Elite Thundersteppe #1",
+      "type": "elite_camp",
+      "regionId": "thundersteppe",
+      "dangerTier": 4,
+      "x": 1993,
+      "y": 4027,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "lightning_scar"
+    },
+    {
+      "id": "elite_thundersteppe_2",
+      "name": "Kamp Siluman Elite Thundersteppe #2",
+      "type": "elite_camp",
+      "regionId": "thundersteppe",
+      "dangerTier": 4,
+      "x": 2452,
+      "y": 4079,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "ice_crack"
+    },
+    {
+      "id": "elite_thundersteppe_3",
+      "name": "Kamp Siluman Elite Thundersteppe #3",
+      "type": "elite_camp",
+      "regionId": "thundersteppe",
+      "dangerTier": 4,
+      "x": 1960,
+      "y": 3972,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "ice_crack"
+    },
+    {
+      "id": "elite_godthunder_peaks_1",
+      "name": "Kamp Siluman Elite Godthunder Peaks #1",
+      "type": "elite_camp",
+      "regionId": "godthunder_peaks",
+      "dangerTier": 5,
+      "x": 3255,
+      "y": 4727,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "elite_godthunder_peaks_2",
+      "name": "Kamp Siluman Elite Godthunder Peaks #2",
+      "type": "elite_camp",
+      "regionId": "godthunder_peaks",
+      "dangerTier": 5,
+      "x": 3291,
+      "y": 4775,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "elite_godthunder_peaks_3",
+      "name": "Kamp Siluman Elite Godthunder Peaks #3",
+      "type": "elite_camp",
+      "regionId": "godthunder_peaks",
+      "dangerTier": 5,
+      "x": 3291,
+      "y": 4847,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "elite_mirror_lake_1",
+      "name": "Kamp Siluman Elite Mirror Lake #1",
+      "type": "elite_camp",
+      "regionId": "mirror_lake",
+      "dangerTier": 2,
+      "x": 3043,
+      "y": 3715,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "river_shallow"
+    },
+    {
+      "id": "elite_mirror_lake_2",
+      "name": "Kamp Siluman Elite Mirror Lake #2",
+      "type": "elite_camp",
+      "regionId": "mirror_lake",
+      "dangerTier": 2,
+      "x": 3079,
+      "y": 4063,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "river_shallow"
+    },
+    {
+      "id": "elite_mirror_lake_3",
+      "name": "Kamp Siluman Elite Mirror Lake #3",
+      "type": "elite_camp",
+      "regionId": "mirror_lake",
+      "dangerTier": 2,
+      "x": 3037,
+      "y": 3651,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "river_shallow"
+    },
+    {
+      "id": "elite_beast_prairies_1",
+      "name": "Kamp Siluman Elite Beast Prairies #1",
+      "type": "elite_camp",
+      "regionId": "beast_prairies",
+      "dangerTier": 3,
+      "x": 1194,
+      "y": 3661,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "elite_beast_prairies_2",
+      "name": "Kamp Siluman Elite Beast Prairies #2",
+      "type": "elite_camp",
+      "regionId": "beast_prairies",
+      "dangerTier": 3,
+      "x": 1597,
+      "y": 3993,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "bamboo_forest"
+    },
+    {
+      "id": "elite_beast_prairies_3",
+      "name": "Kamp Siluman Elite Beast Prairies #3",
+      "type": "elite_camp",
+      "regionId": "beast_prairies",
+      "dangerTier": 3,
+      "x": 1414,
+      "y": 3967,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "mountain"
+    },
+    {
+      "id": "elite_western_sacred_desert_1",
+      "name": "Kamp Siluman Elite Western Sacred Desert #1",
+      "type": "elite_camp",
+      "regionId": "western_sacred_desert",
+      "dangerTier": 3,
+      "x": 295,
+      "y": 2095,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "desert_sand"
+    },
+    {
+      "id": "elite_western_sacred_desert_2",
+      "name": "Kamp Siluman Elite Western Sacred Desert #2",
+      "type": "elite_camp",
+      "regionId": "western_sacred_desert",
+      "dangerTier": 3,
+      "x": 1195,
+      "y": 2995,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "desert_sand"
+    },
+    {
+      "id": "elite_western_sacred_desert_3",
+      "name": "Kamp Siluman Elite Western Sacred Desert #3",
+      "type": "elite_camp",
+      "regionId": "western_sacred_desert",
+      "dangerTier": 3,
+      "x": 751,
+      "y": 3091,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "desert_sand"
+    },
+    {
+      "id": "elite_western_gorge_labyrinth_1",
+      "name": "Kamp Siluman Elite Western Gorge Labyrinth #1",
+      "type": "elite_camp",
+      "regionId": "western_gorge_labyrinth",
+      "dangerTier": 4,
+      "x": 187,
+      "y": 1283,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "canyon_floor"
+    },
+    {
+      "id": "elite_western_gorge_labyrinth_2",
+      "name": "Kamp Siluman Elite Western Gorge Labyrinth #2",
+      "type": "elite_camp",
+      "regionId": "western_gorge_labyrinth",
+      "dangerTier": 4,
+      "x": 799,
+      "y": 1751,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "canyon_floor"
+    },
+    {
+      "id": "elite_western_gorge_labyrinth_3",
+      "name": "Kamp Siluman Elite Western Gorge Labyrinth #3",
+      "type": "elite_camp",
+      "regionId": "western_gorge_labyrinth",
+      "dangerTier": 4,
+      "x": 499,
+      "y": 1847,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "canyon_floor"
+    },
+    {
+      "id": "elite_hermit_highlands_1",
+      "name": "Kamp Siluman Elite Hermit Highlands #1",
+      "type": "elite_camp",
+      "regionId": "hermit_highlands",
+      "dangerTier": 2,
+      "x": 963,
+      "y": 4235,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elite_hermit_highlands_2",
+      "name": "Kamp Siluman Elite Hermit Highlands #2",
+      "type": "elite_camp",
+      "regionId": "hermit_highlands",
+      "dangerTier": 2,
+      "x": 1443,
+      "y": 4595,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elite_hermit_highlands_3",
+      "name": "Kamp Siluman Elite Hermit Highlands #3",
+      "type": "elite_camp",
+      "regionId": "hermit_highlands",
+      "dangerTier": 2,
+      "x": 1209,
+      "y": 4676,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "bamboo_grove"
+    },
+    {
+      "id": "elite_border_march_1",
+      "name": "Kamp Siluman Elite Border March #1",
+      "type": "elite_camp",
+      "regionId": "border_march",
+      "dangerTier": 2,
+      "x": 2815,
+      "y": 1867,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elite_border_march_2",
+      "name": "Kamp Siluman Elite Border March #2",
+      "type": "elite_camp",
+      "regionId": "border_march",
+      "dangerTier": 2,
+      "x": 2935,
+      "y": 1987,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elite_border_march_3",
+      "name": "Kamp Siluman Elite Border March #3",
+      "type": "elite_camp",
+      "regionId": "border_march",
+      "dangerTier": 2,
+      "x": 2815,
+      "y": 2011,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elite_lava_spine_1",
+      "name": "Kamp Siluman Elite Lava Spine #1",
+      "type": "elite_camp",
+      "regionId": "lava_spine",
+      "dangerTier": 5,
+      "x": 691,
+      "y": 495,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "basalt"
+    },
+    {
+      "id": "elite_lava_spine_2",
+      "name": "Kamp Siluman Elite Lava Spine #2",
+      "type": "elite_camp",
+      "regionId": "lava_spine",
+      "dangerTier": 5,
+      "x": 1507,
+      "y": 951,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "basalt"
+    },
+    {
+      "id": "elite_lava_spine_3",
+      "name": "Kamp Siluman Elite Lava Spine #3",
+      "type": "elite_camp",
+      "regionId": "lava_spine",
+      "dangerTier": 5,
+      "x": 1099,
+      "y": 1107,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "elite_venom_mire_1",
+      "name": "Kamp Siluman Elite Venom Mire #1",
+      "type": "elite_camp",
+      "regionId": "venom_mire",
+      "dangerTier": 4,
+      "x": 2363,
+      "y": 695,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "swamp"
+    },
+    {
+      "id": "elite_venom_mire_2",
+      "name": "Kamp Siluman Elite Venom Mire #2",
+      "type": "elite_camp",
+      "regionId": "venom_mire",
+      "dangerTier": 4,
+      "x": 2843,
+      "y": 1151,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "swamp"
+    },
+    {
+      "id": "elite_venom_mire_3",
+      "name": "Kamp Siluman Elite Venom Mire #3",
+      "type": "elite_camp",
+      "regionId": "venom_mire",
+      "dangerTier": 4,
+      "x": 2603,
+      "y": 1247,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "swamp"
+    },
+    {
+      "id": "elite_southern_demon_domain_1",
+      "name": "Kamp Siluman Elite Southern Demon Domain #1",
+      "type": "elite_camp",
+      "regionId": "southern_demon_domain",
+      "dangerTier": 4,
+      "x": 1795,
+      "y": 1015,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "dead_wood"
+    },
+    {
+      "id": "elite_southern_demon_domain_2",
+      "name": "Kamp Siluman Elite Southern Demon Domain #2",
+      "type": "elite_camp",
+      "regionId": "southern_demon_domain",
+      "dangerTier": 4,
+      "x": 2695,
+      "y": 1495,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elite_southern_demon_domain_3",
+      "name": "Kamp Siluman Elite Southern Demon Domain #3",
+      "type": "elite_camp",
+      "regionId": "southern_demon_domain",
+      "dangerTier": 4,
+      "x": 2251,
+      "y": 1615,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elite_crimson_battlefield_1",
+      "name": "Kamp Siluman Elite Crimson Battlefield #1",
+      "type": "elite_camp",
+      "regionId": "crimson_battlefield",
+      "dangerTier": 5,
+      "x": 2599,
+      "y": 435,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "battlefield_ash"
+    },
+    {
+      "id": "elite_crimson_battlefield_2",
+      "name": "Kamp Siluman Elite Crimson Battlefield #2",
+      "type": "elite_camp",
+      "regionId": "crimson_battlefield",
+      "dangerTier": 5,
+      "x": 3199,
+      "y": 795,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "elite_crimson_battlefield_3",
+      "name": "Kamp Siluman Elite Crimson Battlefield #3",
+      "type": "elite_camp",
+      "regionId": "crimson_battlefield",
+      "dangerTier": 5,
+      "x": 2899,
+      "y": 879,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "battlefield_ash"
+    },
+    {
+      "id": "elite_abyssal_scar_1",
+      "name": "Kamp Siluman Elite Abyssal Scar #1",
+      "type": "elite_camp",
+      "regionId": "abyssal_scar",
+      "dangerTier": 5,
+      "x": 1715,
+      "y": 435,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "elite_abyssal_scar_2",
+      "name": "Kamp Siluman Elite Abyssal Scar #2",
+      "type": "elite_camp",
+      "regionId": "abyssal_scar",
+      "dangerTier": 5,
+      "x": 2075,
+      "y": 795,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "elite_abyssal_scar_3",
+      "name": "Kamp Siluman Elite Abyssal Scar #3",
+      "type": "elite_camp",
+      "regionId": "abyssal_scar",
+      "dangerTier": 5,
+      "x": 1871,
+      "y": 879,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "elite_southern_plague_woods_1",
+      "name": "Kamp Siluman Elite Southern Plague Woods #1",
+      "type": "elite_camp",
+      "regionId": "southern_plague_woods",
+      "dangerTier": 4,
+      "x": 3415,
+      "y": 411,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "swamp"
+    },
+    {
+      "id": "elite_southern_plague_woods_2",
+      "name": "Kamp Siluman Elite Southern Plague Woods #2",
+      "type": "elite_camp",
+      "regionId": "southern_plague_woods",
+      "dangerTier": 4,
+      "x": 3643,
+      "y": 723,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "swamp"
+    },
+    {
+      "id": "elite_southern_plague_woods_3",
+      "name": "Kamp Siluman Elite Southern Plague Woods #3",
+      "type": "elite_camp",
+      "regionId": "southern_plague_woods",
+      "dangerTier": 4,
+      "x": 3403,
+      "y": 795,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "swamp"
+    },
+    {
+      "id": "elite_bone_sea_coast_1",
+      "name": "Kamp Siluman Elite Bone Sea Coast #1",
+      "type": "elite_camp",
+      "regionId": "bone_sea_coast",
+      "dangerTier": 3,
+      "x": 703,
+      "y": 91,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "desert_sand"
+    },
+    {
+      "id": "elite_bone_sea_coast_2",
+      "name": "Kamp Siluman Elite Bone Sea Coast #2",
+      "type": "elite_camp",
+      "regionId": "bone_sea_coast",
+      "dangerTier": 3,
+      "x": 2791,
+      "y": 187,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "sea_reef"
+    },
+    {
+      "id": "elite_bone_sea_coast_3",
+      "name": "Kamp Siluman Elite Bone Sea Coast #3",
+      "type": "elite_camp",
+      "regionId": "bone_sea_coast",
+      "dangerTier": 3,
+      "x": 1783,
+      "y": 199,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "desert_sand"
+    },
+    {
+      "id": "elite_spirit_wood_sea_1",
+      "name": "Kamp Siluman Elite Spirit Wood Sea #1",
+      "type": "elite_camp",
+      "regionId": "spirit_wood_sea",
+      "dangerTier": 3,
+      "x": 3399,
+      "y": 1095,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "spirit_wood"
+    },
+    {
+      "id": "elite_spirit_wood_sea_2",
+      "name": "Kamp Siluman Elite Spirit Wood Sea #2",
+      "type": "elite_camp",
+      "regionId": "spirit_wood_sea",
+      "dangerTier": 3,
+      "x": 3939,
+      "y": 1551,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "spirit_wood"
+    },
+    {
+      "id": "elite_spirit_wood_sea_3",
+      "name": "Kamp Siluman Elite Spirit Wood Sea #3",
+      "type": "elite_camp",
+      "regionId": "spirit_wood_sea",
+      "dangerTier": 3,
+      "x": 3699,
+      "y": 1647,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "spirit_wood"
+    },
+    {
+      "id": "elite_mist_insect_valley_1",
+      "name": "Kamp Siluman Elite Mist Insect Valley #1",
+      "type": "elite_camp",
+      "regionId": "mist_insect_valley",
+      "dangerTier": 4,
+      "x": 4191,
+      "y": 909,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "elite_mist_insect_valley_2",
+      "name": "Kamp Siluman Elite Mist Insect Valley #2",
+      "type": "elite_camp",
+      "regionId": "mist_insect_valley",
+      "dangerTier": 4,
+      "x": 4649,
+      "y": 1312,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "elite_mist_insect_valley_3",
+      "name": "Kamp Siluman Elite Mist Insect Valley #3",
+      "type": "elite_camp",
+      "regionId": "mist_insect_valley",
+      "dangerTier": 4,
+      "x": 4400,
+      "y": 1449,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "elite_formation_barrens_1",
+      "name": "Kamp Siluman Elite Formation Barrens #1",
+      "type": "elite_camp",
+      "regionId": "formation_barrens",
+      "dangerTier": 3,
+      "x": 3333,
+      "y": 2000,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "formation_tile"
+    },
+    {
+      "id": "elite_formation_barrens_2",
+      "name": "Kamp Siluman Elite Formation Barrens #2",
+      "type": "elite_camp",
+      "regionId": "formation_barrens",
+      "dangerTier": 3,
+      "x": 3782,
+      "y": 2347,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "formation_tile"
+    },
+    {
+      "id": "elite_formation_barrens_3",
+      "name": "Kamp Siluman Elite Formation Barrens #3",
+      "type": "elite_camp",
+      "regionId": "formation_barrens",
+      "dangerTier": 3,
+      "x": 3620,
+      "y": 2395,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "formation_tile"
+    },
+    {
+      "id": "elite_sword_gorge_1",
+      "name": "Kamp Siluman Elite Sword Gorge #1",
+      "type": "elite_camp",
+      "regionId": "sword_gorge",
+      "dangerTier": 4,
+      "x": 3267,
+      "y": 3091,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "canyon_floor"
+    },
+    {
+      "id": "elite_sword_gorge_2",
+      "name": "Kamp Siluman Elite Sword Gorge #2",
+      "type": "elite_camp",
+      "regionId": "sword_gorge",
+      "dangerTier": 4,
+      "x": 3519,
+      "y": 3079,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "canyon_floor"
+    },
+    {
+      "id": "elite_sword_gorge_3",
+      "name": "Kamp Siluman Elite Sword Gorge #3",
+      "type": "elite_camp",
+      "regionId": "sword_gorge",
+      "dangerTier": 4,
+      "x": 3339,
+      "y": 3079,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "canyon_floor"
+    },
+    {
+      "id": "elite_ore_teeth_range_1",
+      "name": "Kamp Siluman Elite Ore Teeth Range #1",
+      "type": "elite_camp",
+      "regionId": "ore_teeth_range",
+      "dangerTier": 3,
+      "x": 3491,
+      "y": 2635,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elite_ore_teeth_range_2",
+      "name": "Kamp Siluman Elite Ore Teeth Range #2",
+      "type": "elite_camp",
+      "regionId": "ore_teeth_range",
+      "dangerTier": 3,
+      "x": 3755,
+      "y": 2995,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elite_ore_teeth_range_3",
+      "name": "Kamp Siluman Elite Ore Teeth Range #3",
+      "type": "elite_camp",
+      "regionId": "ore_teeth_range",
+      "dangerTier": 3,
+      "x": 3623,
+      "y": 3079,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elite_eastern_sea_1",
+      "name": "Kamp Siluman Elite Eastern Sea #1",
+      "type": "elite_camp",
+      "regionId": "eastern_sea",
+      "dangerTier": 3,
+      "x": 4563,
+      "y": 1831,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "island_reef"
+    },
+    {
+      "id": "elite_eastern_sea_2",
+      "name": "Kamp Siluman Elite Eastern Sea #2",
+      "type": "elite_camp",
+      "regionId": "eastern_sea",
+      "dangerTier": 3,
+      "x": 3939,
+      "y": 2908,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "island_reef"
+    },
+    {
+      "id": "elite_eastern_sea_3",
+      "name": "Kamp Siluman Elite Eastern Sea #3",
+      "type": "elite_camp",
+      "regionId": "eastern_sea",
+      "dangerTier": 3,
+      "x": 3925,
+      "y": 2752,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "island_reef"
+    },
+    {
+      "id": "elite_frostmoon_sea_1",
+      "name": "Kamp Siluman Elite Frostmoon Sea #1",
+      "type": "elite_camp",
+      "regionId": "frostmoon_sea",
+      "dangerTier": 4,
+      "x": 3999,
+      "y": 4127,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "island_reef"
+    },
+    {
+      "id": "elite_frostmoon_sea_2",
+      "name": "Kamp Siluman Elite Frostmoon Sea #2",
+      "type": "elite_camp",
+      "regionId": "frostmoon_sea",
+      "dangerTier": 4,
+      "x": 4503,
+      "y": 4259,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "island_reef"
+    },
+    {
+      "id": "elite_frostmoon_sea_3",
+      "name": "Kamp Siluman Elite Frostmoon Sea #3",
+      "type": "elite_camp",
+      "regionId": "frostmoon_sea",
+      "dangerTier": 4,
+      "x": 4335,
+      "y": 4271,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "island_reef"
+    },
+    {
+      "id": "elite_floating_wind_isles_1",
+      "name": "Kamp Siluman Elite Floating Wind Isles #1",
+      "type": "elite_camp",
+      "regionId": "floating_wind_isles",
+      "dangerTier": 5,
+      "x": 4363,
+      "y": 2495,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "island_reef"
+    },
+    {
+      "id": "elite_floating_wind_isles_2",
+      "name": "Kamp Siluman Elite Floating Wind Isles #2",
+      "type": "elite_camp",
+      "regionId": "floating_wind_isles",
+      "dangerTier": 5,
+      "x": 4831,
+      "y": 2951,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "island_reef"
+    },
+    {
+      "id": "elite_floating_wind_isles_3",
+      "name": "Kamp Siluman Elite Floating Wind Isles #3",
+      "type": "elite_camp",
+      "regionId": "floating_wind_isles",
+      "dangerTier": 5,
+      "x": 4603,
+      "y": 3035,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "island_reef"
+    },
+    {
+      "id": "elite_immortal_ruins_valley_1",
+      "name": "Kamp Siluman Elite Immortal Ruins Valley #1",
+      "type": "elite_camp",
+      "regionId": "immortal_ruins_valley",
+      "dangerTier": 4,
+      "x": 363,
+      "y": 795,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elite_immortal_ruins_valley_2",
+      "name": "Kamp Siluman Elite Immortal Ruins Valley #2",
+      "type": "elite_camp",
+      "regionId": "immortal_ruins_valley",
+      "dangerTier": 4,
+      "x": 843,
+      "y": 1251,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elite_immortal_ruins_valley_3",
+      "name": "Kamp Siluman Elite Immortal Ruins Valley #3",
+      "type": "elite_camp",
+      "regionId": "immortal_ruins_valley",
+      "dangerTier": 4,
+      "x": 603,
+      "y": 1347,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "formation_tile"
+    },
+    {
+      "id": "elite_void_rift_1",
+      "name": "Kamp Siluman Elite Void Rift #1",
+      "type": "elite_camp",
+      "regionId": "void_rift",
+      "dangerTier": 6,
+      "x": 307,
+      "y": 4687,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "elite_void_rift_2",
+      "name": "Kamp Siluman Elite Void Rift #2",
+      "type": "elite_camp",
+      "regionId": "void_rift",
+      "dangerTier": 6,
+      "x": 379,
+      "y": 4843,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "elite_void_rift_3",
+      "name": "Kamp Siluman Elite Void Rift #3",
+      "type": "elite_camp",
+      "regionId": "void_rift",
+      "dangerTier": 6,
+      "x": 355,
+      "y": 4783,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 5
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "boss_lair_azure_mountain_range",
+      "name": "Sarang Siluman Raja Azure Mountain Range",
+      "type": "world_boss_lair",
+      "regionId": "azure_mountain_range",
+      "dangerTier": 3,
+      "requiredRealmIndex": 2,
+      "x": 2599,
+      "y": 3349,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "mountain_pass"
+    },
+    {
+      "id": "boss_lair_northern_desolate",
+      "name": "Sarang Siluman Raja Northern Desolate",
+      "type": "world_boss_lair",
+      "regionId": "northern_desolate",
+      "dangerTier": 4,
+      "requiredRealmIndex": 3,
+      "x": 1799,
+      "y": 4231,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "snow"
+    },
+    {
+      "id": "boss_lair_thundersteppe",
+      "name": "Sarang Siluman Raja Thundersteppe",
+      "type": "world_boss_lair",
+      "regionId": "thundersteppe",
+      "dangerTier": 4,
+      "requiredRealmIndex": 3,
+      "x": 2171,
+      "y": 3843,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "ice_crack"
+    },
+    {
+      "id": "boss_lair_godthunder_peaks",
+      "name": "Sarang Siluman Raja Godthunder Peaks",
+      "type": "world_boss_lair",
+      "regionId": "godthunder_peaks",
+      "dangerTier": 5,
+      "requiredRealmIndex": 4,
+      "x": 3255,
+      "y": 4415,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "boss_lair_mirror_lake",
+      "name": "Sarang Siluman Raja Mirror Lake",
+      "type": "world_boss_lair",
+      "regionId": "mirror_lake",
+      "dangerTier": 2,
+      "requiredRealmIndex": 1,
+      "x": 3095,
+      "y": 3674,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "river_shallow"
+    },
+    {
+      "id": "boss_lair_beast_prairies",
+      "name": "Sarang Siluman Raja Beast Prairies",
+      "type": "world_boss_lair",
+      "regionId": "beast_prairies",
+      "dangerTier": 3,
+      "requiredRealmIndex": 2,
+      "x": 1411,
+      "y": 3797,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "mountain"
+    },
+    {
+      "id": "boss_lair_western_sacred_desert",
+      "name": "Sarang Siluman Raja Western Sacred Desert",
+      "type": "world_boss_lair",
+      "regionId": "western_sacred_desert",
+      "dangerTier": 3,
+      "requiredRealmIndex": 2,
+      "x": 751,
+      "y": 2503,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "desert_sand"
+    },
+    {
+      "id": "boss_lair_western_gorge_labyrinth",
+      "name": "Sarang Siluman Raja Western Gorge Labyrinth",
+      "type": "world_boss_lair",
+      "regionId": "western_gorge_labyrinth",
+      "dangerTier": 4,
+      "requiredRealmIndex": 3,
+      "x": 499,
+      "y": 1499,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "canyon_floor"
+    },
+    {
+      "id": "boss_lair_hermit_highlands",
+      "name": "Sarang Siluman Raja Hermit Highlands",
+      "type": "world_boss_lair",
+      "regionId": "hermit_highlands",
+      "dangerTier": 2,
+      "requiredRealmIndex": 1,
+      "x": 1203,
+      "y": 4403,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "boss_lair_border_march",
+      "name": "Sarang Siluman Raja Border March",
+      "type": "world_boss_lair",
+      "regionId": "border_march",
+      "dangerTier": 2,
+      "requiredRealmIndex": 1,
+      "x": 2815,
+      "y": 1927,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "boss_lair_lava_spine",
+      "name": "Sarang Siluman Raja Lava Spine",
+      "type": "world_boss_lair",
+      "regionId": "lava_spine",
+      "dangerTier": 5,
+      "requiredRealmIndex": 4,
+      "x": 1099,
+      "y": 291,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "boss_lair_venom_mire",
+      "name": "Sarang Siluman Raja Venom Mire",
+      "type": "world_boss_lair",
+      "regionId": "venom_mire",
+      "dangerTier": 4,
+      "requiredRealmIndex": 3,
+      "x": 2603,
+      "y": 1007,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "dead_wood"
+    },
+    {
+      "id": "boss_lair_southern_demon_domain",
+      "name": "Sarang Siluman Raja Southern Demon Domain",
+      "type": "world_boss_lair",
+      "regionId": "southern_demon_domain",
+      "dangerTier": 4,
+      "requiredRealmIndex": 3,
+      "x": 2191,
+      "y": 1195,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "dead_wood"
+    },
+    {
+      "id": "boss_lair_crimson_battlefield",
+      "name": "Sarang Siluman Raja Crimson Battlefield",
+      "type": "world_boss_lair",
+      "regionId": "crimson_battlefield",
+      "dangerTier": 5,
+      "requiredRealmIndex": 4,
+      "x": 2899,
+      "y": 603,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "battlefield_ash"
+    },
+    {
+      "id": "boss_lair_abyssal_scar",
+      "name": "Sarang Siluman Raja Abyssal Scar",
+      "type": "world_boss_lair",
+      "regionId": "abyssal_scar",
+      "dangerTier": 5,
+      "requiredRealmIndex": 4,
+      "x": 1895,
+      "y": 603,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "boss_lair_southern_plague_woods",
+      "name": "Sarang Siluman Raja Southern Plague Woods",
+      "type": "world_boss_lair",
+      "regionId": "southern_plague_woods",
+      "dangerTier": 4,
+      "requiredRealmIndex": 3,
+      "x": 3415,
+      "y": 543,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "swamp"
+    },
+    {
+      "id": "boss_lair_bone_sea_coast",
+      "name": "Sarang Siluman Raja Bone Sea Coast",
+      "type": "world_boss_lair",
+      "regionId": "bone_sea_coast",
+      "dangerTier": 3,
+      "requiredRealmIndex": 2,
+      "x": 1747,
+      "y": 151,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "desert_sand"
+    },
+    {
+      "id": "boss_lair_spirit_wood_sea",
+      "name": "Sarang Siluman Raja Spirit Wood Sea",
+      "type": "world_boss_lair",
+      "regionId": "spirit_wood_sea",
+      "dangerTier": 3,
+      "requiredRealmIndex": 2,
+      "x": 3699,
+      "y": 1299,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "boss_lair_mist_insect_valley",
+      "name": "Sarang Siluman Raja Mist Insect Valley",
+      "type": "world_boss_lair",
+      "regionId": "mist_insect_valley",
+      "dangerTier": 4,
+      "requiredRealmIndex": 3,
+      "x": 4378,
+      "y": 1118,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "boss_lair_formation_barrens",
+      "name": "Sarang Siluman Raja Formation Barrens",
+      "type": "world_boss_lair",
+      "regionId": "formation_barrens",
+      "dangerTier": 3,
+      "requiredRealmIndex": 2,
+      "x": 3541,
+      "y": 2262,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "formation_tile"
+    },
+    {
+      "id": "boss_lair_sword_gorge",
+      "name": "Sarang Siluman Raja Sword Gorge",
+      "type": "world_boss_lair",
+      "regionId": "sword_gorge",
+      "dangerTier": 4,
+      "requiredRealmIndex": 3,
+      "x": 3399,
+      "y": 3079,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "canyon_floor"
+    },
+    {
+      "id": "boss_lair_ore_teeth_range",
+      "name": "Sarang Siluman Raja Ore Teeth Range",
+      "type": "world_boss_lair",
+      "regionId": "ore_teeth_range",
+      "dangerTier": 3,
+      "requiredRealmIndex": 2,
+      "x": 3623,
+      "y": 2803,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "boss_lair_eastern_sea",
+      "name": "Sarang Siluman Raja Eastern Sea",
+      "type": "world_boss_lair",
+      "regionId": "eastern_sea",
+      "dangerTier": 3,
+      "requiredRealmIndex": 2,
+      "x": 3939,
+      "y": 2599,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "island_reef"
+    },
+    {
+      "id": "boss_lair_frostmoon_sea",
+      "name": "Sarang Siluman Raja Frostmoon Sea",
+      "type": "world_boss_lair",
+      "regionId": "frostmoon_sea",
+      "dangerTier": 4,
+      "requiredRealmIndex": 3,
+      "x": 4395,
+      "y": 4283,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "island_reef"
+    },
+    {
+      "id": "boss_lair_floating_wind_isles",
+      "name": "Sarang Siluman Raja Floating Wind Isles",
+      "type": "world_boss_lair",
+      "regionId": "floating_wind_isles",
+      "dangerTier": 5,
+      "requiredRealmIndex": 4,
+      "x": 4603,
+      "y": 2699,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "island_reef"
+    },
+    {
+      "id": "boss_lair_immortal_ruins_valley",
+      "name": "Sarang Siluman Raja Immortal Ruins Valley",
+      "type": "world_boss_lair",
+      "regionId": "immortal_ruins_valley",
+      "dangerTier": 4,
+      "requiredRealmIndex": 3,
+      "x": 579,
+      "y": 999,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "formation_tile"
+    },
+    {
+      "id": "boss_lair_void_rift",
+      "name": "Sarang Siluman Raja Void Rift",
+      "type": "world_boss_lair",
+      "regionId": "void_rift",
+      "dangerTier": 6,
+      "requiredRealmIndex": 5,
+      "x": 307,
+      "y": 4747,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 10
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "elemental_api_ore_teeth_range",
+      "name": "Tanah Api Berkobar (Forge Fire Land)",
+      "type": "elemental_land",
+      "element": "api",
+      "lawAffinity": "natal_artifact",
+      "regionId": "ore_teeth_range",
+      "dangerTier": 3,
+      "x": 3487,
+      "y": 2907,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 8
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "elemental_air_mirror_lake",
+      "name": "Danau Cermin Suci (Azure Water Land)",
+      "type": "elemental_land",
+      "element": "air",
+      "lawAffinity": "element_azure_water",
+      "regionId": "mirror_lake",
+      "dangerTier": 2,
+      "x": 3727,
+      "y": 3864,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 8
+      },
+      "terrain": "river_shallow"
+    },
+    {
+      "id": "elemental_kayu_spirit_wood_sea",
+      "name": "Rimba Roh Hayat (Qingdi Wood Land)",
+      "type": "elemental_land",
+      "element": "kayu",
+      "lawAffinity": "element_qingdi_wood",
+      "regionId": "spirit_wood_sea",
+      "dangerTier": 3,
+      "x": 3600,
+      "y": 1227,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 8
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "elemental_logam_sword_gorge",
+      "name": "Lembah Pedang Logam (Sword Metal Land)",
+      "type": "elemental_land",
+      "element": "logam",
+      "lawAffinity": "righteous_sword_heart",
+      "regionId": "sword_gorge",
+      "dangerTier": 4,
+      "x": 3544,
+      "y": 3046,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 8
+      },
+      "terrain": "canyon_floor"
+    },
+    {
+      "id": "elemental_tanah_formation_barrens",
+      "name": "Gurun Formasi Runic (Array Earth Land)",
+      "type": "elemental_land",
+      "element": "tanah",
+      "lawAffinity": "righteous_formation_array",
+      "regionId": "formation_barrens",
+      "dangerTier": 3,
+      "x": 3926,
+      "y": 2371,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "stamina": 8
+      },
+      "terrain": "plains"
+    },
+    {
+      "id": "spirit_valley_godthunder_peaks_1",
+      "name": "Lembah Intisari Roh Godthunder Peaks #1",
+      "type": "spirit_valley",
+      "regionId": "godthunder_peaks",
+      "dangerTier": 5,
+      "x": 3423,
+      "y": 4949,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "spirit_valley_godthunder_peaks_2",
+      "name": "Lembah Intisari Roh Godthunder Peaks #2",
+      "type": "spirit_valley",
+      "regionId": "godthunder_peaks",
+      "dangerTier": 5,
+      "x": 3517,
+      "y": 4963,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "spirit_valley_mirror_lake_1",
+      "name": "Lembah Intisari Roh Mirror Lake #1",
+      "type": "spirit_valley",
+      "regionId": "mirror_lake",
+      "dangerTier": 2,
+      "x": 3711,
+      "y": 3704,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "river_shallow"
+    },
+    {
+      "id": "spirit_valley_mirror_lake_2",
+      "name": "Lembah Intisari Roh Mirror Lake #2",
+      "type": "spirit_valley",
+      "regionId": "mirror_lake",
+      "dangerTier": 2,
+      "x": 3701,
+      "y": 3630,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "meadow"
+    },
+    {
+      "id": "spirit_valley_beast_prairies_1",
+      "name": "Lembah Intisari Roh Beast Prairies #1",
+      "type": "spirit_valley",
+      "regionId": "beast_prairies",
+      "dangerTier": 3,
+      "x": 1692,
+      "y": 3611,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "spirit_valley_beast_prairies_2",
+      "name": "Lembah Intisari Roh Beast Prairies #2",
+      "type": "spirit_valley",
+      "regionId": "beast_prairies",
+      "dangerTier": 3,
+      "x": 1046,
+      "y": 3616,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "plains"
+    },
+    {
+      "id": "spirit_valley_western_gorge_labyrinth_1",
+      "name": "Lembah Intisari Roh Western Gorge Labyrinth #1",
+      "type": "spirit_valley",
+      "regionId": "western_gorge_labyrinth",
+      "dangerTier": 4,
+      "x": 357,
+      "y": 1920,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "canyon_floor"
+    },
+    {
+      "id": "spirit_valley_western_gorge_labyrinth_2",
+      "name": "Lembah Intisari Roh Western Gorge Labyrinth #2",
+      "type": "spirit_valley",
+      "regionId": "western_gorge_labyrinth",
+      "dangerTier": 4,
+      "x": 703,
+      "y": 1961,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "canyon_floor"
+    },
+    {
+      "id": "spirit_valley_lava_spine_1",
+      "name": "Lembah Intisari Roh Lava Spine #1",
+      "type": "spirit_valley",
+      "regionId": "lava_spine",
+      "dangerTier": 5,
+      "x": 1278,
+      "y": 296,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "basalt"
+    },
+    {
+      "id": "spirit_valley_lava_spine_2",
+      "name": "Lembah Intisari Roh Lava Spine #2",
+      "type": "spirit_valley",
+      "regionId": "lava_spine",
+      "dangerTier": 5,
+      "x": 1557,
+      "y": 851,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "basalt"
+    },
+    {
+      "id": "spirit_valley_venom_mire_1",
+      "name": "Lembah Intisari Roh Venom Mire #1",
+      "type": "spirit_valley",
+      "regionId": "venom_mire",
+      "dangerTier": 4,
+      "x": 2797,
+      "y": 1286,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "swamp"
+    },
+    {
+      "id": "spirit_valley_venom_mire_2",
+      "name": "Lembah Intisari Roh Venom Mire #2",
+      "type": "spirit_valley",
+      "regionId": "venom_mire",
+      "dangerTier": 4,
+      "x": 2471,
+      "y": 1000,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "dead_wood"
+    },
+    {
+      "id": "spirit_valley_abyssal_scar_1",
+      "name": "Lembah Intisari Roh Abyssal Scar #1",
+      "type": "spirit_valley",
+      "regionId": "abyssal_scar",
+      "dangerTier": 5,
+      "x": 2154,
+      "y": 247,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "spirit_valley_abyssal_scar_2",
+      "name": "Lembah Intisari Roh Abyssal Scar #2",
+      "type": "spirit_valley",
+      "regionId": "abyssal_scar",
+      "dangerTier": 5,
+      "x": 2061,
+      "y": 902,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "spirit_valley_southern_plague_woods_1",
+      "name": "Lembah Intisari Roh Southern Plague Woods #1",
+      "type": "spirit_valley",
+      "regionId": "southern_plague_woods",
+      "dangerTier": 4,
+      "x": 3507,
+      "y": 523,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "dead_wood"
+    },
+    {
+      "id": "spirit_valley_southern_plague_woods_2",
+      "name": "Lembah Intisari Roh Southern Plague Woods #2",
+      "type": "spirit_valley",
+      "regionId": "southern_plague_woods",
+      "dangerTier": 4,
+      "x": 3655,
+      "y": 786,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "swamp"
+    },
+    {
+      "id": "spirit_valley_bone_sea_coast_1",
+      "name": "Lembah Intisari Roh Bone Sea Coast #1",
+      "type": "spirit_valley",
+      "regionId": "bone_sea_coast",
+      "dangerTier": 3,
+      "x": 1397,
+      "y": 45,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "desert_sand"
+    },
+    {
+      "id": "spirit_valley_bone_sea_coast_2",
+      "name": "Lembah Intisari Roh Bone Sea Coast #2",
+      "type": "spirit_valley",
+      "regionId": "bone_sea_coast",
+      "dangerTier": 3,
+      "x": 1039,
+      "y": 178,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "desert_sand"
+    },
+    {
+      "id": "spirit_valley_spirit_wood_sea_1",
+      "name": "Lembah Intisari Roh Spirit Wood Sea #1",
+      "type": "spirit_valley",
+      "regionId": "spirit_wood_sea",
+      "dangerTier": 3,
+      "x": 3255,
+      "y": 1501,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "spirit_valley_spirit_wood_sea_2",
+      "name": "Lembah Intisari Roh Spirit Wood Sea #2",
+      "type": "spirit_valley",
+      "regionId": "spirit_wood_sea",
+      "dangerTier": 3,
+      "x": 3616,
+      "y": 1719,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "spirit_wood"
+    },
+    {
+      "id": "spirit_valley_mist_insect_valley_1",
+      "name": "Lembah Intisari Roh Mist Insect Valley #1",
+      "type": "spirit_valley",
+      "regionId": "mist_insect_valley",
+      "dangerTier": 4,
+      "x": 4494,
+      "y": 1118,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "plains"
+    },
+    {
+      "id": "spirit_valley_mist_insect_valley_2",
+      "name": "Lembah Intisari Roh Mist Insect Valley #2",
+      "type": "spirit_valley",
+      "regionId": "mist_insect_valley",
+      "dangerTier": 4,
+      "x": 4280,
+      "y": 1389,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "plains"
+    },
+    {
+      "id": "spirit_valley_formation_barrens_1",
+      "name": "Lembah Intisari Roh Formation Barrens #1",
+      "type": "spirit_valley",
+      "regionId": "formation_barrens",
+      "dangerTier": 3,
+      "x": 3931,
+      "y": 2040,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "formation_tile"
+    },
+    {
+      "id": "spirit_valley_formation_barrens_2",
+      "name": "Lembah Intisari Roh Formation Barrens #2",
+      "type": "spirit_valley",
+      "regionId": "formation_barrens",
+      "dangerTier": 3,
+      "x": 3618,
+      "y": 2335,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "plains"
+    },
+    {
+      "id": "spirit_valley_immortal_ruins_valley_1",
+      "name": "Lembah Intisari Roh Immortal Ruins Valley #1",
+      "type": "spirit_valley",
+      "regionId": "immortal_ruins_valley",
+      "dangerTier": 4,
+      "x": 836,
+      "y": 1298,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "spirit_valley_immortal_ruins_valley_2",
+      "name": "Lembah Intisari Roh Immortal Ruins Valley #2",
+      "type": "spirit_valley",
+      "regionId": "immortal_ruins_valley",
+      "dangerTier": 4,
+      "x": 876,
+      "y": 1390,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "item": "item_spirit_key",
+        "stamina": 10,
+        "cooldownDays": 5
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "land_of_spirits_central_plains",
+      "name": "Tanah Warisan Roh Leluhur #1 (Central Plains)",
+      "type": "land_of_spirits",
+      "regionId": "central_plains",
+      "dangerTier": 1,
+      "x": 2882,
+      "y": 2667,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritStones": 500,
+        "stamina": 10
+      },
+      "terrain": "plains"
+    },
+    {
+      "id": "land_of_spirits_nine_springs_delta",
+      "name": "Tanah Warisan Roh Leluhur #2 (Nine Springs Delta)",
+      "type": "land_of_spirits",
+      "regionId": "nine_springs_delta",
+      "dangerTier": 1,
+      "x": 2470,
+      "y": 2487,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritStones": 500,
+        "stamina": 10
+      },
+      "terrain": "meadow"
+    },
+    {
+      "id": "land_of_spirits_hermit_highlands",
+      "name": "Tanah Warisan Roh Leluhur #3 (Hermit Highlands)",
+      "type": "land_of_spirits",
+      "regionId": "hermit_highlands",
+      "dangerTier": 2,
+      "x": 995,
+      "y": 4692,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritStones": 500,
+        "stamina": 10
+      },
+      "terrain": "hill"
+    },
+    {
+      "id": "defense_circle_godthunder_peaks_1",
+      "name": "Lingkaran Segel Bertahan Godthunder Peaks #1",
+      "type": "defense_circle",
+      "regionId": "godthunder_peaks",
+      "dangerTier": 5,
+      "x": 3395,
+      "y": 4927,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "defense_circle_godthunder_peaks_2",
+      "name": "Lingkaran Segel Bertahan Godthunder Peaks #2",
+      "type": "defense_circle",
+      "regionId": "godthunder_peaks",
+      "dangerTier": 5,
+      "x": 3613,
+      "y": 4937,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "defense_circle_godthunder_peaks_3",
+      "name": "Lingkaran Segel Bertahan Godthunder Peaks #3",
+      "type": "defense_circle",
+      "regionId": "godthunder_peaks",
+      "dangerTier": 5,
+      "x": 3662,
+      "y": 4956,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "defense_circle_beast_prairies_1",
+      "name": "Lingkaran Segel Bertahan Beast Prairies #1",
+      "type": "defense_circle",
+      "regionId": "beast_prairies",
+      "dangerTier": 3,
+      "x": 1299,
+      "y": 3825,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "plains"
+    },
+    {
+      "id": "defense_circle_beast_prairies_2",
+      "name": "Lingkaran Segel Bertahan Beast Prairies #2",
+      "type": "defense_circle",
+      "regionId": "beast_prairies",
+      "dangerTier": 3,
+      "x": 1477,
+      "y": 3700,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "plains"
+    },
+    {
+      "id": "defense_circle_beast_prairies_3",
+      "name": "Lingkaran Segel Bertahan Beast Prairies #3",
+      "type": "defense_circle",
+      "regionId": "beast_prairies",
+      "dangerTier": 3,
+      "x": 1308,
+      "y": 3631,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "defense_circle_lava_spine_1",
+      "name": "Lingkaran Segel Bertahan Lava Spine #1",
+      "type": "defense_circle",
+      "regionId": "lava_spine",
+      "dangerTier": 5,
+      "x": 645,
+      "y": 819,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "defense_circle_lava_spine_2",
+      "name": "Lingkaran Segel Bertahan Lava Spine #2",
+      "type": "defense_circle",
+      "regionId": "lava_spine",
+      "dangerTier": 5,
+      "x": 1531,
+      "y": 984,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "crater"
+    },
+    {
+      "id": "defense_circle_lava_spine_3",
+      "name": "Lingkaran Segel Bertahan Lava Spine #3",
+      "type": "defense_circle",
+      "regionId": "lava_spine",
+      "dangerTier": 5,
+      "x": 1552,
+      "y": 660,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "basalt"
+    },
+    {
+      "id": "defense_circle_venom_mire_1",
+      "name": "Lingkaran Segel Bertahan Venom Mire #1",
+      "type": "defense_circle",
+      "regionId": "venom_mire",
+      "dangerTier": 4,
+      "x": 2326,
+      "y": 840,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "swamp"
+    },
+    {
+      "id": "defense_circle_venom_mire_2",
+      "name": "Lingkaran Segel Bertahan Venom Mire #2",
+      "type": "defense_circle",
+      "regionId": "venom_mire",
+      "dangerTier": 4,
+      "x": 2256,
+      "y": 712,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "swamp"
+    },
+    {
+      "id": "defense_circle_venom_mire_3",
+      "name": "Lingkaran Segel Bertahan Venom Mire #3",
+      "type": "defense_circle",
+      "regionId": "venom_mire",
+      "dangerTier": 4,
+      "x": 2852,
+      "y": 1069,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "swamp"
+    },
+    {
+      "id": "defense_circle_abyssal_scar_1",
+      "name": "Lingkaran Segel Bertahan Abyssal Scar #1",
+      "type": "defense_circle",
+      "regionId": "abyssal_scar",
+      "dangerTier": 5,
+      "x": 1694,
+      "y": 580,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "defense_circle_abyssal_scar_2",
+      "name": "Lingkaran Segel Bertahan Abyssal Scar #2",
+      "type": "defense_circle",
+      "regionId": "abyssal_scar",
+      "dangerTier": 5,
+      "x": 2112,
+      "y": 478,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "defense_circle_abyssal_scar_3",
+      "name": "Lingkaran Segel Bertahan Abyssal Scar #3",
+      "type": "defense_circle",
+      "regionId": "abyssal_scar",
+      "dangerTier": 5,
+      "x": 1720,
+      "y": 338,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "miasma_waste"
+    },
+    {
+      "id": "defense_circle_spirit_wood_sea_1",
+      "name": "Lingkaran Segel Bertahan Spirit Wood Sea #1",
+      "type": "defense_circle",
+      "regionId": "spirit_wood_sea",
+      "dangerTier": 3,
+      "x": 3941,
+      "y": 1314,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "spirit_wood"
+    },
+    {
+      "id": "defense_circle_spirit_wood_sea_2",
+      "name": "Lingkaran Segel Bertahan Spirit Wood Sea #2",
+      "type": "defense_circle",
+      "regionId": "spirit_wood_sea",
+      "dangerTier": 3,
+      "x": 3268,
+      "y": 1709,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "defense_circle_spirit_wood_sea_3",
+      "name": "Lingkaran Segel Bertahan Spirit Wood Sea #3",
+      "type": "defense_circle",
+      "regionId": "spirit_wood_sea",
+      "dangerTier": 3,
+      "x": 3406,
+      "y": 1254,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "forest"
+    },
+    {
+      "id": "defense_circle_formation_barrens_1",
+      "name": "Lingkaran Segel Bertahan Formation Barrens #1",
+      "type": "defense_circle",
+      "regionId": "formation_barrens",
+      "dangerTier": 3,
+      "x": 3581,
+      "y": 2116,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "plains"
+    },
+    {
+      "id": "defense_circle_formation_barrens_2",
+      "name": "Lingkaran Segel Bertahan Formation Barrens #2",
+      "type": "defense_circle",
+      "regionId": "formation_barrens",
+      "dangerTier": 3,
+      "x": 3782,
+      "y": 1916,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "plains"
+    },
+    {
+      "id": "defense_circle_formation_barrens_3",
+      "name": "Lingkaran Segel Bertahan Formation Barrens #3",
+      "type": "defense_circle",
+      "regionId": "formation_barrens",
+      "dangerTier": 3,
+      "x": 3399,
+      "y": 2372,
+      "w": 3,
+      "h": 3,
+      "entryCost": {
+        "spiritFruits": 3,
+        "stamina": 10
+      },
+      "terrain": "plains"
+    }
+  ]
+}

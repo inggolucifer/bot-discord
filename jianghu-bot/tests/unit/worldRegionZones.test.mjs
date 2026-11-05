@@ -204,4 +204,95 @@ describe('V23 G1 — Perbaikan Data Dunia, Jalan Aman, dan Travel Graph 52 Ancho
       expect(zoneConfig.borderGradation.bandWidth).toBe(24);
     });
   });
+
+  describe('V23 G3 — Tabel Risiko Dinamis & Generator Tata Letak Zona (Z8, Invariance)', () => {
+    const zonesData = require('../../world-data/zones-v23.json');
+    const zoneList = zonesData.zones;
+
+    it('Z8.1: zones-v23.json memuat 169 zona tetap dengan tipe terdefinisi lengkap', () => {
+      expect(zoneList.length).toBe(169);
+      expect(zonesData.summary.elite_camp).toBe(87);
+      expect(zonesData.summary.world_boss_lair).toBe(27);
+      expect(zonesData.summary.elemental_land).toBe(5);
+      expect(zonesData.summary.spirit_valley).toBe(26);
+      expect(zonesData.summary.land_of_spirits).toBe(3);
+      expect(zonesData.summary.defense_circle).toBe(21);
+    });
+
+    it('Z8.2: Seluruh zona tetap berada di luar radius eksklusi pemukiman', () => {
+      for (const z of zoneList) {
+        for (const anc of anchors) {
+          const excl = anc.v20?.exclusionRadius || 10;
+          const dCheb = Math.max(Math.abs(z.x - anc.x), Math.abs(z.y - anc.y));
+          expect(dCheb).toBeGreaterThanOrEqual(excl);
+        }
+      }
+    });
+
+    it('Z8.3: Tidak ada zona tetap yang saling tumpang tindih secara spasial (AABB)', () => {
+      for (let i = 0; i < zoneList.length; i++) {
+        const z1 = zoneList[i];
+        for (let j = i + 1; j < zoneList.length; j++) {
+          const z2 = zoneList[j];
+          const overlapX = (z1.x < z2.x + z2.w) && (z1.x + z1.w > z2.x);
+          const overlapY = (z1.y < z2.y + z2.h) && (z1.y + z1.h > z2.y);
+          expect(overlapX && overlapY).toBe(false);
+        }
+      }
+    });
+
+    it('Z8.4: Seluruh zona memiliki objek entryCost yang valid', () => {
+      for (const z of zoneList) {
+        expect(z.entryCost).toBeDefined();
+        expect(typeof z.entryCost).toBe('object');
+        expect(z.entryCost.stamina).toBeGreaterThan(0);
+      }
+    });
+
+    it('G3.1: Tabel risiko terbuka (plains) memiliki ambush bertingkat sesuai tier bahaya', () => {
+      // Tier 1: 0, Tier 2: 0.04, Tier 3: 0.08, Tier 4: 0.15, Tier 5: 0.25, Tier 6: 0.35
+      const expectedRates = { 1: 0, 2: 0.04, 3: 0.08, 4: 0.15, 5: 0.25, 6: 0.35 };
+      for (const [tStr, rate] of Object.entries(expectedRates)) {
+        const t = parseInt(tStr);
+        const reg = regions.find(r => r.dangerTier === t);
+        expect(reg).toBeDefined();
+        const cx = Math.round((reg.bounds.minX + reg.bounds.maxX) / 2);
+        const cy = Math.round((reg.bounds.minY + reg.bounds.maxY) / 2);
+        const tInfo = worldRegionEngine.getTerritoryInfo(cx, cy, 'plains', false);
+        expect(tInfo.ambushRiskRate).toBe(rate);
+      }
+    });
+
+    it('G3.2: Tier 1 Invariance — 2.000 titik sampel seed 1618 di central_plains & nine_springs_delta 100% aman pada open terrain', () => {
+      function Mulberry32(seed) {
+        return function() {
+          let t = seed += 0x6D2B79F5;
+          t = Math.imul(t ^ (t >>> 15), t | 1);
+          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const rng = Mulberry32(1618);
+      const t1Regions = regions.filter(r => r.dangerTier === 1);
+
+      let safeChecked = 0;
+      for (const reg of t1Regions) {
+        for (let i = 0; i < 1000; i++) {
+          const x = Math.floor(reg.bounds.minX + rng() * (reg.bounds.maxX - reg.bounds.minX));
+          const y = Math.floor(reg.bounds.minY + rng() * (reg.bounds.maxY - reg.bounds.minY));
+          const actualReg = worldRegionEngine.getRegionAt(x, y);
+          if (actualReg.id !== reg.id) continue;
+
+          const tile = proceduralWorldEngine.getTileAt(x, y);
+          const info = worldRegionEngine.getTerritoryInfo(x, y, tile.terrainType, false);
+          if (['plains', 'meadow', 'farmland', 'herb_field', 'road', 'road_stone', 'road_dirt'].includes(tile.terrainType)) {
+            safeChecked++;
+            expect(info.ambushRiskRate).toBe(0);
+            expect(info.type).toBe('safe_zone');
+          }
+        }
+      }
+      expect(safeChecked).toBeGreaterThan(1500);
+    });
+  });
 });
