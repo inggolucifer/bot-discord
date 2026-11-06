@@ -169,119 +169,122 @@ router.post('/enter', authenticateToken, async (req, res) => {
       });
     }
 
-    // 4. Periksa Sesi yang Sedang Berjalan (Resume jika zona sama, tolak jika zona berbeda)
-    const existingSession = await InstancedZoneSession.findOne({
-      playerId: player._id,
-      status: { $in: ['active', 'completed'] }
-    });
+    // 4. Periksa Sesi & Kunci Konkurensi Ekspedisi (V26 M5)
+    const releaseLock = await LockManager.acquire(`instanced_enter_${player._id}`);
+    if (!releaseLock) return res.status(429).json({ success: false, error: 'Permintaan sedang diproses. Coba lagi sebentar.' });
 
-    if (existingSession) {
-      if (existingSession.zoneId === zone.id) {
-        return res.json({
-          success: true,
-          message: 'Melanjutkan ekspedisi yang sedang berjalan.',
-          session: formatSessionResponse(existingSession)
-        });
-      } else {
-        return res.status(400).json({
-          success: false,
-          error: 'Anda masih memiliki ekspedisi aktif di zona lain. Selesaikan atau batalkan terlebih dahulu.'
-        });
-      }
-    }
+    try {
+      // 4a. Periksa Sesi yang Sedang Berjalan (Resume jika zona sama, tolak jika zona berbeda)
+      const existingSession = await InstancedZoneSession.findOne({
+        playerId: player._id,
+        status: { $in: ['active', 'completed'] }
+      });
 
-    // 4b. Cooldown & batas sekali-per-lokasi (V26 M4)
-    {
-      const cooldownDays = Number(zone.entryCost?.cooldownDays || 0);
-      if (zone.type === 'land_of_spirits') {
-        const done = await InstancedZoneSession.findOne({ playerId: player._id, zoneId: zone.id, status: { $in: ['claimed', 'completed'] } });
-        if (done) return res.status(400).json({ success: false, error: 'Tanah Warisan ini sudah pernah kamu selesaikan.' });
-      } else if (cooldownDays > 0) {
-        const since = new Date(Date.now() - cooldownDays * 24 * 3600 * 1000);
-        const recent = await InstancedZoneSession.findOne({ playerId: player._id, zoneId: zone.id, status: { $ne: 'active' }, updatedAt: { $gt: since } }).sort({ updatedAt: -1 });
-        if (recent) {
-          const sisaHari = Math.ceil((recent.updatedAt.getTime() + cooldownDays * 86400000 - Date.now()) / 86400000);
-          return res.status(400).json({ success: false, error: `Zona ini masih pulih. Coba lagi dalam ${sisaHari} hari.` });
+      if (existingSession) {
+        if (existingSession.zoneId === zone.id) {
+          return res.json({
+            success: true,
+            message: 'Melanjutkan ekspedisi yang sedang berjalan.',
+            session: formatSessionResponse(existingSession)
+          });
+        } else {
+          return res.status(400).json({
+            success: false,
+            error: 'Anda masih memiliki ekspedisi aktif di zona lain. Selesaikan atau batalkan terlebih dahulu.'
+          });
         }
       }
-    }
 
-    // 5. Validasi & Pengurangan Biaya Masuk (V26: item sungguhan, terkunci per pemain)
-    if (zone.entryCost) {
-      const keys = requiredItems(zone.entryCost).map(r => r.itemKey);
-      const itemDocs = (mongoose.connection && mongoose.connection.readyState === 1 && keys.length)
-        ? await Item.find({ itemKey: { $in: keys } }).select('_id itemKey').lean()
-        : keys.map(k => ({ itemKey: k, _id: k }));
-      const itemIdByKey = new Map(itemDocs.map(d => [d.itemKey, d._id]));
-      const releaseLock = await LockManager.acquire(`instanced_enter_${player._id}`);
-      if (!releaseLock) return res.status(429).json({ success: false, error: 'Permintaan sedang diproses. Coba lagi sebentar.' });
-      try {
+      // 4b. Cooldown & batas sekali-per-lokasi (V26 M4)
+      {
+        const cooldownDays = Number(zone.entryCost?.cooldownDays || 0);
+        if (zone.type === 'land_of_spirits') {
+          const done = await InstancedZoneSession.findOne({ playerId: player._id, zoneId: zone.id, status: { $in: ['claimed', 'completed'] } });
+          if (done) return res.status(400).json({ success: false, error: 'Tanah Warisan ini sudah pernah kamu selesaikan.' });
+        } else if (cooldownDays > 0) {
+          const since = new Date(Date.now() - cooldownDays * 24 * 3600 * 1000);
+          const recent = await InstancedZoneSession.findOne({ playerId: player._id, zoneId: zone.id, status: { $ne: 'active' }, updatedAt: { $gt: since } }).sort({ updatedAt: -1 });
+          if (recent) {
+            const sisaHari = Math.ceil((recent.updatedAt.getTime() + cooldownDays * 86400000 - Date.now()) / 86400000);
+            return res.status(400).json({ success: false, error: `Zona ini masih pulih. Coba lagi dalam ${sisaHari} hari.` });
+          }
+        }
+      }
+
+      // 5. Validasi & Pengurangan Biaya Masuk (V26: item sungguhan, terkunci per pemain)
+      if (zone.entryCost) {
+        const keys = requiredItems(zone.entryCost).map(r => r.itemKey);
+        const itemDocs = (mongoose.connection && mongoose.connection.readyState === 1 && keys.length)
+          ? await Item.find({ itemKey: { $in: keys } }).select('_id itemKey').lean()
+          : keys.map(k => ({ itemKey: k, _id: k }));
+        const itemIdByKey = new Map(itemDocs.map(d => [d.itemKey, d._id]));
+
         const fresh = (mongoose.connection && mongoose.connection.readyState === 1 ? await Player.findById(player._id) : null) || player;
         const check = checkEntryCost(fresh, zone.entryCost, itemIdByKey);
         if (!check.ok) return res.status(400).json({ success: false, error: check.error });
         applyEntryCost(fresh, zone.entryCost, itemIdByKey);
         await fresh.save();
-      } finally {
-        releaseLock();
       }
-    }
 
-    // 6. Inisialisasi Sesi Otoritatif Engine
-    const startedAt = Date.now();
-    let sessionData = null;
-    let initialRewards = [];
+      // 6. Inisialisasi Sesi Otoritatif Engine
+      const startedAt = Date.now();
+      let sessionData = null;
+      let initialRewards = [];
 
-    if (zone.type === 'spirit_valley') {
-      sessionData = instancedEngine.createSpiritValleySession(String(player._id), zone.id, zone.dangerTier, startedAt);
-    } else if (zone.type === 'land_of_spirits') {
-      sessionData = instancedEngine.createLandOfSpiritsSession(String(player._id), zone.id, zone.dangerTier, startedAt);
-    } else if (zone.type === 'defense_circle') {
-      sessionData = instancedEngine.createDefenseCircleSession(String(player._id), zone.id, zone.dangerTier, startedAt);
-    } else if (zone.type === 'elemental_land') {
-      const element = zone.element || 'api';
-      const elRewards = instancedEngine.createElementalLandLoot(element, zone.dangerTier, startedAt);
-      sessionData = {
-        type: 'elemental_land',
+      if (zone.type === 'spirit_valley') {
+        sessionData = instancedEngine.createSpiritValleySession(String(player._id), zone.id, zone.dangerTier, startedAt);
+      } else if (zone.type === 'land_of_spirits') {
+        sessionData = instancedEngine.createLandOfSpiritsSession(String(player._id), zone.id, zone.dangerTier, startedAt);
+      } else if (zone.type === 'defense_circle') {
+        sessionData = instancedEngine.createDefenseCircleSession(String(player._id), zone.id, zone.dangerTier, startedAt);
+      } else if (zone.type === 'elemental_land') {
+        const element = zone.element || 'api';
+        const elRewards = instancedEngine.createElementalLandLoot(element, zone.dangerTier, startedAt);
+        sessionData = {
+          type: 'elemental_land',
+          zoneId: zone.id,
+          name: zone.name,
+          element,
+          tier: zone.dangerTier,
+          status: 'active',
+          currentWave: 1,
+          totalWaves: 3,
+          startedAt,
+          rewards: elRewards
+        };
+        initialRewards = [elRewards];
+      }
+
+      const sessionSeed = sessionData.sessionSeed || ((Date.now() ^ zone.x) >>> 0);
+      const expiresAt = new Date(Date.now() + 2 * 3600 * 1000); // Masa berlaku 2 jam
+
+      const sessionDoc = new InstancedZoneSession({
+        playerId: player._id,
+        discordId: String(player.discordId || userId),
         zoneId: zone.id,
-        name: zone.name,
-        element,
-        tier: zone.dangerTier,
+        zoneName: zone.name,
+        zoneType: zone.type,
+        dangerTier: zone.dangerTier,
+        requiredRealmIndex: requiredRealm,
+        sessionSeed,
         status: 'active',
-        currentWave: 1,
-        totalWaves: 3,
-        startedAt,
-        rewards: elRewards
-      };
-      initialRewards = [elRewards];
+        stepIndex: 0,
+        sessionData,
+        rewards: initialRewards,
+        startedAt: new Date(startedAt),
+        expiresAt
+      });
+
+      await sessionDoc.save();
+
+      return res.json({
+        success: true,
+        message: `Berhasil memasuki ${zone.name}!`,
+        session: formatSessionResponse(sessionDoc)
+      });
+    } finally {
+      releaseLock();
     }
-
-    const sessionSeed = sessionData.sessionSeed || ((Date.now() ^ zone.x) >>> 0);
-    const expiresAt = new Date(Date.now() + 2 * 3600 * 1000); // Masa berlaku 2 jam
-
-    const sessionDoc = new InstancedZoneSession({
-      playerId: player._id,
-      discordId: String(player.discordId || userId),
-      zoneId: zone.id,
-      zoneName: zone.name,
-      zoneType: zone.type,
-      dangerTier: zone.dangerTier,
-      requiredRealmIndex: requiredRealm,
-      sessionSeed,
-      status: 'active',
-      stepIndex: 0,
-      sessionData,
-      rewards: initialRewards,
-      startedAt: new Date(startedAt),
-      expiresAt
-    });
-
-    await sessionDoc.save();
-
-    return res.json({
-      success: true,
-      message: `Berhasil memasuki ${zone.name}!`,
-      session: formatSessionResponse(sessionDoc)
-    });
   } catch (err) {
     console.error('[INSTANCED-ZONE] POST enter error:', err);
     return res.status(500).json({ success: false, error: 'Gagal memasuki zona instans.' });
@@ -327,9 +330,7 @@ router.post('/step', authenticateToken, async (req, res) => {
           sessionData.currentWave = curWave + 1;
           sessionDoc.stepIndex = (sessionDoc.stepIndex || 0) + 1;
           if (typeof sessionDoc.markModified === 'function') {
-            if (typeof sessionDoc.markModified === 'function') {
-      sessionDoc.markModified('sessionData');
-    }
+            sessionDoc.markModified('sessionData');
           }
           await sessionDoc.save();
           return res.json({
@@ -342,9 +343,7 @@ router.post('/step', authenticateToken, async (req, res) => {
           sessionData.status = 'completed';
           sessionDoc.stepIndex = (sessionDoc.stepIndex || 0) + 1;
           if (typeof sessionDoc.markModified === 'function') {
-            if (typeof sessionDoc.markModified === 'function') {
-      sessionDoc.markModified('sessionData');
-    }
+            sessionDoc.markModified('sessionData');
           }
           await sessionDoc.save();
           return res.json({
@@ -403,6 +402,18 @@ router.post('/claim', authenticateToken, async (req, res) => {
 
     if (!player) {
       return res.status(404).json({ success: false, error: 'Pemain tidak ditemukan.' });
+    }
+
+    // Pastikan jika ada ekspedisi aktif yang belum selesai, ditolak secara jelas
+    const activeSession = await InstancedZoneSession.findOne({
+      playerId: player._id,
+      status: 'active'
+    });
+    if (activeSession) {
+      return res.status(400).json({
+        success: false,
+        error: 'Ekspedisi masih berlangsung dan belum selesai! Selesaikan semua tantangan terlebih dahulu.'
+      });
     }
 
     const sessionDoc = await InstancedZoneSession.findOne({

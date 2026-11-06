@@ -474,7 +474,8 @@ async function ensureCoreItems() {
   let updatedCount = 0;
 
   for (const def of CORE_ITEMS_DEFINITIONS) {
-    const existing = await Item.findOne({ name: def.name });
+    const query = def.itemKey ? { $or: [{ itemKey: def.itemKey }, { name: def.name }] } : { name: def.name };
+    const existing = await Item.findOne(query);
     if (!existing) {
       await Item.create({
         guildId: 'global',
@@ -482,18 +483,34 @@ async function ensureCoreItems() {
       });
       createdCount++;
     } else {
-      // Pastikan kategori dan tipe sinkron
+      // Pastikan seluruh atribut inti dan itemKey sinkron secara idempoten
       let needSave = false;
-      if (!existing.type || existing.type !== def.type) {
+      if (def.itemKey && (!existing.itemKey || existing.itemKey !== def.itemKey)) {
+        existing.itemKey = def.itemKey;
+        needSave = true;
+      }
+      if (def.type && existing.type !== def.type) {
         existing.type = def.type;
         needSave = true;
       }
-      if (!existing.category || existing.category !== def.category) {
+      if (def.category && existing.category !== def.category) {
         existing.category = def.category;
         needSave = true;
       }
-      if (!existing.rarity || existing.rarity !== def.rarity) {
+      if (def.rarity && existing.rarity !== def.rarity) {
         existing.rarity = def.rarity;
+        needSave = true;
+      }
+      if (def.buyPrice !== undefined && existing.buyPrice !== def.buyPrice) {
+        existing.buyPrice = def.buyPrice;
+        needSave = true;
+      }
+      if (def.sellPrice !== undefined && existing.sellPrice !== def.sellPrice) {
+        existing.sellPrice = def.sellPrice;
+        needSave = true;
+      }
+      if (def.priceCurrency && existing.priceCurrency !== def.priceCurrency) {
+        existing.priceCurrency = def.priceCurrency;
         needSave = true;
       }
       if (needSave) {
