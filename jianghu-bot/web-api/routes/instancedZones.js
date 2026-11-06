@@ -433,9 +433,15 @@ router.post('/claim', authenticateToken, async (req, res) => {
         { item: 'copper', name: 'Koin Tembaga', quantity: 500 }
       ];
     } else if (sessionDoc.zoneType === 'land_of_spirits') {
-      rewards = sessionData.milestoneReward
-        ? [sessionData.milestoneReward]
-        : [{ item: 'spirit_stone', name: 'Batu Roh', quantity: 500 }];
+      if (sessionData.milestoneReward) {
+        const ms = sessionData.milestoneReward;
+        rewards = [];
+        if (ms.silver) rewards.push({ item: 'silver', name: 'Perak', quantity: ms.silver });
+        if (ms.spiritStones) rewards.push({ item: 'spirit_stone_low', name: 'Batu Roh Rendah', quantity: ms.spiritStones });
+        if (ms.breakthroughPillGrade) rewards.push({ item: 'pure_qi_pill', name: 'Pil Intisari Qi', quantity: ms.breakthroughPillGrade });
+      } else {
+        rewards = [{ item: 'spirit_stone_low', name: 'Batu Roh Rendah', quantity: 500 }];
+      }
     } else if (sessionDoc.zoneType === 'defense_circle') {
       rewards = [
         { item: 'spirit_fruit', name: 'Buah Roh Murni', quantity: 3 },
@@ -445,70 +451,59 @@ router.post('/claim', authenticateToken, async (req, res) => {
       const elR = sessionData.rewards || {};
       rewards = [{
         item: elR.shardKey || 'fire_shard',
-        name: elR.shardName || 'Keping Roh Api',
+        name: elR.shardName || 'Keping Intisari Api (Fire Shard)',
         quantity: elR.quantity || 3
       }];
     }
 
-    // Berikan hadiah ke pemain
-    if (!Array.isArray(player.inventory)) player.inventory = [];
-    if (!player.currency) player.currency = {};
-    for (const r of rewards) {
-      if (r.item === 'copper') {
-        addCopper(player.currency, r.quantity || 0);
-      } else if (r.item === 'silver') {
-        player.currency.silver = (player.currency.silver || 0) + (r.quantity || 0);
-      } else {
-        const itemName = r.name || r.item;
-        const itemKey = r.item;
-        let itemDoc = null;
-        if (mongoose.connection && mongoose.connection.readyState === 1) {
-          try {
-            const guildId = player.guildId || process.env.GUILD_ID || 'DEFAULT_GUILD';
-            itemDoc = await Item.findOne({
-              $or: [
-                { guildId, name: itemName },
-                { guildId, itemId: itemKey },
-                { name: itemName },
-                ...(mongoose.Types.ObjectId.isValid(itemKey) ? [{ _id: itemKey }] : [])
-              ]
-            });
-            if (!itemDoc) {
-              itemDoc = await Item.create({
-                guildId,
-                name: itemName,
-                itemId: itemKey,
-                category: 'material',
-                tier: 1,
-                description: `Material berharga dari ekspedisi instans: ${itemName}`
-              });
-            }
-          } catch (e) {
-            itemDoc = null;
-          }
-        }
-        const itemIdVal = itemDoc?._id || (mongoose.Types.ObjectId.isValid(itemKey) ? itemKey : new mongoose.Types.ObjectId());
-        const existing = player.inventory.find(i => i.itemId && i.itemId.toString() === String(itemIdVal));
-        if (existing) {
-          existing.quantity = (existing.quantity || 1) + (r.quantity || 1);
-        } else {
-          player.inventory.push({
-            itemId: itemIdVal,
-            name: itemName,
-            quantity: r.quantity || 1
-          });
+    // Kumpulkan kunci item reward non-mata uang
+    const itemRewardKeys = rewards
+      .filter(r => r.item !== 'copper' && r.item !== 'silver')
+      .map(r => r.item.startsWith('item_') ? r.item : `item_${r.item}`);
+
+    // Cari dokumen Item di database (tanpa Item.create)
+    let itemDocs = [];
+    if (mongoose.connection && mongoose.connection.readyState === 1 && itemRewardKeys.length) {
+      itemDocs = await Item.find({ itemKey: { $in: itemRewardKeys } }).select('_id itemKey').lean();
+      for (const key of itemRewardKeys) {
+        if (!itemDocs.some(d => d.itemKey === key)) {
+          throw new Error(`Item hadiah belum didefinisikan: ${key}`);
         }
       }
+    } else {
+      // Mock / offline fallback: sediakan ID ObjectId atau String
+      itemDocs = itemRewardKeys.map(k => ({ itemKey: k, _id: new mongoose.Types.ObjectId() }));
     }
-    if (typeof player.markModified === 'function') {
-      player.markModified('inventory');
+    const itemIdByKey = new Map(itemDocs.map(d => [d.itemKey, d._id]));
+
+    // Simpan status sesi secara ATOMIK
+    let updatedSession = null;
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      updatedSession = await InstancedZoneSession.findOneAndUpdate(
+        { _id: sessionDoc._id, status: 'completed' },
+        { $set: { status: 'claimed', claimedRewards: rewards, claimedAt: new Date() } },
+        { new: true }
+      );
+    } else {
+      if (sessionDoc.status === 'completed') {
+        sessionDoc.status = 'claimed';
+        sessionDoc.claimedRewards = rewards;
+        sessionDoc.claimedAt = new Date();
+        await sessionDoc.save();
+        updatedSession = sessionDoc;
+      }
     }
 
-    // Tandai status sesi sebagai 'claimed'
-    sessionDoc.status = 'claimed';
-    sessionDoc.claimedRewards = rewards;
-    sessionDoc.claimedAt = new Date();
-    await sessionDoc.save();
+    if (!updatedSession) {
+      return res.status(409).json({
+        success: false,
+        error: 'Hadiah sudah diklaim sebelumnya atau sesi tidak valid.',
+        claimedRewards: sessionDoc.claimedRewards
+      });
+    }
+
+    // Berikan hadiah ke pemain lewat modul murni authoritative (V26 P4)
+    grantRewards(player, rewards, itemIdByKey);
     await player.save();
 
     return res.json({
