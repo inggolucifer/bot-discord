@@ -510,6 +510,37 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
                     player.markModified('activeBuffs');
                     buffMessage = ` Mendapatkan efek exp_bonus +${item.effectValue}% selama ${durationHours} jam.`;
                     effectsApplied.push(`exp_bonus_${item.effectValue}_${durationHours}h`);
+                } else if (item.effectType === 'repellent_charm' || item.effectType === 'attraction_charm') {
+                    if (!player.activeBuffs) player.activeBuffs = [];
+                    // V25 K4: Saling eksklusif - Jimat Pengusir membatalkan Jimat Penarik, dan sebaliknya
+                    const isRepellent = item.effectType === 'repellent_charm';
+                    const opposingType = isRepellent ? 'attraction_charm' : 'repellent_charm';
+                    const targetType = isRepellent ? 'repellent_charm' : 'attraction_charm';
+
+                    player.activeBuffs = player.activeBuffs.filter(b =>
+                        b.buffType !== targetType && b.buffType !== opposingType && b.buffType !== 'repellent' && b.buffType !== 'attraction'
+                    );
+
+                    // Durasi default 1800 detik (30 menit) dari world-data/zone-config-v23.json
+                    const durationSeconds = item.durationSeconds || 1800;
+                    const expiresAt = new Date(Date.now() + durationSeconds * 1000);
+                    const bonusValue = item.effectValue !== undefined ? item.effectValue : (isRepellent ? 0.50 : 0.75);
+
+                    player.activeBuffs.push({
+                        buffType: targetType,
+                        value: bonusValue,
+                        expiresAt
+                    });
+                    player.markModified('activeBuffs');
+
+                    const minutes = Math.round(durationSeconds / 60);
+                    const percent = Math.round(bonusValue * 100);
+                    if (isRepellent) {
+                        buffMessage = ` Jimat Pengusir Monster diaktifkan! Peluang sergapan siluman berkurang ${percent}% selama ${minutes} menit.`;
+                    } else {
+                        buffMessage = ` Jimat Penarik Monster diaktifkan! Peluang sergapan siluman meningkat ${percent}% selama ${minutes} menit.`;
+                    }
+                    effectsApplied.push(`${targetType}_${bonusValue}_${durationSeconds}s`);
                 } else {
                     // framework ready, runtime not wired yet for other types (e.g. breakthrough_success_bonus, profession_success_bonus)
                     buffMessage = ` (Efek ${item.effectType} siap, namun belum diimplementasikan di runtime)`;

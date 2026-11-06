@@ -1,0 +1,28 @@
+{
+  "steps": 20000,
+  "seed": 1618,
+  "base": {
+    "theoreticalRate": 0.08,
+    "effectiveRate": 0.08,
+    "encounters": 1601,
+    "actualRate": 0.08
+  },
+  "repellent": {
+    "theoreticalRate": 0.04,
+    "effectiveRate": 0.04,
+    "encounters": 788,
+    "actualRate": 0.0394,
+    "errorPct": 1.5,
+    "toleranceMet": true
+  },
+  "attraction": {
+    "theoreticalRate": 0.14,
+    "effectiveRate": 0.14,
+    "encounters": 2803,
+    "actualRate": 0.1401,
+    "errorPct": 0.11,
+    "toleranceMet": true
+  },
+  "allPass": true,
+  "timestamp": "2026-11-06T02:00:21.591Z"
+}

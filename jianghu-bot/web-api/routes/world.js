@@ -2426,11 +2426,20 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             // Ungkap kabut di sekitar langkah baru
             sparseFogManager.revealFogAtPosition(player, currentX, currentY, 4);
 
-            // B-01 & B-09 Fix: Single-roll encounter per langkah dengan tier otoritatif & jimat aktif (V24 H6)
+            // B-01 & B-09 Fix: Single-roll encounter per langkah dengan tier otoritatif & jimat aktif (V25 K4)
             const baseAmbushRate = typeof tileInfo.ambushRiskRate === 'number' ? tileInfo.ambushRiskRate : 0;
-            const playerCharms = player.activeCharms || player.charms || {
-                repellentActive: Boolean(player.buffs?.some(b => b.type === 'repellent') || player.activeBuffs?.some(b => b.buffType === 'repellent')),
-                attractionActive: Boolean(player.buffs?.some(b => b.type === 'attraction') || player.activeBuffs?.some(b => b.buffType === 'attraction'))
+            const nowTime = new Date();
+            const repellentBuff = (player.activeBuffs || []).find(b =>
+                (b.buffType === 'repellent_charm' || b.buffType === 'repellent') && new Date(b.expiresAt) > nowTime
+            );
+            const attractionBuff = (player.activeBuffs || []).find(b =>
+                (b.buffType === 'attraction_charm' || b.buffType === 'attraction') && new Date(b.expiresAt) > nowTime
+            );
+            const playerCharms = {
+                repellentActive: Boolean(repellentBuff),
+                repellentRate: repellentBuff ? (repellentBuff.value || 0.50) : 0,
+                attractionActive: Boolean(attractionBuff),
+                attractionRate: attractionBuff ? (attractionBuff.value || 0.75) : 0
             };
             const ambushRate = monsterSpawnEngine.calculateEffectiveAmbushRisk(baseAmbushRate, playerCharms);
             const encounterRoll = Math.random();

@@ -727,7 +727,7 @@ const playerSchema = new mongoose.Schema({
 
   activeBuffs: {
     type: [{
-      buffType: { type: String, enum: ['hp_boost', 'atk_boost', 'def_boost', 'exp_bonus', 'energy_regen', 'anti_poison'] },
+      buffType: { type: String, enum: ['hp_boost', 'atk_boost', 'def_boost', 'exp_bonus', 'energy_regen', 'anti_poison', 'repellent_charm', 'attraction_charm', 'repellent', 'attraction'] },
       value: { type: Number },
       expiresAt: { type: Date }
     }],
