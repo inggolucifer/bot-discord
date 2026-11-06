@@ -5,7 +5,7 @@ const { authenticateToken } = require('../middlewares/auth');
 const PlayerBuilding = require('../../models/PlayerBuilding');
 const Player = require('../../models/Player');
 const { computeNearbyEntities } = require('../../utils/nearbyEngine');
-const { getNearbyHazards } = require('../../utils/monsterSpawnEngine');
+const zonesV23 = require('../../world-data/zones-v23.json');
 
 // In-memory rate limiting map: userId -> timestamp ms
 const rateLimitMap = new Map();
@@ -22,18 +22,31 @@ setInterval(() => {
   }
 }, 300000);
 
+function formatEntryCostSummary(zone) {
+  if (!zone.entryCost) return 'Gratis';
+  const parts = [];
+  if (zone.entryCost.item) {
+    parts.push(zone.entryCost.item === 'item_spirit_key' ? '1x Kunci Roh' : `1x ${zone.entryCost.item}`);
+  }
+  if (zone.entryCost.spiritStones) parts.push(`${zone.entryCost.spiritStones} Batu Roh`);
+  if (zone.entryCost.spiritFruits) parts.push(`${zone.entryCost.spiritFruits} Buah Roh`);
+  if (zone.entryCost.stamina) parts.push(`${zone.entryCost.stamina} Stamina`);
+  return parts.length > 0 ? parts.join(', ') : 'Gratis';
+}
+
 /**
  * GET /api/world/nearby
- * Mengambil daftar entitas 'Sekitar Anda' (bangunan, kultivator, POI) dalam radius <= 2 chunk.
+ * Mengambil daftar entitas 'Sekitar Anda' (bangunan, kultivator, zona instans, dan bahaya tetap)
+ * V25 K1: Berbasis posisi server otoritatif pemain (radius 14 petak untuk zona/bahaya).
  */
 router.get('/', authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.userId || req.user.id;
+    const userId = req.user.userId || req.user.id || req.user.discordId;
     const now = Date.now();
 
-    // 1. Rate Limiting: 1 request / 2 detik per pemain
+    // 1. Rate Limiting: 1 request / 2 detik per pemain (V21)
     const lastRequestTime = rateLimitMap.get(userId) || 0;
-    if (now - lastRequestTime < 1000) { // toleransi 1 detik agar UX tidak kaku
+    if (now - lastRequestTime < 1000) { // toleransi 1 detik agar UX mulus
       const cached = userCacheMap.get(userId);
       if (cached) {
         res.setHeader('ETag', cached.etag);
@@ -44,27 +57,23 @@ router.get('/', authenticateToken, async (req, res) => {
     }
     rateLimitMap.set(userId, now);
 
-    // 2. Parse Parameter
-    const cx = parseInt(req.query.cx, 10);
-    const cy = parseInt(req.query.cy, 10);
-    const radiusParam = parseInt(req.query.r, 10);
-    const r = Math.min(2, Math.max(1, isNaN(radiusParam) ? 1 : radiusParam));
+    // 2. Posisi Otoritatif Server Pemain
+    const player = await Player.findOne({
+      $or: [{ discordId: userId }, { _id: userId }]
+    }).select('discordId username name avatar level realmIndex currentPosition sect sectId isTraveling activeBattleId inventory stamina').lean();
 
-    if (isNaN(cx) || isNaN(cy)) {
-      return res.status(400).json({ error: 'Parameter cx dan cy wajib berupa angka valid.' });
-    }
-
-    const tileXParam = parseInt(req.query.tileX, 10);
-    const tileYParam = parseInt(req.query.tileY, 10);
-    const centerTileX = !isNaN(tileXParam) ? tileXParam : cx * 32 + 16;
-    const centerTileY = !isNaN(tileYParam) ? tileYParam : cy * 32 + 16;
+    const centerTileX = player?.currentPosition?.x !== undefined ? Number(player.currentPosition.x) : 2051;
+    const centerTileY = player?.currentPosition?.y !== undefined ? Number(player.currentPosition.y) : 2652;
+    const cx = Math.floor(centerTileX / 32);
+    const cy = Math.floor(centerTileY / 32);
+    const r = 1; // Radius 1 chunk
 
     const minCx = cx - r;
     const maxCx = cx + r;
     const minCy = cy - r;
     const maxCy = cy + r;
 
-    // 3. Kueri Bangunan Pemain (menggunakan compound index chunkX_1_chunkY_1)
+    // 3. Kueri Bangunan Pemain
     let buildings = [];
     try {
       buildings = await PlayerBuilding.find({
@@ -72,11 +81,10 @@ router.get('/', authenticateToken, async (req, res) => {
         chunkY: { $gte: minCy, $lte: maxCy }
       }).lean();
     } catch (dbErr) {
-      // Graceful fallback bila db connection sedang transisi
       buildings = [];
     }
 
-    // 4. Kueri Pemain Aktif di Area Tersebut
+    // 4. Kueri Pemain Aktif di Sekitar
     const minTileX = minCx * 32;
     const maxTileX = (maxCx + 1) * 32 - 1;
     const minTileY = minCy * 32;
@@ -96,6 +104,7 @@ router.get('/', authenticateToken, async (req, res) => {
     // 5. Agregasi Entitas
     const rawEntities = [];
 
+    // Bangunan (koordinat dikirim)
     for (const b of buildings) {
       rawEntities.push({
         id: `building_${b._id}`,
@@ -112,6 +121,7 @@ router.get('/', authenticateToken, async (req, res) => {
       });
     }
 
+    // Pemain Lain (koordinat dikirim)
     for (const p of players) {
       const px = p.currentPosition?.x || (cx * 32 + 16);
       const py = p.currentPosition?.y || (cy * 32 + 16);
@@ -130,23 +140,55 @@ router.get('/', authenticateToken, async (req, res) => {
       });
     }
 
-// 5b. Agregasi Bahaya Tetap (Radius 14 Petak)
-    const hazards = getNearbyHazards(centerTileX, centerTileY, 14);
-    for (const h of hazards) {
-      rawEntities.push({
-        id: `hazard_${h.id}`,
-        type: 'hazard',
-        name: h.name,
-        x: h.x,
-        y: h.y,
-        chunkX: Math.floor(h.x / 32),
-        chunkY: Math.floor(h.y / 32),
-        status: `Tier ${h.dangerTier} • ${h.type.replace('_', ' ').toUpperCase()}`,
-        visibility: 'public'
-      });
+    // 5b. Zona Instans & Bahaya Tetap (world-data/zones-v23.json dalam Radius 14 Petak)
+    const allZones = zonesV23.zones || [];
+    for (const z of allZones) {
+      const dx = z.x - centerTileX;
+      const dy = z.y - centerTileY;
+      const dist = Math.max(Math.abs(dx), Math.abs(dy));
+
+      if (dist <= 14) {
+        const isInstanced = ['spirit_valley', 'land_of_spirits', 'defense_circle', 'elemental_land'].includes(z.type);
+        const id = isInstanced ? `inst_${z.id}` : `haz_${z.id}`;
+        const type = isInstanced ? 'zone' : 'hazard';
+        const requiredRealm = z.requiredRealmIndex !== undefined ? z.requiredRealmIndex : (z.dangerTier >= 5 ? 2 : (z.dangerTier >= 3 ? 1 : 0));
+
+        let canEnter = true;
+        let reason = null;
+
+        if (dist > 3) {
+          canEnter = false;
+          reason = 'Terlalu jauh, dekati lokasi (<= 3 petak)';
+        } else if (player?.isTraveling) {
+          canEnter = false;
+          reason = 'Sedang dalam perjalanan';
+        } else if (player?.activeBattleId) {
+          canEnter = false;
+          reason = 'Sedang dalam pertarungan';
+        } else if ((player?.realmIndex || 0) < requiredRealm) {
+          canEnter = false;
+          reason = `Perlu ranah tingkat ${requiredRealm}`;
+        }
+
+        rawEntities.push({
+          id,
+          type,
+          name: z.name,
+          zoneType: z.type,
+          tier: z.dangerTier,
+          requiredRealmIndex: requiredRealm,
+          canEnter,
+          reason,
+          entryCostSummary: formatEntryCostSummary(z),
+          status: `Tier ${z.dangerTier} • ${z.type.replace(/_/g, ' ').toUpperCase()}`,
+          x: z.x,
+          y: z.y,
+          visibility: 'public'
+        });
+      }
     }
 
-    // 6. Hitung & Urutkan Spasial
+    // 6. Hitung & Urutkan Spasial (Maksimal 30 entri, koordinat zone/hazard dihapus di nearbyEngine)
     const result = computeNearbyEntities({
       fromX: centerTileX,
       fromY: centerTileY,
@@ -163,8 +205,7 @@ router.get('/', authenticateToken, async (req, res) => {
       radiusChunks: r,
       totalCount: result.totalCount,
       countOthers: result.countOthers,
-      items: result.items,
-      nearbyHazards: hazards
+      items: result.items
     };
 
     // 7. ETag Generation & 304 Handling

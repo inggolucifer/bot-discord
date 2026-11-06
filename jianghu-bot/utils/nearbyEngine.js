@@ -99,22 +99,39 @@ function computeNearbyEntities({
     const dir = calculateDirection(fromX, fromY, targetX, targetY);
     const distanceLabel = classifyDistance(dist);
 
-    visibleEntities.push({
+    const isZoneOrHazard = ent.type === 'zone' || ent.type === 'hazard';
+    const item = {
       id: ent.id || ent._id || `${ent.type}_${targetX}_${targetY}`,
       type: ent.type || 'unknown',
       name: ent.name || 'Entitas Tak Dikenal',
-      x: targetX,
-      y: targetY,
-      chunkX: ent.chunkX ?? Math.floor(targetX / 32),
-      chunkY: ent.chunkY ?? Math.floor(targetY / 32),
       dist,
-      dir,
-      distanceLabel,
-      status: ent.status || 'aktif',
-      ownerId: ent.ownerId || null,
-      sectId: ent.sectId || null,
-      visibility: ent.visibility || 'public'
-    });
+      dir
+    };
+
+    if (ent.status) item.status = ent.status;
+    if (ent.ownerId) item.ownerId = ent.ownerId;
+    if (ent.sectId) item.sectId = ent.sectId;
+    if (ent.visibility && ent.visibility !== 'public') item.visibility = ent.visibility;
+
+    if (!isZoneOrHazard) {
+      item.distBand = ent.distBand || distanceLabel;
+      item.distanceLabel = distanceLabel;
+      item.x = targetX;
+      item.y = targetY;
+      item.chunkX = ent.chunkX ?? Math.floor(targetX / 32);
+      item.chunkY = ent.chunkY ?? Math.floor(targetY / 32);
+    } else {
+      // V25 K1: Zone & Hazard tidak mengekspos koordinat persis (anti-radar & privacy)
+      item.distBand = ent.distBand || distanceLabel;
+      item.zoneType = ent.zoneType || (ent.type === 'zone' ? 'spirit_valley' : 'hazard');
+      item.tier = ent.tier !== undefined ? ent.tier : (ent.dangerTier || 1);
+      item.requiredRealmIndex = ent.requiredRealmIndex || 0;
+      item.canEnter = ent.canEnter !== undefined ? ent.canEnter : false;
+      if (ent.reason) item.reason = ent.reason;
+      if (ent.entryCostSummary) item.entryCostSummary = ent.entryCostSummary;
+    }
+
+    visibleEntities.push(item);
   }
 
   // Urutkan berdasarkan jarak terdekat

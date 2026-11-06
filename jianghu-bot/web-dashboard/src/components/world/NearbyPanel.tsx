@@ -2,10 +2,10 @@
 
 /**
  * JIANGHU BOT & IMMORTAL-X — NEARBY PANEL (components/world/NearbyPanel.tsx)
- * V21 F3: Panel teks daftar entitas 'Sekitar Anda' (Anti-Lag Multi-Pemain)
+ * V21 F3 / V25 K1: Panel teks daftar entitas 'Sekitar Anda' (Anti-Lag Multi-Pemain)
  * - Gaya estetika Dark Ink Wuxia & Amber Gold (#c5a880)
- * - Menampilkan bangunan, kultivator lain, dan POI dalam radius <= 2 chunk
- * - Arah 8 mata angin dan jarak kualitatif (dekat, sedang, jauh)
+ * - Menampilkan bangunan, kultivator lain, zona instans, dan bahaya tetap
+ * - Arah 8 mata angin dan jarak kualitatif (dekat, sedang, jauh) tanpa koordinat persis untuk zona/bahaya
  * - Menerima delta batching Socket.io (nearby_delta) tanpa re-render berat
  */
 
@@ -15,19 +15,26 @@ import api from '@/lib/api';
 
 export interface NearbyEntityItem {
   id: string;
-  type: 'player' | 'building' | 'monster' | 'npc' | 'poi' | 'hazard' | string;
+  type: 'player' | 'building' | 'monster' | 'npc' | 'poi' | 'hazard' | 'zone' | string;
   name: string;
-  x: number;
-  y: number;
-  chunkX: number;
-  chunkY: number;
-  dist: number;
+  x?: number;
+  y?: number;
+  chunkX?: number;
+  chunkY?: number;
+  dist?: number;
   dir: string;
-  distanceLabel: 'dekat' | 'sedang' | 'jauh' | string;
+  distanceLabel?: 'dekat' | 'sedang' | 'jauh' | string;
+  distBand?: 'dekat' | 'sedang' | 'jauh' | string;
   status?: string;
   ownerId?: string | null;
   sectId?: string | null;
   visibility?: string;
+  zoneType?: string;
+  tier?: number;
+  requiredRealmIndex?: number;
+  canEnter?: boolean;
+  reason?: string | null;
+  entryCostSummary?: string;
 }
 
 interface NearbyResponse {
@@ -99,19 +106,25 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
     if (!isOpen) return;
 
     const handleDelta = (delta: {
+      t: string;
       chunk: string;
+      timestamp: number;
       entered?: Array<{ id: string; name: string; type: string; x: number; y: number; status?: string }>;
       moved?: Array<{ id: string; x: number; y: number; status?: string }>;
       left?: string[];
+      totalActive?: number;
     }) => {
+      if (!delta || delta.t !== 'nearby_delta') return;
+
       setEntities((prev) => {
         const map = new Map(prev.map((e) => [e.id, { ...e }]));
 
         // Proses Left
         if (Array.isArray(delta.left)) {
-          for (const leftId of delta.left) {
-            map.delete(leftId);
-            map.delete(`player_${leftId}`);
+          for (const id of delta.left) {
+            map.delete(id);
+            map.delete(`player_${id}`);
+            map.delete(`building_${id}`);
           }
         }
 
@@ -154,7 +167,7 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
           }
         }
 
-        const updated = Array.from(map.values()).sort((a, b) => a.dist - b.dist);
+        const updated = Array.from(map.values()).sort((a, b) => (a.dist ?? 0) - (b.dist ?? 0));
         return updated.slice(0, 30);
       });
     };
@@ -167,6 +180,7 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
 
   const filteredEntities = useMemo(() => {
     if (filter === 'all') return entities;
+    if (filter === 'hazard') return entities.filter((e) => e.type === 'hazard' || e.type === 'zone');
     return entities.filter((e) => e.type === filter);
   }, [entities, filter]);
 
@@ -177,7 +191,14 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
     }
   };
 
-  const getEntityIcon = (type: string) => {
+  const getEntityIcon = (type: string, zoneType?: string) => {
+    if (zoneType === 'spirit_valley') return '🌀';
+    if (zoneType === 'land_of_spirits') return '⛩️';
+    if (zoneType === 'defense_circle') return '🛡️';
+    if (zoneType === 'elemental_land') return '⚡';
+    if (zoneType === 'elite_camp') return '👹';
+    if (zoneType === 'world_boss_lair') return '🐉';
+
     switch (type) {
       case 'player':
         return '🧘';
@@ -187,6 +208,8 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
         return '👹';
       case 'hazard':
         return '⚠️';
+      case 'zone':
+        return '🌀';
       case 'npc':
         return '👤';
       default:
@@ -194,7 +217,7 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
     }
   };
 
-  const getDistanceBadgeColor = (label: string) => {
+  const getDistanceBadgeColor = (label?: string) => {
     switch (label) {
       case 'dekat':
         return 'bg-emerald-950/80 text-emerald-400 border-emerald-800/60';
@@ -222,7 +245,7 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
             <div>
               <h3 className="text-[#c5a880] text-sm font-bold tracking-wide">SEKITAR ANDA</h3>
               <p className="text-[10px] text-stone-400">
-                Posisi: ({playerX}, {playerY}) • Radius 1 Chunk
+                Posisi: ({playerX}, {playerY}) • Radius 14 Petak
               </p>
             </div>
           </div>
@@ -252,7 +275,7 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
               { key: 'all', label: 'Semua' },
               { key: 'player', label: 'Kultivator' },
               { key: 'building', label: 'Bangunan' },
-              { key: 'hazard', label: 'Bahaya' }
+              { key: 'hazard', label: 'Bahaya & Zona' }
             ] as const
           ).map((tab) => (
             <button
@@ -279,6 +302,7 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
             filteredEntities.map((item) => {
               const isPlayer = item.type === 'player';
               const isBuilding = item.type === 'building';
+              const isZoneOrHazard = item.type === 'zone' || item.type === 'hazard';
               const isGreeted = greetedIds.has(item.id);
 
               return (
@@ -287,7 +311,7 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
                   className="bg-[#12161f]/80 hover:bg-[#1a202c]/90 border border-[#2d2218] hover:border-[#523d2c] rounded p-2 transition flex items-center justify-between space-x-2"
                 >
                   <div className="flex items-start space-x-2.5 min-w-0">
-                    <span className="text-base select-none mt-0.5">{getEntityIcon(item.type)}</span>
+                    <span className="text-base select-none mt-0.5">{getEntityIcon(item.type, item.zoneType)}</span>
                     <div className="min-w-0">
                       <div className="flex items-center space-x-1.5">
                         <span className="font-semibold text-stone-200 truncate max-w-[130px] sm:max-w-[160px]">
@@ -295,23 +319,28 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
                         </span>
                         <span
                           className={`text-[9px] px-1.5 py-0.2 rounded border font-mono ${getDistanceBadgeColor(
-                            item.distanceLabel
+                            item.distBand || item.distanceLabel
                           )}`}
                         >
-                          {item.dir} • {item.dist}t
+                          {item.dir} • {item.distBand || item.distanceLabel}
                         </span>
                       </div>
                       <div className="text-[10px] text-stone-400 truncate">
-                        {item.status || (isPlayer ? 'Mengembara' : isBuilding ? 'Bangunan Mandiri' : item.type === 'hazard' ? 'Zona Bahaya' : 'Entitas')}
+                        {item.status || (isPlayer ? 'Mengembara' : isBuilding ? 'Bangunan Mandiri' : isZoneOrHazard ? 'Area Khusus' : 'Entitas')}
                       </div>
+                      {item.entryCostSummary && (
+                        <div className="text-[9px] text-amber-400/80 font-mono truncate">
+                          Syarat: {item.entryCostSummary}
+                        </div>
+                      )}
                     </div>
                   </div>
 
                   {/* Quick Action Buttons */}
                   <div className="flex items-center space-x-1 shrink-0">
-                    {onNavigateToTile && (
+                    {onNavigateToTile && item.x !== undefined && item.y !== undefined && (
                       <button
-                        onClick={() => onNavigateToTile(item.x, item.y)}
+                        onClick={() => onNavigateToTile(item.x!, item.y!)}
                         title="Arahkan kamera ke lokasi ini"
                         className="px-2 py-0.5 bg-[#1f1914] hover:bg-[#2d2218] text-[#c5a880] border border-[#3d2b1f] rounded text-[10px] transition"
                       >
@@ -319,13 +348,31 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
                       </button>
                     )}
 
-                    {(isBuilding || item.type === 'hazard' || item.type === 'poi' || item.id?.startsWith('inst_')) && onAction && (
+                    {isBuilding && onAction && (
                       <button
                         onClick={() => onAction('enter', item)}
                         className="px-2 py-0.5 bg-amber-900/40 hover:bg-amber-800/60 text-amber-200 border border-amber-700/50 rounded text-[10px] transition font-bold"
                       >
                         Masuk
                       </button>
+                    )}
+
+                    {isZoneOrHazard && onAction && (
+                      item.canEnter ? (
+                        <button
+                          onClick={() => onAction('enter', item)}
+                          className="px-2 py-0.5 bg-amber-900/60 hover:bg-amber-800/80 text-amber-200 border border-amber-600/70 rounded text-[10px] transition font-bold shadow-sm"
+                        >
+                          Masuk
+                        </button>
+                      ) : (
+                        <span
+                          title={item.reason || 'Syarat belum terpenuhi'}
+                          className="px-1.5 py-0.5 bg-stone-900/70 text-amber-500/80 border border-amber-950/80 rounded text-[9px] font-mono italic max-w-[110px] truncate block text-center"
+                        >
+                          {item.reason || 'Terkunci'}
+                        </span>
+                      )
                     )}
 
                     {isPlayer && onAction && (
