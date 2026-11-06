@@ -54,6 +54,7 @@ import WorldMapLoadingScreen from './WorldMapLoadingScreen';
 import RegionCalligraphyBanner from './RegionCalligraphyBanner';
 import Minimap from './Minimap';
 import NearbyPanel from '@/components/world/NearbyPanel';
+import InstancedZonePanel, { InstancedSessionData } from '@/components/world/InstancedZonePanel';
 import { CANONICAL_REGIONS } from '@/config/canonicalRegions';
 import { chunkManager } from '@/lib/chunkManager';
 
@@ -162,6 +163,21 @@ export default function ZoneGridView({
   const [activeBattleId, setActiveBattleId] = useState<string | null>(null);
   const [showMacroMap, setShowMacroMap] = useState(false);
   const [isNearbyOpen, setIsNearbyOpen] = useState<boolean>(false);
+  const [instancedSession, setInstancedSession] = useState<InstancedSessionData | null>(null);
+
+  useEffect(() => {
+    const checkActiveInstancedSession = async () => {
+      try {
+        const res = await api.get('/instanced-zones/session');
+        if (res.data?.success && res.data.session) {
+          setInstancedSession(res.data.session);
+        }
+      } catch (e) {
+        // silent fallback
+      }
+    };
+    checkActiveInstancedSession();
+  }, []);
   const [activeRegionBanner, setActiveRegionBanner] = useState<{
     regionName: string;
     chineseName?: string;
@@ -1600,6 +1616,15 @@ export default function ZoneGridView({
         </div>
       )}
 
+      {/* Modal Ekspedisi Zona Instans (V25 K3) */}
+      {instancedSession && (
+        <InstancedZonePanel
+          session={instancedSession}
+          onUpdateSession={setInstancedSession}
+          onClose={() => setInstancedSession(null)}
+        />
+      )}
+
       {/* Panel Sekitar Anda (V21 F3) */}
       {!activeBattleId && !interiorData && (
         <NearbyPanel
@@ -1610,9 +1635,20 @@ export default function ZoneGridView({
           onNavigateToTile={(tx, ty) => {
             setSearchFocusTile({ x: tx, y: ty });
           }}
-          onAction={(action, item) => {
+          onAction={async (action, item) => {
             if (action === 'enter' && item.type === 'building') {
               handleEnterCourtyard(item.name);
+            } else if (action === 'enter' && (item.type === 'zone' || item.type === 'hazard')) {
+              try {
+                const res = await api.post('/instanced-zones/enter', { zoneId: item.id });
+                if (res.data?.success && res.data.session) {
+                  setInstancedSession(res.data.session);
+                  setIsNearbyOpen(false);
+                }
+              } catch (err: any) {
+                setActionMessage(err.response?.data?.error || 'Gagal memasuki zona instans.');
+                setTimeout(() => setActionMessage(null), 3500);
+              }
             } else if (action === 'greet') {
               setActionMessage(`Anda memberi hormat kepalan tangan kepada ${item.name}.`);
               setTimeout(() => setActionMessage(null), 3000);
