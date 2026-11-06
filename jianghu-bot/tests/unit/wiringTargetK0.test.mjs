@@ -21,8 +21,9 @@ describe('V25 K0 — Target Behavior Tests (Currently Red at HEAD)', () => {
 
   it('T2: instancedZones POST /enter does not read dangerTier from req.body and does not use in-memory Map', () => {
     const routeCode = fs.readFileSync(path.join(BOT_ROOT, 'web-api/routes/instancedZones.js'), 'utf8');
-    // Body should only read zoneId
-    expect(routeCode.includes('dangerTier') && routeCode.includes('req.body')).toBe(false);
+    // POST /enter should not extract dangerTier or zoneType from req.body
+    const readsBodyTier = /req\.body\.(dangerTier|zoneType)/.test(routeCode) || /\{\s*[^}]*(dangerTier|zoneType)[^}]*\}\s*=\s*req\.body/.test(routeCode);
+    expect(readsBodyTier).toBe(false);
     expect(routeCode.includes('const activeSessions = new Map()')).toBe(false);
   });
 
