@@ -280,6 +280,20 @@ function resolveStepAction(session, action, params = {}) {
     }
   }
 
+  if (session.type === 'elemental_land') {
+    if (action === 'clear_wave') {
+      const total = session.totalWaves || 3;
+      const cur = session.currentWave || 1;
+      if (cur < total) {
+        session.currentWave = cur + 1;
+        return { ok: true, currentWave: session.currentWave, completed: false };
+      } else {
+        session.status = 'completed';
+        return { ok: true, currentWave: session.currentWave, completed: true };
+      }
+    }
+  }
+
   return { ok: false, error: 'Aksi tidak dikenal' };
 }
 

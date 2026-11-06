@@ -747,6 +747,31 @@ playerSchema.index({ discordId: 1, guildId: 1 }, { unique: true, sparse: true })
 playerSchema.index({ guildId: 1, "pets.instanceId": 1 }); // Index untuk pencarian pet instance yang efisien
 playerSchema.index({ guildId: 1, 'gridPosition.zoneId': 1, 'gridPosition.tileX': 1, 'gridPosition.tileY': 1 });
 
+// Virtual getter agar currentPosition selalu tersinkronisasi 1-to-1 dengan gridPosition
+playerSchema.virtual('currentPosition').get(function () {
+  const gp = this.gridPosition || {};
+  return {
+    x: gp.tileX !== undefined ? gp.tileX : 2051,
+    y: gp.tileY !== undefined ? gp.tileY : 2652,
+    zoneId: gp.zoneId || 'central_plains_bamboo_forest'
+  };
+});
+
+// Virtual getter agar realmIndex selalu merefleksikan indeks kanonikal dari systemCultivation
+playerSchema.virtual('realmIndex').get(function () {
+  const { getRealmIndex } = require('../utils/cultivation');
+  return getRealmIndex(this.systemCultivation?.realm || this.realm);
+});
+
+// Virtual getter & setter agar stamina selalu merefleksikan currentStamina
+playerSchema.virtual('stamina')
+  .get(function () {
+    return this.currentStamina !== undefined ? this.currentStamina : 100;
+  })
+  .set(function (val) {
+    this.currentStamina = val;
+  });
+
 
 // Setiap kali player disimpan: (1) currency dinormalisasi otomatis (100 Silver->1 Gold, dst),
 // (2) totalWealth dihitung ulang dari currency yang SUDAH dinormalisasi.

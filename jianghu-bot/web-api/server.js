@@ -400,12 +400,15 @@ const setupServer = (client) => {
                 if (userId) {
                     try {
                         const Player = require('../models/Player');
-                        const player = await Player.findOne({
-                            $or: [{ discordId: userId }, { _id: userId }]
-                        }).select('currentPosition').lean();
-                        if (player?.currentPosition) {
-                            playerCx = Math.floor(Number(player.currentPosition.x) / 32);
-                            playerCy = Math.floor(Number(player.currentPosition.y) / 32);
+                        const mongoose = require('mongoose');
+                        const isObjId = mongoose.Types.ObjectId.isValid(userId) && String(new mongoose.Types.ObjectId(userId)) === String(userId);
+                        const playerQuery = isObjId ? { $or: [{ discordId: userId }, { _id: userId }] } : { discordId: String(userId) };
+                        const player = await Player.findOne(playerQuery).select('gridPosition currentPosition').lean();
+                        const px = player?.gridPosition?.tileX ?? player?.currentPosition?.x;
+                        const py = player?.gridPosition?.tileY ?? player?.currentPosition?.y;
+                        if (px !== undefined && py !== undefined) {
+                            playerCx = Math.floor(Number(px) / 32);
+                            playerCy = Math.floor(Number(py) / 32);
                         }
                     } catch (dbErr) {
                         // ignore db error, proceed with fallback

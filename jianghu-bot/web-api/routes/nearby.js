@@ -1,11 +1,13 @@
 const express = require('express');
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 const router = express.Router();
 const { authenticateToken } = require('../middlewares/auth');
 const PlayerBuilding = require('../../models/PlayerBuilding');
 const Player = require('../../models/Player');
 const { computeNearbyEntities } = require('../../utils/nearbyEngine');
 const zonesV23 = require('../../world-data/zones-v23.json');
+const { getRealmIndex } = require('../../utils/cultivation');
 
 // In-memory rate limiting map: userId -> timestamp ms
 const rateLimitMap = new Map();
@@ -58,12 +60,21 @@ router.get('/', authenticateToken, async (req, res) => {
     rateLimitMap.set(userId, now);
 
     // 2. Posisi Otoritatif Server Pemain
-    const player = await Player.findOne({
-      $or: [{ discordId: userId }, { _id: userId }]
-    }).select('discordId username name avatar level realmIndex currentPosition sect sectId isTraveling activeBattleId inventory stamina').lean();
+    const isObjId = mongoose.Types.ObjectId.isValid(userId) && String(new mongoose.Types.ObjectId(userId)) === String(userId);
+    const playerQuery = isObjId ? { $or: [{ discordId: userId }, { _id: userId }] } : { discordId: String(userId) };
+    const player = await Player.findOne(playerQuery)
+      .select('discordId username name avatar level realmIndex systemCultivation realm gridPosition currentPosition sect sectId isTraveling activeBattleId inventory stamina')
+      .lean();
 
-    const centerTileX = player?.currentPosition?.x !== undefined ? Number(player.currentPosition.x) : 2051;
-    const centerTileY = player?.currentPosition?.y !== undefined ? Number(player.currentPosition.y) : 2652;
+    const centerTileX = player?.gridPosition?.tileX !== undefined
+      ? Number(player.gridPosition.tileX)
+      : (player?.currentPosition?.x !== undefined ? Number(player.currentPosition.x) : 2051);
+    const centerTileY = player?.gridPosition?.tileY !== undefined
+      ? Number(player.gridPosition.tileY)
+      : (player?.currentPosition?.y !== undefined ? Number(player.currentPosition.y) : 2652);
+    const playerRealm = player?.realmIndex !== undefined
+      ? Number(player.realmIndex)
+      : getRealmIndex(player?.systemCultivation?.realm || player?.realm);
     const cx = Math.floor(centerTileX / 32);
     const cy = Math.floor(centerTileY / 32);
     const r = 1; // Radius 1 chunk
@@ -94,9 +105,11 @@ router.get('/', authenticateToken, async (req, res) => {
     try {
       players = await Player.find({
         discordId: { $ne: userId },
-        'currentPosition.x': { $gte: minTileX, $lte: maxTileX },
-        'currentPosition.y': { $gte: minTileY, $lte: maxTileY }
-      }).select('discordId username name avatar level realmIndex currentPosition sect sectId').lean();
+        $or: [
+          { 'gridPosition.tileX': { $gte: minTileX, $lte: maxTileX }, 'gridPosition.tileY': { $gte: minTileY, $lte: maxTileY } },
+          { 'currentPosition.x': { $gte: minTileX, $lte: maxTileX }, 'currentPosition.y': { $gte: minTileY, $lte: maxTileY } }
+        ]
+      }).select('discordId username name characterName avatar level realmIndex gridPosition currentPosition sect sectId').lean();
     } catch (dbErr) {
       players = [];
     }
@@ -123,8 +136,8 @@ router.get('/', authenticateToken, async (req, res) => {
 
     // Pemain Lain (koordinat dikirim)
     for (const p of players) {
-      const px = p.currentPosition?.x || (cx * 32 + 16);
-      const py = p.currentPosition?.y || (cy * 32 + 16);
+      const px = p.gridPosition?.tileX ?? p.currentPosition?.x ?? (cx * 32 + 16);
+      const py = p.gridPosition?.tileY ?? p.currentPosition?.y ?? (cy * 32 + 16);
       rawEntities.push({
         id: `player_${p.discordId}`,
         type: 'player',
@@ -165,7 +178,7 @@ router.get('/', authenticateToken, async (req, res) => {
         } else if (player?.activeBattleId) {
           canEnter = false;
           reason = 'Sedang dalam pertarungan';
-        } else if ((player?.realmIndex || 0) < requiredRealm) {
+        } else if (playerRealm < requiredRealm) {
           canEnter = false;
           reason = `Perlu ranah tingkat ${requiredRealm}`;
         }

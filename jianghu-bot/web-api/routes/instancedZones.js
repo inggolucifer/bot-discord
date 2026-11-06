@@ -5,11 +5,20 @@
 
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const { authenticateToken } = require('../middlewares/auth');
 const Player = require('../../models/Player');
+const Item = require('../../models/Item');
 const InstancedZoneSession = require('../../models/InstancedZoneSession');
 const instancedEngine = require('../../services/instancedZoneEngine');
 const zonesV23 = require('../../world-data/zones-v23.json');
+const { getRealmIndex } = require('../../utils/cultivation');
+
+function getPlayerQuery(userId) {
+  if (!userId) return { _id: null };
+  const isObjId = mongoose.Types.ObjectId.isValid(userId) && String(new mongoose.Types.ObjectId(userId)) === String(userId);
+  return isObjId ? { $or: [{ discordId: userId }, { _id: userId }] } : { discordId: String(userId) };
+}
 
 /**
  * Memformat dokumen sesi MongoDB agar kompatibel dengan kontrak klien/engine
@@ -69,9 +78,7 @@ function findZoneDef(zoneId) {
 router.get('/session', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId || req.user.id || req.user.discordId;
-    const player = await Player.findOne({
-      $or: [{ discordId: userId }, { _id: userId }]
-    });
+    const player = await Player.findOne(getPlayerQuery(userId));
 
     if (!player) {
       return res.json({ success: true, session: null });
@@ -115,17 +122,19 @@ router.post('/enter', authenticateToken, async (req, res) => {
       return res.status(400).json({ success: false, error: `Tipe zona '${zone.type}' tidak valid sebagai area instans.` });
     }
 
-    const player = await Player.findOne({
-      $or: [{ discordId: userId }, { _id: userId }]
-    });
+    const player = await Player.findOne(getPlayerQuery(userId));
 
     if (!player) {
       return res.status(404).json({ success: false, error: 'Karakter pemain tidak ditemukan.' });
     }
 
     // 1. Validasi Posisi Otoritatif Server (Jarak Chebyshev <= 3 petak)
-    const px = player.currentPosition?.x !== undefined ? Number(player.currentPosition.x) : zone.x;
-    const py = player.currentPosition?.y !== undefined ? Number(player.currentPosition.y) : zone.y;
+    const px = player.gridPosition?.tileX !== undefined
+      ? Number(player.gridPosition.tileX)
+      : (player.currentPosition?.x !== undefined ? Number(player.currentPosition.x) : zone.x);
+    const py = player.gridPosition?.tileY !== undefined
+      ? Number(player.gridPosition.tileY)
+      : (player.currentPosition?.y !== undefined ? Number(player.currentPosition.y) : zone.y);
     const dist = Math.max(Math.abs(px - zone.x), Math.abs(py - zone.y));
 
     if (dist > 3) {
@@ -148,7 +157,8 @@ router.post('/enter', authenticateToken, async (req, res) => {
       ? zone.requiredRealmIndex
       : (zone.dangerTier >= 5 ? 2 : (zone.dangerTier >= 3 ? 1 : 0));
 
-    if ((player.realmIndex || 0) < requiredRealm) {
+    const actualRealm = player.realmIndex !== undefined ? Number(player.realmIndex) : getRealmIndex(player.systemCultivation?.realm || player.realm);
+    if (actualRealm < requiredRealm) {
       return res.status(400).json({
         success: false,
         error: `Kultivasi Anda belum mencukupi. Perlu ranah tingkat ${requiredRealm}.`
@@ -178,7 +188,8 @@ router.post('/enter', authenticateToken, async (req, res) => {
 
     // 5. Validasi & Pengurangan Biaya Masuk (Atomic Server Deduction)
     if (zone.entryCost) {
-      if (zone.entryCost.stamina && (player.stamina || 0) < zone.entryCost.stamina) {
+      const curStamina = player.currentStamina !== undefined ? player.currentStamina : (player.stamina || 0);
+      if (zone.entryCost.stamina && curStamina < zone.entryCost.stamina) {
         return res.status(400).json({
           success: false,
           error: `Stamina tidak mencukupi (memerlukan ${zone.entryCost.stamina} stamina).`
@@ -207,7 +218,11 @@ router.post('/enter', authenticateToken, async (req, res) => {
       }
 
       // Potong biaya secara permanen
-      if (zone.entryCost.stamina) player.stamina -= zone.entryCost.stamina;
+      if (zone.entryCost.stamina) {
+        const newSta = Math.max(0, curStamina - zone.entryCost.stamina);
+        player.currentStamina = newSta;
+        player.stamina = newSta;
+      }
       if (zone.entryCost.spiritStones) {
         if (player.spiritStones !== undefined) player.spiritStones -= zone.entryCost.spiritStones;
         else player.silver = Math.max(0, (player.silver || 0) - zone.entryCost.spiritStones);
@@ -299,9 +314,7 @@ router.post('/step', authenticateToken, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Aksi wajib disertakan.' });
     }
 
-    const player = await Player.findOne({
-      $or: [{ discordId: userId }, { _id: userId }]
-    });
+    const player = await Player.findOne(getPlayerQuery(userId));
 
     if (!player) {
       return res.status(404).json({ success: false, error: 'Pemain tidak ditemukan.' });
@@ -326,7 +339,11 @@ router.post('/step', authenticateToken, async (req, res) => {
         if (curWave < totWaves) {
           sessionData.currentWave = curWave + 1;
           sessionDoc.stepIndex = (sessionDoc.stepIndex || 0) + 1;
-          sessionDoc.markModified('sessionData');
+          if (typeof sessionDoc.markModified === 'function') {
+            if (typeof sessionDoc.markModified === 'function') {
+      sessionDoc.markModified('sessionData');
+    }
+          }
           await sessionDoc.save();
           return res.json({
             success: true,
@@ -337,7 +354,11 @@ router.post('/step', authenticateToken, async (req, res) => {
           sessionDoc.status = 'completed';
           sessionData.status = 'completed';
           sessionDoc.stepIndex = (sessionDoc.stepIndex || 0) + 1;
-          sessionDoc.markModified('sessionData');
+          if (typeof sessionDoc.markModified === 'function') {
+            if (typeof sessionDoc.markModified === 'function') {
+      sessionDoc.markModified('sessionData');
+    }
+          }
           await sessionDoc.save();
           return res.json({
             success: true,
@@ -367,7 +388,9 @@ router.post('/step', authenticateToken, async (req, res) => {
       sessionDoc.status = 'completed';
     }
 
-    sessionDoc.markModified('sessionData');
+    if (typeof sessionDoc.markModified === 'function') {
+      sessionDoc.markModified('sessionData');
+    }
     await sessionDoc.save();
 
     return res.json({
@@ -389,9 +412,7 @@ router.post('/claim', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId || req.user.id || req.user.discordId;
 
-    const player = await Player.findOne({
-      $or: [{ discordId: userId }, { _id: userId }]
-    });
+    const player = await Player.findOne(getPlayerQuery(userId));
 
     if (!player) {
       return res.status(404).json({ success: false, error: 'Pemain tidak ditemukan.' });
@@ -434,30 +455,65 @@ router.post('/claim', authenticateToken, async (req, res) => {
         { item: 'pure_qi_pill', name: 'Pil Intisari Qi', quantity: 2 }
       ];
     } else if (sessionDoc.zoneType === 'elemental_land') {
-      rewards = sessionData.rewards ? [sessionData.rewards] : [{ item: 'fire_shard', name: 'Keping Roh Api', quantity: 5 }];
+      const elR = sessionData.rewards || {};
+      rewards = [{
+        item: elR.shardKey || 'fire_shard',
+        name: elR.shardName || 'Keping Roh Api',
+        quantity: elR.quantity || 3
+      }];
     }
 
     // Berikan hadiah ke pemain
-    if (!player.inventory) player.inventory = [];
+    if (!Array.isArray(player.inventory)) player.inventory = [];
     for (const r of rewards) {
       if (r.item === 'copper' || r.item === 'silver') {
         player.silver = (player.silver || 0) + (r.quantity || 0);
       } else if (r.item === 'spirit_stone') {
         player.spiritStones = (player.spiritStones || 0) + (r.quantity || 0);
       } else {
-        const existingIdx = player.inventory.findIndex(it => (it.itemId || it.id || it.name) === r.item);
-        if (existingIdx !== -1) {
-          if (player.inventory[existingIdx].quantity !== undefined) player.inventory[existingIdx].quantity += (r.quantity || 1);
-          else if (player.inventory[existingIdx].amount !== undefined) player.inventory[existingIdx].amount += (r.quantity || 1);
-          else player.inventory[existingIdx].quantity = (r.quantity || 1) + 1;
+        const itemName = r.name || r.item;
+        const itemKey = r.item;
+        let itemDoc = null;
+        if (mongoose.connection && mongoose.connection.readyState === 1) {
+          try {
+            const guildId = player.guildId || process.env.GUILD_ID || 'DEFAULT_GUILD';
+            itemDoc = await Item.findOne({
+              $or: [
+                { guildId, name: itemName },
+                { guildId, itemId: itemKey },
+                { name: itemName },
+                ...(mongoose.Types.ObjectId.isValid(itemKey) ? [{ _id: itemKey }] : [])
+              ]
+            });
+            if (!itemDoc) {
+              itemDoc = await Item.create({
+                guildId,
+                name: itemName,
+                itemId: itemKey,
+                category: 'material',
+                tier: 1,
+                description: `Material berharga dari ekspedisi instans: ${itemName}`
+              });
+            }
+          } catch (e) {
+            itemDoc = null;
+          }
+        }
+        const itemIdVal = itemDoc?._id || (mongoose.Types.ObjectId.isValid(itemKey) ? itemKey : new mongoose.Types.ObjectId());
+        const existing = player.inventory.find(i => i.itemId && i.itemId.toString() === String(itemIdVal));
+        if (existing) {
+          existing.quantity = (existing.quantity || 1) + (r.quantity || 1);
         } else {
           player.inventory.push({
-            itemId: r.item,
-            name: r.name || r.item,
+            itemId: itemIdVal,
+            name: itemName,
             quantity: r.quantity || 1
           });
         }
       }
+    }
+    if (typeof player.markModified === 'function') {
+      player.markModified('inventory');
     }
 
     // Tandai status sesi sebagai 'claimed'
@@ -486,9 +542,7 @@ router.post('/abandon', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId || req.user.id || req.user.discordId;
 
-    const player = await Player.findOne({
-      $or: [{ discordId: userId }, { _id: userId }]
-    });
+    const player = await Player.findOne(getPlayerQuery(userId));
 
     if (!player) {
       return res.status(404).json({ success: false, error: 'Pemain tidak ditemukan.' });
