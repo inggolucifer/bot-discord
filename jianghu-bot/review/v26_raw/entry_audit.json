@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-11-06T09:01:49.512Z",
+  "totalTargetZones": 55,
+  "countsByType": {
+    "spirit_valley": 26,
+    "land_of_spirits": 3,
+    "defense_circle": 21,
+    "elemental_land": 5
+  },
+  "expectedCounts": {
+    "spirit_valley": 26,
+    "land_of_spirits": 3,
+    "defense_circle": 21,
+    "elemental_land": 5
+  },
+  "totalViolations": 0,
+  "violations": []
+}
