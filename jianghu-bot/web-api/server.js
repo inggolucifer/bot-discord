@@ -283,7 +283,11 @@ const setupServer = (client) => {
         console.log(`[API] Anti-Cheat Locks & Rate Limiters Initialized.`);
         try {
             const { ensureCoreItems } = require('../services/coreItems');
-            ensureCoreItems().catch(err => console.error('[CORE-ITEMS-ERROR]', err));
+            ensureCoreItems()
+                .then(async () => {
+                    await require('../services/coreShop').ensureCoreShopListings();
+                })
+                .catch(err => console.error('[CORE-ITEMS-ERROR]', err));
         } catch (e) {
             console.error('[CORE-ITEMS-IMPORT-ERROR]', e);
         }
