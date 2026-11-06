@@ -34,58 +34,79 @@ function getRegionAt(x, y) {
 
 const anchors = require('../world-data/anchors.json');
 
-// Bucket spasial anchor untuk buffer zone
-const BUCKET_SIZE = 250;
-const anchorBuckets = new Map();
+// Daftar 52 Anchor Pemukiman (SSOT Spasial V25)
+const ANCHORS_LIST = anchors.map(anc => ({
+  id: anc.id,
+  name: anc.name,
+  x: anc.x,
+  y: anc.y,
+  tier: anc.tier || 1,
+  R: (anc.v20 && typeof anc.v20.exclusionRadius === 'number') ? anc.v20.exclusionRadius : 10
+}));
 
-for (const anc of anchors) {
-  const excl = (anc.v20 && typeof anc.v20.exclusionRadius === 'number') ? anc.v20.exclusionRadius : 10;
-  const maxReach = excl + 14;
-  const minBx = Math.max(0, Math.floor((anc.x - maxReach) / BUCKET_SIZE));
-  const maxBx = Math.min(19, Math.floor((anc.x + maxReach) / BUCKET_SIZE));
-  const minBy = Math.max(0, Math.floor((anc.y - maxReach) / BUCKET_SIZE));
-  const maxBy = Math.min(19, Math.floor((anc.y + maxReach) / BUCKET_SIZE));
+/**
+ * V25 K5: Pembatasan Tier Otoritatif di Sekitar Pemukiman (52 Anchor)
+ * d <= R => tier = 1
+ * R < d <= R + 12 => min(naturalTier, settlement.tier + 1)
+ * d > R + 12 => min(naturalTier, settlement.tier + 1 + floor((d - (R + 12)) / 12))
+ * Multi-anchor: pilih anchor yang meminimalkan (d - R)
+ */
+function applySettlementTierCap(x, y, naturalTier) {
+  let bestAnchor = null;
+  let minDelta = Infinity;
 
-  for (let bx = minBx; bx <= maxBx; bx++) {
-    for (let by = minBy; by <= maxBy; by++) {
-      const key = `${bx}_${by}`;
-      if (!anchorBuckets.has(key)) anchorBuckets.set(key, []);
-      anchorBuckets.get(key).push({
-        id: anc.id,
-        x: anc.x,
-        y: anc.y,
-        tier: anc.tier || 1,
-        R: excl
-      });
+  for (let i = 0; i < ANCHORS_LIST.length; i++) {
+    const anc = ANCHORS_LIST[i];
+    const dx = Math.abs(x - anc.x);
+    const dy = Math.abs(y - anc.y);
+    const d = dx > dy ? dx : dy;
+    const delta = d - anc.R;
+    if (delta < minDelta) {
+      minDelta = delta;
+      bestAnchor = anc;
     }
   }
+
+  if (!bestAnchor) return naturalTier;
+
+  if (minDelta <= 0) {
+    return 1;
+  }
+
+  let cap;
+  if (minDelta <= 12) {
+    cap = bestAnchor.tier + 1;
+  } else {
+    const extra = Math.floor((minDelta - 12) / 12);
+    cap = bestAnchor.tier + 1 + extra;
+  }
+
+  return Math.max(1, Math.min(naturalTier, cap));
 }
 
 function getSettlementProximity(x, y) {
-  const bx = Math.floor(x / BUCKET_SIZE);
-  const by = Math.floor(y / BUCKET_SIZE);
-  const list = anchorBuckets.get(`${bx}_${by}`);
-  if (!list || list.length === 0) return null;
-
-  let minFactor = 2.0;
+  let minDelta = Infinity;
   let nearestAnchor = null;
 
-  for (const anc of list) {
-    const dCheb = Math.max(Math.abs(x - anc.x), Math.abs(y - anc.y));
-    if (dCheb <= anc.R) {
-      return { insideExclusion: true, factor: 0, anchor: anc };
-    }
-    if (dCheb <= anc.R + 12) {
-      const factor = (dCheb - anc.R) / 12;
-      if (factor <= minFactor) {
-        minFactor = factor;
-        nearestAnchor = anc;
-      }
+  for (let i = 0; i < ANCHORS_LIST.length; i++) {
+    const anc = ANCHORS_LIST[i];
+    const dx = Math.abs(x - anc.x);
+    const dy = Math.abs(y - anc.y);
+    const d = dx > dy ? dx : dy;
+    const delta = d - anc.R;
+    if (delta < minDelta) {
+      minDelta = delta;
+      nearestAnchor = anc;
     }
   }
 
-  if (nearestAnchor) {
-    return { insideExclusion: false, factor: minFactor, anchor: nearestAnchor };
+  if (!nearestAnchor) return null;
+
+  if (minDelta <= 0) {
+    return { insideExclusion: true, factor: 0, anchor: nearestAnchor, delta: minDelta };
+  }
+  if (minDelta <= 12) {
+    return { insideExclusion: false, factor: minDelta / 12, anchor: nearestAnchor, delta: minDelta };
   }
   return null;
 }
@@ -143,13 +164,15 @@ function getEffectiveDanger(x, y) {
     }
   }
 
+  const finalTier = applySettlementTierCap(ix, iy, maxEffectiveTier);
+
   if (dangerCache.size >= DANGER_CACHE_MAX) {
     const firstKey = dangerCache.keys().next().value;
     dangerCache.delete(firstKey);
   }
-  dangerCache.set(cacheKey, maxEffectiveTier);
+  dangerCache.set(cacheKey, finalTier);
 
-  return maxEffectiveTier;
+  return finalTier;
 }
 
 /**
@@ -190,20 +213,22 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
   const raw = getRawTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive);
 
   // 2c. Cincin Penyangga R..R+12 (Gradasi Ambush & Batas Tier)
+  const cappedTier = applySettlementTierCap(x, y, raw.dangerTierBase);
+
   if (prox && !prox.insideExclusion) {
     const factor = prox.factor;
     const dampedAmbush = Math.round(raw.ambushRiskRate * factor * 10000) / 10000;
-    const maxTier = (prox.anchor.tier || 1) + 1;
     return {
       type: dampedAmbush === 0 ? 'safe_zone' : raw.type,
       ambushRiskRate: dampedAmbush,
-      dangerTierBase: Math.min(raw.dangerTierBase, maxTier),
+      dangerTierBase: cappedTier,
       bufferFactor: factor
     };
   }
 
   return {
     ...raw,
+    dangerTierBase: cappedTier,
     bufferFactor: 1.0
   };
 }
@@ -427,6 +452,7 @@ function getTerrainStaminaCost(terrainType) {
 }
 
 module.exports = {
+  applySettlementTierCap,
   WORLD_WIDTH,
   WORLD_HEIGHT,
   REGIONS,

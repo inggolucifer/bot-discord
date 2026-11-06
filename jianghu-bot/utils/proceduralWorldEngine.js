@@ -7,7 +7,7 @@
  */
 
 const worldData = require('./worldData');
-const { getRegionAt, getTerritoryInfo, getTerrainStaminaCost } = require('./worldRegionEngine');
+const { getRegionAt, getTerritoryInfo, getTerrainStaminaCost, applySettlementTierCap } = require('./worldRegionEngine');
 const { isTileClaimableFast } = require('./buildZoneRules');
 
 const WORLD_WIDTH = worldData.WORLD_WIDTH || 5000;
@@ -229,12 +229,19 @@ const MAX_TILE_CACHE = 65536;
  */
 function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
   if (candidateSettlements !== ANCHOR_SETTLEMENTS) {
-    return _computeTileAt(tileX, tileY, candidateSettlements);
+    const raw = _computeTileAt(tileX, tileY, candidateSettlements);
+    if (raw && typeof raw.dangerTier === 'number') {
+      raw.dangerTier = applySettlementTierCap(tileX, tileY, raw.dangerTier);
+    }
+    return raw;
   }
   const cacheKey = (tileX << 13) | tileY;
   let cached = TILE_CACHE.get(cacheKey);
   if (cached === undefined) {
     cached = _computeTileAt(tileX, tileY, ANCHOR_SETTLEMENTS);
+    if (cached && typeof cached.dangerTier === 'number') {
+      cached.dangerTier = applySettlementTierCap(tileX, tileY, cached.dangerTier);
+    }
     if (TILE_CACHE.size >= MAX_TILE_CACHE) {
       const iter = TILE_CACHE.keys();
       for (let i = 0; i < 16384; i++) TILE_CACHE.delete(iter.next().value);
@@ -325,7 +332,7 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
       regionId: region.id,
       regionName: region.name,
       territoryType: isDanger ? 'danger_zone' : (settlementInfo.type === 'sect' ? 'sect_territory' : 'settlement'),
-      dangerTier: isDanger ? 4 : (settlementInfo.tier || 1),
+      dangerTier: applySettlementTierCap(tileX, tileY, isDanger ? 4 : (settlementInfo.tier || 1)),
       ambushRiskRate: isDanger ? 0.3 : 0,
       factionName: settlementInfo.type === 'sect' ? settlementInfo.name : null,
       staminaCost: getTerrainStaminaCost('settlement')
@@ -352,7 +359,7 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
       regionId: region.id,
       regionName: region.name,
       territoryType: 'calm_zone',
-      dangerTier: activePass.tier || 2,
+      dangerTier: applySettlementTierCap(tileX, tileY, activePass.tier || 2),
       ambushRiskRate: 0.05,
       factionName: null,
       staminaCost: getTerrainStaminaCost(passTerrain)
@@ -412,7 +419,7 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
       regionId: region.id,
       regionName: region.name,
       territoryType: 'danger_zone',
-      dangerTier: Math.max(3, region.dangerTier),
+      dangerTier: applySettlementTierCap(tileX, tileY, Math.max(3, region.dangerTier)),
       ambushRiskRate: 0,
       factionName: null,
       staminaCost: getTerrainStaminaCost(barrierTerrain)
@@ -956,7 +963,8 @@ function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS)
     regionId: region.id,
     regionName: region.name,
     territoryType: finalTerritory.type,
-    dangerTier: Math.max(region.dangerTier, finalTerritory.dangerTierBase),
+    dangerTier: applySettlementTierCap(tileX, tileY, Math.max(region.dangerTier, finalTerritory.dangerTierBase)),
+    dangerTierBase: finalTerritory.dangerTierBase,
     ambushRiskRate: finalTerritory.ambushRiskRate,
     factionName: null,
     staminaCost: getTerrainStaminaCost(terrainType)
