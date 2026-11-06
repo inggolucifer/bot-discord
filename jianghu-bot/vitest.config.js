@@ -4,6 +4,9 @@ module.exports = defineConfig({
     test: {
         globals: true,
         environment: 'node',
-        include: ['tests/**/*.{test,spec}.{js,mjs,ts}']
+        include: [
+            'tests/unit/**/*.{test,spec}.{js,mjs,ts}',
+            'tests/integration/**/*.{test,spec}.{js,mjs,ts}'
+        ]
     }
 });

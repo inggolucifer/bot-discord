@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-11-06T02:20:28.108Z",
+  "summary": {
+    "totalTested": 6,
+    "totalResolved": 6,
+    "totalFailed": 0,
+    "allGreen": true,
+    "gateStatus": "PASS"
+  },
+  "findings": {
+    "T1": {
+      "tested": "T1 (Nearby Zones)",
+      "failed": false,
+      "resolved": true,
+      "reason": "GET /api/world/nearby memuat zones-v23.json, menghasilkan ID inst_*, dan menggunakan posisi server otoritatif.",
+      "details": {
+        "hasZonesV23Import": true,
+        "hasInstPrefix": true,
+        "queriesZones": true,
+        "trustsClientCoords": false
+      }
+    },
+    "T2": {
+      "tested": "T2 (Instanced Route Hardening & Database Persistence)",
+      "failed": false,
+      "resolved": true,
+      "reason": "POST /enter hanya membaca zoneId, tersimpan persisten di MongoDB InstancedZoneSession, dan memvalidasi jarak server <= 3 petak.",
+      "details": {
+        "readsBodyDangerTier": false,
+        "usesInMemoryMap": false,
+        "checksDistance": true,
+        "usesDatabaseModel": true
+      }
+    },
+    "T4": {
+      "tested": "T4 (Jimat Pengusir & Penarik Aktif)",
+      "failed": false,
+      "resolved": true,
+      "reason": "Jimat repellent & attraction terdaftar di enum Player.js, diproses mutlak di inventory.js, dan diinspeksi dari activeBuffs di world.js.",
+      "details": {
+        "invHandlesCharms": true,
+        "playerEnumHasCharms": true,
+        "worldUsesGhostFields": false,
+        "worldChecksActiveBuffs": true
+      }
+    },
+    "T5": {
+      "tested": "T5 (Batas Tier Cincin Pemukiman)",
+      "failed": false,
+      "resolved": true,
+      "reason": "Semua pemukiman uji mematuhi batas tier cincin R+1..R+12 (dangerTier <= anc.tier + 1, 0 pelanggaran).",
+      "details": {
+        "violationsCount": 0,
+        "violations": []
+      }
+    },
+    "T6": {
+      "tested": "T6 (Pesan Rintangan Kontekstual)",
+      "failed": false,
+      "resolved": true,
+      "reason": "Pesan tebing usang berhasil diganti total dengan modul otoritatif describeBlocker.",
+      "details": {
+        "hasLegacyMsg": false,
+        "usesDescribeBlocker": true
+      }
+    },
+    "T7": {
+      "tested": "T7 (Penyelarasan Nama Wilayah Kanonikal)",
+      "failed": false,
+      "resolved": true,
+      "reason": "Seluruh dokumen dan skrip telah bersih dari nama wilayah fiktif (0 token halusinasi).",
+      "details": {
+        "foundTokensCount": 0,
+        "foundTokens": []
+      }
+    }
+  }
+}

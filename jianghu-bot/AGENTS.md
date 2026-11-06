@@ -275,6 +275,28 @@ Mengikuti standar visual Wuxia premium Tale of Immortal dengan kebijakan **Zero-
    - Tombol mengambang (floating buttons) seperti kompas dan chat otomatis disembunyikan saat modal atau inspektor petak aktif.
    - Di viewport mobile landscape (tinggi 360–420px), setiap modal menggunakan `max-h-[96vh]` dengan `overflow-y-auto custom-scrollbar` mandiri sehingga tidak pernah terpotong atau saling menimpa.
 
+### 3.12. Arsitektur V25: Area Khusus Berinstans, Jimat Spasial, Batas Tier Otoritatif & Privasi Realtime
+1. **Area Khusus Berinstans (Instanced Zones V25)**:
+   - Sumber konfigurasi otoritatif: `world-data/zones-v23.json` (169 zona: `spirit_valley`, `land_of_spirits`, `defense_circle`, `elemental_land`).
+   - Gerbang Masuk Spasial: Penemuan zona di `/api/world/nearby` berawalan prefix `inst_` jika berada dalam radius $\le 14$ petak. Masuk zona (`POST /api/instanced-zones/enter`) wajib memvalidasi Chebyshev distance $\le 3$ petak dari anchor koordinat zona.
+   - Server Authoritative Strict: Parameter `zoneType` dan `dangerTier` diambil murni dari `zones-v23.json` di sisi server; payload klien yang mencoba memanipulasi `zoneType`/`dangerTier` diabaikan/ditolak.
+   - Persistensi Sesi MongoDB: Menggunakan model Mongoose `InstancedZoneSession` (bukan memori `Map`), dengan status `active`, `completed`, `failed`, `abandoned`. Idempoten saat klaim hadiah (409 Conflict jika sudah diklaim).
+   - Antarmuka Berbasis Teks: Komponen `InstancedZonePanel.tsx` dirancang dengan Wuxia Dark Ink murni (Tailwind CSS, Zero Canvas) tanpa membebani performa web browser.
+2. **Jimat Spasial & Modulator Ambush (Charms & Ambush Engine)**:
+   - Jimat Pengusir Monster (`repellent_charm`): Mengurangi tingkat bahaya ambush efektif sebesar 50% (`encounterCharms.repellentBonus = 0.5`).
+   - Jimat Penarik Monster (`attraction_charm`): Meningkatkan tingkat bahaya ambush efektif sebesar 75% (`encounterCharms.attractionBonus = 0.75`).
+   - Durasi & Eksklusivitas Saling Menghilangkan: Berlaku selama 1800 detik (30 menit). Mengaktifkan salah satu jimat otomatis membersihkan jimat lawan dari `player.activeBuffs`.
+   - Sanitasi Field Database: Disimpan di `player.activeBuffs` dengan buffType `repellent_charm` / `attraction_charm`. Seluruh field hantu legacy (`player.activeCharms`, `player.charms`) dilarang dan dihapus.
+3. **Batas Tier Otoritatif Cincin Pemukiman (Settlement Danger Tier Cap)**:
+   - Keamanan Mutlak Zona Penyangga: Pemukiman dan radius sekitarnya terlindungi dari monster berkekuatan tidak wajar menggunakan formula otoritatif `applySettlementTierCap(x, y, naturalTier)` di `worldRegionEngine.js` dan `proceduralWorldEngine.js`:
+     - $d \le R_{\text{exclusion}} \implies \text{dangerTier} = 1$
+     - $R_{\text{exclusion}} < d \le R_{\text{exclusion}} + 12 \implies \min(\text{naturalTier}, \text{settlementTier} + 1)$
+     - $d > R_{\text{exclusion}} + 12 \implies \min(\text{naturalTier}, \text{settlementTier} + 1 + \lfloor(d - (R_{\text{exclusion}} + 12)) / 12\rfloor)$
+   - Konsistensi Multi-Layer: Diterapkan serempak pada `getTileAt`, `_computeTileAt`, `getEffectiveDanger`, dan `getTerritoryInfo` sehingga 0 pelanggaran di seluruh 52 pemukiman Jianghu.
+4. **Privasi Spasial & Proteksi Siaran Realtime (Socket Delta & Chunk Guard)**:
+   - Kuantisasi Koordinat Multi-Pemain: Siaran delta posisi publik (`nearby_delta`) dikuantisasi ke kelipatan 8 petak (`Math.floor(pos / 8) * 8`) untuk mencegah eksploitasi radar pelacakan koordinat presisi tinggi.
+   - Pagar Jarak Langganan Chunk: Socket event `subscribe_chunks` memvalidasi jarak Chebyshev ke petak pemain ($dChunk \le 2$). Permintaan langganan chunk arbitrer di luar jangkauan ditolak seketika.
+
 ---
 
 ## 4. Standar `globalAssets.ts`

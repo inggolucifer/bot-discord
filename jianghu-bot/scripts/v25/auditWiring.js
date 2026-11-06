@@ -1,9 +1,8 @@
 /**
  * scripts/v25/auditWiring.js
- * Baseline Wiring Audit & Red Test Lock for V25 (K0)
- * 
- * Verifies that all 6 findings (T1, T2, T4, T5, T6, T7) currently FAIL at HEAD.
- * Generates review/v25_raw/before.json with deterministic proof.
+ * Wiring Audit untuk V25
+ * Mode default : Baseline audit (menghasilkan review/v25_raw/before.json)
+ * Mode --after : Post-fix audit (menghasilkan review/v25_raw/after.json)
  */
 
 const fs = require('fs');
@@ -20,71 +19,75 @@ const anchors = require('../../world-data/anchors.json');
 const regions = require('../../world-data/regions.json');
 const zonesV23 = require('../../world-data/zones-v23.json');
 
+const isAfterMode = process.argv.includes('--after');
+
 function auditT1_NearbyZones() {
-  // Test T1: Does nearby.js or nearbyEngine produce instanced zone entries with id 'inst_'?
   const nearbyRouteCode = fs.readFileSync(path.join(BOT_ROOT, 'web-api/routes/nearby.js'), 'utf8');
   const hasZonesV23Import = nearbyRouteCode.includes('zones-v23.json');
   const hasInstPrefix = nearbyRouteCode.includes('inst_');
   const queriesZones = nearbyRouteCode.includes('spirit_valley') || nearbyRouteCode.includes('land_of_spirits');
-  
-  // Also check if nearby.js relies on client query cx,cy instead of server position
   const trustsClientCoords = nearbyRouteCode.includes('req.query.cx') && nearbyRouteCode.includes('req.query.cy');
 
-  const failed = !hasZonesV23Import && !hasInstPrefix && !queriesZones;
+  const resolved = hasZonesV23Import && hasInstPrefix && queriesZones && !trustsClientCoords;
+  const failed = !resolved;
+
   return {
     tested: 'T1 (Nearby Zones)',
     failed,
-    reason: failed 
-      ? 'GET /api/world/nearby tidak memuat zones-v23.json, tidak menghasilkan ID inst_*, dan memercayai req.query klien.' 
-      : 'T1 sudah terpasang (unexpected for baseline).',
+    resolved,
+    reason: resolved
+      ? 'GET /api/world/nearby memuat zones-v23.json, menghasilkan ID inst_*, dan menggunakan posisi server otoritatif.'
+      : 'GET /api/world/nearby tidak memuat zones-v23.json, tidak menghasilkan ID inst_*, atau memercayai query klien.',
     details: { hasZonesV23Import, hasInstPrefix, queriesZones, trustsClientCoords }
   };
 }
 
 function auditT2_InstancedRouteInjection() {
-  // Test T2: Does POST /enter in instancedZones.js accept dangerTier/zoneType from req.body, and use in-memory Map?
   const routeCode = fs.readFileSync(path.join(BOT_ROOT, 'web-api/routes/instancedZones.js'), 'utf8');
-  const readsBodyDangerTier = routeCode.includes('dangerTier') && routeCode.includes('req.body');
+  const readsBodyDangerTier = /req\.body\.(dangerTier|zoneType)/.test(routeCode) || /\{\s*[^}]*(dangerTier|zoneType)[^}]*\}\s*=\s*req\.body/.test(routeCode);
   const usesInMemoryMap = routeCode.includes('const activeSessions = new Map()') || routeCode.includes('activeSessions.set');
-  const checksDistance = routeCode.includes('dist <= 3') || routeCode.includes('Chebyshev');
+  const checksDistance = routeCode.includes('dist > 3') || routeCode.includes('Math.max(Math.abs(px - zone.x)');
+  const usesDatabaseModel = routeCode.includes('InstancedZoneSession');
 
-  const failed = readsBodyDangerTier && usesInMemoryMap && !checksDistance;
+  const resolved = !readsBodyDangerTier && !usesInMemoryMap && checksDistance && usesDatabaseModel;
+  const failed = !resolved;
+
   return {
-    tested: 'T2 (Instanced Route Injection & Memory Sessions)',
+    tested: 'T2 (Instanced Route Hardening & Database Persistence)',
     failed,
-    reason: failed
-      ? 'POST /enter menerima dangerTier/zoneType dari body klien, memakai Map in-memory, dan tidak memvalidasi jarak server.'
-      : 'T2 sudah diperbaiki (unexpected for baseline).',
-    details: { readsBodyDangerTier, usesInMemoryMap, checksDistance }
+    resolved,
+    reason: resolved
+      ? 'POST /enter hanya membaca zoneId, tersimpan persisten di MongoDB InstancedZoneSession, dan memvalidasi jarak server <= 3 petak.'
+      : 'POST /enter menerima dangerTier/zoneType dari klien, memakai Map in-memory, atau tidak memvalidasi jarak server.',
+    details: { readsBodyDangerTier, usesInMemoryMap, checksDistance, usesDatabaseModel }
   };
 }
 
 function auditT4_CharmsWiring() {
-  // Test T4: Check inventory.js, Player.js, and world.js for charm disconnects
   const invCode = fs.readFileSync(path.join(BOT_ROOT, 'web-api/routes/inventory.js'), 'utf8');
   const playerModelCode = fs.readFileSync(path.join(BOT_ROOT, 'models/Player.js'), 'utf8');
   const worldCode = fs.readFileSync(path.join(BOT_ROOT, 'web-api/routes/world.js'), 'utf8');
 
-  // Check inventory use-item handler
   const invHandlesCharms = invCode.includes("item.effectType === 'repellent_charm'") || invCode.includes("item.effectType === 'attraction_charm'");
-  // Check Player.js activeBuffs enum
   const playerEnumHasCharms = playerModelCode.includes("'repellent_charm'") && playerModelCode.includes("'attraction_charm'");
-  // Check world.js for ghost field player.activeCharms
   const worldUsesGhostFields = worldCode.includes('player.activeCharms') || worldCode.includes('player.charms');
+  const worldChecksActiveBuffs = worldCode.includes('b.buffType === \'repellent_charm\'');
 
-  const failed = !invHandlesCharms && !playerEnumHasCharms && worldUsesGhostFields;
+  const resolved = invHandlesCharms && playerEnumHasCharms && !worldUsesGhostFields && worldChecksActiveBuffs;
+  const failed = !resolved;
+
   return {
-    tested: 'T4 (Jimat Tak Berfungsi)',
+    tested: 'T4 (Jimat Pengusir & Penarik Aktif)',
     failed,
-    reason: failed
-      ? 'Jimat repellent/attraction jatuh ke cabang unhandled di inventory.js, tidak ada di enum Player.js, dan world.js membaca field hantu.'
-      : 'T4 sudah diperbaiki (unexpected for baseline).',
-    details: { invHandlesCharms, playerEnumHasCharms, worldUsesGhostFields }
+    resolved,
+    reason: resolved
+      ? 'Jimat repellent & attraction terdaftar di enum Player.js, diproses mutlak di inventory.js, dan diinspeksi dari activeBuffs di world.js.'
+      : 'Jimat tidak ditangani di inventory.js, tidak ada di enum Player.js, atau world.js masih membaca field hantu.',
+    details: { invHandlesCharms, playerEnumHasCharms, worldUsesGhostFields, worldChecksActiveBuffs }
   };
 }
 
 function auditT5_SettlementRingTierCap() {
-  // Test T5: Ring tier on at least 5 settlements exceeds settlement.tier + 1
   const targetIds = ['kota_canghai', 'desa_heiyan', 'pulau_penyu_raksasa', 'dusun_pondok_karang', 'kota_leiyin'];
   const violations = [];
 
@@ -94,10 +97,10 @@ function auditT5_SettlementRingTierCap() {
     const R = anc.v20?.exclusionRadius || 10;
     const allowedMax = (anc.tier || 1) + 1;
 
-    // Sample along ring R+1 to R+12
     for (let step = 1; step <= 12; step += 3) {
       const x = anc.x + R + step;
       const y = anc.y;
+
       const t = proceduralWorldEngine.getTileAt(x, y);
       const eff = worldRegionEngine.getEffectiveDanger(x, y);
 
@@ -110,41 +113,46 @@ function auditT5_SettlementRingTierCap() {
           tileDangerTier: t.dangerTier,
           effectiveDanger: eff
         });
-        break; // Count once per settlement
+        break;
       }
     }
   }
 
-  const failed = violations.length >= 5;
+  const resolved = violations.length === 0;
+  const failed = !resolved;
+
   return {
     tested: 'T5 (Batas Tier Cincin Pemukiman)',
     failed,
-    reason: failed
-      ? `Terbukti ${violations.length}/5 pemukiman melanggar batas tier (dangerTier > anc.tier + 1).`
-      : 'T5 tidak melanggar (unexpected for baseline).',
+    resolved,
+    reason: resolved
+      ? 'Semua pemukiman uji mematuhi batas tier cincin R+1..R+12 (dangerTier <= anc.tier + 1, 0 pelanggaran).'
+      : `Ditemukan ${violations.length}/5 pemukiman melanggar batas tier (dangerTier > anc.tier + 1).`,
     details: { violationsCount: violations.length, violations }
   };
 }
 
 function auditT6_LegacyBlockerMessages() {
-  // Test T6: Legacy tebing message in world.js line 2709
   const worldCode = fs.readFileSync(path.join(BOT_ROOT, 'web-api/routes/world.js'), 'utf8');
   const legacyStr = 'Jalur terhalang rintangan tebing batu yang mustahil ditembus! Dibutuhkan artefak terbang spiritual.';
   const hasLegacyMsg = worldCode.includes(legacyStr);
+  const usesDescribeBlocker = worldCode.includes('describeBlocker(destTile');
 
-  const failed = hasLegacyMsg;
+  const resolved = !hasLegacyMsg && usesDescribeBlocker;
+  const failed = !resolved;
+
   return {
-    tested: 'T6 (Pesan Halangan Lama Tersisa)',
+    tested: 'T6 (Pesan Rintangan Kontekstual)',
     failed,
-    reason: failed
-      ? 'Ditemukan pesan tebing batu mustahil ditembus pada rute gerakan lama (world.js:2709).'
-      : 'Pesan lama sudah dibersihkan (unexpected for baseline).',
-    details: { hasLegacyMsg }
+    resolved,
+    reason: resolved
+      ? 'Pesan tebing usang berhasil diganti total dengan modul otoritatif describeBlocker.'
+      : 'Pesan tebing batu mustahil ditembus masih ditemukan di world.js:2709.',
+    details: { hasLegacyMsg, usesDescribeBlocker }
   };
 }
 
 function auditT7_DocsHallucinatedRegions() {
-  // Test T7: Check docs for hallucinated region tokens
   const canonicalIds = new Set(regions.map(r => r.id));
   const hallucinatedList = [
     'kunlun_foothills',
@@ -174,20 +182,24 @@ function auditT7_DocsHallucinatedRegions() {
     }
   }
 
-  const failed = foundTokens.length > 0;
+  const resolved = foundTokens.length === 0;
+  const failed = !resolved;
+
   return {
-    tested: 'T7 (Wilayah Halusinasi Dokumen)',
+    tested: 'T7 (Penyelarasan Nama Wilayah Kanonikal)',
     failed,
-    reason: failed
-      ? `Ditemukan ${foundTokens.length} token wilayah fiktif pada dokumen/skrip V23.`
-      : 'Dokumen sudah bersih (unexpected for baseline).',
-    details: { foundTokensCount: foundTokens.length, sampleTokens: foundTokens.slice(0, 5) }
+    resolved,
+    reason: resolved
+      ? 'Seluruh dokumen dan skrip telah bersih dari nama wilayah fiktif (0 token halusinasi).'
+      : `Ditemukan ${foundTokens.length} token wilayah fiktif pada dokumen/skrip.`,
+    details: { foundTokensCount: foundTokens.length, foundTokens }
   };
 }
 
 function runAudit() {
+  const modeLabel = isAfterMode ? 'POST-FIX AUDIT WIRING V25 (K8)' : 'BASELINE AUDIT WIRING & TES MERAH V25 (K0)';
   console.log('======================================================================');
-  console.log(' BASELINE AUDIT WIRING & TES MERAH V25 (K0)');
+  console.log(` ${modeLabel}`);
   console.log('======================================================================');
 
   const findings = {
@@ -200,45 +212,78 @@ function runAudit() {
   };
 
   let totalTested = 0;
+  let totalResolved = 0;
   let totalFailed = 0;
 
   for (const [key, result] of Object.entries(findings)) {
     totalTested++;
+    if (result.resolved) totalResolved++;
     if (result.failed) totalFailed++;
-    const icon = result.failed ? '🔴 GAGAL (TERKUNCI)' : '🟢 LULUS';
+
+    const icon = isAfterMode
+      ? (result.resolved ? '🟢 TERSELESAIKAN' : '🔴 BELUM SELESAI')
+      : (result.failed ? '🔴 GAGAL (TERKUNCI)' : '🟢 LULUS');
+
     console.log(`${key.padEnd(4)}: ${icon} | ${result.tested}`);
     console.log(`      ${result.reason}`);
   }
-
-  const allRed = totalFailed === totalTested && totalTested === 6;
-
-  console.log('======================================================================');
-  console.log(`HASIL EVALUASI K0: ${totalFailed} / ${totalTested} TEMUAN TERBUKTI GAGAL (ALL RED: ${allRed})`);
-  console.log('======================================================================');
 
   if (!fs.existsSync(RAW_DIR)) {
     fs.mkdirSync(RAW_DIR, { recursive: true });
   }
 
-  const outputPayload = {
-    timestamp: new Date().toISOString(),
-    commitBase: '4d56a63a',
-    summary: {
-      totalTested,
-      totalFailed,
-      allRed,
-      gateStatus: allRed ? 'PASS' : 'FAIL'
-    },
-    findings
-  };
+  if (isAfterMode) {
+    const allGreen = totalResolved === totalTested && totalTested === 6;
+    console.log('======================================================================');
+    console.log(`HASIL EVALUASI K8: ${totalResolved} / ${totalTested} TEMUAN TERSELESAIKAN (ALL GREEN: ${allGreen})`);
+    console.log('======================================================================');
 
-  const outputPath = path.join(RAW_DIR, 'before.json');
-  fs.writeFileSync(outputPath, JSON.stringify(outputPayload, null, 2), 'utf8');
-  console.log(`[OUTPUT] Hasil audit baseline disimpan ke: ${outputPath}`);
+    const outputPayload = {
+      timestamp: new Date().toISOString(),
+      summary: {
+        totalTested,
+        totalResolved,
+        totalFailed,
+        allGreen,
+        gateStatus: allGreen ? 'PASS' : 'FAIL'
+      },
+      findings
+    };
 
-  if (!allRed) {
-    console.error('[FATAL] Evaluasi K0 gagal: Tidak semua temuan terbukti gagal di HEAD baseline!');
-    process.exit(1);
+    const outputPath = path.join(RAW_DIR, 'after.json');
+    fs.writeFileSync(outputPath, JSON.stringify(outputPayload, null, 2), 'utf8');
+    console.log(`[OUTPUT] Hasil audit pasca-perbaikan disimpan ke: ${outputPath}`);
+
+    if (!allGreen) {
+      console.error('[FATAL] Evaluasi K8 gagal: Masih ada temuan yang belum terselesaikan!');
+      process.exit(1);
+    }
+  } else {
+    const allRed = totalFailed === totalTested && totalTested === 6;
+    console.log('======================================================================');
+    console.log(`HASIL EVALUASI K0: ${totalFailed} / ${totalTested} TEMUAN TERBUKTI GAGAL (ALL RED: ${allRed})`);
+    console.log('======================================================================');
+
+    const outputPayload = {
+      timestamp: new Date().toISOString(),
+      commitBase: '4d56a63a',
+      summary: {
+        totalTested,
+        totalFailed,
+        allRed,
+        gateStatus: allRed ? 'PASS' : 'FAIL'
+      },
+      findings
+    };
+
+    const outputPath = path.join(RAW_DIR, 'before.json');
+    fs.writeFileSync(outputPath, JSON.stringify(outputPayload, null, 2), 'utf8');
+    console.log(`[OUTPUT] Hasil audit baseline disimpan ke: ${outputPath}`);
+
+    if (!allRed) {
+      console.error('[FATAL] Evaluasi K0 gagal: Tidak semua temuan terbukti gagal di HEAD baseline!');
+      process.exit(1);
+    }
   }
 }
 
