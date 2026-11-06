@@ -387,11 +387,41 @@ const setupServer = (client) => {
         const { nearbyBroadcaster } = require('../services/nearbyBroadcaster');
         nearbyBroadcaster.start(io, 500);
         // ==========================================
-        socket.on('subscribe_chunks', (data) => {
+        socket.on('subscribe_chunks', async (data) => {
             try {
                 const chunks = Array.isArray(data?.chunks) ? data.chunks.slice(0, 25) : [];
+                if (chunks.length === 0) return;
+
+                // V25 K7: Validasi radius chunk server-authoritative (maksimum radius <= 2 chunk dari posisi pemain)
+                const userId = socket.user?.userId || socket.user?.id || socket.user?.discordId;
+                let playerCx = null;
+                let playerCy = null;
+
+                if (userId) {
+                    try {
+                        const Player = require('../models/Player');
+                        const player = await Player.findOne({
+                            $or: [{ discordId: userId }, { _id: userId }]
+                        }).select('currentPosition').lean();
+                        if (player?.currentPosition) {
+                            playerCx = Math.floor(Number(player.currentPosition.x) / 32);
+                            playerCy = Math.floor(Number(player.currentPosition.y) / 32);
+                        }
+                    } catch (dbErr) {
+                        // ignore db error, proceed with fallback
+                    }
+                }
+
                 for (const c of chunks) {
                     if (Number.isInteger(c.cx) && Number.isInteger(c.cy)) {
+                        // Tolak chunk yang jarak Chebyshev-nya > 2 chunk (anti-radar & privacy)
+                        if (playerCx !== null && playerCy !== null) {
+                            const dChunk = Math.max(Math.abs(c.cx - playerCx), Math.abs(c.cy - playerCy));
+                            if (dChunk > 2) {
+                                continue;
+                            }
+                        }
+
                         socket.join(`chunk:${c.cx}:${c.cy}`);
                         nearbyBroadcaster.addSubscriber(socket.id, c.cx, c.cy);
                     }

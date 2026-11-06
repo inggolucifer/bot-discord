@@ -80,12 +80,16 @@ class NearbyBroadcaster {
     if (!this.chunkEntities.has(newKey)) {
       this.chunkEntities.set(newKey, new Map());
     }
+    // V25 K7: Kuantisasi koordinat spasial ke blok 8 petak untuk melindungi privasi pemain lain
+    const quantizedX = entity.x !== undefined ? Math.floor(Number(entity.x) / 8) * 8 : undefined;
+    const quantizedY = entity.y !== undefined ? Math.floor(Number(entity.y) / 8) * 8 : undefined;
+
     this.chunkEntities.get(newKey).set(id, {
       id,
       name: entity.name,
       type: entity.type || 'player',
-      x: entity.x,
-      y: entity.y,
+      x: quantizedX,
+      y: quantizedY,
       status: entity.status || 'aktif'
     });
     this.dirtyChunks.add(newKey);
