@@ -2307,6 +2307,7 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
         let stepsTaken = 0;
         let stoppedEarly = false;
         let stopReason = null;
+        let blockerInfo = null;
         let encounterResult = null;
 
         // Loop eksekusi pergerakan langkah demi langkah
