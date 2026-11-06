@@ -321,6 +321,35 @@ const setupServer = (client) => {
         });
     });
 
+    // ==========================================
+    // CHUNK STREAMING SOCKET ROOMS & NEARBY DELTA BATCHING (V21 F3, V26 P5)
+    const { nearbyBroadcaster } = require('../services/nearbyBroadcaster');
+    nearbyBroadcaster.start(io, 500);
+
+    async function getPlayerChunk(socket) {
+        const userId = socket.user?.userId || socket.user?.id || socket.user?.discordId;
+        if (!userId) return null;
+        try {
+            const Player = require('../models/Player');
+            const mongoose = require('mongoose');
+            const isObjId = mongoose.Types.ObjectId.isValid(userId) && String(new mongoose.Types.ObjectId(userId)) === String(userId);
+            const playerQuery = isObjId ? { $or: [{ discordId: userId }, { _id: userId }] } : { discordId: String(userId) };
+            const player = await Player.findOne(playerQuery).select('gridPosition currentPosition').lean();
+            const px = player?.gridPosition?.tileX ?? player?.currentPosition?.x;
+            const py = player?.gridPosition?.tileY ?? player?.currentPosition?.y;
+            if (px !== undefined && py !== undefined) {
+                return {
+                    cx: Math.floor(Number(px) / 32),
+                    cy: Math.floor(Number(py) / 32)
+                };
+            }
+        } catch (dbErr) {
+            // ignore db error, proceed with null
+        }
+        return null;
+    }
+    // ==========================================
+
     io.on('connection', async (socket) => {
         // Rate limiting in-memory per koneksi socket (maksimal 1 pesan per 3 detik)
         let lastMessageTime = 0;
@@ -386,71 +415,9 @@ const setupServer = (client) => {
             }
         });
 
-        // ==========================================
-        // CHUNK STREAMING SOCKET ROOMS & NEARBY DELTA BATCHING (V21 F3)
-        const { nearbyBroadcaster } = require('../services/nearbyBroadcaster');
-        nearbyBroadcaster.start(io, 500);
-        // ==========================================
-        socket.on('subscribe_chunks', async (data) => {
-            try {
-                const chunks = Array.isArray(data?.chunks) ? data.chunks.slice(0, 25) : [];
-                if (chunks.length === 0) return;
-
-                // V25 K7: Validasi radius chunk server-authoritative (maksimum radius <= 2 chunk dari posisi pemain)
-                const userId = socket.user?.userId || socket.user?.id || socket.user?.discordId;
-                let playerCx = null;
-                let playerCy = null;
-
-                if (userId) {
-                    try {
-                        const Player = require('../models/Player');
-                        const mongoose = require('mongoose');
-                        const isObjId = mongoose.Types.ObjectId.isValid(userId) && String(new mongoose.Types.ObjectId(userId)) === String(userId);
-                        const playerQuery = isObjId ? { $or: [{ discordId: userId }, { _id: userId }] } : { discordId: String(userId) };
-                        const player = await Player.findOne(playerQuery).select('gridPosition currentPosition').lean();
-                        const px = player?.gridPosition?.tileX ?? player?.currentPosition?.x;
-                        const py = player?.gridPosition?.tileY ?? player?.currentPosition?.y;
-                        if (px !== undefined && py !== undefined) {
-                            playerCx = Math.floor(Number(px) / 32);
-                            playerCy = Math.floor(Number(py) / 32);
-                        }
-                    } catch (dbErr) {
-                        // ignore db error, proceed with fallback
-                    }
-                }
-
-                for (const c of chunks) {
-                    if (Number.isInteger(c.cx) && Number.isInteger(c.cy)) {
-                        // Tolak chunk yang jarak Chebyshev-nya > 2 chunk (anti-radar & privacy)
-                        if (playerCx !== null && playerCy !== null) {
-                            const dChunk = Math.max(Math.abs(c.cx - playerCx), Math.abs(c.cy - playerCy));
-                            if (dChunk > 2) {
-                                continue;
-                            }
-                        }
-
-                        socket.join(`chunk:${c.cx}:${c.cy}`);
-                        nearbyBroadcaster.addSubscriber(socket.id, c.cx, c.cy);
-                    }
-                }
-            } catch (err) {
-                console.warn('[SOCKET] subscribe_chunks error:', err.message);
-            }
-        });
-
-        socket.on('unsubscribe_chunks', (data) => {
-            try {
-                const chunks = Array.isArray(data?.chunks) ? data.chunks.slice(0, 25) : [];
-                for (const c of chunks) {
-                    if (Number.isInteger(c.cx) && Number.isInteger(c.cy)) {
-                        socket.leave(`chunk:${c.cx}:${c.cy}`);
-                        nearbyBroadcaster.removeSubscriber(socket.id, c.cx, c.cy);
-                    }
-                }
-            } catch (err) {
-                console.warn('[SOCKET] unsubscribe_chunks error:', err.message);
-            }
-        });
+        // Pendaftaran Handler Streaming Chunk Produksi (V26 P5)
+        const { registerChunkSubscriptionHandlers } = require('./socket/chunkSubscriptions');
+        registerChunkSubscriptionHandlers(io, socket, { getPlayerChunk, nearbyBroadcaster });
 
         socket.on('disconnect', () => {
             nearbyBroadcaster.removeSocketAll(socket.id);
