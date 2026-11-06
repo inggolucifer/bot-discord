@@ -4284,6 +4284,100 @@ router.post('/fish/reel', authenticateToken, async (req, res) => {
     }
 });
 
+
+// =========================================================================
+// FASILITAS PEMUKIMAN (SETTLEMENT FACILITIES V26)
+// =========================================================================
+const settlementFacilityService = require('../../services/settlementFacilityService');
+
+// Paviliun Kitab: Daftar Manual
+router.get('/facility/manual-pavilion/list', authenticateToken, async (req, res) => {
+    try {
+        const player = await Player.findOne({ discordId: req.user.userId });
+        if (!player) return res.status(404).json({ ok: false, error: 'Karakter tidak ditemukan' });
+
+        const manuals = await settlementFacilityService.getManualPavilionList(player);
+        return res.json({ ok: true, manuals });
+    } catch (error) {
+        console.error('[API-MANUAL-PAVILION-LIST] Error:', error);
+        return res.status(500).json({ ok: false, error: error.message || 'Gagal memuat manual paviliun.' });
+    }
+});
+
+// Paviliun Kitab: Pelajari Manual
+router.post('/facility/manual-pavilion/learn', authenticateToken, async (req, res) => {
+    try {
+        const player = await Player.findOne({ discordId: req.user.userId });
+        if (!player) return res.status(404).json({ ok: false, error: 'Karakter tidak ditemukan' });
+
+        const { manualId, manualName } = req.body;
+        const target = manualId || manualName;
+        if (!target) return res.status(400).json({ ok: false, error: 'Kitab manual tidak ditentukan.' });
+
+        const result = await settlementFacilityService.learnPavilionManual(player, target);
+        return res.json({ ok: true, ...result });
+    } catch (error) {
+        console.error('[API-MANUAL-PAVILION-LEARN] Error:', error);
+        return res.status(400).json({ ok: false, error: error.message || 'Gagal mempelajari manual.' });
+    }
+});
+
+// Kandang Kuda: Beli Kuda / Pakan Kuda
+router.post('/facility/stables/buy', authenticateToken, async (req, res) => {
+    try {
+        const player = await Player.findOne({ discordId: req.user.userId });
+        if (!player) return res.status(404).json({ ok: false, error: 'Karakter tidak ditemukan' });
+
+        const { itemKey, quantity } = req.body;
+        if (!itemKey) return res.status(400).json({ ok: false, error: 'Item kandang kuda tidak ditentukan.' });
+
+        const result = await settlementFacilityService.buyStablesItem(player, itemKey, quantity || 1);
+        return res.json({ ok: true, ...result });
+    } catch (error) {
+        console.error('[API-STABLES-BUY] Error:', error);
+        return res.status(400).json({ ok: false, error: error.message || 'Gagal membeli item kandang kuda.' });
+    }
+});
+
+// Bengkel: Reparasi Seluruh Perlengkapan
+router.post('/facility/workshop/repair', authenticateToken, async (req, res) => {
+    try {
+        const player = await Player.findOne({ discordId: req.user.userId });
+        if (!player) return res.status(404).json({ ok: false, error: 'Karakter tidak ditemukan' });
+
+        const result = await settlementFacilityService.repairEquipment(player);
+        return res.json({ ok: true, ...result });
+    } catch (error) {
+        console.error('[API-WORKSHOP-REPAIR] Error:', error);
+        return res.status(400).json({ ok: false, error: error.message || 'Gagal memperbaiki perlengkapan.' });
+    }
+});
+
+// Kedai: Santap Makanan & Arak
+router.post('/facility/tavern/dine', authenticateToken, async (req, res) => {
+    try {
+        const player = await Player.findOne({ discordId: req.user.userId });
+        if (!player) return res.status(404).json({ ok: false, error: 'Karakter tidak ditemukan' });
+
+        const result = await settlementFacilityService.tavernDine(player);
+        return res.json({ ok: true, ...result });
+    } catch (error) {
+        console.error('[API-TAVERN-DINE] Error:', error);
+        return res.status(400).json({ ok: false, error: error.message || 'Gagal memesan hidangan kedai.' });
+    }
+});
+
+// Kedai: Dengar Gosip & Rumor
+router.get('/facility/tavern/rumors', authenticateToken, async (req, res) => {
+    try {
+        const result = settlementFacilityService.getTavernRumors();
+        return res.json({ ok: true, ...result });
+    } catch (error) {
+        console.error('[API-TAVERN-RUMORS] Error:', error);
+        return res.status(500).json({ ok: false, error: error.message || 'Gagal mendengar rumor.' });
+    }
+});
+
 module.exports = router;
 
 

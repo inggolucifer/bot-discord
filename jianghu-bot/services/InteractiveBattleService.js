@@ -107,6 +107,7 @@ class InteractiveBattleService {
   static buildAdaptiveBasicAttack(discipline, power) {
     const template = this.BASIC_ATTACK_MAP[discipline] || this.BASIC_ATTACK_MAP.default;
     return {
+      id: 'basic_attack',
       skillId: 'basic_attack',
       name: template.name,
       description: template.desc,
@@ -188,6 +189,7 @@ class InteractiveBattleService {
         const sCd = manual.cooldown !== undefined ? manual.cooldown : 2;
 
         manualSkills.push({
+          id: sId,
           skillId: sId,
           name: manual.name,
           description: manual.description || 'Jurus teknik bela diri tingkat tinggi.',

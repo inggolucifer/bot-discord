@@ -409,6 +409,40 @@ const CORE_ITEMS_DEFINITIONS = [
     description: 'Keping intisari kristal elemen api murni dari tanah elemen.',
     weight: 0.1,
     isTradeable: true
+  },
+  {
+    name: 'Kuda Jinak Jianghu',
+    itemKey: 'item_horse_jianghu',
+    category: 'mount',
+    type: 'mount',
+    mountType: 'horse',
+    staminaReduction: 0.5,
+    rarity: 'uncommon',
+    rank: 'Uncommon',
+    tier: 1,
+    basePrice: 150,
+    buyPrice: 150,
+    sellPrice: 75,
+    priceCurrency: 'silver',
+    description: 'Kuda jinak terlatih khas dataran tengah, meringankan beban stamina langkah (-0.5 per petak) dan meningkatkan kelincahan.',
+    weight: 0,
+    isTradeable: true
+  },
+  {
+    name: 'Pakan Kuda Spiritual',
+    itemKey: 'item_horse_fodder',
+    category: 'consume',
+    type: 'consume',
+    rarity: 'common',
+    rank: 'Common',
+    tier: 1,
+    basePrice: 2,
+    buyPrice: 2,
+    sellPrice: 1,
+    priceCurrency: 'silver',
+    description: 'Rumput pakan bernutrisi tinggi untuk memulihkan vitalitas tunggangan.',
+    weight: 0.1,
+    isTradeable: true
   }
 ];
 

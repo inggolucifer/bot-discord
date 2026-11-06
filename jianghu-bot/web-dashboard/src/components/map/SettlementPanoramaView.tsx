@@ -74,6 +74,14 @@ export default function SettlementPanoramaView({
   const [shopLoading, setShopLoading] = useState<boolean>(false);
   const [buyingId, setBuyingId] = useState<string | null>(null);
 
+  // Facility & Rest States
+  const [restStatus, setRestStatus] = useState<any>(null);
+  const [manualsList, setManualsList] = useState<any[]>([]);
+  const [manualsLoading, setManualsLoading] = useState<boolean>(false);
+  const [learningManualId, setLearningManualId] = useState<string | null>(null);
+  const [tavernRumor, setTavernRumor] = useState<string | null>(null);
+  const [facilityActionLoading, setFacilityActionLoading] = useState<boolean>(false);
+
   // Panorama horizontal scroll container ref
   const panoramaContainerRef = useRef<HTMLDivElement>(null);
 
@@ -145,6 +153,150 @@ export default function SettlementPanoramaView({
   const showNotice = (msg: string) => {
     setActionNotice(msg);
     setTimeout(() => setActionNotice(null), 3500);
+  };
+
+  const fetchRestStatus = async () => {
+    try {
+      const res = await api.get('/world/rest/status');
+      if (res.data?.rest && res.data.rest.status === 'resting') {
+        setRestStatus(res.data.rest);
+      } else {
+        setRestStatus(null);
+      }
+    } catch {
+      setRestStatus(null);
+    }
+  };
+
+  useEffect(() => {
+    fetchRestStatus();
+  }, []);
+
+  useEffect(() => {
+    if (selectedBuilding?.id === 'manual_pavilion' || selectedBuilding?.type === 'manual_pavilion') {
+      const fetchManuals = async () => {
+        try {
+          setManualsLoading(true);
+          const res = await api.get('/world/facility/manual-pavilion/list');
+          if (res.data?.ok && Array.isArray(res.data?.manuals)) {
+            setManualsList(res.data.manuals);
+          }
+        } catch (e: any) {
+          console.warn('Gagal memuat katalog kitab:', e.message);
+        } finally {
+          setManualsLoading(false);
+        }
+      };
+      fetchManuals();
+    }
+  }, [selectedBuilding]);
+
+  const handleLearnManual = async (manualId: string, manualName: string) => {
+    try {
+      setLearningManualId(manualId);
+      const res = await api.post('/world/facility/manual-pavilion/learn', { manualId });
+      if (res.data?.ok) {
+        showNotice(res.data.message || `🎉 Berhasil mempelajari ${manualName}!`);
+        const refreshed = await api.get('/world/facility/manual-pavilion/list');
+        if (refreshed.data?.ok && Array.isArray(refreshed.data?.manuals)) {
+          setManualsList(refreshed.data.manuals);
+        }
+      } else {
+        showNotice(`❌ ${res.data?.error || 'Gagal mempelajari manual.'}`);
+      }
+    } catch (err: any) {
+      showNotice(`❌ ${err.response?.data?.error || 'Gagal mempelajari manual.'}`);
+    } finally {
+      setLearningManualId(null);
+    }
+  };
+
+  const handleBuyStablesItem = async (itemKey: string, quantity: number, itemName: string) => {
+    try {
+      setFacilityActionLoading(true);
+      const res = await api.post('/world/facility/stables/buy', { itemKey, quantity });
+      if (res.data?.ok) {
+        showNotice(res.data.message || `🎉 Berhasil membeli ${itemName}!`);
+      } else {
+        showNotice(`❌ ${res.data?.error || 'Gagal membeli item kandang kuda.'}`);
+      }
+    } catch (err: any) {
+      showNotice(`❌ ${err.response?.data?.error || 'Gagal membeli item kandang kuda.'}`);
+    } finally {
+      setFacilityActionLoading(false);
+    }
+  };
+
+  const handleCancelRest = async () => {
+    try {
+      setFacilityActionLoading(true);
+      await api.post('/world/rest/cancel');
+      showNotice('☀️ Kamu telah bangun dari istirahat! Stamina dan kondisi tubuh segar kembali.');
+      setRestStatus(null);
+    } catch (err: any) {
+      showNotice(`❌ ${err.response?.data?.error || 'Gagal mengakhiri istirahat.'}`);
+    } finally {
+      setFacilityActionLoading(false);
+    }
+  };
+
+  const handleRentRoom = async (hours: number) => {
+    try {
+      setFacilityActionLoading(true);
+      await api.post('/world/rest/start', { mode: 'open', hours });
+      showNotice(`Mulai istirahat ${hours} jam di penginapan.`);
+      await fetchRestStatus();
+    } catch (err: any) {
+      showNotice(`❌ ${err.response?.data?.error || 'Gagal memulai istirahat.'}`);
+    } finally {
+      setFacilityActionLoading(false);
+    }
+  };
+
+  const handleWorkshopRepair = async () => {
+    try {
+      setFacilityActionLoading(true);
+      const res = await api.post('/world/facility/workshop/repair');
+      if (res.data?.ok) {
+        showNotice(res.data.message || '🛠️ Seluruh perlengkapan telah diperbaiki!');
+      } else {
+        showNotice(`❌ ${res.data?.error || 'Gagal memperbaiki perlengkapan.'}`);
+      }
+    } catch (err: any) {
+      showNotice(`❌ ${err.response?.data?.error || 'Gagal memperbaiki perlengkapan.'}`);
+    } finally {
+      setFacilityActionLoading(false);
+    }
+  };
+
+  const handleTavernDine = async () => {
+    try {
+      setFacilityActionLoading(true);
+      const res = await api.post('/world/facility/tavern/dine');
+      if (res.data?.ok) {
+        showNotice(res.data.message || '🍶 Menikmati hidangan kedai!');
+      } else {
+        showNotice(`❌ ${res.data?.error || 'Gagal memesan hidangan.'}`);
+      }
+    } catch (err: any) {
+      showNotice(`❌ ${err.response?.data?.error || 'Gagal memesan hidangan.'}`);
+    } finally {
+      setFacilityActionLoading(false);
+    }
+  };
+
+  const handleFetchTavernRumor = async () => {
+    try {
+      setFacilityActionLoading(true);
+      const res = await api.get('/world/facility/tavern/rumors');
+      if (res.data?.ok && res.data.rumor) {
+        setTavernRumor(res.data.rumor);
+      }
+    } catch (err: any) {
+      showNotice(`❌ ${err.response?.data?.error || 'Gagal mendengar rumor.'}`);
+    } finally {
+      setFacilityActionLoading(false);
+    }
   };
 
   const handleBuildingClick = (building: any) => {
@@ -333,6 +485,21 @@ export default function SettlementPanoramaView({
           <div className="absolute top-4 left-1/2 -translate-x-1/2 z-40 bg-black/90 border border-amber-500 text-amber-200 px-4 py-2 rounded-lg text-xs font-semibold shadow-2xl backdrop-blur-md animate-in fade-in flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-400 animate-spin" />
             <span>{actionNotice}</span>
+          </div>
+        )}
+
+        {/* Active Rest Banner if Resting */}
+        {restStatus && (
+          <div className="absolute top-16 left-1/2 -translate-x-1/2 z-40 bg-indigo-950/90 border border-indigo-400 text-indigo-100 px-4 py-2 rounded-lg text-xs font-semibold shadow-2xl backdrop-blur-md flex items-center gap-3">
+            <BedDouble className="w-4 h-4 text-indigo-300 animate-pulse" />
+            <span>🛌 Sedang beristirahat di Penginapan ({restStatus.mode === 'tent' ? 'Tenda' : 'Kamar'})</span>
+            <button
+              onClick={handleCancelRest}
+              disabled={facilityActionLoading}
+              className="px-2 py-0.5 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-[10px]"
+            >
+              {facilityActionLoading ? 'Memproses...' : 'Bangun dari Tidur'}
+            </button>
           </div>
         )}
 
@@ -594,59 +761,80 @@ export default function SettlementPanoramaView({
               {(selectedBuilding.id === 'manual_pavilion' || selectedBuilding.type === 'manual_pavilion') && (
                 <div className="space-y-2 text-xs">
                   <div className="text-amber-300 font-semibold mb-1">Kitab Jurus & Sutra Kultivasi Tersedia:</div>
-                  {[
-                    { name: 'Kitab Langkah Angin (Qinggong Tier 1)', price: '50 Perak', desc: 'Meringankan beban langkah, mengurangi konsumsi stamina 15%' },
-                    { name: 'Sutra Pedang Bambu Hijau (Pedang Tier 1)', price: '75 Perak', desc: 'Meningkatkan serangan tebasan pedang dasar +20 ATK' },
-                    { name: 'Metode Tinju Batu Hitam (Tinju Tier 1)', price: '60 Perak', desc: 'Memperkuat daya tahan tubuh dan tinju pendekar' },
-                    { name: 'Sutra Pernapasan Batin Murni (Batin Tier 2)', price: '120 Perak', desc: 'Mempercepat regenerasi Qi saat meditasi di paviliun' }
-                  ].map((manual, idx) => (
-                    <div key={idx} className="bg-[#0f141f] border border-gray-800 p-2.5 rounded flex justify-between items-center hover:border-amber-700/60">
-                      <div>
-                        <div className="font-semibold text-amber-200">📜 {manual.name}</div>
-                        <div className="text-[10px] text-gray-400 mt-0.5">{manual.desc}</div>
-                      </div>
-                      <button
-                        onClick={() => showNotice(`Selamat! Kamu telah mempelajari ${manual.name}!`)}
-                        className="px-3 py-1 bg-purple-900/80 hover:bg-purple-800 text-purple-100 rounded text-[11px] font-bold transition-all ml-2 flex-shrink-0"
-                      >
-                        Pelajari ({manual.price})
-                      </button>
+                  {manualsLoading ? (
+                    <div className="flex items-center justify-center p-6 text-amber-400">
+                      <Loader2 className="w-5 h-5 animate-spin mr-2" /> Membuka gulungan kitab...
                     </div>
-                  ))}
+                  ) : (
+                    manualsList.map((manual) => (
+                      <div key={manual.id} className="bg-[#0f141f] border border-gray-800 p-2.5 rounded flex justify-between items-center hover:border-amber-700/60">
+                        <div>
+                          <div className="font-semibold text-amber-200">📜 {manual.name}</div>
+                          <div className="text-[10px] text-gray-400 mt-0.5">{manual.description}</div>
+                          {manual.minRealmIndex > 0 && (
+                            <span className="text-[9px] text-amber-500 font-mono">Syarat Ranah: Tk. {manual.minRealmIndex}</span>
+                          )}
+                        </div>
+                        {manual.isLearned ? (
+                          <span className="px-3 py-1 bg-emerald-950 border border-emerald-600/60 text-emerald-300 rounded text-[11px] font-bold flex-shrink-0">
+                            ✓ Sudah Dipahami
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => handleLearnManual(manual.id, manual.name)}
+                            disabled={learningManualId === manual.id}
+                            className="px-3 py-1 bg-purple-900/80 hover:bg-purple-800 text-purple-100 rounded text-[11px] font-bold transition-all ml-2 flex-shrink-0 disabled:opacity-50"
+                          >
+                            {learningManualId === manual.id ? 'Mempelajari...' : `Pelajari (${manual.price} ${manual.currency})`}
+                          </button>
+                        )}
+                      </div>
+                    ))
+                  )}
                 </div>
               )}
 
               {/* INN REST */}
               {(selectedBuilding.id === 'inn' || selectedBuilding.id === 'village_inn' || selectedBuilding.type === 'inn') && (
                 <div className="space-y-3 text-xs">
-                  <div className="text-amber-300 font-semibold">Pilihan Sewa Kamar Beristirahat:</div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {[
-                      { hours: 1, stamina: '+20 Stamina', cost: '3 Perak' },
-                      { hours: 4, stamina: '+60 Stamina & +50 HP', cost: '10 Perak' },
-                      { hours: 8, stamina: 'Stamina Penuh 100/100', cost: '18 Perak' }
-                    ].map((plan, idx) => (
-                      <div key={idx} className="bg-[#0f141f] border border-gray-800 p-3 rounded text-center flex flex-col justify-between">
-                        <div className="font-bold text-amber-200">{plan.hours} Jam</div>
-                        <div className="text-[10px] text-green-400 my-1">{plan.stamina}</div>
-                        <button
-                          onClick={async () => {
-                            try {
-                              await api.post('/world/rest/start', { mode: 'open', hours: plan.hours });
-                              showNotice(`Mulai istirahat ${plan.hours} jam di penginapan.`);
-                              setSelectedBuilding(null);
-                            } catch (e) {
-                              showNotice(`Istirahat dimulai (${plan.hours} jam). Stamina dipulihkan!`);
-                              setSelectedBuilding(null);
-                            }
-                          }}
-                          className="mt-2 py-1 bg-amber-900 hover:bg-amber-800 text-white rounded text-[10px] font-bold"
-                        >
-                          Sewa ({plan.cost})
-                        </button>
+                  {restStatus ? (
+                    <div className="bg-amber-950/60 border border-amber-600/50 p-4 rounded-lg text-center space-y-2">
+                      <div className="text-amber-200 font-semibold text-sm">🛌 Kamu Sedang Beristirahat di Penginapan</div>
+                      <div className="text-xs text-amber-300/90">
+                        Sedang memulihkan stamina dan tenaga dalam hingga: {new Date(restStatus.endsAt).toLocaleTimeString()}
                       </div>
-                    ))}
-                  </div>
+                      <button
+                        onClick={handleCancelRest}
+                        disabled={facilityActionLoading}
+                        className="mt-2 px-4 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded font-bold text-xs shadow-md transition-all disabled:opacity-50"
+                      >
+                        {facilityActionLoading ? 'Memproses...' : '☀️ Bangun dari Tidur / Akhiri Istirahat'}
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="text-amber-300 font-semibold">Pilihan Sewa Kamar Beristirahat:</div>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { hours: 1, stamina: '+20 Stamina', cost: '3 Perak' },
+                          { hours: 4, stamina: '+60 Stamina & +50 HP', cost: '10 Perak' },
+                          { hours: 8, stamina: 'Stamina Penuh 100/100', cost: '18 Perak' }
+                        ].map((plan, idx) => (
+                          <div key={idx} className="bg-[#0f141f] border border-gray-800 p-3 rounded text-center flex flex-col justify-between">
+                            <div className="font-bold text-amber-200">{plan.hours} Jam</div>
+                            <div className="text-[10px] text-green-400 my-1">{plan.stamina}</div>
+                            <button
+                              onClick={() => handleRentRoom(plan.hours)}
+                              disabled={facilityActionLoading}
+                              className="mt-2 py-1 bg-amber-900 hover:bg-amber-800 text-white rounded text-[10px] font-bold disabled:opacity-50"
+                            >
+                              Sewa ({plan.cost})
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
 
@@ -660,8 +848,9 @@ export default function SettlementPanoramaView({
                       <div className="text-[10px] text-gray-400">Kurangi konsumsi stamina -40% per petak dan langkah lebih cepat</div>
                     </div>
                     <button
-                      onClick={() => showNotice('Berhasil membeli Kuda Jinak! Efisiensi perjalanan meningkat.')}
-                      className="px-3 py-1 bg-amber-900 hover:bg-amber-800 text-white rounded text-[11px] font-bold"
+                      onClick={() => handleBuyStablesItem('item_horse_jianghu', 1, 'Kuda Jinak Jianghu')}
+                      disabled={facilityActionLoading}
+                      className="px-3 py-1 bg-amber-900 hover:bg-amber-800 text-white rounded text-[11px] font-bold disabled:opacity-50"
                     >
                       Beli (150 Perak)
                     </button>
@@ -672,8 +861,9 @@ export default function SettlementPanoramaView({
                       <div className="text-[10px] text-gray-400">Memulihkan stamina tunggangan selama perjalanan melintasi benua</div>
                     </div>
                     <button
-                      onClick={() => showNotice('Berhasil membeli 5x Pakan Kuda Spiritual.')}
-                      className="px-3 py-1 bg-amber-900 hover:bg-amber-800 text-white rounded text-[11px] font-bold"
+                      onClick={() => handleBuyStablesItem('item_horse_fodder', 5, 'Pakan Kuda Spiritual (5x)')}
+                      disabled={facilityActionLoading}
+                      className="px-3 py-1 bg-amber-900 hover:bg-amber-800 text-white rounded text-[11px] font-bold disabled:opacity-50"
                     >
                       Beli (10 Perak)
                     </button>
@@ -681,14 +871,82 @@ export default function SettlementPanoramaView({
                 </div>
               )}
 
-              {/* OTHER BUILDINGS (Workshop, Tavern, Bounty, Vault, etc.) */}
+              {/* WORKSHOP */}
+              {(selectedBuilding.id === 'workshop' || selectedBuilding.type === 'workshop') && (
+                <div className="bg-[#0b0e14] border border-[#232d3f] p-4 rounded-lg space-y-3 text-xs text-gray-300">
+                  <div className="text-amber-400 font-semibold text-sm flex items-center gap-2">
+                    <Hammer className="w-4 h-4 text-amber-400" />
+                    <span>Bengkel Tempa & Reparasi Senjata</span>
+                  </div>
+                  <p className="text-gray-400">
+                    Pandai besi terampil siap memperbaiki dan mengasah kembali seluruh senjata, zirah, dan perhiasanmu yang aus akibat pertempuran sengit.
+                  </p>
+                  <div className="p-3 bg-stone-950/80 border border-stone-800 rounded flex justify-between items-center">
+                    <div>
+                      <div className="font-bold text-gray-200">🛠️ Jasa Asah & Servis Menyeluruh</div>
+                      <div className="text-[10px] text-emerald-400">Memulihkan 100% durabilitas seluruh equipment aktif</div>
+                    </div>
+                    <button
+                      onClick={handleWorkshopRepair}
+                      disabled={facilityActionLoading}
+                      className="px-4 py-2 bg-amber-800 hover:bg-amber-700 text-white font-bold rounded shadow-md text-xs disabled:opacity-50"
+                    >
+                      {facilityActionLoading ? 'Memperbaiki...' : 'Perbaiki (5 Perak)'}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* TAVERN */}
+              {(selectedBuilding.id === 'tavern' || selectedBuilding.type === 'tavern') && (
+                <div className="bg-[#0b0e14] border border-[#232d3f] p-4 rounded-lg space-y-3 text-xs text-gray-300">
+                  <div className="text-amber-400 font-semibold text-sm flex items-center gap-2">
+                    <Wine className="w-4 h-4 text-amber-400" />
+                    <span>Kedai Tuak & Tempat Istirahat Pendekar</span>
+                  </div>
+                  <p className="text-gray-400">
+                    Aroma harum arak bambu dan daging bakar menyambut para petualang. Duduklah sejenak untuk memulihkan vitalitas atau bertukar kabar angin dunia persilatan.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button
+                      onClick={handleTavernDine}
+                      disabled={facilityActionLoading}
+                      className="p-3 bg-stone-950/80 hover:bg-stone-900 border border-stone-800 hover:border-amber-700 rounded text-left transition-all disabled:opacity-50"
+                    >
+                      <div className="font-bold text-amber-200">🍖 Santap Daging & Arak (5 Perak)</div>
+                      <div className="text-[10px] text-green-400 mt-1">+20 Vitalitas & +15 Suasana Hati</div>
+                    </button>
+                    <button
+                      onClick={handleFetchTavernRumor}
+                      disabled={facilityActionLoading}
+                      className="p-3 bg-stone-950/80 hover:bg-stone-900 border border-stone-800 hover:border-amber-700 rounded text-left transition-all disabled:opacity-50"
+                    >
+                      <div className="font-bold text-amber-200">🗣️ Dengar Kabar Angin (Gratis)</div>
+                      <div className="text-[10px] text-cyan-400 mt-1">Dengar cerita & rahasia dari pelayan</div>
+                    </button>
+                  </div>
+                  {tavernRumor && (
+                    <div className="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-amber-200 italic text-[11px] flex items-start gap-2">
+                      <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <div className="font-bold not-italic text-[10px] text-amber-400 mb-0.5">Kabar dari Pengunjung Kedai:</div>
+                        "{tavernRumor}"
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* OTHER BUILDINGS (Bounty, Vault, etc.) */}
               {![
                 'market',
                 'manual_pavilion',
                 'inn',
                 'village_inn',
-                'courier_stables'
-              ].includes(selectedBuilding.id) && (
+                'courier_stables',
+                'workshop',
+                'tavern'
+              ].includes(selectedBuilding.id) && selectedBuilding.type !== 'workshop' && selectedBuilding.type !== 'tavern' && (
                 <div className="bg-[#0b0e14] border border-[#232d3f] p-4 rounded-lg space-y-2 text-xs text-gray-300">
                   <div className="text-amber-400 font-semibold">Layanan & Fasilitas:</div>
                   <p>

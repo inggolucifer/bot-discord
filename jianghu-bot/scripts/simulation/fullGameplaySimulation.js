@@ -20,6 +20,7 @@ const Player = require('../../models/Player');
 const Item = require('../../models/Item');
 const InstancedZoneSession = require('../../models/InstancedZoneSession');
 const BattleSession = require('../../models/BattleSession');
+const Manual = require('../../models/Manual');
 
 const API_BASE = 'http://localhost:3001/api';
 const FRONTEND_BASE = 'http://localhost:3000';
@@ -250,6 +251,7 @@ async function runSimulation() {
 
   // 5. Uji Penginapan (Resting)
   console.log('\n--- 5. FASILITAS PENGINAPAN & PEMULIHAN STAMINA ---');
+  await requestApi('/world/rest/cancel', { method: 'POST' }, tokenInggo);
   const restRes = await requestApi('/world/rest/start', {
     method: 'POST',
     body: JSON.stringify({ mode: 'open', hours: 1 })
@@ -257,6 +259,7 @@ async function runSimulation() {
 
   if (restRes.ok) {
     recordPass('Penginapan / Istirahat', `Mulai istirahat di penginapan berhasil.`);
+    await requestApi('/world/rest/cancel', { method: 'POST' }, tokenInggo);
   } else {
     recordShortcoming('Penginapan / Istirahat', `Endpoint /world/rest/start merespons HTTP ${restRes.status}: ${restRes.data?.error || JSON.stringify(restRes.data)}`);
   }
@@ -368,12 +371,12 @@ async function runSimulation() {
     recordPass('Inisiasi Pertarungan (POST /battle/start)', `Pertarungan dimulai melawan ${session.enemies?.[0]?.name || 'Monster'} (Battle ID: ${bId})`);
     
     // Periksa jurus yang tersedia (Basic Attack Adaptif)
-    const playerEntity = session.entities?.find(e => e.entityId === session.playerId || e.isPlayer);
+    const playerEntity = session.player || session.entities?.find(e => e.entityId === session.playerId || e.isPlayer);
     const skills = playerEntity?.skills || [];
     console.log(`   Jurus pemain tersedia: ${skills.map(s => s.name).join(', ') || 'Hanya basic attack'}`);
 
-    if (skills.length > 0 && skills[0].id === 'basic_attack') {
-      recordPass('Basic Attack Adaptif (Slot 1)', `Slot 1 adalah basic attack teradaptasi: '${skills[0].name}'`);
+    if (skills.length > 0 && (skills[0].id === 'basic_attack' || skills[0].skillId === 'basic_attack')) {
+      recordPass('Basic Attack Adaptif (Slot 1)', `Slot 1 adalah basic attack teradaptasi: '${skills[0].name}' (${skills[0].kungfuDiscipline || 'fist'})`);
     } else {
       recordShortcoming('Basic Attack Adaptif', 'Slot 1 tidak memuat basic attack beradaptasi.');
     }
@@ -499,25 +502,142 @@ async function runSimulation() {
     }
   }
 
-  // 12. Evaluasi Hal yang Masih Kurang (Shortcomings Analysis)
-  console.log('\n--- 12. AUDIT INTEGRITAS & KEKURANGAN SISTEM ---');
-  // Temuan 1: Courier Stables di Panorama
-  recordShortcoming(
-    'Fasilitas Kandang Kuda (Courier Stables)',
-    'Tombol beli "Kuda Jinak" dan "Pakan Kuda" di SettlementPanoramaView.tsx hanya memicu alert/showNotice tanpa memotong perak atau memasukkan item tunggangan ke database.'
+  // 12. Pengujian Interaktif Fasilitas Pemukiman & Rest (Settlement Facilities V26)
+  console.log('\n--- 12. PENGUJIAN FASILITAS PEMUKIMAN & SINKRONISASI GAMEPLAY ---');
+
+  // Pastikan pemain punya cukup koin perak untuk berbelanja fasilitas
+  await Player.updateOne(
+    { _id: inggo._id },
+    { $set: { 'currency.silver': 1000, 'extendedStats.vitality': 50, 'extendedStats.mood': 50 } }
   );
 
-  // Temuan 2: Manual Pavilion di Panorama
-  recordShortcoming(
-    'Fasilitas Paviliun Kitab (Manual Pavilion)',
-    'Tombol "Pelajari" pada daftar kitab di SettlementPanoramaView.tsx hanya menampilkan showNotice kosmetik tanpa memanggil API /api/manuals atau memotong koin perak.'
-  );
+  // 12.1 Kandang Kuda (Courier Stables)
+  const stablesBuyHorse = await requestApi('/world/facility/stables/buy', {
+    method: 'POST',
+    body: JSON.stringify({ itemKey: 'item_horse_jianghu', quantity: 1 })
+  }, tokenInggo);
 
-  // Temuan 3: Fasilitas Lainnya (Bengkel, Kedai, Papan Hadiah)
-  recordShortcoming(
-    'Fasilitas Bengkel & Kedai di Panorama',
-    'Tombol "Gunakan Fasilitas Ini" pada bangunan selain pasar/penginapan hanya menutup modal dan menampilkan notifikasi generik tanpa aksi gameplay riil (misal memperbaiki zirah di bengkel atau memesan arak di kedai).'
-  );
+  if (stablesBuyHorse.data?.ok) {
+    recordPass('Kandang Kuda: Beli Kuda Jinak', stablesBuyHorse.data.message);
+  } else {
+    recordBug('Kandang Kuda: Beli Kuda Jinak', `Gagal membeli kuda: ${stablesBuyHorse.data?.error}`);
+  }
+
+  const stablesBuyFodder = await requestApi('/world/facility/stables/buy', {
+    method: 'POST',
+    body: JSON.stringify({ itemKey: 'item_horse_fodder', quantity: 5 })
+  }, tokenInggo);
+
+  if (stablesBuyFodder.data?.ok) {
+    recordPass('Kandang Kuda: Beli Pakan Kuda (5x)', stablesBuyFodder.data.message);
+  } else {
+    recordBug('Kandang Kuda: Beli Pakan Kuda', `Gagal membeli pakan: ${stablesBuyFodder.data?.error}`);
+  }
+
+  // 12.2 Paviliun Kitab (Manual Pavilion)
+  const manualListRes = await requestApi('/world/facility/manual-pavilion/list', {
+    method: 'GET'
+  }, tokenInggo);
+
+  if (manualListRes.data?.ok && Array.isArray(manualListRes.data?.manuals) && manualListRes.data.manuals.length >= 4) {
+    recordPass('Paviliun Kitab: Ambil Katalog', `Ditemukan ${manualListRes.data.manuals.length} manual.`);
+  } else {
+    recordBug('Paviliun Kitab: Ambil Katalog', `Gagal memuat katalog: ${manualListRes.data?.error}`);
+  }
+
+  const anginDoc = await Manual.findOne({ name: 'Kitab Langkah Angin' });
+  if (anginDoc) {
+    await Player.updateOne(
+      { _id: inggo._id },
+      { $pull: { manuals: { manualId: anginDoc._id } } }
+    );
+  }
+
+  const learnManualRes = await requestApi('/world/facility/manual-pavilion/learn', {
+    method: 'POST',
+    body: JSON.stringify({ manualName: 'Kitab Langkah Angin' })
+  }, tokenInggo);
+
+  if (learnManualRes.data?.ok) {
+    recordPass('Paviliun Kitab: Pelajari Manual', learnManualRes.data.message);
+  } else {
+    recordBug('Paviliun Kitab: Pelajari Manual', `Gagal mempelajari manual: ${learnManualRes.data?.error}`);
+  }
+
+  // 12.3 Bengkel (Workshop Repair)
+  const workshopRepairRes = await requestApi('/world/facility/workshop/repair', {
+    method: 'POST'
+  }, tokenInggo);
+
+  if (workshopRepairRes.data?.ok) {
+    recordPass('Bengkel: Reparasi Perlengkapan', workshopRepairRes.data.message);
+  } else {
+    recordBug('Bengkel: Reparasi Perlengkapan', `Gagal reparasi: ${workshopRepairRes.data?.error}`);
+  }
+
+  // 12.4 Kedai (Tavern Dine & Rumors)
+  const tavernDineRes = await requestApi('/world/facility/tavern/dine', {
+    method: 'POST'
+  }, tokenInggo);
+
+  if (tavernDineRes.data?.ok) {
+    recordPass('Kedai: Santap Makanan & Arak', tavernDineRes.data.message);
+  } else {
+    recordBug('Kedai: Santap Makanan & Arak', `Gagal santap hidangan: ${tavernDineRes.data?.error}`);
+  }
+
+  const tavernRumorsRes = await requestApi('/world/facility/tavern/rumors', {
+    method: 'GET'
+  }, tokenInggo);
+
+  if (tavernRumorsRes.data?.ok && tavernRumorsRes.data?.rumor) {
+    recordPass('Kedai: Dengar Gosip & Rumor', `Rumor: "${tavernRumorsRes.data.rumor}"`);
+  } else {
+    recordBug('Kedai: Dengar Gosip & Rumor', `Gagal mendengar rumor: ${tavernRumorsRes.data?.error}`);
+  }
+
+  // 12.5 Siklus Istirahat Penginapan (Inn Rest Lifecycle)
+  const restStartRes = await requestApi('/world/rest/start', {
+    method: 'POST',
+    body: JSON.stringify({ mode: 'open', hours: 1 })
+  }, tokenInggo);
+
+  if (restStartRes.data?.rest) {
+    recordPass('Penginapan: Mulai Istirahat (1 Jam)', `Status: ${restStartRes.data.rest.status}`);
+  } else {
+    recordBug('Penginapan: Mulai Istirahat', `Gagal istirahat: ${restStartRes.data?.error}`);
+  }
+
+  const restStatusRes = await requestApi('/world/rest/status', {
+    method: 'GET'
+  }, tokenInggo);
+
+  if (restStatusRes.data?.rest && restStatusRes.data.rest.status === 'resting') {
+    recordPass('Penginapan: Periksa Status Istirahat', `Mode: ${restStatusRes.data.rest.mode}, EndsAt: ${restStatusRes.data.rest.endsAt}`);
+  } else {
+    recordBug('Penginapan: Periksa Status Istirahat', 'Karakter tidak terdeteksi sedang beristirahat.');
+  }
+
+  const restCancelRes = await requestApi('/world/rest/cancel', {
+    method: 'POST'
+  }, tokenInggo);
+
+  if (restCancelRes.status === 200) {
+    recordPass('Penginapan: Bangun dari Tidur / Batalkan Istirahat', 'Berhasil bangun dan siap berpetualang kembali.');
+  } else {
+    recordBug('Penginapan: Bangun dari Tidur', `Gagal bangun: ${restCancelRes.data?.error}`);
+  }
+
+  // 12.6 Verifikasi Dual ID & Adaptif Weapon Skill Battle Arena
+  const InteractiveBattleService = require('../../services/InteractiveBattleService');
+  const freshPlayerDoc = await Player.findById(inggo._id).populate('manuals.manualId');
+  const skillsPool = InteractiveBattleService.formatPlayerSkills(freshPlayerDoc);
+
+  if (skillsPool.length >= 1 && skillsPool[0].id === 'basic_attack' && skillsPool[0].skillId === 'basic_attack') {
+    recordPass('Battle Arena: Format Basic Attack Adaptif', `Slot 1: ${skillsPool[0].name} (id='${skillsPool[0].id}', skillId='${skillsPool[0].skillId}'). Total Jurus Aktif: ${skillsPool.length}.`);
+  } else {
+    recordBug('Battle Arena: Format Basic Attack Adaptif', `Format skill tidak valid: ${JSON.stringify(skillsPool[0])}`);
+  }
 
   // LAPORAN AKHIR
   console.log('\n======================================================================');
