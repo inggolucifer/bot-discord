@@ -46,8 +46,8 @@ Semua angka dalam tabel ini diekstraksi secara langsung dan otomatis oleh `scrip
 
 Dunia Jianghu (29 wilayah) diklasifikasikan ke dalam 5 peran fungsional terinspirasi *Tale of Immortal*:
 - **Hub Regions (8 Wilayah)**: Pusat peradaban dengan ibukota, kota besar, sekte, dan fasilitas lengkap (`central_plains`, `nine_springs_delta`, `azure_mountain_range`, dll).
-- **Frontier Outposts (5 Wilayah)**: Daerah terluar perbatasan dengan pos benteng dan desa perbatasan (`border_march`, `kunlun_foothills`, dll).
-- **Transition Zones (8 Wilayah)**: Jalur penghubung antarkerajaan berbahaya **TANPA kota utama atau sekte** (`hundred_thousand_hills`, `lei_ze_wasteland`, dll).
+- **Frontier Outposts (5 Wilayah)**: Daerah terluar perbatasan dengan pos benteng dan desa perbatasan (`border_march`, `northern_desolate`, dll).
+- **Transition Zones (8 Wilayah)**: Jalur penghubung antarkerajaan berbahaya **TANPA kota utama atau sekte** (`beast_prairies`, `spirit_wood_sea`, dll).
 - **Danger Breakthrough Zones (5 Wilayah)**: Alam liar berisiko tinggi tempat kultivator memburu bahan terobosan (`western_gorge_labyrinth`, `southern_plague_woods`, dll).
 - **Sealed Void Zones (3 Wilayah)**: Domain terlarang ekstrim dengan anomali spasial (`void_rift`, `frostmoon_sea`, `floating_wind_isles`).
 

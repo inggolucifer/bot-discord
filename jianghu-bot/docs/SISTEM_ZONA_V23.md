@@ -21,8 +21,8 @@ Dua puluh sembilan wilayah diklasifikasikan ke dalam 5 peran fungsional (\`world
 | Peran Wilayah | Jumlah | Karakteristik Utama | Contoh Wilayah |
 |---|---|---|---|
 | **Hub** | 8 | Pusat kota, sekte utama, fasilitas pasar, bank, kedai, dan balai misi. | \`central_plains\`, \`nine_springs_delta\`, \`azure_mountain_range\` |
-| **Frontier** | 5 | Pos perbatasan terluar dan benteng garnisun. Menjaga batas antara peradaban dan alam liar. | \`border_march\`, \`kunlun_foothills\` |
-| **Transition** | 8 | Lembah dan gurun berbahaya penghubung dua hub. Bebas pemukiman; banyak ambush dan monster elite. | \`hundred_thousand_hills\`, \`lei_ze_wasteland\` |
+| **Frontier** | 5 | Pos perbatasan terluar dan benteng garnisun. Menjaga batas antara peradaban dan alam liar. | \`border_march\`, \`northern_desolate\` |
+| **Transition** | 8 | Lembah dan gurun berbahaya penghubung dua hub. Bebas pemukiman; banyak ambush dan monster elite. | \`beast_prairies\`, \`spirit_wood_sea\` |
 | **Danger** | 5 | Alam ekstrem tempat berburu bahan terobosan ranah tinggi. Hawa dingin/racun mematikan. | `western_gorge_labyrinth`, `mist_insect_valley` |
 | **Sealed** | 3 | Wilayah patahan anomali purba dengan monster tier 6 level 105–120. | `void_rift`, `frostmoon_sea`, `floating_wind_isles` |
 

@@ -2714,8 +2714,9 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
 
         const targetTerrain = destTile?.terrainType || 'plains';
         if (isTileObstructed({ terrainType: targetTerrain, mountType: effectiveMountType })) {
+            const desc = describeBlocker(destTile || { terrainType: targetTerrain }, targetX, targetY);
             return res.status(400).json({
-                error: `Jalur terhalang rintangan tebing batu yang mustahil ditembus! Dibutuhkan artefak terbang spiritual.`
+                error: desc.message || `Jalur terhalang oleh ${desc.label}!`
             });
         }
 
