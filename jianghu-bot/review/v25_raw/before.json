@@ -1,0 +1,131 @@
+{
+  "timestamp": "2026-11-06T01:41:34.962Z",
+  "commitBase": "4d56a63a",
+  "summary": {
+    "totalTested": 6,
+    "totalFailed": 6,
+    "allRed": true,
+    "gateStatus": "PASS"
+  },
+  "findings": {
+    "T1": {
+      "tested": "T1 (Nearby Zones)",
+      "failed": true,
+      "reason": "GET /api/world/nearby tidak memuat zones-v23.json, tidak menghasilkan ID inst_*, dan memercayai req.query klien.",
+      "details": {
+        "hasZonesV23Import": false,
+        "hasInstPrefix": false,
+        "queriesZones": false,
+        "trustsClientCoords": true
+      }
+    },
+    "T2": {
+      "tested": "T2 (Instanced Route Injection & Memory Sessions)",
+      "failed": true,
+      "reason": "POST /enter menerima dangerTier/zoneType dari body klien, memakai Map in-memory, dan tidak memvalidasi jarak server.",
+      "details": {
+        "readsBodyDangerTier": true,
+        "usesInMemoryMap": true,
+        "checksDistance": false
+      }
+    },
+    "T4": {
+      "tested": "T4 (Jimat Tak Berfungsi)",
+      "failed": true,
+      "reason": "Jimat repellent/attraction jatuh ke cabang unhandled di inventory.js, tidak ada di enum Player.js, dan world.js membaca field hantu.",
+      "details": {
+        "invHandlesCharms": false,
+        "playerEnumHasCharms": false,
+        "worldUsesGhostFields": true
+      }
+    },
+    "T5": {
+      "tested": "T5 (Batas Tier Cincin Pemukiman)",
+      "failed": true,
+      "reason": "Terbukti 5/5 pemukiman melanggar batas tier (dangerTier > anc.tier + 1).",
+      "details": {
+        "violationsCount": 5,
+        "violations": [
+          {
+            "settlementId": "kota_canghai",
+            "anchorTier": 1,
+            "allowedMax": 2,
+            "dist": 15,
+            "tileDangerTier": 3,
+            "effectiveDanger": 3
+          },
+          {
+            "settlementId": "desa_heiyan",
+            "anchorTier": 2,
+            "allowedMax": 3,
+            "dist": 11,
+            "tileDangerTier": 4,
+            "effectiveDanger": 4
+          },
+          {
+            "settlementId": "pulau_penyu_raksasa",
+            "anchorTier": 3,
+            "allowedMax": 4,
+            "dist": 11,
+            "tileDangerTier": 5,
+            "effectiveDanger": 5
+          },
+          {
+            "settlementId": "dusun_pondok_karang",
+            "anchorTier": 1,
+            "allowedMax": 2,
+            "dist": 7,
+            "tileDangerTier": 3,
+            "effectiveDanger": 3
+          },
+          {
+            "settlementId": "kota_leiyin",
+            "anchorTier": 2,
+            "allowedMax": 3,
+            "dist": 15,
+            "tileDangerTier": 4,
+            "effectiveDanger": 4
+          }
+        ]
+      }
+    },
+    "T6": {
+      "tested": "T6 (Pesan Halangan Lama Tersisa)",
+      "failed": true,
+      "reason": "Ditemukan pesan tebing batu mustahil ditembus pada rute gerakan lama (world.js:2709).",
+      "details": {
+        "hasLegacyMsg": true
+      }
+    },
+    "T7": {
+      "tested": "T7 (Wilayah Halusinasi Dokumen)",
+      "failed": true,
+      "reason": "Ditemukan 12 token wilayah fiktif pada dokumen/skrip V23.",
+      "details": {
+        "foundTokensCount": 12,
+        "sampleTokens": [
+          {
+            "file": "SISTEM_ZONA_V23.md",
+            "token": "kunlun_foothills"
+          },
+          {
+            "file": "SISTEM_ZONA_V23.md",
+            "token": "hundred_thousand_hills"
+          },
+          {
+            "file": "SISTEM_ZONA_V23.md",
+            "token": "lei_ze_wasteland"
+          },
+          {
+            "file": "gateRunner.js",
+            "token": "kunlun_foothills"
+          },
+          {
+            "file": "gateRunner.js",
+            "token": "hundred_thousand_hills"
+          }
+        ]
+      }
+    }
+  }
+}
