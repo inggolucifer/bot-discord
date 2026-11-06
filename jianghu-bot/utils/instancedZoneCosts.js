@@ -38,10 +38,15 @@ function requiredItems(cost = {}) {
 function countOwned(player, itemId) {
   if (!player || !Array.isArray(player.inventory) || !itemId) return 0;
   const targetStr = String(itemId);
+  const targetStripped = targetStr.replace(/^item_/, '');
   let total = 0;
   for (const slot of player.inventory) {
-    if (slot && slot.itemId && String(slot.itemId) === targetStr) {
-      total += (slot.quantity || 1);
+    if (slot && slot.itemId) {
+      const slotIdStr = String(slot.itemId);
+      const slotStripped = slotIdStr.replace(/^item_/, '');
+      if (slotIdStr === targetStr || (slotStripped && slotStripped === targetStripped)) {
+        total += (slot.quantity || 1);
+      }
     }
   }
   return total;
@@ -84,7 +89,7 @@ function checkEntryCost(player, cost = {}, itemIdByKey = new Map()) {
       const kurang = req.quantity - owned;
       return {
         ok: false,
-        error: `Item ${req.itemKey} tidak mencukupi (kurang ${kurang}).`
+        error: `Membutuhkan item kunci '${req.itemKey}' (kurang ${kurang}).`
       };
     }
   }
@@ -118,21 +123,27 @@ function applyEntryCost(player, cost = {}, itemIdByKey = new Map()) {
 
   for (const req of items) {
     const targetId = itemIdByKey instanceof Map ? itemIdByKey.get(req.itemKey) : itemIdByKey?.[req.itemKey];
+    const targetStr = String(targetId);
+    const targetStripped = targetStr.replace(/^item_/, '');
     let remainingToDeduct = req.quantity;
 
     for (let i = player.inventory.length - 1; i >= 0; i--) {
       const slot = player.inventory[i];
-      if (slot && slot.itemId && String(slot.itemId) === String(targetId)) {
-        const qty = slot.quantity || 1;
-        const take = Math.min(qty, remainingToDeduct);
-        slot.quantity = qty - take;
-        remainingToDeduct -= take;
+      if (slot && slot.itemId) {
+        const slotIdStr = String(slot.itemId);
+        const slotStripped = slotIdStr.replace(/^item_/, '');
+        if (slotIdStr === targetStr || (slotStripped && slotStripped === targetStripped)) {
+          const qty = slot.quantity || 1;
+          const take = Math.min(qty, remainingToDeduct);
+          slot.quantity = qty - take;
+          remainingToDeduct -= take;
 
-        if (slot.quantity <= 0) {
-          player.inventory.splice(i, 1);
+          if (slot.quantity <= 0) {
+            player.inventory.splice(i, 1);
+          }
+
+          if (remainingToDeduct <= 0) break;
         }
-
-        if (remainingToDeduct <= 0) break;
       }
     }
   }

@@ -86,7 +86,7 @@ describe('V26 P2 — Instanced Zone Pure Cost Logic & Real Mongoose Model Verifi
     const p = createRealPlayer({ inventory: [] });
     const res = checkEntryCost(p, { item: 'item_spirit_key' }, mockItemIdByKey);
     expect(res.ok).toBe(false);
-    expect(res.error).toContain('item_spirit_key tidak mencukupi');
+    expect(res.error).toContain('item_spirit_key');
     expect(res.error).toContain('kurang 1');
   });
 
@@ -100,7 +100,7 @@ describe('V26 P2 — Instanced Zone Pure Cost Logic & Real Mongoose Model Verifi
     const p = createRealPlayer({ inventory: [{ itemId: spiritFruitId, quantity: 2 }] });
     const res = checkEntryCost(p, { spiritFruits: 5 }, mockItemIdByKey);
     expect(res.ok).toBe(false);
-    expect(res.error).toContain('item_spirit_fruit tidak mencukupi');
+    expect(res.error).toContain('item_spirit_fruit');
     expect(res.error).toContain('kurang 3');
   });
 
@@ -114,7 +114,7 @@ describe('V26 P2 — Instanced Zone Pure Cost Logic & Real Mongoose Model Verifi
     const p = createRealPlayer({ inventory: [{ itemId: spiritStoneId, quantity: 100 }] });
     const res = checkEntryCost(p, { spiritStones: 500 }, mockItemIdByKey);
     expect(res.ok).toBe(false);
-    expect(res.error).toContain('item_spirit_stone_low tidak mencukupi');
+    expect(res.error).toContain('item_spirit_stone_low');
     expect(res.error).toContain('kurang 400');
   });
 

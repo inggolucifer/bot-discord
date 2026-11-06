@@ -13,6 +13,10 @@ const InstancedZoneSession = require('../../models/InstancedZoneSession');
 const instancedEngine = require('../../services/instancedZoneEngine');
 const zonesV23 = require('../../world-data/zones-v23.json');
 const { getRealmIndex } = require('../../utils/cultivation');
+const LockManager = require('../utils/lockManager');
+const { withTransaction } = require('../utils/dbTransaction');
+const { checkEntryCost, applyEntryCost, requiredItems, computeCooldown, grantRewards } = require('../../utils/instancedZoneCosts');
+const { addCopper } = require('../../utils/currency');
 
 function getPlayerQuery(userId) {
   if (!userId) return { _id: null };
@@ -186,57 +190,40 @@ router.post('/enter', authenticateToken, async (req, res) => {
       }
     }
 
-    // 5. Validasi & Pengurangan Biaya Masuk (Atomic Server Deduction)
+    // 4b. Cooldown & batas sekali-per-lokasi (V26 M4)
+    {
+      const cooldownDays = Number(zone.entryCost?.cooldownDays || 0);
+      if (zone.type === 'land_of_spirits') {
+        const done = await InstancedZoneSession.findOne({ playerId: player._id, zoneId: zone.id, status: { $in: ['claimed', 'completed'] } });
+        if (done) return res.status(400).json({ success: false, error: 'Tanah Warisan ini sudah pernah kamu selesaikan.' });
+      } else if (cooldownDays > 0) {
+        const since = new Date(Date.now() - cooldownDays * 24 * 3600 * 1000);
+        const recent = await InstancedZoneSession.findOne({ playerId: player._id, zoneId: zone.id, status: { $ne: 'active' }, updatedAt: { $gt: since } }).sort({ updatedAt: -1 });
+        if (recent) {
+          const sisaHari = Math.ceil((recent.updatedAt.getTime() + cooldownDays * 86400000 - Date.now()) / 86400000);
+          return res.status(400).json({ success: false, error: `Zona ini masih pulih. Coba lagi dalam ${sisaHari} hari.` });
+        }
+      }
+    }
+
+    // 5. Validasi & Pengurangan Biaya Masuk (V26: item sungguhan, terkunci per pemain)
     if (zone.entryCost) {
-      const curStamina = player.currentStamina !== undefined ? player.currentStamina : (player.stamina || 0);
-      if (zone.entryCost.stamina && curStamina < zone.entryCost.stamina) {
-        return res.status(400).json({
-          success: false,
-          error: `Stamina tidak mencukupi (memerlukan ${zone.entryCost.stamina} stamina).`
-        });
+      const keys = requiredItems(zone.entryCost).map(r => r.itemKey);
+      const itemDocs = (mongoose.connection && mongoose.connection.readyState === 1 && keys.length)
+        ? await Item.find({ itemKey: { $in: keys } }).select('_id itemKey').lean()
+        : keys.map(k => ({ itemKey: k, _id: k }));
+      const itemIdByKey = new Map(itemDocs.map(d => [d.itemKey, d._id]));
+      const releaseLock = await LockManager.acquire(`instanced_enter_${player._id}`);
+      if (!releaseLock) return res.status(429).json({ success: false, error: 'Permintaan sedang diproses. Coba lagi sebentar.' });
+      try {
+        const fresh = (mongoose.connection && mongoose.connection.readyState === 1 ? await Player.findById(player._id) : null) || player;
+        const check = checkEntryCost(fresh, zone.entryCost, itemIdByKey);
+        if (!check.ok) return res.status(400).json({ success: false, error: check.error });
+        applyEntryCost(fresh, zone.entryCost, itemIdByKey);
+        await fresh.save();
+      } finally {
+        releaseLock();
       }
-
-      if (zone.entryCost.spiritStones) {
-        const stones = player.spiritStones ?? player.silver ?? 0;
-        if (stones < zone.entryCost.spiritStones) {
-          return res.status(400).json({
-            success: false,
-            error: `Batu Roh tidak mencukupi (memerlukan ${zone.entryCost.spiritStones} Batu Roh).`
-          });
-        }
-      }
-
-      if (zone.entryCost.item) {
-        const inv = player.inventory || [];
-        const hasItem = inv.some(it => (it.itemId || it.id || it.name) === zone.entryCost.item && (it.quantity || it.amount || 1) >= 1);
-        if (!hasItem) {
-          return res.status(400).json({
-            success: false,
-            error: `Membutuhkan item kunci '${zone.entryCost.item}' untuk membuka gerbang.`
-          });
-        }
-      }
-
-      // Potong biaya secara permanen
-      if (zone.entryCost.stamina) {
-        const newSta = Math.max(0, curStamina - zone.entryCost.stamina);
-        player.currentStamina = newSta;
-        player.stamina = newSta;
-      }
-      if (zone.entryCost.spiritStones) {
-        if (player.spiritStones !== undefined) player.spiritStones -= zone.entryCost.spiritStones;
-        else player.silver = Math.max(0, (player.silver || 0) - zone.entryCost.spiritStones);
-      }
-      if (zone.entryCost.item) {
-        const itemIdx = player.inventory.findIndex(it => (it.itemId || it.id || it.name) === zone.entryCost.item);
-        if (itemIdx !== -1) {
-          const qty = player.inventory[itemIdx].quantity || player.inventory[itemIdx].amount || 1;
-          if (qty <= 1) player.inventory.splice(itemIdx, 1);
-          else if (player.inventory[itemIdx].quantity !== undefined) player.inventory[itemIdx].quantity--;
-          else player.inventory[itemIdx].amount--;
-        }
-      }
-      await player.save();
     }
 
     // 6. Inisialisasi Sesi Otoritatif Engine
@@ -465,11 +452,12 @@ router.post('/claim', authenticateToken, async (req, res) => {
 
     // Berikan hadiah ke pemain
     if (!Array.isArray(player.inventory)) player.inventory = [];
+    if (!player.currency) player.currency = {};
     for (const r of rewards) {
-      if (r.item === 'copper' || r.item === 'silver') {
-        player.silver = (player.silver || 0) + (r.quantity || 0);
-      } else if (r.item === 'spirit_stone') {
-        player.spiritStones = (player.spiritStones || 0) + (r.quantity || 0);
+      if (r.item === 'copper') {
+        addCopper(player.currency, r.quantity || 0);
+      } else if (r.item === 'silver') {
+        player.currency.silver = (player.currency.silver || 0) + (r.quantity || 0);
       } else {
         const itemName = r.name || r.item;
         const itemKey = r.item;
