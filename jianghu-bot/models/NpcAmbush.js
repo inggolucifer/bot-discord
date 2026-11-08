@@ -19,4 +19,4 @@ const npcAmbushSchema = new mongoose.Schema({
 npcAmbushSchema.index({ targetPlayerId: 1, status: 1 });
 npcAmbushSchema.index({ tileX: 1, tileY: 1, status: 1 });
 
-module.exports = mongoose.model('NpcAmbush', npcAmbushSchema);
+module.exports = mongoose.models.NpcAmbush || mongoose.model('NpcAmbush', npcAmbushSchema);

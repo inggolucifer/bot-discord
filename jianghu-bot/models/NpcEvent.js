@@ -19,4 +19,4 @@ const npcEventSchema = new mongoose.Schema({
 
 npcEventSchema.index({ npcId: 1, timestamp: -1 });
 
-module.exports = mongoose.model('NpcEvent', npcEventSchema);
+module.exports = mongoose.models.NpcEvent || mongoose.model('NpcEvent', npcEventSchema);

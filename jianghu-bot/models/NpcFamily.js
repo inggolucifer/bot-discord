@@ -20,4 +20,4 @@ const npcFamilySchema = new mongoose.Schema({
 
 npcFamilySchema.index({ homeAnchorId: 1 });
 
-module.exports = mongoose.model('NpcFamily', npcFamilySchema);
+module.exports = mongoose.models.NpcFamily || mongoose.model('NpcFamily', npcFamilySchema);

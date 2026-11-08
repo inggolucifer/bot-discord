@@ -14,4 +14,4 @@ const npcRelationSchema = new mongoose.Schema({
 
 npcRelationSchema.index({ sourceNpcId: 1, targetNpcId: 1 }, { unique: true });
 
-module.exports = mongoose.model('NpcRelation', npcRelationSchema);
+module.exports = mongoose.models.NpcRelation || mongoose.model('NpcRelation', npcRelationSchema);

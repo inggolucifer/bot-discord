@@ -152,4 +152,4 @@ npcSchema.index({ guildId: 1, zoneId: 1 });
 npcSchema.index({ 'schedule.currentAnchorId': 1, 'vitalStatus.isAlive': 1 });
 npcSchema.index({ 'schedule.tileX': 1, 'schedule.tileY': 1 });
 
-module.exports = mongoose.model('Npc', npcSchema);
+module.exports = mongoose.models.Npc || mongoose.model('Npc', npcSchema);

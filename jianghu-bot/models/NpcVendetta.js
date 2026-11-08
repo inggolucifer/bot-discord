@@ -20,4 +20,4 @@ const npcVendettaSchema = new mongoose.Schema({
 npcVendettaSchema.index({ targetId: 1, resolved: 1 });
 npcVendettaSchema.index({ hunterNpcId: 1, resolved: 1 });
 
-module.exports = mongoose.model('NpcVendetta', npcVendettaSchema);
+module.exports = mongoose.models.NpcVendetta || mongoose.model('NpcVendetta', npcVendettaSchema);
