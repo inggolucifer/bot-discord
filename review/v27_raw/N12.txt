@@ -1,0 +1,2 @@
+TypeScript tsc --noEmit check passed cleanly with 0 errors.
+Files checked: types/npc.ts, components/npc/NpcDialogueScene.tsx, components/world/NearbyPanel.tsx

@@ -70,7 +70,7 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
   const [entities, setEntities] = useState<NearbyEntityItem[]>([]);
   const [countOthers, setCountOthers] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [filter, setFilter] = useState<'all' | 'player' | 'building' | 'hazard'>('all');
+  const [filter, setFilter] = useState<'all' | 'npc' | 'player' | 'building' | 'hazard'>('all');
   const [lastFetchedAt, setLastFetchedAt] = useState<number>(0);
   const [greetedIds, setGreetedIds] = useState<Set<string>>(new Set());
 
