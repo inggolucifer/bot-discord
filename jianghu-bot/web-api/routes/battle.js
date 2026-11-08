@@ -386,6 +386,17 @@ router.post('/start', authenticateToken, async (req, res) => {
                     { skillId: 'basic_attack', name: 'Serangan Brutal', type: 'attack', power: 15, qiCost: 0, cooldown: 0, currentCooldown: 0 }
                 ]
             }];
+        } else if (targetType === 'npc_spar' || targetType === 'npc_duel' || targetType === 'npc_ambush') {
+            const Npc = require('../../models/Npc');
+            const { convertNpcToBattleEnemy } = require('../../services/npcCombatAdapter');
+            const npc = await Npc.findById(targetId);
+            if (!npc) return res.status(404).json({ error: 'NPC tidak ditemukan di dunia Jianghu' });
+            if (!npc.vitalStatus || !npc.vitalStatus.isAlive) {
+                return res.status(400).json({ error: 'Karakter ini telah wafat' });
+            }
+            const enemyObj = convertNpcToBattleEnemy(npc, targetType);
+            enemies = [enemyObj];
+            battleType = targetType === 'npc_duel' ? 'pve_lethal' : 'pve_spar';
         } else if (targetType === 'player') {
             const targetPlayer = await Player.findOne({ discordId: targetId })
                 .populate('laws')
@@ -931,7 +942,25 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
                  }
                  player.dailyHub.missions.combatDefeats = (player.dailyHub.missions.combatDefeats || 0) + 1;
                  player.markModified('dailyHub');
-                 await player.save();
+ 
+                 // Resolusi Khusus Pertarungan NPC Hidup (V27)
+                 if (session.enemies && session.enemies[0]?.tags?.includes('living_npc')) {
+                     try {
+                         const { handleNpcBattleResolution } = require('../../services/npcCombatAdapter');
+                         const enemy = session.enemies[0];
+                         const mode = enemy.tags.find(t => t.startsWith('npc_')) || 'npc_spar';
+                         await handleNpcBattleResolution({
+                             session,
+                             player,
+                             isVictory: true,
+                             npcDbId: enemy.npcDbId,
+                             mode
+                         });
+                     } catch (npcResErr) {
+                         console.warn('[API-BATTLE] Gagal memproses resolusi pertempuran NPC:', npcResErr.message);
+                     }
+                 }
+                await player.save();
              }
         } else if (session.status === 'lost') {
              const player = await Player.findOne({ discordId: userId });
