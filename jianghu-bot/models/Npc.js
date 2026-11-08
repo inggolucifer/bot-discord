@@ -142,7 +142,8 @@ const npcSchema = new mongoose.Schema({
     injurySeverity: { type: Number, default: 0 },
     isMissing: { type: Boolean, default: false },
     isEssential: { type: Boolean, default: false },
-    essentialRole: { type: String, default: '' }
+    essentialRole: { type: String, default: '' },
+    downedUntil: { type: Date, default: null }
   }
 }, { timestamps: true });
 
