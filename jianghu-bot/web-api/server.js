@@ -243,6 +243,9 @@ const setupServer = (client) => {
     const sectArenaRoutes = require('./routes/sectArena');
     app.use('/api/sect-arena', sectArenaRoutes);
 
+    const npcInteractionRoutes = require('./routes/npcInteraction');
+    app.use('/api/npc', npcInteractionRoutes);
+
     const celestialCalendarRoutes = require('./routes/celestialCalendar');
     app.use('/api/celestial-calendar', celestialCalendarRoutes);
 

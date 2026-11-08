@@ -784,4 +784,4 @@ playerSchema.pre('save', function (next) {
   next();
 });
 
-module.exports = mongoose.model('Player', playerSchema);
+module.exports = mongoose.models.Player || mongoose.model('Player', playerSchema);
