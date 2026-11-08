@@ -1,0 +1,17 @@
+=== V27(N13) TALE OF IMMORTAL 7-TAB NPC PROFILE PANEL & MODAL INTEGRATION ===
+Timestamp: 2026-11-08T21:12:45+07:00
+Component: web-dashboard/src/components/npc/NpcProfilePanel.tsx
+Integrated:
+- 7 Tabs: Ikhtisar (Overview), Atribut 5-Pilar (Attributes), Hubungan & Klan (Relationships), Riwayat Hidup (Chronicles), Inventaris (Inventory), Manual & Jurus (Manuals), Catatan Pribadi (Interaction Log).
+- NpcInteractionModal.tsx: Connected to /api/npc/profile/:npcId and /api/npc/relations/:npcId.
+- Seamless mode switching between VN Dialogue Scene (NpcDialogueScene) and 7-Tab Profile (NpcProfilePanel).
+- BattleArena integration for NPC Sparring and Lethal Duels.
+- ZoneGridView.tsx & NearbyPanel.tsx quick action dispatching ('talk' -> dialogue, 'inspect' -> profile).
+
+Type Checking:
+npx tsc --noEmit: EXIT 0 (0 errors)
+
+Production Build:
+npm run build: EXIT 0
+Routes generated: 33/33 static and dynamic pages compiled successfully in 77s.
+STATUS: PASS

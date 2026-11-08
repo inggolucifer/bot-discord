@@ -1,0 +1,73 @@
+======================================================================
+ GATE RUNNER V27 — EVALUASI OTORITATIF EKOSISTEM NPC HIDUP (N0 - N14)
+======================================================================
+✓ Seluruh berkas mentah N0 - N13 terverifikasi hadir dan valid.
+
+[TEST 1/3] Menjalankan Test Suite NPC V27 (Unit & Integration)...
+[EXEC] npx vitest run tests/unit/npc/ tests/integration/npc tests/integration/nearbyNpcStreaming.test.mjs (cwd: D:\gitub\bot-discord\jianghu-bot)
+✓ Vitest NPC V27: 11 berkas lulus, 63 tes lulus.
+
+[TEST 2/3] Menjalankan Uji Regresi V26 (instancedZoneCosts)...
+[EXEC] npx vitest run tests/unit/instancedZoneCosts.test.js (cwd: D:\gitub\bot-discord\jianghu-bot)
+✓ Uji Regresi V26: 17 tes lulus.
+
+[TEST 3/3] Memeriksa Kompilasi TypeScript Frontend (tsc --noEmit)...
+[EXEC] npx tsc --noEmit (cwd: D:\gitub\bot-discord\jianghu-bot\web-dashboard)
+✓ Kompilasi TypeScript Frontend: 0 error.
+
+======================================================================
+ HASIL EVALUASI GERBANG V27 (N0 - N14)
+======================================================================
+N0  : ✅ PASS | Baseline Verification & Regresi V26
+      Target: Suite V26 lulus tanpa mock
+      Hasil : 17 tes unit lulus (instancedZoneCosts)
+N1  : ✅ PASS | Definisi Data Statis JSON
+      Target: 8 kepribadian, 16 dao, takdir, kamus nama
+      Hasil : 6 tes lulus, skrip narasi A–D tersedia
+N2  : ✅ PASS | Ekstensi Skema Mongoose
+      Target: Npc.js, Player.wantedLevel, 6 relasi
+      Hasil : 7 tes lulus, export aman anti-overwrite
+N3  : ✅ PASS | PRNG Murni, Kalender & Kalkulator Atribut
+      Target: Mulberry32, 60 Jiazi, integer bulat
+      Hasil : 10 tes lulus, 0 desimal terbukti
+N4  : ✅ PASS | Generator Deterministik & Genealogi Klan
+      Target: Profil peran, klan DAG, selisih usia >= 18
+      Hasil : 4 tes lulus, 8 klan teruji
+N5  : ✅ PASS | Siklus Hidup, Pintu Kematian Tunggal & Dendam
+      Target: killNpc terpusat, dendam, auto-replenish
+      Hasil : 4 tes lulus, single death door aman
+N6  : ✅ PASS | Master Seeder & 14 Invarian Otoritatif
+      Target: Snapshot 290 NPC, 14 invarian lulus
+      Hasil : 14/14 invarian I1–I14 lulus sempurna
+N7  : ✅ PASS | Penjadwal Spasial Ganda & Simulator Gerak
+      Target: Near/far ticks, batas kecepatan
+      Hasil : 4 tes lulus, status aktivitas presisi
+N8  : ✅ PASS | API Interaksi Server-Authoritative (15 Aksi)
+      Target: 15 aksi, cap harian, multi-tier currency
+      Hasil : 5 tes integrasi lulus, payCurrency aman
+N9  : ✅ PASS | Adapter Tempur, Sparring, Duel & Ambush
+      Target: npc_spar, npc_duel, lethal death door
+      Hasil : 4 tes integrasi lulus, resolusi duel sah
+N10 : ✅ PASS | Integrasi Spasial Nearby & Streaming Soket
+      Target: Streaming NPC hidup, filter NearbyPanel
+      Hasil : 2 tes integrasi lulus, tombol aksi aktif
+N11 : ✅ PASS | Engine Dialog Visual Novel Dinamis
+      Target: 4 batch skrip, zero placeholder leakage
+      Hasil : 3 tes lulus, sapaan & gelar kontekstual
+N12 : ✅ PASS | Komponen Visual Novel Dialogue Scene UI
+      Target: Typewriter effect, 15 aksi interaktif
+      Hasil : tsc --noEmit lolos 0 error
+N13 : ✅ PASS | Panel Profil Komprehensif 7-Tab Tale of Immortal
+      Target: 7 tab lengkap, modal integrasi
+      Hasil : Next.js build 33/33 halaman berhasil
+N14 : ✅ PASS | Gate Runner Otomatis & Dokumentasi Ekosistem
+      Target: Laporan resmi & gate_summary.json
+      Hasil : Semua 15 gerbang lulus (100% PASS)
+
+[OUTPUT] Ringkasan JSON tersimpan di: D:\gitub\bot-discord\jianghu-bot\review\v27_raw\gate_summary.json
+[OUTPUT] Laporan resmi V27 berhasil ditulis ke: D:\gitub\bot-discord\jianghu-bot\review\report_v27.md
+
+======================================================================
+STATUS AKHIR GERBANG V27: ✅ SEMUA GERBANG LULUS (100% PASS)
+======================================================================
+STATUS: PASS (EXIT 0)

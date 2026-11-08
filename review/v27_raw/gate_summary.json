@@ -1,0 +1,223 @@
+{
+  "version": "V27",
+  "headHash": "8753327d",
+  "evaluatedAt": "2026-11-08T14:18:32.098Z",
+  "totalGates": 15,
+  "passedGates": 15,
+  "overallStatus": "PASS",
+  "testMetrics": {
+    "npcTestFiles": 11,
+    "npcTotalTests": 63,
+    "regressionTests": 17,
+    "totalAutomatedTests": 80,
+    "typescriptErrors": 0,
+    "nextBuildPages": 33
+  },
+  "invariantsMatrix": [
+    {
+      "code": "I1",
+      "desc": "Distribusi Peran Pokok Terpenuhi di Seluruh 52 Anchor",
+      "target": ">= 2 peran per anchor",
+      "actual": "Semua 52 anchor terpenuhi",
+      "status": "PASS"
+    },
+    {
+      "code": "I2",
+      "desc": "Distribusi Kepribadian (8 Varian) Berimbang",
+      "target": "Semua 8 kepribadian aktif",
+      "actual": "8 kepribadian terdistribusi proporsional",
+      "status": "PASS"
+    },
+    {
+      "code": "I3",
+      "desc": "Distribusi Sifat Dao (16 Varian) Berimbang",
+      "target": "Semua 16 trait terpakai",
+      "actual": "16 sifat Dao terdistribusi",
+      "status": "PASS"
+    },
+    {
+      "code": "I4",
+      "desc": "Batas Usia Biologis (currentAge <= maxAge)",
+      "target": "0 NPC melampaui maxAge",
+      "actual": "0 pelanggaran batas usia",
+      "status": "PASS"
+    },
+    {
+      "code": "I5",
+      "desc": "Integritas Atribut 5-Pilar (Integer Murni, Non-Desimal)",
+      "target": "100% atribut bulat Math.floor",
+      "actual": "0 desimal pada seluruh 290 NPC",
+      "status": "PASS"
+    },
+    {
+      "code": "I6",
+      "desc": "Kesesuaian Spasial & Anchor Koordinat",
+      "target": "Semua koordinat dalam jangkauan anchor",
+      "actual": "100% koordinat valid",
+      "status": "PASS"
+    },
+    {
+      "code": "I7",
+      "desc": "Asal-Usul Nama Tokoh Wuxia Asli",
+      "target": "100% nama berasal dari kamus nama",
+      "actual": "290 nama autentik Jianghu",
+      "status": "PASS"
+    },
+    {
+      "code": "I8",
+      "desc": "Integritas Silsilah Keluarga (Struktur Asiklik / DAG)",
+      "target": "0 siklus silsilah",
+      "actual": "8 klan keluarga berupa pohon asiklik",
+      "status": "PASS"
+    },
+    {
+      "code": "I9",
+      "desc": "Batas Selisih Usia Orang Tua & Anak",
+      "target": "Selisih usia minimal >= 18 tahun",
+      "actual": "100% hubungan orang tua-anak valid",
+      "status": "PASS"
+    },
+    {
+      "code": "I10",
+      "desc": "Kesesuaian Perlengkapan Awal dengan Ranah",
+      "target": "Senjata & zirah sesuai tier",
+      "actual": "100% equipment valid",
+      "status": "PASS"
+    },
+    {
+      "code": "I11",
+      "desc": "Jadwal Aktivitas Spasial (12 Shichen)",
+      "target": "12 slot waktu per hari terdefinisi",
+      "actual": "100% schedule valid",
+      "status": "PASS"
+    },
+    {
+      "code": "I12",
+      "desc": "Keunikan ID Tokoh & Konsistensi Deterministik",
+      "target": "290 ID unik, PRNG deterministik",
+      "actual": "290 ID unik terverifikasi",
+      "status": "PASS"
+    },
+    {
+      "code": "I13",
+      "desc": "Afinitas Hubungan Awal Berada dalam Rentang Aman",
+      "target": "Rentang -100 s/d +100",
+      "actual": "Semua relasi dalam batas aman",
+      "status": "PASS"
+    },
+    {
+      "code": "I14",
+      "desc": "Kesesuaian Skema Mongoose (Backward Compatibility)",
+      "target": "0 field tidak sah",
+      "actual": "100% sesuai skema Npc.js",
+      "status": "PASS"
+    }
+  ],
+  "gatesMatrix": [
+    {
+      "gate": "N0",
+      "name": "Baseline Verification & Regresi V26",
+      "target": "Suite V26 lulus tanpa mock",
+      "actual": "17 tes unit lulus (instancedZoneCosts)",
+      "status": "PASS"
+    },
+    {
+      "gate": "N1",
+      "name": "Definisi Data Statis JSON",
+      "target": "8 kepribadian, 16 dao, takdir, kamus nama",
+      "actual": "6 tes lulus, skrip narasi A–D tersedia",
+      "status": "PASS"
+    },
+    {
+      "gate": "N2",
+      "name": "Ekstensi Skema Mongoose",
+      "target": "Npc.js, Player.wantedLevel, 6 relasi",
+      "actual": "7 tes lulus, export aman anti-overwrite",
+      "status": "PASS"
+    },
+    {
+      "gate": "N3",
+      "name": "PRNG Murni, Kalender & Kalkulator Atribut",
+      "target": "Mulberry32, 60 Jiazi, integer bulat",
+      "actual": "10 tes lulus, 0 desimal terbukti",
+      "status": "PASS"
+    },
+    {
+      "gate": "N4",
+      "name": "Generator Deterministik & Genealogi Klan",
+      "target": "Profil peran, klan DAG, selisih usia >= 18",
+      "actual": "4 tes lulus, 8 klan teruji",
+      "status": "PASS"
+    },
+    {
+      "gate": "N5",
+      "name": "Siklus Hidup, Pintu Kematian Tunggal & Dendam",
+      "target": "killNpc terpusat, dendam, auto-replenish",
+      "actual": "4 tes lulus, single death door aman",
+      "status": "PASS"
+    },
+    {
+      "gate": "N6",
+      "name": "Master Seeder & 14 Invarian Otoritatif",
+      "target": "Snapshot 290 NPC, 14 invarian lulus",
+      "actual": "14/14 invarian I1–I14 lulus sempurna",
+      "status": "PASS"
+    },
+    {
+      "gate": "N7",
+      "name": "Penjadwal Spasial Ganda & Simulator Gerak",
+      "target": "Near/far ticks, batas kecepatan",
+      "actual": "4 tes lulus, status aktivitas presisi",
+      "status": "PASS"
+    },
+    {
+      "gate": "N8",
+      "name": "API Interaksi Server-Authoritative (15 Aksi)",
+      "target": "15 aksi, cap harian, multi-tier currency",
+      "actual": "5 tes integrasi lulus, payCurrency aman",
+      "status": "PASS"
+    },
+    {
+      "gate": "N9",
+      "name": "Adapter Tempur, Sparring, Duel & Ambush",
+      "target": "npc_spar, npc_duel, lethal death door",
+      "actual": "4 tes integrasi lulus, resolusi duel sah",
+      "status": "PASS"
+    },
+    {
+      "gate": "N10",
+      "name": "Integrasi Spasial Nearby & Streaming Soket",
+      "target": "Streaming NPC hidup, filter NearbyPanel",
+      "actual": "2 tes integrasi lulus, tombol aksi aktif",
+      "status": "PASS"
+    },
+    {
+      "gate": "N11",
+      "name": "Engine Dialog Visual Novel Dinamis",
+      "target": "4 batch skrip, zero placeholder leakage",
+      "actual": "3 tes lulus, sapaan & gelar kontekstual",
+      "status": "PASS"
+    },
+    {
+      "gate": "N12",
+      "name": "Komponen Visual Novel Dialogue Scene UI",
+      "target": "Typewriter effect, 15 aksi interaktif",
+      "actual": "tsc --noEmit lolos 0 error",
+      "status": "PASS"
+    },
+    {
+      "gate": "N13",
+      "name": "Panel Profil Komprehensif 7-Tab Tale of Immortal",
+      "target": "7 tab lengkap, modal integrasi",
+      "actual": "Next.js build 33/33 halaman berhasil",
+      "status": "PASS"
+    },
+    {
+      "gate": "N14",
+      "name": "Gate Runner Otomatis & Dokumentasi Ekosistem",
+      "target": "Laporan resmi & gate_summary.json",
+      "actual": "Semua 15 gerbang lulus (100% PASS)",
+      "status": "PASS"
+    }
+  ]
+}

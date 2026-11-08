@@ -335,6 +335,25 @@ Mengikuti standar visual Wuxia premium Tale of Immortal dengan kebijakan **Zero-
    - **Jurus Bawaan Law**: Bebas kuota manual (0 slot), permanen (tidak bisa dilupakan), naik level via combat riil $\lfloor 25 \times \text{level}^2 \rfloor$.
    - **Dock Loadout Tempur 4-Slot (Sistem 4+1)**: Slot 0 otomatis Basic Attack Adaptif Senjata; Slot 1–4 memadukan bebas manual luar dan jurus Law.
 
+### 3.12. Sistem NPC Hidup & Hubungan Sosial Spasial (V27)
+1. **Ekosistem 290 Tokoh di 52 Anchor**:
+   - Seluruh 52 anchor dunia (kota megah, kota menengah, desa, dusun, pos perbatasan, dermaga) dihuni oleh 290 NPC berkepribadian otonom dengan kuota peran esensial terjamin.
+   - 8 Klan Keluarga Besar (Jiang, Zhao, Lin, Ye, Xiao, Chen, Bai, Chu) memiliki pohon silsilah keluarga (DAG asiklik) dengan selisih usia orang tua dan anak >= 18 tahun.
+2. **Determinisme PRNG & Kalender Wuxia**:
+   - Dilarang keras menggunakan `Math.random` untuk atribut, nama, dan sifat NPC. Semua kalkulasi wajib menggunakan Mulberry32 PRNG terpusat (`utils/npcRng.js`).
+   - Kalender mengacu pada 60 Jiazi, peredaran 4 musim, dan 12 Shichen per hari (`utils/npcTime.js`).
+3. **Pintu Kematian Tunggal (Single Death Door)**:
+   - Modul `services/npcLifecycle.js: killNpc()` adalah satu-satunya otoritas yang boleh mengubah `npc.vitalStatus.isAlive` menjadi `false`.
+   - Kematian memicu warisan inventaris, pencatatan `NpcEvent`, aktivasi dendam keluarga (`NpcVendetta`), dan penjadwalan regenerasi peran pokok via `npcPopulationManager.js`.
+4. **Sistem Dendam & Ambush Nyata**:
+   - Membunuh atau merugikan NPC memicu `NpcVendetta`. Langkah pemain di alam liar mengevaluasi peluang sergapan (`NpcAmbush`) secara server-authoritative.
+5. **Keamanan Finansial & Otoritas Server**:
+   - Biaya suap dan aksi interaksi wajib melalui helper terproteksi `payCurrency` (`utils/currency.js`).
+   - 15 aksi interaksi (Sosial, Hadiah/Suap, Beladiri, Hubungan Khusus, Intrik) divalidasi server berdasarkan jarak, batas harian, dan kepemilikan koin.
+6. **Antarmuka Ganda Bergaya Tale of Immortal**:
+   - **Mode Dialog Visual Novel (`NpcDialogueScene.tsx`)**: Typewriter animation, sapaan dinamis, visual art standing, dan 15 aksi interaksi.
+   - **Mode Profil 7-Tab (`NpcProfilePanel.tsx`)**: Ikhtisar, Atribut 5-Pilar Integer, Hubungan & Klan, Riwayat Hidup, Inventaris (Fog of Inspection), Manual, Catatan Pribadi.
+
 ---
 
 ## 4. Standar `globalAssets.ts`
