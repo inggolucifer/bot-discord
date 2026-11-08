@@ -1,0 +1,20 @@
+﻿On branch main
+Your branch is ahead of 'origin/main' by 2 commits.
+  (use "git push" to publish your local commits)
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	../review/
+
+nothing added to commit but untracked files present (use "git add" to track)
+5e045056 v26: fix settlement panorama facilities, mount, fodder, adaptive basic attack dual id, and rest lifecycle
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90mD:/gitub/bot-discord/jianghu-bot[39m
+
+ [32mΓ£ô[39m tests/unit/instancedZoneCosts.test.js [2m([22m[2m17 tests[22m[2m)[22m[32m 215[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m17 passed[39m[22m[90m (17)[39m
+[2m   Start at [22m 20:19:37
+[2m   Duration [22m 5.13s[2m (import 93%, tests 5%, worker 1%, transform 1%)[22m
+
