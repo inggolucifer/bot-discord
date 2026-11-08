@@ -1,0 +1,162 @@
+[
+  {
+    "id": "righteous",
+    "name": "Budiman (Righteous)",
+    "description": "Menjunjung tinggi keadilan, moralitas luhur, dan membela yang lemah tanpa pamrih.",
+    "moralityRange": [75, 100],
+    "temperamentRange": [50, 80],
+    "affinityModifiers": {
+      "chat": 1.0,
+      "spar": 1.2,
+      "gift": 1.0,
+      "bribe": -2.0,
+      "threaten": -3.0,
+      "steal": -3.0,
+      "recruit": 1.1,
+      "confess": 1.0
+    },
+    "preferredGiftCategories": ["pill", "manual", "tea"],
+    "dislikedGiftCategories": ["poison", "stolen_goods"],
+    "dialogueTone": "santun, berbudi luhur, dan penuh nasihat kebajikan"
+  },
+  {
+    "id": "honest",
+    "name": "Jujur (Honest)",
+    "description": "Berbicara apa adanya, memegang teguh janji, dan membenci kepalsuan serta muslihat.",
+    "moralityRange": [65, 95],
+    "temperamentRange": [30, 60],
+    "affinityModifiers": {
+      "chat": 1.1,
+      "spar": 1.0,
+      "gift": 1.0,
+      "bribe": -2.5,
+      "threaten": -2.5,
+      "steal": -3.0,
+      "recruit": 1.0,
+      "confess": 1.2
+    },
+    "preferredGiftCategories": ["food", "ore", "material"],
+    "dislikedGiftCategories": ["counterfeit", "poison"],
+    "dialogueTone": "lugas, jujur tanpa basa-basi, dan tulus"
+  },
+  {
+    "id": "free_spirited",
+    "name": "Bebas Pengelana (Free-Spirited)",
+    "description": "Mengembara tanpa beban aturan, mencintai arak, alam bebas, dan persahabatan sejati.",
+    "moralityRange": [40, 75],
+    "temperamentRange": [60, 90],
+    "affinityModifiers": {
+      "chat": 1.3,
+      "spar": 1.1,
+      "gift": 1.2,
+      "bribe": -0.5,
+      "threaten": -2.0,
+      "steal": -1.5,
+      "recruit": 1.3,
+      "confess": 1.1
+    },
+    "preferredGiftCategories": ["wine", "tea", "herb", "musical_instrument"],
+    "dislikedGiftCategories": ["official_token", "court_document"],
+    "dialogueTone": "santai, jenaka, dan penuh kiasan angin pegunungan"
+  },
+  {
+    "id": "pragmatic",
+    "name": "Pragmatis (Pragmatic)",
+    "description": "Mengutamakan manfaat nyata, kalkulasi untung-rugi, dan kesepakatan dagang yang saling menguntungkan.",
+    "moralityRange": [35, 65],
+    "temperamentRange": [30, 60],
+    "affinityModifiers": {
+      "chat": 0.8,
+      "spar": 0.9,
+      "gift": 1.3,
+      "bribe": 1.5,
+      "threaten": -1.0,
+      "steal": -2.0,
+      "recruit": 0.9,
+      "confess": 0.8
+    },
+    "preferredGiftCategories": ["spirit_stone", "currency", "ore", "talisman"],
+    "dislikedGiftCategories": ["flower", "trinket"],
+    "dialogueTone": "realistis, berhitung rasional, dan lugas soal harga/manfaat"
+  },
+  {
+    "id": "aloof",
+    "name": "Dingin Menyendiri (Aloof)",
+    "description": "Pendiam, menjaga jarak dengan dunia fana, dan hanya peduli pada ketajaman Dao serta pedangnya.",
+    "moralityRange": [40, 70],
+    "temperamentRange": [10, 40],
+    "affinityModifiers": {
+      "chat": 0.6,
+      "spar": 1.4,
+      "gift": 0.8,
+      "bribe": -1.5,
+      "threaten": -1.5,
+      "steal": -2.0,
+      "recruit": 0.7,
+      "confess": 0.6
+    },
+    "preferredGiftCategories": ["sword", "ice_herb", "ancient_scroll"],
+    "dislikedGiftCategories": ["wine", "vulgar_item", "sweet"],
+    "dialogueTone": "singkat, dingin sedingin es, dan menusuk tajam"
+  },
+  {
+    "id": "ambitious",
+    "name": "Ambisius (Ambitious)",
+    "description": "Mengejar kekuasaan, martabat ranah tertinggi, dan bersedia menempuh jalan berliku demi keagungan sekte.",
+    "moralityRange": [20, 50],
+    "temperamentRange": [50, 85],
+    "affinityModifiers": {
+      "chat": 0.9,
+      "spar": 1.1,
+      "gift": 1.4,
+      "bribe": 1.2,
+      "threaten": 0.5,
+      "steal": -2.0,
+      "recruit": 0.8,
+      "confess": 0.7
+    },
+    "preferredGiftCategories": ["breakthrough_pill", "high_manual", "sect_token"],
+    "dislikedGiftCategories": ["low_food", "scrap_metal"],
+    "dialogueTone": "percaya diri tinggi, berwibawa, dan sarat hasrat kejayaan"
+  },
+  {
+    "id": "ruthless",
+    "name": "Kejam (Ruthless)",
+    "description": "Tidak mengenal belas kasihan pada musuh, menghormati kekerasan murni, dan pendendam berdarah dingin.",
+    "moralityRange": [0, 25],
+    "temperamentRange": [60, 95],
+    "affinityModifiers": {
+      "chat": 0.5,
+      "spar": 1.3,
+      "gift": 1.0,
+      "bribe": 1.0,
+      "threaten": 1.0,
+      "steal": -3.0,
+      "recruit": 0.6,
+      "confess": 0.4
+    },
+    "preferredGiftCategories": ["poison", "sharp_weapon", "blood_herb"],
+    "dislikedGiftCategories": ["buddhist_scripture", "tea", "medicine"],
+    "dialogueTone": "mengintimidasi, bernada ancaman, dan haus darah"
+  },
+  {
+    "id": "eccentric",
+    "name": "Eksentrik (Eccentric)",
+    "description": "Tingkah laku sulit ditebak, terobsesi pada keanehan Dao, dan memandang dunia fana seperti lelucon besar.",
+    "moralityRange": [20, 80],
+    "temperamentRange": [70, 100],
+    "affinityModifiers": {
+      "chat": 1.2,
+      "spar": 1.2,
+      "gift": 1.3,
+      "bribe": 0.8,
+      "threaten": -0.8,
+      "steal": -1.0,
+      "recruit": 1.1,
+      "confess": 1.0
+    },
+    "preferredGiftCategories": ["rare_beast_part", "oddity", "experimental_pill"],
+    "dislikedGiftCategories": ["common_clothes", "ordinary_book"],
+    "dialogueTone": "tak terduga, melompat-lompat, dan sering tertawa aneh"
+  }
+]

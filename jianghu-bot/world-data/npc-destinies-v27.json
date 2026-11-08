@@ -1,0 +1,111 @@
+{
+  "innate": [
+    {
+      "id": "mortal_dantian",
+      "name": "Dantian Fana Biasa",
+      "tier": "gray",
+      "description": "Bakat rata-rata manusia fana tanpa keistimewaan bawaan.",
+      "statModifiers": {}
+    },
+    {
+      "id": "tough_skin",
+      "name": "Kulit Tebal Petani",
+      "tier": "green",
+      "description": "Terbiasa bekerja keras di bawah terik matahari, fisik sedikit lebih liat.",
+      "statModifiers": { "defense": 5, "hp": 20 }
+    },
+    {
+      "id": "nimble_steps",
+      "name": "Langkah Rusa Hutan",
+      "tier": "green",
+      "description": "Kelincahan alami yang memudahkan lari dari bahaya.",
+      "statModifiers": { "agility": 8 }
+    },
+    {
+      "id": "crane_longevity",
+      "name": "Umur Panjang Bangau Putih",
+      "tier": "blue",
+      "description": "Meridian alami yang lentur memberikan tambahan usia harapan hidup.",
+      "statModifiers": { "lifespanBonus": 30, "vitality": 15 }
+    },
+    {
+      "id": "tiger_bone",
+      "name": "Kerangka Tulang Harimau",
+      "tier": "blue",
+      "description": "Struktur tulang padat yang memperkuat hantaman fisik secara alami.",
+      "statModifiers": { "attack": 12, "hp": 40 }
+    },
+    {
+      "id": "blessed_fortune",
+      "name": "Bintang Keberuntungan Menyinari",
+      "tier": "purple",
+      "description": "Sering menemukan herba liar bernilai tinggi atau lolos tipis dari maut.",
+      "statModifiers": { "luck": 20 }
+    },
+    {
+      "id": "unyielding_spirit",
+      "name": "Tekad Baja Pantang Menyerah",
+      "tier": "purple",
+      "description": "Ketika terdesak dalam bahaya, potensi pertahanan bangkit secara dramatis.",
+      "statModifiers": { "defense": 15, "focus": 15, "critRes": 10 }
+    },
+    {
+      "id": "phoenix_grace",
+      "name": "Keanggunan Bulu Phoenix",
+      "tier": "gold",
+      "description": "Karisma memikat yang membuat kultivator lain segan dan mudah terpikat.",
+      "statModifiers": { "luck": 25, "agility": 15, "charm": 20 }
+    },
+    {
+      "id": "dragon_spine",
+      "name": "Tulang Punggung Naga Sejati",
+      "tier": "red",
+      "description": "Takdir purba penguasa semesta; kekuatan fisik dan daya tampung dantian tiada tara.",
+      "statModifiers": { "attack": 30, "defense": 20, "hp": 150, "critRate": 10 }
+    }
+  ],
+  "acquired": [
+    {
+      "id": "broken_meridian",
+      "name": "Meridian Terluka Parah",
+      "tier": "gray",
+      "description": "Luka dalam akibat pertarungan sengit di masa lalu yang membatasi aliran Qi.",
+      "statModifiers": { "attack": -10, "agility": -10 }
+    },
+    {
+      "id": "hardened_veteran",
+      "name": "Pengelana Bertahan Hidup",
+      "tier": "green",
+      "description": "Pengalaman melintasi alam liar memberikan insting bertahan hidup yang tajam.",
+      "statModifiers": { "martialRes": 10, "defense": 8 }
+    },
+    {
+      "id": "sect_favored",
+      "name": "Anak Emas Sekte",
+      "tier": "blue",
+      "description": "Mendapat alokasi pil pemurni dan bimbingan langsung dari tetua terkemuka.",
+      "statModifiers": { "insight": 15, "focus": 10 }
+    },
+    {
+      "id": "lone_wolf",
+      "name": "Serigala Penyendiri",
+      "tier": "purple",
+      "description": "Berjuang seorang diri tanpa lindungan sekte; naluri serangannya sangat mematikan.",
+      "statModifiers": { "attack": 20, "critDmg": 25 }
+    },
+    {
+      "id": "ancient_inheritance",
+      "name": "Warisan Gua Kuno",
+      "tier": "gold",
+      "description": "Pernah jatuh ke jurang dan menemukan makam pertapa abadi pembawa berkah.",
+      "statModifiers": { "attack": 25, "defense": 20, "insight": 25, "hp": 100 }
+    },
+    {
+      "id": "enlightened_one",
+      "name": "Pencerahan Dao Mendadak",
+      "tier": "red",
+      "description": "Pernah menyaksikan sambaran petir surgawi dan membedah esensi semesta dalam sekejap mata.",
+      "statModifiers": { "insight": 40, "focus": 30, "spiritualRes": 25, "critRate": 12 }
+    }
+  ]
+}

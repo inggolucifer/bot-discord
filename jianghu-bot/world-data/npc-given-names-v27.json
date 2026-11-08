@@ -1,0 +1,24 @@
+{
+  "male": [
+    "Tianyu", "Feng", "Changfeng", "Zhan", "Yunfei", "Hao", "Jian", "Wuji", "Zichen", "Bailong",
+    "Haotian", "Ming", "Xuan", "Yifeng", "Tianxing", "Zhenyu", "Chuan", "Qingshan", "Hanhai", "Hong",
+    "Yichen", "Zhuo", "Sheng", "Wufeng", "Tianxiang", "Teng", "Yuan", "Lie", "Mo", "Chenfeng",
+    "Bofeng", "Guang", "Haochun", "Jianhua", "Jun", "Kai", "Lang", "Long", "Nan", "Ping",
+    "Qian", "Rui", "Shan", "Tao", "Wei", "Xiang", "Xing", "Yan", "Yong", "Zheng",
+    "Zhi", "Zhong", "Bohan", "Cheng", "Dafeng", "Dong", "En", "Feihong", "Guan", "Huilong"
+  ],
+  "female": [
+    "Xue", "Yue", "Ling", "Qing", "Wan'er", "Ruxue", "Ziyan", "Ting", "Feiyan", "Shuang",
+    "Mei", "Lan", "Huan", "Xiaoxiao", "Yuxin", "Qianxue", "Lian", "Die", "Ying", "Yutong",
+    "Ruolan", "Hanyue", "Biying", "Luo", "Ning", "Pei", "Qiao", "Rong", "Shan", "Shu",
+    "Tong", "Wen", "Xi", "Xuan", "Ya", "Yan", "Yi", "Yin", "Yuan", "Yun",
+    "Zhen", "Zhu", "An", "Bing", "Cai", "Dan", "Fang", "He", "Jia", "Jing",
+    "Lian'er", "Meng", "Nian", "Piao", "Qi", "Rou", "Si", "Xin", "Yao", "Zhiruo"
+  ],
+  "neutral": [
+    "Yun", "Qing", "Zhen", "Yu", "Chen", "Jing", "Xi", "Ran", "Mo", "Han",
+    "Chuan", "Shu", "Ning", "Xiao", "Chun", "Feng", "Lin", "Hui", "Jian", "Le",
+    "Qi", "Rui", "Sen", "Tian", "Wei", "Xin", "Ying", "Zhi", "Zhuo", "Ao",
+    "Bai", "Chu", "Dan", "Fan", "Guang"
+  ]
+}

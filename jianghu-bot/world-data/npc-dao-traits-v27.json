@@ -1,0 +1,222 @@
+[
+  {
+    "id": "sword_heart",
+    "name": "Hati Pedang Murni (Sword Heart)",
+    "description": "Dilahirkan dengan jiwa yang menyatu bersama pedang; setiap tebasan mengandung niat membunuh yang tajam.",
+    "category": "martial",
+    "statModifiers": {
+      "attack": 15,
+      "critRate": 5,
+      "critDmg": 15
+    },
+    "rootAffinities": {
+      "metal": 25
+    }
+  },
+  {
+    "id": "frost_essence",
+    "name": "Intisari Dingin Salju (Frost Essence)",
+    "description": "Meridian tubuh sedingin gletser abadi; mantra air dan es memiliki daya beku yang melumpuhkan.",
+    "category": "spiritual",
+    "statModifiers": {
+      "defense": 10,
+      "spiritualRes": 15
+    },
+    "rootAffinities": {
+      "water": 30
+    }
+  },
+  {
+    "id": "phoenix_blood",
+    "name": "Titisan Darah Phoenix (Phoenix Blood)",
+    "description": "Mengalir darah burung abadi; daya pemulihan luka dan vitalitas berlipat ganda.",
+    "category": "physique",
+    "statModifiers": {
+      "hp": 80,
+      "vitality": 20
+    },
+    "rootAffinities": {
+      "fire": 25,
+      "wood": 10
+    }
+  },
+  {
+    "id": "vajra_body",
+    "name": "Tubuh Baja Vajra (Vajra Physique)",
+    "description": "Otot dan tulang sekeras logam surgawi; mampu menahan hantaman senjata tanpa bergeming.",
+    "category": "physique",
+    "statModifiers": {
+      "defense": 25,
+      "martialRes": 20
+    },
+    "rootAffinities": {
+      "earth": 20,
+      "metal": 15
+    }
+  },
+  {
+    "id": "killing_intent",
+    "name": "Aura Pembunuh Pekat (Asura Intent)",
+    "description": "Niat membunuh yang diasah dari ratusan pertempuran berdarah; membuat lawan bergidik gentar.",
+    "category": "mental",
+    "statModifiers": {
+      "attack": 20,
+      "critRate": 8
+    },
+    "rootAffinities": {
+      "fire": 15
+    }
+  },
+  {
+    "id": "herb_sage",
+    "name": "Bakat Tabib Suci (Herb Sage)",
+    "description": "Memahami detak kehidupan herba spiritual; efisiensi pengobatan dan kultivasi kayu melesat tinggi.",
+    "category": "spiritual",
+    "statModifiers": {
+      "vitality": 15,
+      "insight": 10
+    },
+    "rootAffinities": {
+      "wood": 35
+    }
+  },
+  {
+    "id": "alchemy_prodigy",
+    "name": "Kecerdasan Tungku Alkimia (Alchemy Prodigy)",
+    "description": "Sensitivitas luar biasa terhadap panas api dan intisari ramuan; rasio kemurnian pil selalu tinggi.",
+    "category": "spiritual",
+    "statModifiers": {
+      "focus": 15,
+      "insight": 12
+    },
+    "rootAffinities": {
+      "fire": 20,
+      "wood": 15
+    }
+  },
+  {
+    "id": "thunder_soul",
+    "name": "Jiwa Petir Menggelegar (Thunder Soul)",
+    "description": "Memiliki resonansi bawaan dengan halilintar langit; gerakan dan serangannya secepat kilat.",
+    "category": "spiritual",
+    "statModifiers": {
+      "agility": 18,
+      "attack": 12
+    },
+    "rootAffinities": {
+      "lightning": 35
+    }
+  },
+  {
+    "id": "wind_whisperer",
+    "name": "Penunggang Angin Puyuh (Wind Whisperer)",
+    "description": "Melangkah seringan embusan angin senja; sulit disentuh oleh pedang lawan.",
+    "category": "martial",
+    "statModifiers": {
+      "agility": 22,
+      "travelSpeed": 10
+    },
+    "rootAffinities": {
+      "wind": 35
+    }
+  },
+  {
+    "id": "earth_steadfast",
+    "name": "Keteguhan Tebing Bumi (Steadfast Earth)",
+    "description": "Berpijak sekokoh Gunung Tai; tidak mudah terhempas oleh teknik dorongan atau pukulan berat.",
+    "category": "physique",
+    "statModifiers": {
+      "hp": 60,
+      "defense": 20
+    },
+    "rootAffinities": {
+      "earth": 35
+    }
+  },
+  {
+    "id": "water_flowing",
+    "name": "Keluwesan Air Lembah (Flowing Water)",
+    "description": "Gerakan beladiri lembut yang meredam kekuatan keras; ahli membelokkan jurus lawan.",
+    "category": "martial",
+    "statModifiers": {
+      "defense": 12,
+      "agility": 10
+    },
+    "rootAffinities": {
+      "water": 25
+    }
+  },
+  {
+    "id": "flame_spirit",
+    "name": "Intisari Api Berkobar (Flame Spirit)",
+    "description": "Darah menyala dengan bara yang tak pernah padam; serangan memiliki daya bakar tinggi.",
+    "category": "spiritual",
+    "statModifiers": {
+      "attack": 18,
+      "critDmg": 20
+    },
+    "rootAffinities": {
+      "fire": 35
+    }
+  },
+  {
+    "id": "demonic_vein",
+    "name": "Meridian Iblis Kuno (Demonic Vein)",
+    "description": "Menyerap Qi dengan kejam dan cepat tanpa takut penyimpangan Qi; kultivasi melonjak pesat namun emosi rentan liar.",
+    "category": "physique",
+    "statModifiers": {
+      "attack": 25,
+      "hp": 50,
+      "focus": -10
+    },
+    "rootAffinities": {
+      "fire": 15,
+      "lightning": 15
+    }
+  },
+  {
+    "id": "buddhist_compassion",
+    "name": "Belas Kasih Buddha (Buddhist Compassion)",
+    "description": "Hati yang damai menolak niat jahat; kebal terhadap ilusi dan gangguan racun batin.",
+    "category": "mental",
+    "statModifiers": {
+      "defense": 15,
+      "spiritualRes": 25,
+      "focus": 20
+    },
+    "rootAffinities": {
+      "earth": 15,
+      "wood": 15
+    }
+  },
+  {
+    "id": "yin_yang_balance",
+    "name": "Keseimbangan Yin-Yang (Yin-Yang Harmony)",
+    "description": "Kedua kutub energi dalam dantian mengalir serasi; tidak memiliki kelemahan elemen yang mencolok.",
+    "category": "mental",
+    "statModifiers": {
+      "attack": 10,
+      "defense": 10,
+      "martialRes": 10,
+      "spiritualRes": 10
+    },
+    "rootAffinities": {
+      "water": 10,
+      "fire": 10
+    }
+  },
+  {
+    "id": "celestial_insight",
+    "name": "Mata Batin Surgawi (Celestial Insight)",
+    "description": "Dapat melihat pola Dao di langit dan bumi; mudah memahami kitab manual tingkat tinggi.",
+    "category": "mental",
+    "statModifiers": {
+      "insight": 30,
+      "focus": 15
+    },
+    "rootAffinities": {
+      "wind": 10,
+      "lightning": 10
+    }
+  }
+]

@@ -1,0 +1,179 @@
+{
+  "greetings": {
+    "nemesis": {
+      "default": "Enyahlah dari pandanganku, {playerName}! Darah keluargaku berteriak menuntut kepalamu!",
+      "aloof": "Pedangku bergetar... bukan karena takut, melainkan haus akan darahmu, {playerName}.",
+      "ruthless": "Kau masih berani bernapas di hadapanku? Bersiaplah untuk dicincang menjadi bubur daging!"
+    },
+    "hateful": {
+      "default": "Jangan mendekat, {playerName}. Kita tidak memiliki urusan selain kebencian yang mendidih.",
+      "righteous": "Tindakan kotormu mencoreng jalan kebenaran. Aku tidak sudi bertukar kata denganmu.",
+      "pragmatic": "Kecuali kau datang untuk menebus dosamu dengan ribuan batu roh, pergilah."
+    },
+    "wary": {
+      "default": "Ada perlu apa kau mencariku, {playerName}? Aku tidak mudah percaya pada orang asing sepertimu.",
+      "aloof": "Bicaralah singkat. Aku tidak punya waktu meladeni basa-basi fana.",
+      "honest": "Langkahmu mencurigakan. Katakan niatmu yang sebenarnya tanpa berbelit."
+    },
+    "neutral": {
+      "default": "Salam, Rekan Dao {playerName}. Ada angin apa membawamu ke mari?",
+      "free_spirited": "Haha! Angin sepoi-sepoi membawa pengelana baru. Selamat datang, kawan!",
+      "righteous": "Semoga kedamaian menyertai langkah kultivasimu, Rekan Dao."
+    },
+    "friendly": {
+      "default": "Ah, Rekan Dao {playerName}! Senang sekali melihatmu dalam keadaan sehat bugar.",
+      "free_spirited": "Saudara {playerName}! Duduklah, mari kita habiskan satu cawan arak beras bersama!",
+      "honest": "Melihat wajahmu yang tulus selalu membuat hati tenang. Apa yang bisa kubantu hari ini?"
+    },
+    "close_friend": {
+      "default": "{playerName}! Sahabat karibku! Jianghu begitu luas, namun takdir selalu mempertemukan kita.",
+      "aloof": "Hanya sedikit orang yang kuanggap pantas berdiri di sisiku. Kau salah satunya, {playerName}.",
+      "righteous": "Persahabatan kita seumpama pinus di puncak tebing salju; tak tergoyahkan oleh badai fana apa pun."
+    },
+    "soulmate": {
+      "default": "{playerName}... Setiap hembusan nafasku dan setiap denyut dantian ini terikat pada jiwamu.",
+      "aloof": "Dunia fana boleh runtuh menjadi debu, asalkan kau tetap berada di dekapanku.",
+      "free_spirited": "Mari kita menjelajahi sembilan lapis langit bersama hingga akhir zaman, belahan jiwaku!"
+    }
+  },
+  "actions": {
+    "chat": {
+      "success": {
+        "righteous": "Mendengar pandanganmu mengenai kebajikan membuat pemahaman Dao-ku semakin bening, {playerName}.",
+        "honest": "Perkataanmu jujur tanpa kepalsuan. Orang sepertimu sangat langka di rimba persilatan ini.",
+        "free_spirited": "Hahaha! Kisah perjalananmu sangat menghibur! Memang hidup ini harus dinikmati layaknya anggur manis!",
+        "pragmatic": "Analisis yang tajam mengenai situasi pasar dan sekte. Senang berbincang dengan orang berakal sehat.",
+        "aloof": "Hmm... Ucapanmu tidak sepenuhnya sia-sia. Ada sedikit intisari pedang di dalamnya.",
+        "ambitious": "Ambisi yang hebat! Suatu saat kita berdua akan mengguncang puncak sembilan surga!",
+        "ruthless": "Kau memiliki nyali juga untuk berbicara denganku. Bagus, setidaknya kau bukan pengecut lemah.",
+        "eccentric": "Wahahaha! Aneh sekali jalan pikiranmu! Tapi justru itu yang membuatku tertarik, kawan aneh!"
+      },
+      "cap_reached": {
+        "default": "Kita sudah banyak berbincang hari ini, {playerName}. Dantian-ku butuh keheningan untuk mencerna energi semesta."
+      }
+    },
+    "inquire": {
+      "success": {
+        "default": "Mengenai hal itu... Aku mendengar kabar angin bahwa di pedalaman rimba ada getaran energi spiritual kuno yang mulai bangkit.",
+        "pragmatic": "Informasi ini bernilai mahal, namun karena ini kau yang bertanya, akan kubocorkan sedikit rahasianya...",
+        "aloof": "Aku hanya tahu ada pembunuh bayaran berkeliaran di dekat perbatasan. Berhati-hatilah."
+      }
+    },
+    "spar": {
+      "accept": {
+        "default": "Bagus! Mari kita uji kemajuan jurus masing-masing. Hanya adu jurus persahabatan, cabut senjatamu!",
+        "aloof": "Pedangku tidak mengenal ampun, namun untuk latihan ini aku akan menahan niat membunuh.",
+        "ruthless": "Latihan tanding? Hati-hati jangan sampai tulangmu remuk di tanganku!"
+      },
+      "refuse": {
+        "default": "Qi dalam tubuhku sedang tidak stabil hari ini. Mari kita cari hari lain untuk bertukar jurus.",
+        "hateful": "Aku tidak sudi meladeni tanding dengan orang seperti dirimu!"
+      }
+    },
+    "duel": {
+      "challenge": {
+        "default": "Kau menantang duel hidup-mati padaku?! Jangan menyesal jika namamu terkubur di bawah tanah hari ini!",
+        "righteous": "Jika pertumpahan darah ini tak terhindarkan demi menuntut keadilan, terimalah tebasan pedangku!",
+        "ruthless": "Hahaha! Mampuslah kau, serangga lancang! Tengkorakmu akan kujadikan hiasan di balai latihan!"
+      }
+    },
+    "gift": {
+      "liked": {
+        "default": "Hadiah yang luar biasa! Benda ini sangat berguna bagi jalur kultivasiku. Terima kasih banyak, {playerName}!",
+        "aloof": "Benda ini... memiliki aura yang murni. Kuterima kebaikan budimu, {playerName}.",
+        "pragmatic": "Kau tahu betul apa yang bernilai tinggi di Jianghu. Hadiah ini sangat memuaskan hatiku!"
+      },
+      "disliked": {
+        "default": "Apa maksudmu memberiku barang rongsokan ini? Simpan saja kembali untuk dirimu sendiri.",
+        "righteous": "Benda kotor beracun ini bertentangan dengan prinsip luhurku! Bawa pergi dari hadapanku!"
+      },
+      "cap_reached": {
+        "default": "Kebaikanmu sudah terlalu berlimpah hari ini. Jangan memboroskan hartamu terus-menerus padaku."
+      }
+    },
+    "bribe": {
+      "success": {
+        "default": "Hehehe... Kau sangat mengerti aturan main rimba persilatan. Anggap saja masalah tadi tidak pernah terjadi.",
+        "pragmatic": "Batu roh dan koin ini berbicara lebih fasih daripada seribu dalil suci. Kesepakatan tercapai!"
+      },
+      "failure": {
+        "default": "Kau kira martabat dan sumpah sekteku bisa dibeli dengan keping logam murah ini?! Lancang!",
+        "righteous": "Simpan racun suapmu! Jangan coba-coba mencemari integritas murid lurus sepertiku!"
+      }
+    },
+    "recruit": {
+      "success": {
+        "default": "Bersamamu melintasi bahaya Jianghu adalah kehormatan bagiku. Mari kita satukan kekuatan!",
+        "free_spirited": "Ayo berangkat! Angin memanggil kita untuk menaklukkan puncak-puncak gunung terjal bersama!"
+      },
+      "failure": {
+        "default": "Jalan takdir kita belum sejalan saat ini, {playerName}. Aku masih memiliki urusan kultivasi yang harus diselesaikan sendiri.",
+        "wary": "Aku belum cukup mengenalmu untuk mempercayakan punggungku dalam medan perang."
+      }
+    },
+    "confess": {
+      "success": {
+        "default": "Ternyata... perasaan kita saling menyambut. Sejak pertama kali melihatmu di antara kabut bambu, hatiku tak pernah tenang.",
+        "aloof": "Kupikir pedang adalah satu-satunya hal abadi... hingga kau melangkah masuk ke dalam hidupku, {playerName}."
+      },
+      "failure": {
+        "default": "Maafkan aku, {playerName}. Hatiku hanya tertuju pada puncak keabadian Dao, bukan asmara fana.",
+        "wary": "Hubungan kita belum sedalam itu untuk membicarakan ikatan asmara."
+      }
+    },
+    "propose": {
+      "success": {
+        "default": "Menjadi Pasangan Dao-mu dalam suka dan duka kultivasi? Ya! Demi langit dan bumi, aku bersumpah!",
+        "soulmate": "Tiada hal di sembilan surga yang lebih kuinginkan selain mengikat jiwa ini bersamamu selamanya."
+      },
+      "failure": {
+        "default": "Ikatan Pasangan Dao adalah komitmen ribuan tahun. Aku belum siap melangkah sejauh itu bersamamu."
+      }
+    },
+    "divorce": {
+      "execute": {
+        "default": "Jika memang benang merah takdir kita telah terputus... maka pergilah. Mulai saat ini, kita hanyalah debu asing yang saling berpapasan.",
+        "ruthless": "Bagus! Memang kau hanya menjadi beban bagi kemajuan ranah kultivasiku! Enyahlah selamanya!"
+      }
+    },
+    "adopt": {
+      "success": {
+        "default": "Mulai hari ini, aku menyambutmu ke dalam silsilah perguruanku. Junjung tinggi kehormatan aliran kita!",
+        "apprentice": "Guru! Terimalah sujud sembah muridmu ini. Aku berjanji tidak akan mempermalukan nama baikmu!"
+      },
+      "failure": {
+        "default": "Bakat dan takdir kita belum bersambut. Aku belum bisa menerimamu."
+      }
+    },
+    "steal": {
+      "caught": {
+        "default": "Pencuri keparat! Beraninya kau meraba sakuku di siang bolong! Jangan lari kau!",
+        "ruthless": "Tangan kotormu mencoba menjamah milikku?! Akan kupotong kedua tanganmu dan kulempar ke serigala!"
+      }
+    },
+    "threaten": {
+      "success": {
+        "default": "T-tolong jangan lukai aku! Ini... ambil saja semua yang kubawa, asalkan nyawaku selamat!",
+        "pragmatic": "Baik, baik! Kau menang kali ini. Ambil koin ini dan biarkan aku pergi dengan tenang."
+      },
+      "failure": {
+        "default": "Mengancamku? Hahaha! Kau memilih lawan yang salah, cecunguk kecil! Cabut pedangmu!",
+        "aloof": "Kata-kata kosong dari mulut yang sebentar lagi akan membeku."
+      }
+    },
+    "request_favor": {
+      "success": {
+        "default": "Tentu, untuk sahabat karib sepertimu, bantuan sekecil ini bukanlah apa-apa. Terimalah.",
+        "righteous": "Membantu mereka yang dalam kesulitan adalah kewajiban kultivator sejati. Pergunakanlah ini dengan bijak."
+      },
+      "failure": {
+        "default": "Maaf, permintaanmu terlalu memberatkan. Aku tidak bisa memenuhinya saat ini."
+      }
+    },
+    "break_relations": {
+      "execute": {
+        "default": "Mulai detik ini, sumpah persaudaraan kita putus layaknya kain sutra yang tergunting. Jangan pernah mencariku lagi!"
+      }
+    }
+  }
+}
