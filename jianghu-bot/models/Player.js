@@ -585,6 +585,7 @@ const playerSchema = new mongoose.Schema({
   race:           { type: String, default: 'Human' },
   reputation:     { type: Number, default: 100 },
   reputationTitle: { type: String, default: 'Novice Cultivator' },
+  wantedLevel:    { type: Number, default: 0, min: 0, max: 5 },
   laws: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Law' }], default: [] },
   cultivationLaw: { type: cultivationLawSchema, default: () => ({}) },
   manuals: { type: [playerManualSchema], default: [] },
