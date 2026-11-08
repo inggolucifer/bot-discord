@@ -16,6 +16,7 @@ const NpcEvent = require('../../models/NpcEvent');
 const { authenticateToken } = require('../middlewares/auth');
 const { hasEnoughCurrency, payCurrency, addCopper } = require('../../utils/currency');
 const { makeRng } = require('../../utils/npcRng');
+const { loadPlayer } = require('../utils/playerLookup');
 
 function getAffinityStage(affinity) {
   if (affinity <= -60) return 'nemesis';
@@ -53,10 +54,9 @@ async function getOrCreateRelation(playerId, npcId) {
 router.get('/profile/:npcId', authenticateToken, async (req, res) => {
   try {
     const { npcId } = req.params;
-    const playerId = req.user.id || req.user._id;
-    let player = await Player.findById(playerId);
-    if (!player && req.user.userId) {
-      player = await Player.findOne({ userId: req.user.userId });
+    const player = await loadPlayer(req.user);
+    if (!player) {
+      return res.status(401).json({ success: false, message: 'Pemain tidak sah.' });
     }
 
     const npc = await Npc.findById(npcId);
@@ -64,12 +64,12 @@ router.get('/profile/:npcId', authenticateToken, async (req, res) => {
       return res.status(404).json({ success: false, message: 'NPC tidak ditemukan di Jianghu.' });
     }
 
-    const activePlayerId = player ? player._id : playerId;
+    const activePlayerId = player._id;
     const relation = await getOrCreateRelation(activePlayerId, npc._id);
     const affinityStage = getAffinityStage(relation.affinity);
 
     // Fog of Inspection: Mask hidden inventory unless affinity >= 20 or player insight >= 25
-    const playerInsight = (player && player.attributes && player.attributes.insight) || 10;
+    const playerInsight = (player.extendedStats && player.extendedStats.insight) || 10;
     const canInspectAll = relation.affinity >= 20 || playerInsight >= 25;
 
     const visibleInventory = (npc.inventory || []).filter(item => {
@@ -144,12 +144,7 @@ router.post('/action/:npcId', authenticateToken, async (req, res) => {
   try {
     const { npcId } = req.params;
     const { action, payload = {} } = req.body;
-    const playerId = req.user.id || req.user._id;
-    let player = await Player.findById(playerId);
-    if (!player && req.user.userId) {
-      player = await Player.findOne({ userId: req.user.userId });
-    }
-
+    const player = await loadPlayer(req.user);
     if (!player) return res.status(401).json({ success: false, message: 'Pemain tidak sah.' });
 
     const npc = await Npc.findById(npcId);
