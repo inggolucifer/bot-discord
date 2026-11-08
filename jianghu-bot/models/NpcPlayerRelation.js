@@ -8,6 +8,13 @@ const npcPlayerRelationSchema = new mongoose.Schema({
     chat: { type: Number, default: 0 },
     gift: { type: Number, default: 0 },
     spar: { type: Number, default: 0 },
+    steal: { type: Number, default: 0 },
+    threaten: { type: Number, default: 0 },
+    date: { type: String, default: () => new Date().toISOString().slice(0, 10) }
+  },
+  dailyLimits: {
+    steal: { type: Number, default: 0 },
+    threaten: { type: Number, default: 0 },
     date: { type: String, default: () => new Date().toISOString().slice(0, 10) }
   },
   history: [{

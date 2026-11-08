@@ -107,6 +107,7 @@ const npcSchema = new mongoose.Schema({
   },
 
   inventory: { type: [npcInventoryItemSchema], default: [] },
+  tradeCoins: { type: Number, default: 100 },
 
   cultivation: {
     realmIndex: { type: Number, default: 0, min: 0, max: 8 },

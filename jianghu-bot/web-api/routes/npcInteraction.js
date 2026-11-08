@@ -17,6 +17,9 @@ const { authenticateToken } = require('../middlewares/auth');
 const { hasEnoughCurrency, payCurrency, addCopper } = require('../../utils/currency');
 const { makeRng } = require('../../utils/npcRng');
 const { loadPlayer } = require('../utils/playerLookup');
+const LockManager = require('../utils/lockManager');
+const { checkNpcProximity } = require('../../services/npcProximity');
+const { evaluateAction } = require('../../services/npcActions');
 
 function getAffinityStage(affinity) {
   if (affinity <= -60) return 'nemesis';
@@ -141,254 +144,72 @@ router.get('/relations/:npcId', authenticateToken, async (req, res) => {
 
 // POST /api/npc/action/:npcId
 router.post('/action/:npcId', authenticateToken, async (req, res) => {
-  try {
-    const { npcId } = req.params;
-    const { action, payload = {} } = req.body;
-    const player = await loadPlayer(req.user);
-    if (!player) return res.status(401).json({ success: false, message: 'Pemain tidak sah.' });
+  const { npcId } = req.params;
+  const { action, payload = {} } = req.body;
 
+  const player = await loadPlayer(req.user);
+  if (!player) return res.status(401).json({ success: false, message: 'Pemain tidak sah.' });
+
+  const lockKey = `player_${player._id}`;
+  const releaseLock = await LockManager.acquire(lockKey);
+  if (!releaseLock) {
+    return res.status(429).json({ success: false, message: 'Aksi sedang diproses, harap tunggu sejenak.' });
+  }
+
+  try {
     const npc = await Npc.findById(npcId);
     if (!npc) return res.status(404).json({ success: false, message: 'NPC tidak ditemukan.' });
     if (!npc.vitalStatus || !npc.vitalStatus.isAlive) {
       return res.status(400).json({ success: false, message: 'Karakter ini telah wafat dan tidak dapat diajak berinteraksi.' });
     }
 
+    // 1. Proximity check
+    const proximity = checkNpcProximity(player, npc);
+    if (!proximity.ok) {
+      if (proximity.reason === 'traveling') {
+        return res.status(400).json({ success: false, message: 'Anda tidak dapat berinteraksi saat sedang dalam perjalanan.' });
+      }
+      return res.status(400).json({
+        success: false,
+        message: `Jarak terlalu jauh dengan ${npc.name} (${proximity.distance} petak). Mendekatlah terlebih dahulu.`
+      });
+    }
+
+    // 2. Relation and RNG
     const relation = await getOrCreateRelation(player._id, npc._id);
     const rng = makeRng(`${player._id}_${npcId}_${Date.now()}`);
 
-    let deltaAffinity = 0;
-    let message = '';
-    let resultData = {};
-
-    switch (action) {
-      case 'chat': {
-        if (relation.interactionCountDaily.chat >= 3) {
-          return res.status(400).json({
-            success: false,
-            message: 'Batas obrolan harian tercapai (Maks 3 kali per hari). NPC butuh waktu bermeditasi.'
-          });
-        }
-        relation.interactionCountDaily.chat += 1;
-        deltaAffinity = rng() < 0.8 ? 2 : 3;
-        relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-        message = `Anda berbincang hangat mengenai kabar Jianghu dengan ${npc.name}. (Afinitas +${deltaAffinity})`;
-        break;
-      }
-
-      case 'inquire': {
-        message = `${npc.name} mencondongkan badan dan berbisik: "Kudengar di pegunungan timur ada aura spiritual kuno yang baru saja bangkit..."`;
-        resultData.clue = 'Kabut spiritual di pegunungan timur.';
-        break;
-      }
-
-      case 'spar': {
-        if ((player.stamina || 0) < 5) {
-          return res.status(400).json({ success: false, message: 'Stamina tidak mencukupi untuk sparring (Butuh min 5 Stamina).' });
-        }
-        player.stamina -= 5;
-        deltaAffinity = 2;
-        relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-        message = `Anda bertukar beberapa jurus persahabatan dengan ${npc.name}. Keduanya saling mengagumi kemahiran beladiri! (Stamina -5, Afinitas +2)`;
-        break;
-      }
-
-      case 'duel': {
-        message = `Anda menyatakan duel hidup-mati kepada ${npc.name}! Niat membunuh menyelimuti medan pertempuran!`;
-        resultData.duelReady = true;
-        break;
-      }
-
-      case 'gift': {
-        if (relation.interactionCountDaily.gift >= 2) {
-          return res.status(400).json({ success: false, message: 'Batas pemberian hadiah harian tercapai (Maks 2 hadiah per hari).' });
-        }
-        const { itemId } = payload;
-        let invIdx = -1;
-
-        if (itemId) {
-          invIdx = player.inventory.findIndex(i => (i.itemId?.toString() === itemId.toString() || i.id?.toString() === itemId.toString()) && i.quantity > 0);
-        } else {
-          invIdx = player.inventory.findIndex(i => i.quantity > 0);
-        }
-
-        if (invIdx !== -1) {
-          const playerItem = player.inventory[invIdx];
-          if (playerItem.quantity > 1) {
-            playerItem.quantity -= 1;
-          } else {
-            player.inventory.splice(invIdx, 1);
-          }
-          relation.interactionCountDaily.gift += 1;
-          deltaAffinity = 8;
-          relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-          message = `${npc.name} tersenyum lebar menerima pemberian Anda: "Terima kasih banyak atas hadiah ini, budi baikmu akan selalu kuingat!" (Afinitas +${deltaAffinity})`;
-        } else {
-          if (hasEnoughCurrency(player.currency, 50, 'copper')) {
-            payCurrency(player.currency, 50, 'copper');
-            relation.interactionCountDaily.gift += 1;
-            deltaAffinity = 6;
-            relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-            message = `Anda membelikan teh harum khas Jianghu (50 Tembaga) untuk ${npc.name}. ${npc.name} tersenyum ramah: "Teh yang sedap! Terima kasih atas keramahanmu!" (Afinitas +6)`;
-          } else {
-            return res.status(400).json({ success: false, message: 'Anda tidak memiliki barang atau koin tembaga untuk dihadiahkan.' });
-          }
-        }
-        break;
-      }
-
-      case 'bribe': {
-        const amount = Math.max(50, Math.floor(payload.amount || 100)); // minimum 50 copper
-        if (!hasEnoughCurrency(player.currency, amount, 'copper')) {
-          return res.status(400).json({ success: false, message: 'Koin tembaga Anda tidak mencukupi untuk menyuap.' });
-        }
-
-        payCurrency(player.currency, amount, 'copper');
-        const pId = npc.personality ? npc.personality.primary : 'pragmatic';
-
-        if (['righteous', 'honest'].includes(pId)) {
-          deltaAffinity = -10;
-          relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-          message = `${npc.name} menepis koin Anda dengan geram: "Simpan logam kotormu! Aku bukan orang rendahan!" (Afinitas -10)`;
-        } else {
-          deltaAffinity = 6;
-          relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-          message = `${npc.name} menyelipkan koin ke dalam lengan bajunya dengan senyum puas. (Afinitas +6)`;
-        }
-        break;
-      }
-
-      case 'recruit': {
-        if (relation.affinity < 60) {
-          return res.status(400).json({ success: false, message: `Afinitas belum mencukupi untuk merekrut (Butuh min 60, saat ini: ${relation.affinity}).` });
-        }
-        relation.specialStatus.isSwornSibling = true;
-        message = `${npc.name} mengangguk mantap: "Bersamamu melintasi bahaya Jianghu adalah kehormatan bagiku!"`;
-        break;
-      }
-
-      case 'confess': {
-        if (relation.affinity < 70) {
-          return res.status(400).json({ success: false, message: `Afinitas belum mencukupi untuk menyatakan asmara (Butuh min 70, saat ini: ${relation.affinity}).` });
-        }
-        deltaAffinity = 5;
-        relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-        message = `${npc.name} tersipu malu: "Sejak pertama kali bertemu di rimba bambu, hatiku pun tak pernah tenang..." (Afinitas +5)`;
-        break;
-      }
-
-      case 'propose': {
-        if (relation.affinity < 85) {
-          return res.status(400).json({ success: false, message: `Afinitas belum mencukupi untuk ikatan Pasangan Dao (Butuh min 85, saat ini: ${relation.affinity}).` });
-        }
-        relation.specialStatus.isDaoCompanion = true;
-        deltaAffinity = 10;
-        relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-        message = `Di bawah saksi langit dan bumi, Anda dan ${npc.name} resmi mengikat sumpah sebagai Pasangan Dao! (Afinitas +10)`;
-        break;
-      }
-
-      case 'divorce': {
-        if (!relation.specialStatus.isDaoCompanion) {
-          return res.status(400).json({ success: false, message: 'Anda tidak memiliki ikatan Pasangan Dao dengan karakter ini.' });
-        }
-        relation.specialStatus.isDaoCompanion = false;
-        deltaAffinity = -50;
-        relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-        message = `Ikatan Pasangan Dao diputuskan. ${npc.name} memalingkan muka dengan tatapan pedih dan dingin. (Afinitas -50)`;
-        break;
-      }
-
-      case 'adopt': {
-        relation.specialStatus.isApprentice = true;
-        deltaAffinity = 5;
-        relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-        message = `${npc.name} membungkuk hormat dan menyambut hubungan perguruan. (Afinitas +5)`;
-        break;
-      }
-
-      case 'steal': {
-        const playerAgility = (player.attributes && player.attributes.agility) || 15;
-        const npcInsight = (npc.attributes && npc.attributes.insight) || 15;
-        const stealSuccess = rng() < (playerAgility / (playerAgility + npcInsight));
-
-        if (stealSuccess) {
-          const stolenCopper = 25;
-          addCopper(player.currency, stolenCopper);
-          message = `Anda dengan lincah menyambar kantong kecil berisi ${stolenCopper} Koin Tembaga tanpa disadari ${npc.name}!`;
-          resultData.stolenCopper = stolenCopper;
-        } else {
-          deltaAffinity = -30;
-          relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-          player.wantedLevel = Math.min(5, (player.wantedLevel || 0) + 1);
-          message = `Tertangkap basah! ${npc.name} mencengkeram tangan Anda dengan amarah: "Pencuri keparat!" (Afinitas -30, Buronan +1)`;
-        }
-        break;
-      }
-
-      case 'threaten': {
-        const playerAtk = (player.attack || 20);
-        const npcDef = (npc.attributes && npc.attributes.defense) || 15;
-
-        if (playerAtk > npcDef) {
-          const extortedCopper = 50;
-          addCopper(player.currency, extortedCopper);
-          deltaAffinity = -15;
-          relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-          message = `${npc.name} gemetar ketakutan dan menyerahkan ${extortedCopper} Koin Tembaga: "Jangan bunuh aku!" (Afinitas -15)`;
-          resultData.extortedCopper = extortedCopper;
-        } else {
-          deltaAffinity = -25;
-          relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-          message = `${npc.name} tertawa meremehkan: "Kekuatanmu seujung kuku tapi berani mengancamku?!" (Afinitas -25)`;
-        }
-        break;
-      }
-
-      case 'request_favor': {
-        if (relation.affinity < 50) {
-          return res.status(400).json({ success: false, message: `Afinitas belum mencukupi untuk meminta bantuan (Butuh min 50, saat ini: ${relation.affinity}).` });
-        }
-        message = `${npc.name} memberikan Anda sebuah ramuan herba pemulih luka: "Pergunakanlah ini di saat genting, Rekan Dao."`;
-        break;
-      }
-
-      case 'break_relations': {
-        relation.affinity = 0;
-        relation.specialStatus.isDaoCompanion = false;
-        relation.specialStatus.isSwornSibling = false;
-        relation.specialStatus.isMaster = false;
-        relation.specialStatus.isApprentice = false;
-        message = `Hubungan khusus dengan ${npc.name} telah diputus. Kini kalian hanyalah orang asing.`;
-        break;
-      }
-
-      default:
-        return res.status(400).json({ success: false, message: `Aksi interaksi '${action}' tidak dikenali.` });
-    }
-
-    // Record history
-    relation.history.push({
-      timestamp: new Date(),
-      action,
-      delta: deltaAffinity,
-      note: message
+    // 3. Authoritative Action Evaluation
+    const actionResult = evaluateAction(action, {
+      player,
+      npc,
+      relation,
+      payload,
+      rng
     });
 
+    if (!actionResult.success && actionResult.status && actionResult.status !== 200) {
+      return res.status(actionResult.status).json(actionResult);
+    }
+
+    // 4. Save state
     await relation.save();
     await player.save();
+    if (typeof npc.save === 'function' && npc.constructor?.db && npc.constructor.db.readyState === 1) {
+      try {
+        await npc.save();
+      } catch (e) {}
+    }
 
-    return res.json({
-      success: true,
-      action,
-      message,
-      deltaAffinity,
-      newAffinity: relation.affinity,
-      affinityStage: getAffinityStage(relation.affinity),
-      resultData
+    return res.status(actionResult.status || 200).json({
+      ...actionResult,
+      affinityStage: getAffinityStage(relation.affinity)
     });
   } catch (error) {
     console.error('[NPC Action API Error]', error);
     return res.status(500).json({ success: false, message: 'Gagal memproses aksi interaksi NPC.' });
+  } finally {
+    if (releaseLock) releaseLock();
   }
 });
 

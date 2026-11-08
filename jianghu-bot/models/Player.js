@@ -611,6 +611,11 @@ const playerSchema = new mongoose.Schema({
     weeklyChestClaimed: { type: Boolean, default: false },
     lastWeeklyResetAt: { type: Date, default: Date.now }
   },
+  npcDaily: {
+    stealCount: { type: Number, default: 0 },
+    threatenCount: { type: Number, default: 0 },
+    date: { type: String, default: () => new Date().toISOString().slice(0, 10) }
+  },
 
   // Sect Arena Persistent Record
   sectArena: {
@@ -771,6 +776,15 @@ playerSchema.virtual('stamina')
   })
   .set(function (val) {
     this.currentStamina = val;
+  });
+
+// Virtual getter & setter agar hp selalu merefleksikan currentHp / baseHp
+playerSchema.virtual('hp')
+  .get(function () {
+    return this.currentHp !== null && this.currentHp !== undefined ? this.currentHp : (this.stats?.baseHp || 100);
+  })
+  .set(function (val) {
+    this.currentHp = val;
   });
 
 
