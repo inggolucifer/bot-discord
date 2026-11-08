@@ -20,7 +20,7 @@ function walkJsFiles(dir, fileList = []) {
       if (!IGNORED_DIRS.has(entry.name)) {
         walkJsFiles(path.join(dir, entry.name), fileList);
       }
-    } else if (entry.isFile() && entry.name.endsWith('.js')) {
+    } else if (entry.isFile() && (entry.name.endsWith('.js') || entry.name.endsWith('.mjs'))) {
       fileList.push(path.join(dir, entry.name));
     }
   }
