@@ -20,6 +20,7 @@ const { loadPlayer } = require('../utils/playerLookup');
 const LockManager = require('../utils/lockManager');
 const { checkNpcProximity } = require('../../services/npcProximity');
 const { evaluateAction } = require('../../services/npcActions');
+const { buildVisibleProfile } = require('../../services/npcVisibility');
 
 function getAffinityStage(affinity) {
   if (affinity <= -60) return 'nemesis';
@@ -71,46 +72,17 @@ router.get('/profile/:npcId', authenticateToken, async (req, res) => {
     const relation = await getOrCreateRelation(activePlayerId, npc._id);
     const affinityStage = getAffinityStage(relation.affinity);
 
-    // Fog of Inspection: Mask hidden inventory unless affinity >= 20 or player insight >= 25
-    const playerInsight = (player.extendedStats && player.extendedStats.insight) || 10;
-    const canInspectAll = relation.affinity >= 20 || playerInsight >= 25;
-
-    const visibleInventory = (npc.inventory || []).filter(item => {
-      if (canInspectAll) return true;
-      return item.equippedSlot !== null; // only show equipped gear
-    });
+    const visibleProfile = buildVisibleProfile(npc, player, relation);
 
     return res.json({
       success: true,
-      npc: {
-        _id: npc._id,
-        name: npc.name,
-        title: npc.title,
-        gender: npc.gender || 'male',
-        description: npc.description,
-        regionSlug: npc.regionSlug,
-        settlementName: npc.settlementName,
-        buildingName: npc.buildingName,
-        portraitUrl: npc.portraitUrl,
-        imageUrl: npc.imageUrl,
-        greeting: npc.greeting,
-        personality: npc.personality,
-        dao: npc.dao,
-        destiny: npc.destiny,
-        lifespan: npc.lifespan,
-        attributes: npc.attributes,
-        cultivation: npc.cultivation,
-        schedule: npc.schedule,
-        vitalStatus: npc.vitalStatus,
-        inventory: visibleInventory,
-        social: npc.social
-      },
+      npc: visibleProfile,
       relation: {
         affinity: relation.affinity,
         affinityStage,
         interactionCountDaily: relation.interactionCountDaily,
         specialStatus: relation.specialStatus,
-        history: relation.history.slice(-10) // last 10 entries
+        history: (relation.history || []).slice(-10)
       }
     });
   } catch (error) {
