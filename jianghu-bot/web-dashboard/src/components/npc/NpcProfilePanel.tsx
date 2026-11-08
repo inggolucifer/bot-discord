@@ -238,13 +238,17 @@ export const NpcProfilePanel: React.FC<NpcProfilePanelProps> = ({
                 </button>
               </div>
 
-              {/* Center: Standing Full-Body Art */}
-              <div className="relative flex-1 h-[340px] flex items-center justify-center overflow-hidden">
+              {/* Center: Standing Full-Body Art with Soft Bottom Fade */}
+              <div className="relative flex-1 h-[340px] flex items-center justify-center overflow-hidden px-1">
                 {npc.imageUrl ? (
                   <img
                     src={npc.imageUrl}
                     alt={npc.name}
                     className="w-full h-full object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)]"
+                    style={{
+                      maskImage: 'linear-gradient(to bottom, black 72%, transparent 98%)',
+                      WebkitMaskImage: 'linear-gradient(to bottom, black 72%, transparent 98%)'
+                    }}
                   />
                 ) : (
                   <svg className="w-full h-full drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)]" viewBox="0 0 200 340">
