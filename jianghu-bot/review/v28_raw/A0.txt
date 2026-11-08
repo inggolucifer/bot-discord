@@ -1,0 +1,150 @@
+=== 1. git log -1 --format=%h ===
+04150a03
+
+=== 2. npm test 2>&1 | tail -12 ===
+(node:15324) Warning: Failed to load the ES module: D:\gitub\bot-discord\jianghu-bot\tests\unit\npc\v27_static_data.test.js. Make sure to set "type": "module" in the nearest package.json file or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+D:\gitub\bot-discord\jianghu-bot\tests\unit\npc\v27_static_data.test.js:1
+import { describe, it, expect } from 'vitest';
+^^^^^^
+
+SyntaxError: Cannot use import statement outside a module
+    at wrapSafe (node:internal/modules/cjs/loader:1804:18)
+    at checkSyntax (node:internal/main/check_syntax:76:3)
+
+Node.js v24.19.0
+
+
+=== 3. npx vitest run 2>&1 | grep -E 'Test Files|Tests ' ===
+[2m Test Files [22m [1m[32m33 passed[39m[22m[90m (33)[39m
+[2m      Tests [22m [1m[32m314 passed[39m[22m[90m (314)[39m
+
+=== 4. sed -n 1,60p models/Npc.js ===
+const mongoose = require('mongoose');
+
+const npcInventoryItemSchema = new mongoose.Schema({
+  itemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item' },
+  itemModel: { type: String, default: 'Item' },
+  name: { type: String, default: '' },
+  category: { type: String, default: 'misc' },
+  quantity: { type: Number, default: 1 },
+  equippedSlot: { type: String, default: null },
+  qualityTier: { type: String, default: 'common' }
+}, { _id: false });
+
+const npcSchema = new mongoose.Schema({
+  // Legacy Core Fields (Preserved for 100% backward compatibility)
+  guildId: { type: String, default: 'global', index: true },
+  name: { type: String, required: true },
+  title: { type: String, default: 'Warga Jianghu' },
+  description: { type: String, default: '' },
+  regionSlug: { type: String, default: 'wilayah_fana' },
+  settlementName: { type: String, default: 'Desa Bunga Persik' },
+  buildingName: { type: String, default: null },
+  portraitUrl: { type: String, default: null },
+  imageUrl: { type: String, default: null },
+  greeting: { type: String, default: 'Ada perlu, pengembara?' },
+  dialogLines: [{
+    id: { type: String },
+    text: { type: String },
+    responses: [{ label: String, nextId: String }]
+  }],
+  questIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quest' }],
+  isActive: { type: Boolean, default: true },
+  minRealmIndexToTalk: { type: Number, default: 0 },
+  zoneId: { type: String, default: null },
+  tileX: { type: Number, default: null },
+  tileY: { type: Number, default: null },
+
+  // V27 Living NPC Extensions
+  gender: { type: String, enum: ['male', 'female', 'neutral'], default: 'male' },
+
+  personality: {
+    primary: { type: String, default: 'righteous' },
+    secondary: { type: String, default: 'honest' },
+    morality: { type: Number, default: 75, min: 0, max: 100 },
+    temperament: { type: Number, default: 50, min: 0, max: 100 }
+  },
+
+  dao: {
+    traits: { type: [String], default: [] },
+    comprehensionLevel: { type: Number, default: 1 },
+    heartState: { type: String, default: 'serene' }
+  },
+
+  destiny: {
+    innate: { type: [String], default: [] },
+    acquired: { type: [String], default: [] }
+  },
+
+  lifespan: {
+    currentAge: { type: Number, default: 20 },
+    maxAge: { type: Number, default: 100 },
+
+=== 5. grep -n 'inventoryItemSchema' -A14 models/Player.js | head -30 ===
+77:const inventoryItemSchema = new mongoose.Schema({
+78:  itemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true },
+79:  quantity: { type: Number, default: 1 },
+80:  // Fields for crafted items / tools
+81:  creatorName: { type: String, default: null },
+82:  qualityMultiplier: { type: Number, default: 1.0 },
+83:  durability: { type: Number, default: null }, // Current durability for tools
+84:  maxDurability: { type: Number, default: null },
+85:  isEquipped: { type: Boolean, default: false },
+86:});
+87:
+88:const professionSchema = new mongoose.Schema({
+89:  isUnlocked: { type: Boolean, default: true },
+90:  level: { type: Number, default: 1 },
+91:  exp: { type: Number, default: 0 }
+
+=== 6. grep -n 'agility\|attack' models/Player.js | head ===
+9:  exp: { type: Number, default: 0 },   // Combat attack mastery XP
+50:  agility:       { type: Number, default: 10 },
+296:  // Combat Loadout (Sistem 4+1: Basic Attack Senjata otomatis + 4 Jurus dari Skill Tree / Manual)
+326:    guType: { type: String, default: 'attack' },
+
+=== 7. grep -n 'zoneId' web-api/routes/world.js | sed -n 1,40p ===
+147:function loadZoneConfig(zoneId) {
+148:    if (!zoneId || typeof zoneId !== 'string' || !/^[a-z0-9_-]+$/i.test(zoneId)) {
+153:    const configPath = path.join(__dirname, '../../config/zones', `${zoneId}.js`);
+502:                        zoneId: 'tianyuan_world_map',
+847:                zoneId: 'tianyuan_world_map',
+1212:    if (player.gridPosition?.zoneId) {
+1213:        const zoneId = player.gridPosition.zoneId;
+1217:        let npcZone = npc.zoneId;
+1225:                zoneId: zoneId,
+1233:                npcZone = tile.zoneId;
+1240:            if (npcZone !== zoneId) {
+1271:        if (player.gridPosition?.zoneId) {
+1272:            const currentZoneId = player.gridPosition.zoneId;
+1278:                zoneId: currentZoneId,
+1294:                        zoneId: currentZoneId,
+1568:// STATUS TERMAL ZONA AKTIF (Wajib sebelum /zone/:zoneId wildcard)
+1576:        const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
+1579:            ? { guildId: player.guildId, zoneId: currentZoneId, tileX: player.gridPosition?.tileX ?? 0, tileY: player.gridPosition?.tileY ?? 0 }
+1580:            : { zoneId: currentZoneId, tileX: player.gridPosition?.tileX ?? 0, tileY: player.gridPosition?.tileY ?? 0 };
+1868:router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
+1871:        const { zoneId } = req.params;
+1873:        if (!/^[a-z0-9_-]+$/i.test(zoneId)) {
+1884:            zoneConfig = loadZoneConfig(zoneId);
+1895:                zoneId: zoneConfig.zoneId || zoneId,
+1899:        } else if (!player.gridPosition.zoneId) {
+1900:            player.gridPosition.zoneId = zoneConfig.zoneId || zoneId;
+1945:                zoneId: zoneId,
+1982:                    zoneId,
+2055:                ? { $or: [{ guildId: player.guildId, zoneId }, { zoneId }] }
+2056:                : { zoneId };
+2075:            const allActiveNpcs = await Npc.find(npcQuery).select('_id name title description greeting portraitUrl imageUrl zoneId tileX tileY settlementName buildingName').lean();
+2081:                if (typeof npc.tileX === 'number' && typeof npc.tileY === 'number' && (!npc.zoneId || npc.zoneId === zoneId)) {
+2134:                exploredTileIndexes: (player.exploredTiles?.find(e => e.zoneId === zoneId)?.tileIndexes) || [],
+2157:        const { waypoints, zoneId, requestId } = req.body;
+2184:        const activeZoneId = zoneId || player.gridPosition?.zoneId || 'tianyuan_world_map';
+2275:            zoneId: activeZoneId,
+2465:            zoneId: activeZoneId,
+2622:        const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
+2700:            zoneId: currentZoneId,
+2774:                exploredTileIndexes: (player.exploredTiles?.find(e => e.zoneId === currentZoneId)?.tileIndexes) || [],
+
+=== 8. anchors counts by type ===
+{"village":10,"hamlet":9,"outpost":4,"port":2,"capital_city":1,"major_city":4,"island":1,"danger_zone":2,"sect":8,"secret_realm":4,"town":7}
