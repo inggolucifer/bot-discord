@@ -182,7 +182,7 @@ router.post('/action/:npcId', authenticateToken, async (req, res) => {
     }
 
     let actionContext = action;
-    if (action === 'steal' && !actionResult.success) actionContext = 'steal_caught';
+    if (action === 'steal' && (!actionResult.resultData?.isSuccess || !actionResult.success)) actionContext = 'steal_caught';
     if (action === 'threaten') actionContext = actionResult.success ? 'threaten_submit' : 'threaten_resist';
 
     const dialogue = generateDialogueLine({

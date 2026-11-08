@@ -69,16 +69,17 @@ function evaluateAction(action, { player, npc, relation, payload = {}, rng = Mat
 
   ensureDailyStructures(player, relation);
 
-  // Authoritative player stats lookup (B7 fix)
-  const playerInsight = player.extendedStats?.insight || 10;
-  const playerAgility = player.extendedStats?.agility || 10;
-  const playerAtk = player.stats?.baseAtk || 15;
-  const playerDef = player.stats?.baseDef || 10;
+  // Authoritative player stats lookup (B7 fix, with attributes fallback for backward compat)
+  const playerInsight = player.extendedStats?.insight ?? player.attributes?.insight ?? 10;
+  const playerAgility = player.extendedStats?.agility ?? player.attributes?.agility ?? 10;
+  const playerAtk = player.stats?.baseAtk ?? player.attributes?.attack ?? 15;
+  const playerDef = player.stats?.baseDef ?? player.attributes?.defense ?? 10;
 
   // NPC stats
-  const npcAgility = npc.attributes?.agility || npc.extendedStats?.agility || 10;
-  const npcAtk = npc.stats?.baseAtk || npc.attributes?.attack || 15;
-  const npcDef = npc.stats?.baseDef || npc.attributes?.defense || 10;
+  const npcAgility = npc.attributes?.agility ?? npc.extendedStats?.agility ?? 10;
+  const npcInsight = npc.attributes?.insight ?? npc.extendedStats?.insight ?? 10;
+  const npcAtk = npc.stats?.baseAtk ?? npc.attributes?.attack ?? 15;
+  const npcDef = npc.stats?.baseDef ?? npc.attributes?.defense ?? 10;
 
   if (npc.tradeCoins === undefined || npc.tradeCoins === null) {
     npc.tradeCoins = 100;
@@ -344,9 +345,11 @@ function evaluateAction(action, { player, npc, relation, payload = {}, rng = Mat
       relation.dailyLimits.steal += 1;
       player.npcDaily.stealCount += 1;
 
-      // 3. Sigmoid chance based on agility differential
-      const successChance = sigmoid((playerAgility - npcAgility) * 0.05);
+      // 3. Sigmoid chance based on agility vs maximum of NPC agility and insight
+      const npcDefenseStat = Math.max(npcAgility, npcInsight);
+      const successChance = sigmoid((playerAgility - npcDefenseStat) * 0.05);
       const isSuccess = rng() < successChance;
+      resultData.isSuccess = isSuccess;
 
       if (isSuccess) {
         const stolenCopper = Math.min(npc.tradeCoins, 10 + Math.floor(rng() * 16)); // 10-25 copper
@@ -359,6 +362,7 @@ function evaluateAction(action, { player, npc, relation, payload = {}, rng = Mat
         relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
         player.wantedLevel = Math.min(5, (player.wantedLevel || 0) + 1);
         message = `Tertangkap basah! ${npc.name} mencengkeram tangan Anda dengan amarah: "Pencuri keparat!" (Afinitas -25, Buronan +1)`;
+        resultData.caught = true;
       }
       break;
     }
