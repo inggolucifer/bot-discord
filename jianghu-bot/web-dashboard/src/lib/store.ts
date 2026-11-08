@@ -151,7 +151,8 @@ interface UIState {
   isTileInspectorActive: boolean;
   setIsTileInspectorActive: (val: boolean) => void;
   activeNpcId: string | null;
-  setActiveNpcId: (id: string | null) => void;
+  npcModalMode: 'dialogue' | 'profile';
+  setActiveNpcId: (id: string | null, mode?: 'dialogue' | 'profile') => void;
   isLandingMenu: boolean;
   setIsLandingMenu: (val: boolean) => void;
   currentStamina: number;
@@ -171,7 +172,8 @@ export const useUIStore = create<UIState>((set) => ({
   isTileInspectorActive: false,
   setIsTileInspectorActive: (val) => set({ isTileInspectorActive: val }),
   activeNpcId: null,
-  setActiveNpcId: (id) => set({ activeNpcId: id, activeModal: id ? 'npcInteraction' : null }),
+  npcModalMode: 'dialogue',
+  setActiveNpcId: (id, mode = 'dialogue') => set({ activeNpcId: id, activeModal: id ? 'npcInteraction' : null, npcModalMode: mode || 'dialogue' }),
   isLandingMenu: true,
   setIsLandingMenu: (val) => set({ isLandingMenu: val }),
   currentStamina: 100,

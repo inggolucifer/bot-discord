@@ -1652,6 +1652,10 @@ export default function ZoneGridView({
             } else if (action === 'greet') {
               setActionMessage(`Anda memberi hormat kepalan tangan kepada ${item.name}.`);
               setTimeout(() => setActionMessage(null), 3000);
+            } else if (action === 'talk' && item.type === 'npc') {
+              useUIStore.getState().setActiveNpcId(item.id, 'dialogue');
+            } else if (action === 'inspect' && item.type === 'npc') {
+              useUIStore.getState().setActiveNpcId(item.id, 'profile');
             }
           }}
         />
