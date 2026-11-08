@@ -120,6 +120,15 @@ function computeNearbyEntities({
       item.y = targetY;
       item.chunkX = ent.chunkX ?? Math.floor(targetX / 32);
       item.chunkY = ent.chunkY ?? Math.floor(targetY / 32);
+
+      if (ent.type === 'npc') {
+        if (ent.title) item.title = ent.title;
+        if (ent.portraitUrl) item.portraitUrl = ent.portraitUrl;
+        if (ent.personality) item.personality = ent.personality;
+        if (ent.gender) item.gender = ent.gender;
+        if (ent.activityState) item.activityState = ent.activityState;
+        if (ent.affinityStatus) item.affinityStatus = ent.affinityStatus;
+      }
     } else {
       // V25 K1: Zone & Hazard tidak mengekspos koordinat persis (anti-radar & privacy)
       item.distBand = ent.distBand || distanceLabel;

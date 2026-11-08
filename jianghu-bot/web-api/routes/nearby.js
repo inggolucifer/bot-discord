@@ -114,6 +114,20 @@ router.get('/', authenticateToken, async (req, res) => {
       players = [];
     }
 
+    let npcs = [];
+    try {
+      const Npc = require('../../models/Npc');
+      npcs = await Npc.find({
+        'vitalStatus.isAlive': true,
+        $or: [
+          { 'schedule.tileX': { $gte: minTileX, $lte: maxTileX }, 'schedule.tileY': { $gte: minTileY, $lte: maxTileY } },
+          { tileX: { $gte: minTileX, $lte: maxTileX }, tileY: { $gte: minTileY, $lte: maxTileY } }
+        ]
+      }).select('name title personality dao cultivation schedule vitalStatus gender portraitUrl').lean();
+    } catch (npcErr) {
+      npcs = [];
+    }
+
     // 5. Agregasi Entitas
     const rawEntities = [];
 
@@ -149,6 +163,28 @@ router.get('/', authenticateToken, async (req, res) => {
         status: `Lv.${p.level || 1} • Ranah ${p.realmIndex || 0}`,
         ownerId: p.discordId,
         sectId: p.sectId || p.sect,
+        visibility: 'public'
+      });
+    }
+
+    // 5a. Living NPCs (V27)
+    for (const n of npcs) {
+      const nx = n.schedule?.tileX ?? n.tileX ?? (cx * 32 + 16);
+      const ny = n.schedule?.tileY ?? n.tileY ?? (cy * 32 + 16);
+      rawEntities.push({
+        id: `npc_${n._id}`,
+        type: 'npc',
+        name: n.name,
+        title: n.title || 'Warga Jianghu',
+        x: nx,
+        y: ny,
+        chunkX: Math.floor(nx / 32),
+        chunkY: Math.floor(ny / 32),
+        status: `${n.title || 'Warga'} • Ranah ${n.cultivation?.realmIndex ?? 0}`,
+        gender: n.gender || 'male',
+        portraitUrl: n.portraitUrl || null,
+        personality: n.personality?.primary || 'righteous',
+        activityState: n.schedule?.activityState || 'idle',
         visibility: 'public'
       });
     }

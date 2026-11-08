@@ -22,4 +22,4 @@ playerBuildingSchema.index({ chunkX: 1, chunkY: 1 });
 playerBuildingSchema.index({ ownerId: 1 });
 playerBuildingSchema.index({ locationKey: 1, visibility: 1 });
 
-module.exports = mongoose.model('PlayerBuilding', playerBuildingSchema);
+module.exports = mongoose.models.PlayerBuilding || mongoose.model('PlayerBuilding', playerBuildingSchema);

@@ -17,6 +17,11 @@ export interface NearbyEntityItem {
   id: string;
   type: 'player' | 'building' | 'monster' | 'npc' | 'poi' | 'hazard' | 'zone' | string;
   name: string;
+  title?: string;
+  personality?: string;
+  gender?: string;
+  activityState?: string;
+  affinityStatus?: string;
   x?: number;
   y?: number;
   chunkX?: number;
@@ -51,7 +56,7 @@ interface NearbyPanelProps {
   isOpen: boolean;
   onToggle: () => void;
   onNavigateToTile?: (x: number, y: number) => void;
-  onAction?: (action: 'enter' | 'visit' | 'greet', entity: NearbyEntityItem) => void;
+  onAction?: (action: 'enter' | 'visit' | 'greet' | 'talk' | 'inspect', entity: NearbyEntityItem) => void;
 }
 
 export const NearbyPanel: React.FC<NearbyPanelProps> = ({
@@ -269,10 +274,11 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex border-b border-[#2d2218] bg-[#080a0e] px-2 py-1.5 space-x-1 text-xs">
+        <div className="flex border-b border-[#2d2218] bg-[#080a0e] px-2 py-1.5 space-x-1 text-xs overflow-x-auto">
           {(
             [
               { key: 'all', label: 'Semua' },
+              { key: 'npc', label: 'Warga' },
               { key: 'player', label: 'Kultivator' },
               { key: 'building', label: 'Bangunan' },
               { key: 'hazard', label: 'Bahaya & Zona' }
@@ -301,6 +307,7 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
           ) : (
             filteredEntities.map((item) => {
               const isPlayer = item.type === 'player';
+              const isNpc = item.type === 'npc';
               const isBuilding = item.type === 'building';
               const isZoneOrHazard = item.type === 'zone' || item.type === 'hazard';
               const isGreeted = greetedIds.has(item.id);
@@ -355,6 +362,23 @@ export const NearbyPanel: React.FC<NearbyPanelProps> = ({
                       >
                         Masuk
                       </button>
+                    )}
+
+                    {isNpc && onAction && (
+                      <div className="flex items-center space-x-1">
+                        <button
+                          onClick={() => onAction('talk', item)}
+                          className="px-2 py-0.5 bg-amber-900/60 hover:bg-amber-800/80 text-amber-200 border border-amber-600/70 rounded text-[10px] transition font-bold shadow-sm"
+                        >
+                          Bicara
+                        </button>
+                        <button
+                          onClick={() => onAction('inspect', item)}
+                          className="px-2 py-0.5 bg-[#1f1914] hover:bg-[#2d2218] text-[#c5a880] border border-[#3d2b1f] rounded text-[10px] transition"
+                        >
+                          Profil
+                        </button>
+                      </div>
                     )}
 
                     {isZoneOrHazard && onAction && (
