@@ -10,7 +10,7 @@
       "critDmg": 15
     },
     "rootAffinities": {
-      "metal": 25
+      "wind": 25
     }
   },
   {
@@ -50,8 +50,7 @@
       "martialRes": 20
     },
     "rootAffinities": {
-      "earth": 20,
-      "metal": 15
+      "earth": 35
     }
   },
   {
