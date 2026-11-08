@@ -56,11 +56,16 @@ export const NpcDialogueScene: React.FC<NpcDialogueSceneProps> = ({
   const [loadingAction, setLoadingAction] = useState<boolean>(false);
   const [currentAffinity, setCurrentAffinity] = useState<number>(relation.affinity);
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const fullTextRef = useRef<string>('');
 
-  const initialGreeting = npc.greeting || `Salam, pengelana. Saya ${npc.name}, ${npc.title || 'Warga'} dari ${npc.settlementName}. Ada yang bisa kubantu?`;
+  const isAlive = npc.vitalStatus?.isAlive !== false;
+  const initialGreeting = !isAlive
+    ? `Sosok ${npc.name} telah wafat di dunia persilatan. Jasadnya telah bersemayam dalam ketenangan abadi.`
+    : (npc.greeting || `Salam, pengelana. Saya ${npc.name}, ${npc.title || 'Warga'} dari ${npc.settlementName}. Ada yang bisa kubantu?`);
 
   // Typewriter text effect
   const typeText = (fullText: string) => {
+    fullTextRef.current = fullText;
     if (typingTimerRef.current) clearInterval(typingTimerRef.current);
     setIsTyping(true);
     setDisplayedText('');
@@ -77,6 +82,14 @@ export const NpcDialogueScene: React.FC<NpcDialogueSceneProps> = ({
     }, 18);
   };
 
+  const skipTyping = () => {
+    if (isTyping && typingTimerRef.current) {
+      clearInterval(typingTimerRef.current);
+      setDisplayedText(fullTextRef.current);
+      setIsTyping(false);
+    }
+  };
+
   useEffect(() => {
     if (isOpen) {
       setCurrentAffinity(relation.affinity);
@@ -90,7 +103,12 @@ export const NpcDialogueScene: React.FC<NpcDialogueSceneProps> = ({
   if (!isOpen) return null;
 
   const handleActionClick = async (choice: DialogueChoice) => {
-    if (loadingAction || isTyping) return;
+    if (loadingAction) return;
+
+    if (isTyping) {
+      skipTyping();
+      return;
+    }
 
     // Special quick navigation
     if (choice.actionType === 'spar' && onStartBattle) {
@@ -104,7 +122,7 @@ export const NpcDialogueScene: React.FC<NpcDialogueSceneProps> = ({
 
     try {
       setLoadingAction(true);
-      const res = await api.post(`/api/npc/action/${npc._id}`, {
+      const res = await api.post(`/npc/action/${npc._id}`, {
         action: choice.actionType,
         payload: { amount: 100 }
       });
@@ -203,7 +221,11 @@ export const NpcDialogueScene: React.FC<NpcDialogueSceneProps> = ({
           </div>
 
           {/* Typewriter Dialogue Text Area */}
-          <div className="p-5 min-h-[90px] text-sm sm:text-base text-stone-200 leading-relaxed font-sans">
+          <div
+            onClick={skipTyping}
+            className="p-5 min-h-[90px] text-sm sm:text-base text-stone-200 leading-relaxed font-sans cursor-pointer hover:bg-white/[0.02] transition"
+            title={isTyping ? 'Klik untuk lewati animasi teks' : undefined}
+          >
             {displayedText}
             {isTyping && <span className="inline-block w-1.5 h-4 ml-1 bg-amber-400 animate-ping" />}
           </div>
@@ -234,17 +256,23 @@ export const NpcDialogueScene: React.FC<NpcDialogueSceneProps> = ({
 
           {/* Action Choice Buttons */}
           <div className="p-3 bg-[#0d1017] border-t border-[#231b14] grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {currentChoices.map(choice => (
-              <button
-                key={choice.id}
-                onClick={() => handleActionClick(choice)}
-                disabled={loadingAction || isTyping}
-                className="px-3 py-2 bg-[#171d27]/90 hover:bg-[#252f3f] border border-[#2d2218] hover:border-[#5a3f2d] text-stone-200 rounded text-xs flex items-center space-x-2 transition disabled:opacity-50 text-left"
-              >
-                <span className="text-base">{choice.icon}</span>
-                <span className="truncate">{choice.label}</span>
-              </button>
-            ))}
+            {!isAlive ? (
+              <div className="col-span-full py-3 text-center text-xs text-rose-400/90 italic font-serif">
+                Sosok ini telah berpulang ke haribaan semesta. Tiada lagi interaksi fana yang dapat dilakukan.
+              </div>
+            ) : (
+              currentChoices.map(choice => (
+                <button
+                  key={choice.id}
+                  onClick={() => handleActionClick(choice)}
+                  disabled={loadingAction}
+                  className="px-3 py-2 bg-[#171d27]/90 hover:bg-[#252f3f] border border-[#2d2218] hover:border-[#5a3f2d] text-stone-200 rounded text-xs flex items-center space-x-2 transition disabled:opacity-50 text-left"
+                >
+                  <span className="text-base">{choice.icon}</span>
+                  <span className="truncate">{choice.label}</span>
+                </button>
+              ))
+            )}
           </div>
         </div>
       </div>

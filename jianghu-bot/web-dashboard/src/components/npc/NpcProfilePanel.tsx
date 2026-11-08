@@ -72,9 +72,15 @@ export const NpcProfilePanel: React.FC<NpcProfilePanelProps> = ({
             <div>
               <div className="flex items-center space-x-2">
                 <h2 className="text-[#f3e5ab] text-lg font-bold tracking-wide">{npc.name}</h2>
-                <span className="px-2 py-0.5 rounded text-[10px] bg-amber-950/70 border border-amber-700/60 text-amber-300 font-mono">
-                  {npc.title || 'Warga Jianghu'}
-                </span>
+                {npc.vitalStatus?.isAlive === false ? (
+                  <span className="px-2 py-0.5 rounded text-[10px] bg-red-950/80 border border-red-700/80 text-red-300 font-bold">
+                    ☠️ Telah Wafat
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded text-[10px] bg-amber-950/70 border border-amber-700/60 text-amber-300 font-mono">
+                    {npc.title || 'Warga Jianghu'}
+                  </span>
+                )}
                 <span className="text-xs text-stone-400">({npc.settlementName})</span>
               </div>
               <p className="text-xs text-stone-400 mt-0.5">
@@ -197,12 +203,12 @@ export const NpcProfilePanel: React.FC<NpcProfilePanelProps> = ({
                   <span>Aspirasi Dao (Dao Traits)</span>
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {npc.dao.traits.map(t => (
+                  {(npc.dao?.traits || []).map(t => (
                     <span key={t} className="px-3 py-1 bg-amber-950/60 border border-amber-700/60 text-amber-200 rounded text-xs font-mono">
                       {t.replace(/_/g, ' ').toUpperCase()}
                     </span>
                   ))}
-                  {npc.dao.traits.length === 0 && <span className="text-stone-500 italic">Belum mematri Dao Trait khusus.</span>}
+                  {(!npc.dao?.traits || npc.dao.traits.length === 0) && <span className="text-stone-500 italic">Belum mematri Dao Trait khusus.</span>}
                 </div>
               </div>
 
@@ -216,22 +222,23 @@ export const NpcProfilePanel: React.FC<NpcProfilePanelProps> = ({
                   <div>
                     <span className="text-stone-400 text-xs block mb-1">Takdir Bawaan (Innate):</span>
                     <div className="flex flex-wrap gap-1.5">
-                      {npc.destiny.innate.map(d => (
+                      {(npc.destiny?.innate || []).map(d => (
                         <span key={d} className={`px-2.5 py-0.5 rounded text-xs border font-mono ${getTierColor('blue')}`}>
                           {d.replace(/_/g, ' ')}
                         </span>
                       ))}
+                      {(!npc.destiny?.innate || npc.destiny.innate.length === 0) && <span className="text-stone-500 italic text-xs">Belum ada takdir bawaan.</span>}
                     </div>
                   </div>
                   <div>
                     <span className="text-stone-400 text-xs block mb-1">Takdir Bentukan (Acquired):</span>
                     <div className="flex flex-wrap gap-1.5">
-                      {npc.destiny.acquired.map(d => (
+                      {(npc.destiny?.acquired || []).map(d => (
                         <span key={d} className={`px-2.5 py-0.5 rounded text-xs border font-mono ${getTierColor('purple')}`}>
                           {d.replace(/_/g, ' ')}
                         </span>
                       ))}
-                      {npc.destiny.acquired.length === 0 && <span className="text-stone-500 italic text-xs">Belum ada takdir bentukan.</span>}
+                      {(!npc.destiny?.acquired || npc.destiny.acquired.length === 0) && <span className="text-stone-500 italic text-xs">Belum ada takdir bentukan.</span>}
                     </div>
                   </div>
                 </div>
@@ -385,7 +392,7 @@ export const NpcProfilePanel: React.FC<NpcProfilePanelProps> = ({
             <div className="p-4 bg-[#12161f]/80 border border-[#2d2218] rounded-lg">
               <h4 className="text-amber-400 font-bold mb-3">Barang Bawaan & Perlengkapan</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                {npc.inventory.map((item, idx) => (
+                {(npc.inventory || []).map((item, idx) => (
                   <div key={idx} className="p-2.5 bg-[#0e1219] border border-[#2d2218] rounded flex items-center justify-between">
                     <div>
                       <span className="text-stone-200 font-medium block">{item.name}</span>
@@ -394,7 +401,7 @@ export const NpcProfilePanel: React.FC<NpcProfilePanelProps> = ({
                     <span className="text-amber-400 font-mono font-bold">x{item.quantity}</span>
                   </div>
                 ))}
-                {npc.inventory.length === 0 && <span className="text-stone-500 italic">Tas kosong atau tersembunyi.</span>}
+                {(!npc.inventory || npc.inventory.length === 0) && <span className="text-stone-500 italic">Tas kosong atau tersembunyi.</span>}
               </div>
             </div>
           )}
@@ -410,7 +417,7 @@ export const NpcProfilePanel: React.FC<NpcProfilePanelProps> = ({
                     <span className="text-xs text-stone-400">Teknik dasar bela diri perguruan.</span>
                   </div>
                   <span className="px-2 py-0.5 bg-amber-950/60 border border-amber-700/60 text-amber-300 rounded text-xs font-mono">
-                    Pemahaman Lv.{npc.cultivation.stage}
+                    Pemahaman Lv.{npc.cultivation?.stage ?? 1}
                   </span>
                 </div>
               </div>
@@ -422,7 +429,7 @@ export const NpcProfilePanel: React.FC<NpcProfilePanelProps> = ({
             <div className="p-4 bg-[#12161f]/80 border border-[#2d2218] rounded-lg">
               <h4 className="text-amber-400 font-bold mb-3">Riwayat Interaksi Anda dengan Tokoh Ini</h4>
               <div className="space-y-2">
-                {relation.history.map((h, idx) => (
+                {(relation.history || []).map((h, idx) => (
                   <div key={idx} className="p-2 bg-[#0e1219] border border-[#2d2218] rounded flex justify-between items-center text-xs">
                     <div>
                       <span className="text-amber-300 font-bold uppercase mr-2">[{h.action}]</span>
@@ -433,7 +440,7 @@ export const NpcProfilePanel: React.FC<NpcProfilePanelProps> = ({
                     </span>
                   </div>
                 ))}
-                {relation.history.length === 0 && (
+                {(!relation.history || relation.history.length === 0) && (
                   <p className="text-stone-500 italic">Belum ada riwayat interaksi sebelumnya. Mulailah menyapa tokoh ini!</p>
                 )}
               </div>

@@ -981,6 +981,24 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
                  player.deathRecoveryUntil = new Date(Date.now() + 4 * 60 * 60 * 1000);
                  player.lastKilledAt = new Date();
                  player.lastKilledByMonster = session.enemies[0]?.name || 'Siluman Liar';
+
+                  // Resolusi Pertarungan NPC Hidup saat Pemain Kalah
+                  if (session.enemies && session.enemies[0]?.tags?.includes('living_npc')) {
+                      try {
+                          const { handleNpcBattleResolution } = require('../../services/npcCombatAdapter');
+                          const enemy = session.enemies[0];
+                          const mode = enemy.tags.find(t => t.startsWith('npc_')) || 'npc_spar';
+                          await handleNpcBattleResolution({
+                              session,
+                              player,
+                              isVictory: false,
+                              npcDbId: enemy.npcDbId,
+                              mode
+                          });
+                      } catch (npcResErr) {
+                          console.warn('[API-BATTLE] Gagal memproses resolusi kekalahan NPC:', npcResErr.message);
+                      }
+                  }
                  await player.save();
              }
         } else if (session.status === 'fled') {

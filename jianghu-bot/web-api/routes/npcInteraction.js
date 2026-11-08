@@ -208,24 +208,36 @@ router.post('/action/:npcId', authenticateToken, async (req, res) => {
           return res.status(400).json({ success: false, message: 'Batas pemberian hadiah harian tercapai (Maks 2 hadiah per hari).' });
         }
         const { itemId } = payload;
-        if (!itemId) return res.status(400).json({ success: false, message: 'Tentukan item yang ingin dihadiahkan.' });
+        let invIdx = -1;
 
-        const invIdx = player.inventory.findIndex(i => i.itemId.toString() === itemId.toString() && i.quantity > 0);
-        if (invIdx === -1) {
-          return res.status(400).json({ success: false, message: 'Item tidak ditemukan di inventaris Anda.' });
-        }
-
-        const playerItem = player.inventory[invIdx];
-        if (playerItem.quantity > 1) {
-          playerItem.quantity -= 1;
+        if (itemId) {
+          invIdx = player.inventory.findIndex(i => (i.itemId?.toString() === itemId.toString() || i.id?.toString() === itemId.toString()) && i.quantity > 0);
         } else {
-          player.inventory.splice(invIdx, 1);
+          invIdx = player.inventory.findIndex(i => i.quantity > 0);
         }
 
-        relation.interactionCountDaily.gift += 1;
-        deltaAffinity = 8; // base gift affinity
-        relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
-        message = `${npc.name} tersenyum lebar menerima pemberian Anda: "Terima kasih banyak, budi baik ini akan kuingat!" (Afinitas +${deltaAffinity})`;
+        if (invIdx !== -1) {
+          const playerItem = player.inventory[invIdx];
+          if (playerItem.quantity > 1) {
+            playerItem.quantity -= 1;
+          } else {
+            player.inventory.splice(invIdx, 1);
+          }
+          relation.interactionCountDaily.gift += 1;
+          deltaAffinity = 8;
+          relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
+          message = `${npc.name} tersenyum lebar menerima pemberian Anda: "Terima kasih banyak atas hadiah ini, budi baikmu akan selalu kuingat!" (Afinitas +${deltaAffinity})`;
+        } else {
+          if (hasEnoughCurrency(player.currency, 50, 'copper')) {
+            payCurrency(player.currency, 50, 'copper');
+            relation.interactionCountDaily.gift += 1;
+            deltaAffinity = 6;
+            relation.affinity = Math.min(100, Math.max(-100, relation.affinity + deltaAffinity));
+            message = `Anda membelikan teh harum khas Jianghu (50 Tembaga) untuk ${npc.name}. ${npc.name} tersenyum ramah: "Teh yang sedap! Terima kasih atas keramahanmu!" (Afinitas +6)`;
+          } else {
+            return res.status(400).json({ success: false, message: 'Anda tidak memiliki barang atau koin tembaga untuk dihadiahkan.' });
+          }
+        }
         break;
       }
 

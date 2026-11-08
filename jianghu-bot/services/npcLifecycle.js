@@ -15,6 +15,17 @@ const { createVendetta } = require('./npcVendettaEngine');
 async function killNpc(npc, killerInfo = {}) {
   if (!npc) throw new Error('killNpc requires valid NPC instance');
 
+  // Idempotency check: Jangan proses dua kali jika karakter sudah wafat
+  if (npc.vitalStatus && npc.vitalStatus.isAlive === false) {
+    return {
+      npc,
+      deathEvent: null,
+      createdVendettas: [],
+      isEssential: npc.vitalStatus.isEssential || false,
+      alreadyDead: true
+    };
+  }
+
   // 1. Mark Vital Status
   npc.vitalStatus = npc.vitalStatus || {};
   npc.vitalStatus.isAlive = false;
