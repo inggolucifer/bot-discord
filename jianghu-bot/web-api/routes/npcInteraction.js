@@ -21,6 +21,7 @@ const LockManager = require('../utils/lockManager');
 const { checkNpcProximity } = require('../../services/npcProximity');
 const { evaluateAction } = require('../../services/npcActions');
 const { buildVisibleProfile } = require('../../services/npcVisibility');
+const { generateDialogueLine } = require('../../services/npcDialogueEngine');
 
 function getAffinityStage(affinity) {
   if (affinity <= -60) return 'nemesis';
@@ -73,10 +74,17 @@ router.get('/profile/:npcId', authenticateToken, async (req, res) => {
     const affinityStage = getAffinityStage(relation.affinity);
 
     const visibleProfile = buildVisibleProfile(npc, player, relation);
+    const greetingDialogue = generateDialogueLine({
+      npc,
+      player,
+      relation,
+      actionContext: 'greeting'
+    });
 
     return res.json({
       success: true,
       npc: visibleProfile,
+      greetingDialogue,
       relation: {
         affinity: relation.affinity,
         affinityStage,
@@ -173,8 +181,22 @@ router.post('/action/:npcId', authenticateToken, async (req, res) => {
       } catch (e) {}
     }
 
+    let actionContext = action;
+    if (action === 'steal' && !actionResult.success) actionContext = 'steal_caught';
+    if (action === 'threaten') actionContext = actionResult.success ? 'threaten_submit' : 'threaten_resist';
+
+    const dialogue = generateDialogueLine({
+      npc,
+      player,
+      relation,
+      actionContext,
+      rng,
+      payload
+    });
+
     return res.status(actionResult.status || 200).json({
       ...actionResult,
+      dialogue,
       affinityStage: getAffinityStage(relation.affinity)
     });
   } catch (error) {

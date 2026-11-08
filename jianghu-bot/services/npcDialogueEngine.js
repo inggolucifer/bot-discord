@@ -95,10 +95,63 @@ function resolveDialogue(npc, player, actionType = 'chat', outcome = 'success', 
   return replacePlaceholders(rawTemplate, replacements);
 }
 
+function getDefaultDialogueChoices(relation) {
+  const affinity = relation?.affinity ?? 0;
+  const choices = [
+    { id: 'choice_chat', label: 'Berbincang santai', action: 'chat' },
+    { id: 'choice_inquire', label: 'Tanyakan kabar Jianghu', action: 'inquire' },
+    { id: 'choice_spar', label: 'Ajak latihan tanding', action: 'spar' }
+  ];
+  if (affinity >= 20) {
+    choices.push({ id: 'choice_gift', label: 'Beri hadiah', action: 'gift' });
+  }
+  if (affinity >= 50) {
+    choices.push({ id: 'choice_favor', label: 'Minta bantuan', action: 'request_favor' });
+  }
+  if (affinity >= 60 && !relation?.specialStatus?.isSwornSibling) {
+    choices.push({ id: 'choice_recruit', label: 'Ajak berkelana bersama', action: 'recruit' });
+  }
+  if (affinity >= 70 && !relation?.specialStatus?.isDaoCompanion) {
+    choices.push({ id: 'choice_confess', label: 'Nyatakan isi hati', action: 'confess' });
+  }
+  return choices;
+}
+
+function generateDialogueLine({ npc, player = {}, relation = {}, actionContext = 'greeting', rng = Math.random, payload = {} }) {
+  const affinity = relation?.affinity ?? 0;
+  let text = '';
+
+  if (actionContext === 'greeting') {
+    if (npc.dialogLines && npc.dialogLines.length > 0 && npc.dialogLines[0].text) {
+      text = npc.dialogLines[0].text;
+    } else {
+      text = resolveGreeting(npc, player, affinity);
+    }
+  } else if (actionContext === 'gift') {
+    text = resolveDialogue(npc, player, 'gift', 'liked', { affinity, ...(payload || {}) });
+  } else if (actionContext === 'steal_caught') {
+    text = resolveDialogue(npc, player, 'steal', 'caught', { affinity, ...(payload || {}) });
+  } else if (actionContext === 'threaten_submit') {
+    text = resolveDialogue(npc, player, 'threaten', 'success', { affinity, ...(payload || {}) });
+  } else if (actionContext === 'threaten_resist') {
+    text = resolveDialogue(npc, player, 'threaten', 'failure', { affinity, ...(payload || {}) });
+  } else {
+    text = resolveDialogue(npc, player, actionContext, 'success', { affinity, ...(payload || {}) });
+  }
+
+  return {
+    text,
+    speakerName: npc.name || 'Warga Jianghu',
+    choices: getDefaultDialogueChoices(relation)
+  };
+}
+
 module.exports = {
   getAffinityStage,
   resolveHonorific,
   replacePlaceholders,
   resolveGreeting,
-  resolveDialogue
+  resolveDialogue,
+  getDefaultDialogueChoices,
+  generateDialogueLine
 };
