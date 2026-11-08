@@ -81,6 +81,21 @@ export default function NpcInteractionModal() {
     }
   };
 
+  const handleAction = async (action: string, payload?: any) => {
+    if (!activeNpcId) return;
+    try {
+      const res = await api.post(`/npc/action/${activeNpcId}`, {
+        action,
+        payload: payload || { amount: 100 }
+      });
+      if (res.data?.success) {
+        await refreshRelationOnly();
+      }
+    } catch (err: any) {
+      setError(err?.response?.data?.message || 'Gagal memproses aksi interaksi.');
+    }
+  };
+
   const handleStartBattle = async (mode: 'npc_spar' | 'npc_duel') => {
     if (!activeNpcId) return;
     try {
@@ -157,6 +172,8 @@ export default function NpcInteractionModal() {
         isOpen={true}
         onClose={closeModal}
         onOpenDialogue={() => setViewMode('dialogue')}
+        onStartBattle={handleStartBattle}
+        onAction={handleAction}
       />
     );
   }
