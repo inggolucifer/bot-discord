@@ -4,9 +4,45 @@
  * Adheres to Chebyshev distance metrics and settlement exclusion boundaries.
  */
 
+const path = require('path');
+const fs = require('fs');
 const { resolveNpcTile } = require('../utils/npcPosition');
-const { isPlayerInsideSettlementExclusion } = require('./npcVendettaEngine');
 const { snapWalkable } = require('./npcJourneyTick');
+
+const EXCLUSION_RADIUS_BY_TYPE = {
+  hamlet: 6,
+  village: 10,
+  town: 14,
+  major_city: 24,
+  capital_city: 36,
+  capital: 36,
+  sect: 16,
+  outpost: 8,
+  port: 10,
+  island: 10
+};
+
+function isPlayerInsideSettlementExclusion(px, py, anchorsList = null) {
+  let anchors = anchorsList;
+  if (!anchors) {
+    try {
+      const rootDir = path.resolve(__dirname, '../');
+      anchors = JSON.parse(fs.readFileSync(path.join(rootDir, 'world-data/anchors.json'), 'utf8'));
+    } catch (_) {
+      anchors = [];
+    }
+  }
+
+  for (const a of anchors) {
+    const ax = a.x ?? a.tileX ?? 0;
+    const ay = a.y ?? a.tileY ?? 0;
+    const r = EXCLUSION_RADIUS_BY_TYPE[a.type] ?? a.v20?.exclusionRadius ?? 10;
+    const dist = Math.max(Math.abs(px - ax), Math.abs(py - ay));
+    if (dist <= r) return true;
+  }
+
+  return false;
+}
 
 /**
  * Executes a single hunting step towards the player.
@@ -92,5 +128,7 @@ function huntStep({ hunter, player, anchors = null, isWalkableFn = null, now = D
 }
 
 module.exports = {
-  huntStep
+  huntStep,
+  isPlayerInsideSettlementExclusion,
+  EXCLUSION_RADIUS_BY_TYPE
 };

@@ -8,45 +8,16 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const NpcVendetta = require('../models/NpcVendetta');
 const NpcAmbush = require('../models/NpcAmbush');
-const { makeRng } = require('../utils/npcRng');
+const NpcPlayerRelation = require('../models/NpcPlayerRelation');
+const { makeRng, hash32 } = require('../utils/npcRng');
 const { hasEnoughCurrency, payCurrency } = require('../utils/currency');
+const {
+  huntStep,
+  isPlayerInsideSettlementExclusion,
+  EXCLUSION_RADIUS_BY_TYPE
+} = require('./npcHuntEngine');
 
 const DEFAULT_RNG = makeRng(0xC0FFEE);
-
-const EXCLUSION_RADIUS_BY_TYPE = {
-  hamlet: 6,
-  village: 10,
-  town: 14,
-  major_city: 24,
-  capital_city: 36,
-  capital: 36,
-  sect: 16,
-  outpost: 8,
-  port: 10,
-  island: 10
-};
-
-function isPlayerInsideSettlementExclusion(px, py, anchorsList = null) {
-  let anchors = anchorsList;
-  if (!anchors) {
-    try {
-      const rootDir = path.resolve(__dirname, '../');
-      anchors = JSON.parse(fs.readFileSync(path.join(rootDir, 'world-data/anchors.json'), 'utf8'));
-    } catch (_) {
-      anchors = [];
-    }
-  }
-
-  for (const a of anchors) {
-    const ax = a.x ?? a.tileX ?? 0;
-    const ay = a.y ?? a.tileY ?? 0;
-    const r = EXCLUSION_RADIUS_BY_TYPE[a.type] ?? a.v20?.exclusionRadius ?? 10;
-    const dist = Math.max(Math.abs(px - ax), Math.abs(py - ay));
-    if (dist <= r) return true;
-  }
-
-  return false;
-}
 
 function calculateFleeChance(playerAgility, hunterAgility) {
   const pAgi = Number(playerAgility) || 10;
@@ -273,29 +244,55 @@ async function runVendettaTick({
   NpcAmbush: NpcAmbushModel = null,
   Player: PlayerModel = null,
   Npc: NpcModel = null,
+  NpcPlayerRelation: NpcPlayerRelationModel = null,
   anchors = null,
+  isWalkableFn = null,
   now = Date.now(),
-  rng = DEFAULT_RNG
+  rng = null
 } = {}) {
   const Vendetta = NpcVendettaModel || NpcVendetta;
   const Ambush = NpcAmbushModel || NpcAmbush;
   const PlayerMod = PlayerModel || (mongoose.models?.Player ? mongoose.models.Player : null);
   const NpcMod = NpcModel || (mongoose.models?.Npc ? mongoose.models.Npc : null);
+  const RelationMod = NpcPlayerRelationModel || NpcPlayerRelation || (mongoose.models?.NpcPlayerRelation ? mongoose.models.NpcPlayerRelation : null);
 
   if (!PlayerMod || !Vendetta || !Ambush) return 0;
 
-  // 1. Find online players (updatedAt <= 2 minutes ago)
-  const twoMinutesAgo = new Date(now - 2 * 60 * 1000);
-  const onlinePlayers = await PlayerMod.find({ updatedAt: { $gte: twoMinutesAgo } });
+  // 1. Find online players (updatedAt <= 10 minutes ago)
+  const tenMinutesAgo = new Date(now - 10 * 60 * 1000);
+  const onlinePlayers = await PlayerMod.find({ updatedAt: { $gte: tenMinutesAgo } });
+
+  // Reset hunters whose targets are offline or whose vendetta was resolved
+  if (NpcMod) {
+    const huntingNpcs = await NpcMod.find({ 'schedule.activityState': 'hunting' });
+    for (const h of huntingNpcs) {
+      const activeVendetta = await Vendetta.findOne({
+        hunterNpcId: h._id,
+        resolved: false
+      });
+      if (!activeVendetta) {
+        h.schedule = h.schedule || {};
+        h.schedule.activityState = 'idle';
+        if (typeof h.save === 'function') await h.save();
+        continue;
+      }
+      const targetPlayer = await PlayerMod.findById(activeVendetta.targetId);
+      if (!targetPlayer || !targetPlayer.updatedAt || new Date(targetPlayer.updatedAt).getTime() < tenMinutesAgo.getTime()) {
+        h.schedule = h.schedule || {};
+        h.schedule.activityState = 'idle';
+        if (typeof h.save === 'function') await h.save();
+      }
+    }
+  }
 
   let triggeredCount = 0;
   const cooldownMs = 3 * 3600 * 1000;
 
   for (const player of onlinePlayers) {
-    const px = player.gridPosition?.tileX ?? player.tileX ?? 0;
-    const py = player.gridPosition?.tileY ?? player.tileY ?? 0;
+    const px = Math.floor(player.gridPosition?.tileX ?? player.tileX ?? 0);
+    const py = Math.floor(player.gridPosition?.tileY ?? player.tileY ?? 0);
 
-    // Check settlement exclusion zone
+    // Check settlement exclusion zone for player
     if (isPlayerInsideSettlementExclusion(px, py, anchors)) continue;
 
     // Check if player already has an active pending ambush
@@ -306,7 +303,9 @@ async function runVendettaTick({
     });
     if (existingPending) continue;
 
-    // Find up to 3 active vendettas against player
+    let playerAmbushedThisTick = false;
+
+    // A. Check vendettas (family grudges)
     const vendettas = await Vendetta.find({
       targetId: player._id,
       resolved: false
@@ -323,38 +322,123 @@ async function runVendettaTick({
       }
       if (!hunter || !hunter.vitalStatus?.isAlive) continue;
 
+      // Call huntStep first
+      const step = huntStep({
+        hunter,
+        player,
+        anchors,
+        isWalkableFn,
+        now
+      });
+
+      if (step.moved) {
+        hunter.schedule = hunter.schedule || {};
+        hunter.schedule.tileX = step.newX;
+        hunter.schedule.tileY = step.newY;
+        hunter.tileX = step.newX;
+        hunter.tileY = step.newY;
+        hunter.schedule.activityState = 'hunting';
+        if (typeof hunter.save === 'function') {
+          await hunter.save();
+        }
+      } else if (step.state === 'hunting') {
+        if (hunter.schedule?.activityState !== 'hunting') {
+          hunter.schedule = hunter.schedule || {};
+          hunter.schedule.activityState = 'hunting';
+          if (typeof hunter.save === 'function') {
+            await hunter.save();
+          }
+        }
+      }
+
+      // Recompute distance from hunter's current/updated coordinates
       const hx = hunter.schedule?.tileX ?? hunter.tileX ?? px;
       const hy = hunter.schedule?.tileY ?? hunter.tileY ?? py;
       const dist = Math.max(Math.abs(px - hx), Math.abs(py - hy));
 
-      if (dist > 24) continue;
-
-      const trig = evaluateAmbushTrigger({
-        hunterNpc: hunter,
-        player: { tileX: px, tileY: py },
-        tileInfo: { isSettlement: false },
-        grudgeLevel: v.grudgeLevel,
-        rng
-      });
-
-      if (trig.canAmbush) {
-        const ambush = new Ambush({
-          hunterNpcId: hunter._id,
-          targetPlayerId: player._id,
-          status: 'pending',
-          tileX: px,
-          tileY: py,
-          expiresAt: new Date(now + 10 * 60 * 1000)
+      if (dist <= 24) {
+        const playerRng = rng || makeRng(hash32(String(player._id) + ':' + Math.floor(now / 60000)));
+        const trig = evaluateAmbushTrigger({
+          hunterNpc: hunter,
+          player: { tileX: px, tileY: py },
+          tileInfo: { isSettlement: false },
+          grudgeLevel: v.grudgeLevel,
+          rng: playerRng
         });
-        if (typeof ambush.save === 'function' && ambush.constructor.db?.readyState === 1) {
-          await ambush.save();
+
+        if (trig.canAmbush) {
+          const ambush = new Ambush({
+            hunterNpcId: hunter._id,
+            targetPlayerId: player._id,
+            kind: 'vendetta',
+            reason: v.reason || 'dendam',
+            status: 'pending',
+            tileX: px,
+            tileY: py,
+            expiresAt: new Date(now + 10 * 60 * 1000)
+          });
+          if (typeof ambush.save === 'function' && ambush.constructor.db?.readyState === 1) {
+            await ambush.save();
+          }
+          v.lastAmbushAt = new Date(now);
+          if (typeof v.save === 'function' && v.constructor.db?.readyState === 1) {
+            await v.save();
+          }
+          triggeredCount++;
+          playerAmbushedThisTick = true;
+          break; // Max 1 ambush per tick per player
         }
-        v.lastAmbushAt = new Date(now);
-        if (typeof v.save === 'function' && v.constructor.db?.readyState === 1) {
-          await v.save();
+      }
+    }
+
+    // B. Hostile ambush (affinity <= -60) if player was not ambushed by vendetta
+    if (!playerAmbushedThisTick && RelationMod && NpcMod) {
+      const hostileRelations = await RelationMod.find({
+        playerId: player._id,
+        affinity: { $lte: -60 }
+      }).sort({ affinity: 1 }).limit(5);
+
+      for (const rel of hostileRelations) {
+        // Cooldown 6 hours
+        if (rel.lastAmbushAt && (now - new Date(rel.lastAmbushAt).getTime() < 6 * 3600 * 1000)) {
+          continue;
         }
-        triggeredCount++;
-        break; // Max 1 ambush per player
+
+        const npc = await NpcMod.findById(rel.npcId);
+        if (!npc) continue;
+        if (!npc.vitalStatus?.isAlive) continue;
+        if (npc.vitalStatus?.isEssential) continue;
+        if (npc.vitalStatus?.isInjured) continue;
+        if (npc.vitalStatus?.downedUntil && new Date(npc.vitalStatus.downedUntil).getTime() > now) continue;
+
+        const nx = npc.schedule?.tileX ?? npc.tileX ?? 0;
+        const ny = npc.schedule?.tileY ?? npc.tileY ?? 0;
+        const dist = Math.max(Math.abs(px - nx), Math.abs(py - ny));
+        if (dist > 12) continue; // Only attacks if close to player
+
+        // 10% chance per minute
+        const roll = rng ? rng() : makeRng(hash32(String(npc._id) + ':' + String(player._id) + ':' + Math.floor(now / 60000)))();
+        if (roll < 0.10) {
+          const ambush = new Ambush({
+            hunterNpcId: npc._id,
+            targetPlayerId: player._id,
+            kind: 'hostile',
+            reason: 'benci',
+            status: 'pending',
+            tileX: px,
+            tileY: py,
+            expiresAt: new Date(now + 10 * 60 * 1000)
+          });
+          if (typeof ambush.save === 'function' && ambush.constructor.db?.readyState === 1) {
+            await ambush.save();
+          }
+          rel.lastAmbushAt = new Date(now);
+          if (typeof rel.save === 'function' && rel.constructor.db?.readyState === 1) {
+            await rel.save();
+          }
+          triggeredCount++;
+          break; // Max 1 ambush per tick per player
+        }
       }
     }
   }
