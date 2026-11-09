@@ -1268,48 +1268,63 @@ router.get('/npcs', authenticateToken, async (req, res) => {
 
 
         let npcs = [];
-        if (player.gridPosition?.zoneId) {
-            const currentZoneId = player.gridPosition.zoneId;
-            const px = player.gridPosition.tileX || 0;
-            const py = player.gridPosition.tileY || 0;
+        const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
+        const px = player.gridPosition?.tileX || 0;
+        const py = player.gridPosition?.tileY || 0;
+        const guildFilter = { $in: [player.guildId, 'global'].filter(Boolean) };
+        const aliveFilter = {
+            $or: [
+                { 'vitalStatus.isAlive': true },
+                { 'vitalStatus.isAlive': { $exists: false }, isActive: true }
+            ]
+        };
 
-            const spawnTiles = await ZoneTile.find({
-                guildId: player.guildId,
-                zoneId: currentZoneId,
-                tileType: 'npc_spawn',
-                tileX: { $gte: px - 2, $lte: px + 2 },
-                tileY: { $gte: py - 2, $lte: py + 2 }
-            });
-
-            const linkedIds = spawnTiles.map(t => t.linkedRefId).filter(Boolean);
-            const npcNames = spawnTiles.map(t => t.label).filter(Boolean);
-
+        if (currentZoneId === 'tianyuan_world_map') {
             npcs = await Npc.find({
-                guildId: player.guildId,
-                isActive: true,
+                guildId: guildFilter,
+                ...aliveFilter,
+                zoneId: 'tianyuan_world_map',
                 $or: [
-                    { _id: { $in: linkedIds } },
-                    { name: { $in: npcNames } },
-                    {
-                        zoneId: currentZoneId,
-                        tileX: { $gte: px - 2, $lte: px + 2 },
-                        tileY: { $gte: py - 2, $lte: py + 2 }
-                    }
+                    { tileX: { $gte: px - 2, $lte: px + 2 }, tileY: { $gte: py - 2, $lte: py + 2 } },
+                    { 'schedule.tileX': { $gte: px - 2, $lte: px + 2 }, 'schedule.tileY': { $gte: py - 2, $lte: py + 2 } }
                 ]
             });
         }
 
         if (npcs.length === 0) {
             const location = player.currentLocation || { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', buildingName: null };
+            const settlementName = location.settlementName;
+            
+            // Map settlement name to anchor id if possible
+            let anchorId = null;
+            try {
+                const anchors = require('../../world-data/anchors.json');
+                const matched = anchors.find(a => a.name === settlementName || a.id === settlementName);
+                if (matched) anchorId = matched.id;
+            } catch (_) {}
+
+            const orConditions = [{ settlementName }];
+            if (anchorId) orConditions.push({ 'schedule.currentAnchorId': anchorId });
+
             npcs = await Npc.find({
-                guildId: player.guildId,
-                settlementName: location.settlementName,
-                buildingName: location.buildingName || null,
-                isActive: true
+                guildId: guildFilter,
+                ...aliveFilter,
+                $or: orConditions
             });
         }
 
-        res.json({ success: true, npcs, data: { npcs } });
+        const formattedNpcs = npcs.map(npcDoc => {
+            const n = npcDoc.toObject ? npcDoc.toObject() : npcDoc;
+            if (n.schedule?.activityState === 'sleeping') {
+                n.isSleeping = true;
+            }
+            if (n.vitalStatus?.injurySeverity === 3 || n.vitalStatus?.downedUntil) {
+                n.isDowned = true;
+            }
+            return n;
+        });
+
+        res.json({ success: true, npcs: formattedNpcs, data: { npcs: formattedNpcs } });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Terjadi kesalahan internal.' });

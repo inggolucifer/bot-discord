@@ -8,6 +8,9 @@ const Player = require('../../models/Player');
 const { computeNearbyEntities } = require('../../utils/nearbyEngine');
 const zonesV23 = require('../../world-data/zones-v23.json');
 const { getRealmIndex } = require('../../utils/cultivation');
+const { resolveNpcTile } = require('../../utils/npcPosition');
+
+const warnedNpcMap = new Set();
 
 // In-memory rate limiting map: userId -> timestamp ms
 const rateLimitMap = new Map();
@@ -167,10 +170,20 @@ router.get('/', authenticateToken, async (req, res) => {
       });
     }
 
-    // 5a. Living NPCs (V27)
+    // 5a. Living NPCs (V28 / B2)
     for (const n of npcs) {
-      const nx = n.schedule?.tileX ?? n.tileX ?? (cx * 32 + 16);
-      const ny = n.schedule?.tileY ?? n.tileY ?? (cy * 32 + 16);
+      let pos;
+      try {
+        pos = resolveNpcTile(n);
+      } catch (err) {
+        if (!warnedNpcMap.has(n._id?.toString())) {
+          warnedNpcMap.add(n._id?.toString());
+          console.warn(`[NearbyStream] Skipping NPC with invalid coords: ${err.message}`);
+        }
+        continue;
+      }
+      const nx = pos.tileX;
+      const ny = pos.tileY;
       rawEntities.push({
         id: `npc_${n._id}`,
         type: 'npc',
