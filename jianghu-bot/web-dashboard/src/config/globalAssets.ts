@@ -409,8 +409,8 @@ export const GLOBAL_ASSETS = {
   // Key = NPC.name
   // =========================================================================
   npcs: {
-    "default_standing": "/assets/npc/xihua_standing_perfect.png",
-    "default_scenery": "/assets/npc/toi_scenery_background.jpg",
+    "default_standing": "",
+    "default_scenery": "",
     // Tokoh & Tetua Desa Xingcun (Central Plains)
     "Penatua Zhou": "",
     "Ahli Tani Lian": "",
@@ -448,7 +448,7 @@ export const GLOBAL_ASSETS = {
     "npc_li_keke": "",
 
     // Tokoh Umum & Sekte
-    "Xi Hua": "/assets/npc/xihua_standing_perfect.png",              // Tetua Sekte Roh Suci (Wanita, gaun hijau berdiri)
+    "Xi Hua": "",              // Tetua Sekte Roh Suci (Wanita)
     "Tetua Sekte": "",         // Tetua Sekte umum
     "Penjaga Gerbang": "",
     "Ketua Sekte Pedang Langit": "",

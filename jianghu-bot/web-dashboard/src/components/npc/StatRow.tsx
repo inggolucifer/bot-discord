@@ -7,8 +7,9 @@ export interface StatRowProps {
 }
 
 /**
- * Standardized Attribute Row (V28)
- * Two-column baseline layout preventing overlap at all viewports.
+ * Standardized Attribute Row (V29)
+ * Two-column baseline layout preventing overlap and truncation at all viewports.
+ * Label min 40% width, normal white-space, no ellipsis. Value right-aligned.
  */
 export function StatRow({ label, value, className = '' }: StatRowProps) {
   const displayVal =
@@ -16,9 +17,12 @@ export function StatRow({ label, value, className = '' }: StatRowProps) {
 
   return (
     <div
-      className={`grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 items-baseline text-[12.5px] leading-tight py-[2px] ${className}`}
+      className={`grid grid-cols-[minmax(40%,1fr)_auto] gap-x-3 items-baseline text-[12.5px] leading-tight py-[2px] ${className}`}
     >
-      <span className="min-w-0 truncate text-[color:var(--npc-mute,#9a9686)]">
+      <span
+        className="text-[color:var(--npc-mute,#9a9686)]"
+        style={{ whiteSpace: 'normal', minWidth: '40%' }}
+      >
         {label}
       </span>
       <span className="tabular-nums text-right text-[color:var(--npc-cream,#e8e2d0)] font-medium">

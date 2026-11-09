@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "totalViolations": 0,
+  "combinationsTested": 4,
+  "results": [
+    {
+      "view": "dialogue",
+      "viewport": "mobile",
+      "dimensions": "390x844",
+      "violations": [],
+      "status": "PASS"
+    },
+    {
+      "view": "dialogue",
+      "viewport": "desktop",
+      "dimensions": "1440x900",
+      "violations": [],
+      "status": "PASS"
+    },
+    {
+      "view": "profile",
+      "viewport": "mobile",
+      "dimensions": "390x844",
+      "violations": [],
+      "status": "PASS"
+    },
+    {
+      "view": "profile",
+      "viewport": "desktop",
+      "dimensions": "1440x900",
+      "violations": [],
+      "status": "PASS"
+    }
+  ],
+  "timestamp": "2026-11-09T09:31:02.918Z"
+}

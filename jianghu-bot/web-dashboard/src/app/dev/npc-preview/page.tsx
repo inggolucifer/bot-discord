@@ -1,39 +1,24 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { notFound } from 'next/navigation';
+import React, { Suspense, useState, useEffect } from 'react';
+import { notFound, useSearchParams } from 'next/navigation';
 import { NPC_FIXTURE, RELATION_FIXTURE } from './fixture';
 import { NpcDialogueScene } from '@/components/npc/NpcDialogueScene';
 import { NpcProfilePanel } from '@/components/npc/NpcProfilePanel';
 import '@/components/npc/npcTheme.css';
 
-export default function NpcPreviewDevPage() {
-  // Production guard
-  if (process.env.NODE_ENV === 'production') {
-    notFound();
-  }
-
-  const [viewMode, setViewMode] = useState<'dialogue' | 'profile'>('dialogue');
-  const [mounted, setMounted] = useState(false);
+function NpcPreviewContent() {
+  const searchParams = useSearchParams();
+  const v = searchParams.get('view');
+  const initialView = v === 'profile' ? 'profile' : 'dialogue';
+  const [viewMode, setViewMode] = useState<'dialogue' | 'profile'>(initialView);
 
   useEffect(() => {
-    setMounted(true);
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const v = params.get('view');
-      if (v === 'profile' || v === 'dialogue') {
-        setViewMode(v);
-      }
+    const cur = searchParams.get('view');
+    if (cur === 'profile' || cur === 'dialogue') {
+      setViewMode(cur);
     }
-  }, []);
-
-  if (!mounted) {
-    return (
-      <div className="w-screen h-screen bg-[#070a14] flex items-center justify-center text-stone-400 text-sm">
-        Memuat Pratinjau Tokoh...
-      </div>
-    );
-  }
+  }, [searchParams]);
 
   return (
     <div className="w-screen h-screen overflow-hidden bg-[#070a14] relative">
@@ -80,5 +65,24 @@ export default function NpcPreviewDevPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function NpcPreviewDevPage() {
+  // Production guard
+  if (process.env.NODE_ENV === 'production') {
+    notFound();
+  }
+
+  return (
+    <Suspense
+      fallback={
+        <div className="w-screen h-screen bg-[#070a14] flex items-center justify-center text-stone-400 text-sm">
+          Memuat Pratinjau Tokoh...
+        </div>
+      }
+    >
+      <NpcPreviewContent />
+    </Suspense>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { NpcFullProfile, NpcPlayerRelationData } from '@/types/npc';
 import { GlyphClose, GlyphMouse } from './glyphs';
 import { InkBackdrop } from './InkBackdrop';
@@ -16,7 +17,6 @@ import {
   DialogueRunnerState
 } from '@/lib/npcDialogueRunner';
 import api from '@/lib/api';
-import { GLOBAL_ASSETS } from '@/config/globalAssets';
 import './npcTheme.css';
 
 export interface NpcDialogueSceneProps {
@@ -40,17 +40,6 @@ export function NpcDialogueScene({
   onStartBattle,
   initialLines
 }: NpcDialogueSceneProps) {
-  // Determine scenery background
-  const sceneryUrl =
-    (GLOBAL_ASSETS as any)?.npcs?.default_scenery ||
-    '/assets/npc/toi_scenery_background.jpg';
-
-  // Determine portraits
-  const npcAsset =
-    (GLOBAL_ASSETS as any)?.npcs?.[npc.name] ||
-    npc.portraitUrl ||
-    (npc.name === 'Xi Hua' ? '/assets/npc/xihua_standing_perfect.png' : '');
-
   // Default initial greeting line
   const defaultLines: DialogueLine[] = initialLines || [
     {
@@ -70,10 +59,22 @@ export function NpcDialogueScene({
   );
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [showMoreActions, setShowMoreActions] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const lastTimeRef = useRef<number>(performance.now());
   const rafRef = useRef<number | null>(null);
+
+  // Body scroll lock
+  useEffect(() => {
+    if (isOpen && typeof document !== 'undefined') {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
 
   // Focus root when opened
   useEffect(() => {
@@ -209,19 +210,22 @@ export function NpcDialogueScene({
   const lastLine = isLastLine(runnerState);
   const showChoices = lastLine && !runnerState.isTyping;
 
-  // Available interaction choices (pure text, 0 emoji)
-  const choices = [
+  // 4 Primary choices + 4 Secondary choices via "Lainnya"
+  const primaryChoices = [
     { id: 'chat', label: 'Bicara' },
     { id: 'gift', label: 'Beri Hadiah' },
     { id: 'spar', label: 'Adu Latih' },
-    { id: 'debate', label: 'Berdebat' },
-    { id: 'dual_cultivation', label: 'Latihan Bersama' },
-    { id: 'request_favor', label: 'Minta Bantuan' },
-    { id: 'view_profile', label: 'Lihat Profil' },
     { id: 'dismiss', label: 'Pamit' }
   ];
 
-  return (
+  const secondaryChoices = [
+    { id: 'debate', label: 'Berdebat' },
+    { id: 'dual_cultivation', label: 'Latihan Bersama' },
+    { id: 'request_favor', label: 'Minta Bantuan' },
+    { id: 'view_profile', label: 'Lihat Profil' }
+  ];
+
+  const dialogContent = (
     <div
       ref={containerRef}
       tabIndex={-1}
@@ -229,14 +233,17 @@ export function NpcDialogueScene({
       role="dialog"
       aria-modal="true"
       aria-label={`Percakapan dengan ${npc.name}`}
-      className="npc-ui fixed inset-0 z-[99990] w-screen h-screen overflow-hidden flex flex-col justify-end select-none outline-none"
+      className="npc-ui fixed inset-0 w-screen h-screen overflow-hidden flex flex-col justify-end select-none outline-none"
       style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 2147483000,
         backgroundColor: 'var(--npc-night, #0e0f12)',
         fontFamily: 'var(--npc-font, system-ui, sans-serif)'
       }}
     >
-      {/* 1. Backdrop Layer (Authentic Scenery or Ink Mountain SVG) */}
-      <InkBackdrop backdropUrl={sceneryUrl} />
+      {/* 1. Backdrop Layer (Procedural Ink Mountain SVG with flat colors) */}
+      <InkBackdrop />
 
       {/* 2. Top Bar: Title & Close Button */}
       <div className="absolute top-4 right-4 z-50 flex items-center gap-3">
@@ -256,8 +263,12 @@ export function NpcDialogueScene({
       </div>
 
       {/* 3. Standing Portraits Stage */}
-      <div className="relative w-full flex-1 flex items-end justify-between px-6 md:px-20 pointer-events-none pb-0 max-h-[calc(100vh-170px)]">
-        {/* Left: Player Standing Figure */}
+      <div
+        className={`relative w-full flex-1 flex items-end justify-between px-6 md:px-20 pointer-events-none ${
+          showChoices ? 'pb-[180px] sm:pb-0' : 'pb-0'
+        } max-h-[calc(100vh-170px)]`}
+      >
+        {/* Left: Player Standing Figure (Hidden on mobile) */}
         <div
           className={`hidden sm:flex flex-col items-center justify-end w-[320px] max-h-[74vh] transition-all duration-180 ${
             isPlayerActive
@@ -268,56 +279,87 @@ export function NpcDialogueScene({
           <Silhouette gender="male" className="h-[65vh] w-auto" />
         </div>
 
-        {/* Right: NPC Standing Figure (Xi Hua / Authentic Asset) */}
+        {/* Right: NPC Standing Figure (Pure Silhouette) */}
         <div
-          className={`flex flex-col items-center justify-end w-full sm:w-[380px] max-h-[74vh] transition-all duration-180 mx-auto sm:mx-0 ${
+          className={`flex flex-col items-center justify-end w-full sm:w-[380px] max-h-[45vh] sm:max-h-[74vh] transition-all duration-180 mx-auto sm:mx-0 ${
             isNpcActive
               ? 'opacity-100 scale-100 translate-y-0'
               : 'opacity-55 brightness-80 translate-y-2'
           }`}
         >
-          {npcAsset ? (
-            <div
-              className="relative max-h-[74vh] flex items-end justify-center overflow-hidden"
-              style={{
-                maskImage:
-                  'linear-gradient(to top, transparent 0%, black 18%, black 100%)',
-                WebkitMaskImage:
-                  'linear-gradient(to top, transparent 0%, black 18%, black 100%)'
-              }}
-            >
-              <img
-                src={npcAsset}
-                alt={npc.name}
-                className="max-h-[74vh] w-auto object-contain select-none pointer-events-none"
-              />
-            </div>
-          ) : (
-            <Silhouette gender={npc.gender} className="h-[65vh] w-auto" />
-          )}
+          <Silhouette gender={npc.gender} className="h-[45vh] sm:h-[65vh] w-auto" />
         </div>
       </div>
 
-      {/* 4. Choice Options Overlay (Floating above dialogue box, right-aligned) */}
+      {/* 4. Choice Options Overlay (Floating above dialogue box, right-aligned, clear of nameplate) */}
       {showChoices && (
-        <div className="relative z-40 max-w-[900px] w-[min(94vw,900px)] mx-auto flex flex-col items-end mb-2 px-2 pointer-events-auto">
-          <div className="w-full sm:w-[280px] flex flex-col gap-1.5">
-            {choices.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => handleChoice(c.id)}
-                disabled={actionLoading}
-                className="w-full h-[38px] px-4 flex items-center justify-center font-medium text-sm transition cursor-pointer border"
-                style={{
-                  backgroundColor: 'var(--npc-btn, #cfcfcf)',
-                  color: 'var(--npc-btn-ink, #1b1b1b)',
-                  borderColor: 'var(--npc-parchment-edge, #8c8672)',
-                  borderRadius: 'var(--npc-radius, 2px)'
-                }}
-              >
-                {c.label}
-              </button>
-            ))}
+        <div className="relative z-40 max-w-[900px] w-[min(94vw,900px)] mx-auto flex flex-col items-end mb-8 sm:mb-9 px-2 pointer-events-auto">
+          <div className="w-full sm:w-[320px] grid grid-cols-2 sm:flex sm:flex-col gap-1.5">
+            {!showMoreActions ? (
+              <>
+                {primaryChoices.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => handleChoice(c.id)}
+                    disabled={actionLoading}
+                    className="w-full h-[44px] px-3 flex items-center justify-center font-medium text-sm transition cursor-pointer border"
+                    style={{
+                      backgroundColor: 'var(--npc-parchment, #d8d2c0)',
+                      color: 'var(--npc-ink, #1d1c19)',
+                      borderColor: 'var(--npc-parchment-edge, #8c8672)',
+                      borderRadius: 'var(--npc-radius, 2px)'
+                    }}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setShowMoreActions(true)}
+                  disabled={actionLoading}
+                  className="col-span-2 sm:col-span-1 w-full h-[44px] px-3 flex items-center justify-center font-medium text-sm transition cursor-pointer border"
+                  style={{
+                    backgroundColor: 'var(--npc-parchment, #d8d2c0)',
+                    color: 'var(--npc-ink, #1d1c19)',
+                    borderColor: 'var(--npc-parchment-edge, #8c8672)',
+                    borderRadius: 'var(--npc-radius, 2px)'
+                  }}
+                >
+                  Lainnya
+                </button>
+              </>
+            ) : (
+              <>
+                {secondaryChoices.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => handleChoice(c.id)}
+                    disabled={actionLoading}
+                    className="w-full h-[44px] px-3 flex items-center justify-center font-medium text-sm transition cursor-pointer border"
+                    style={{
+                      backgroundColor: 'var(--npc-parchment, #d8d2c0)',
+                      color: 'var(--npc-ink, #1d1c19)',
+                      borderColor: 'var(--npc-parchment-edge, #8c8672)',
+                      borderRadius: 'var(--npc-radius, 2px)'
+                    }}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setShowMoreActions(false)}
+                  disabled={actionLoading}
+                  className="col-span-2 sm:col-span-1 w-full h-[44px] px-3 flex items-center justify-center font-medium text-sm transition cursor-pointer border"
+                  style={{
+                    backgroundColor: 'var(--npc-parchment, #d8d2c0)',
+                    color: 'var(--npc-ink, #1d1c19)',
+                    borderColor: 'var(--npc-parchment-edge, #8c8672)',
+                    borderRadius: 'var(--npc-radius, 2px)'
+                  }}
+                >
+                  Kembali
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -381,4 +423,8 @@ export function NpcDialogueScene({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined'
+    ? createPortal(dialogContent, document.body)
+    : dialogContent;
 }

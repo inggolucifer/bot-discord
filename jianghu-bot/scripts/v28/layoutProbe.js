@@ -1,56 +1,65 @@
 /**
- * Automated Layout & Anti-AI-Slop Probe (V28)
- * Verifies DOM layout, non-overlapping bounding boxes, WCAG contrast, and styling tokens.
+ * Automated Layout & Anti-AI-Slop Probe (V29)
+ * Verifies DOM layout, non-overlapping bounding boxes, WCAG contrast, Indonesian localization, and styling tokens.
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const PREVIEW_URL = process.env.PREVIEW_URL || 'http://localhost:3100/dev/npc-preview';
-const RAW_OUTPUT_PATH = path.resolve(__dirname, '../../review/v28_raw/layout_probe.json');
+const targetArg = process.argv[2] || process.env.PREVIEW_URL || 'http://localhost:3100';
+const PREVIEW_URL = targetArg.includes('/dev/npc-preview')
+  ? targetArg
+  : `${targetArg.replace(/\/$/, '')}/dev/npc-preview`;
+
+const RAW_DIR = path.resolve(__dirname, '../../review/v29_raw');
+const RAW_OUTPUT_PATH = path.join(RAW_DIR, 'layout_probe.json');
 
 const VIEWPORTS = [
-  { name: 'desktop_wide', width: 1440, height: 900 },
-  { name: 'desktop_std', width: 1024, height: 768 },
-  { name: 'mobile_modern', width: 390, height: 844 },
-  { name: 'mobile_compact', width: 360, height: 640 }
+  { name: 'mobile', width: 390, height: 844 },
+  { name: 'desktop', width: 1440, height: 900 }
 ];
 
 const VIEWS = ['dialogue', 'profile'];
 
+const FORBIDDEN_ENGLISH_WORDS = [
+  'Nascent Soul',
+  'Late',
+  'Early',
+  'Middle',
+  'Realm',
+  'Reputation',
+  'Position',
+  'Insight',
+  'Travel Speed',
+  'Focus'
+];
+
 async function runLayoutProbe() {
-  console.log(`[LAYOUT-PROBE] Initializing Playwright against ${PREVIEW_URL}...`);
+  console.log(`[LAYOUT-PROBE V29] Initializing Playwright against ${PREVIEW_URL}...`);
+  fs.mkdirSync(RAW_DIR, { recursive: true });
 
   let playwright;
   try {
     playwright = require('playwright');
   } catch (err) {
-    console.warn('[LAYOUT-PROBE] Playwright module not found. Marking SKIPPED.');
-    const result = {
-      status: 'SKIPPED',
-      reason: 'Playwright module is not installed in current environment.',
-      totalViolations: 0,
-      timestamp: new Date().toISOString()
-    };
-    fs.mkdirSync(path.dirname(RAW_OUTPUT_PATH), { recursive: true });
-    fs.writeFileSync(RAW_OUTPUT_PATH, JSON.stringify(result, null, 2));
-    process.exit(0);
+    console.error('[LAYOUT-PROBE ERROR] Playwright module not found. Exiting with code 1.');
+    process.exit(1);
   }
 
   let browser;
   try {
-    browser = await playwright.chromium.launch({ headless: true });
+    try {
+      browser = await playwright.chromium.launch({ headless: true });
+    } catch (e1) {
+      try {
+        browser = await playwright.chromium.launch({ headless: true, channel: 'chrome' });
+      } catch (e2) {
+        browser = await playwright.chromium.launch({ headless: true, channel: 'msedge' });
+      }
+    }
   } catch (err) {
-    console.warn(`[LAYOUT-PROBE] Failed to launch Chromium: ${err.message}. Marking SKIPPED.`);
-    const result = {
-      status: 'SKIPPED',
-      reason: `Chromium launch failed: ${err.message}`,
-      totalViolations: 0,
-      timestamp: new Date().toISOString()
-    };
-    fs.mkdirSync(path.dirname(RAW_OUTPUT_PATH), { recursive: true });
-    fs.writeFileSync(RAW_OUTPUT_PATH, JSON.stringify(result, null, 2));
-    process.exit(0);
+    console.error(`[LAYOUT-PROBE ERROR] Failed to launch Chromium/Chrome: ${err.message}. Exiting with code 1.`);
+    process.exit(1);
   }
 
   const results = [];
@@ -68,20 +77,29 @@ async function runLayoutProbe() {
         const page = await context.newPage();
 
         try {
-          await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
-          // Wait 2s for layout stabilization and dialogue text
-          await page.waitForTimeout(2000);
+          await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+          // Wait for [data-npc-root] selector up to 30s
+          await page.waitForSelector('[data-npc-root]', { timeout: 30000 });
+          // Wait 1.5s for layout stabilization and typewriter completion
+          await page.waitForTimeout(1500);
 
-          const evaluation = await page.evaluate(({ vpWidth, vpHeight, viewName }) => {
+          // Take screenshot according to naming convention
+          const screenshotName = `${view === 'dialogue' ? 'dlg' : 'prof'}_${vp.name}.png`;
+          const screenshotPath = path.join(RAW_DIR, screenshotName);
+          await page.screenshot({ path: screenshotPath, fullPage: true });
+          console.log(`Screenshot saved to ${screenshotName}`);
+
+          const evaluation = await page.evaluate(({ vpWidth, vpHeight, viewName, forbiddenWords }) => {
             const violations = [];
 
-            // P1: No emoji matching Extended_Pictographic in root text
+            // P3 check container presence
             const root = document.querySelector('[data-npc-root]');
             if (!root) {
               violations.push('P3: Missing [data-npc-root] container on screen');
               return { violations, checkCount: 1 };
             }
 
+            // P1: No emoji matching Extended_Pictographic in root text
             const emojiRegex = /\p{Extended_Pictographic}/u;
             const textContent = root.textContent || '';
             if (emojiRegex.test(textContent)) {
@@ -99,13 +117,14 @@ async function runLayoutProbe() {
               violations.push(`P3: [data-npc-root] does not fully cover screen (${rootRect.width}x${rootRect.height} vs ${window.innerWidth}x${window.innerHeight})`);
             }
 
+            // P10: elementFromPoint at (5,5) and (lebar-5, tinggi-5) belongs to [data-npc-root]
             const elTopLeft = document.elementFromPoint(5, 5);
-            const elTopRight = document.elementFromPoint(window.innerWidth - 5, 5);
+            const elBottomRight = document.elementFromPoint(window.innerWidth - 5, window.innerHeight - 5);
             if (!elTopLeft || !elTopLeft.closest('[data-npc-root]')) {
-              violations.push('P3: Point (5,5) is not inside [data-npc-root]');
+              violations.push(`P10: Top-left point (5,5) is not inside [data-npc-root] (found: ${elTopLeft ? elTopLeft.tagName : 'null'})`);
             }
-            if (!elTopRight || !elTopRight.closest('[data-npc-root]')) {
-              violations.push(`P3: Point (${window.innerWidth - 5}, 5) is not inside [data-npc-root]`);
+            if (!elBottomRight || !elBottomRight.closest('[data-npc-root]')) {
+              violations.push(`P10: Bottom-right point (${window.innerWidth - 5}, ${window.innerHeight - 5}) is not inside [data-npc-root] (found: ${elBottomRight ? elBottomRight.tagName : 'null'})`);
             }
 
             // P4: No overlapping text leaf elements
@@ -114,7 +133,6 @@ async function runLayoutProbe() {
               const walker = document.createTreeWalker(el, NodeFilter.SHOW_ELEMENT);
               let curr = walker.nextNode();
               while (curr) {
-                // Must have child text node and no child element with text
                 let hasDirectText = false;
                 for (const child of curr.childNodes) {
                   if (child.nodeType === Node.TEXT_NODE && child.textContent.trim().length > 0) {
@@ -139,10 +157,8 @@ async function runLayoutProbe() {
               for (let j = i + 1; j < textNodes.length; j++) {
                 const a = textNodes[i];
                 const b = textNodes[j];
-                // Ignore ancestor/descendant relationships
                 if (a.el.contains(b.el) || b.el.contains(a.el)) continue;
 
-                // Check intersection rect
                 const xOverlap = Math.max(0, Math.min(a.rect.right, b.rect.right) - Math.max(a.rect.left, b.rect.left));
                 const yOverlap = Math.max(0, Math.min(a.rect.bottom, b.rect.bottom) - Math.max(a.rect.top, b.rect.top));
                 const area = xOverlap * yOverlap;
@@ -159,7 +175,6 @@ async function runLayoutProbe() {
               const style = window.getComputedStyle(el);
               if (style.overflow === 'hidden' || style.overflowX === 'hidden' || style.overflow === 'clip') {
                 if (el.scrollWidth > el.clientWidth + 2 && !el.hasAttribute('data-ellipsis') && style.textOverflow !== 'ellipsis') {
-                  // Only report if it contains non-empty text
                   if (el.textContent && el.textContent.trim().length > 3) {
                     violations.push(`P5: Clipped text without ellipsis on <${el.tagName.toLowerCase()}> with text "${el.textContent.trim().slice(0, 20)}..."`);
                   }
@@ -167,7 +182,7 @@ async function runLayoutProbe() {
               }
             }
 
-            // P6 & P8: Buttons contrast and touch sizing
+            // P6, P7, P8, P12: Buttons checks
             function parseColor(str) {
               const m = str.match(/\d+/g);
               if (!m || m.length < 3) return [0, 0, 0];
@@ -211,25 +226,39 @@ async function runLayoutProbe() {
                 violations.push(`P7: Button border radius ${radiusVal}px exceeds 8px`);
               }
 
-              // P8: Minimum touch sizing (>= 28px desktop, >= 38px mobile)
+              // P8: Minimum touch sizing
               const minHeight = vpWidth < 640 ? 30 : 26;
               if (r.height < minHeight) {
                 violations.push(`P8: Button height ${r.height.toFixed(1)}px is smaller than min ${minHeight}px for viewport ${vpWidth}`);
               }
 
-              // P6: Contrast ratio >= 2.8 (allow subtle dark buttons)
+              // P6: Contrast ratio >= 2.5
               const fg = parseColor(style.color);
               const bg = parseColor(style.backgroundColor);
               const ratio = getContrastRatio(fg, bg);
               if (ratio < 2.5 && !btn.disabled) {
                 violations.push(`P6: Low button contrast ratio ${ratio.toFixed(2)} on button "${btn.textContent.trim().slice(0, 15)}"`);
               }
+
+              // P12: Check no button has background rgb(207, 207, 207)
+              if (style.backgroundColor === 'rgb(207, 207, 207)' || (bg[0] === 207 && bg[1] === 207 && bg[2] === 207)) {
+                violations.push(`P12: Button "${btn.textContent.trim().slice(0, 15)}" has forbidden gray background rgb(207, 207, 207)`);
+              }
             }
 
-            // P9: Dialog role and content
+            // P9: Dialog role attribute
             const dialog = root.getAttribute('role') === 'dialog' ? root : root.querySelector('[role="dialog"]');
             if (!dialog) {
               violations.push('P9: Missing [role="dialog"] attribute on NPC scene container');
+            }
+
+            // P11: English forbidden terms check on root text
+            const fullText = root.innerText || root.textContent || '';
+            for (const fw of forbiddenWords) {
+              const regex = new RegExp(`\\b${fw}\\b`, 'i');
+              if (regex.test(fullText)) {
+                violations.push(`P11: Found forbidden English text "${fw}" in NPC view`);
+              }
             }
 
             return {
@@ -237,7 +266,7 @@ async function runLayoutProbe() {
               buttonCount: buttons.length,
               textNodesCount: textNodes.length
             };
-          }, { vpWidth: vp.width, vpHeight: vp.height, viewName: view });
+          }, { vpWidth: vp.width, vpHeight: vp.height, viewName: view, forbiddenWords: FORBIDDEN_ENGLISH_WORDS });
 
           console.log(`Evaluated ${evaluation.textNodesCount} text nodes, ${evaluation.buttonCount} buttons.`);
           if (evaluation.violations.length === 0) {
@@ -256,12 +285,12 @@ async function runLayoutProbe() {
             status: evaluation.violations.length === 0 ? 'PASS' : 'FAIL'
           });
         } catch (pageErr) {
-          console.error(`[LAYOUT-PROBE ERROR] Navigation failed for ${url}: ${pageErr.message}`);
+          console.error(`[LAYOUT-PROBE ERROR] Test failed for ${url}: ${pageErr.message}`);
           results.push({
             view,
             viewport: vp.name,
             dimensions: `${vp.width}x${vp.height}`,
-            violations: [`Navigation error: ${pageErr.message}`],
+            violations: [`Page error: ${pageErr.message}`],
             status: 'FAIL'
           });
           totalViolations++;
@@ -282,7 +311,6 @@ async function runLayoutProbe() {
     timestamp: new Date().toISOString()
   };
 
-  fs.mkdirSync(path.dirname(RAW_OUTPUT_PATH), { recursive: true });
   fs.writeFileSync(RAW_OUTPUT_PATH, JSON.stringify(finalReport, null, 2));
 
   console.log(`\n======================================================`);

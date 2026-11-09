@@ -388,3 +388,85 @@ export const UI_ACTIONS = {
   theft: 'Curi',
   attack: 'Serang'
 } as const;
+
+export const REALM_NAMES_ID: string[] = [
+  'Fondasi Fana',          // 0
+  'Pemurnian Qi',          // 1
+  'Pembangunan Fondasi',   // 2
+  'Inti Emas',             // 3
+  'Jiwa Baru Lahir',       // 4
+  'Pembentukan Jiwa',      // 5
+  'Pemurnian Kekosongan',  // 6
+  'Penyatuan Tubuh',       // 7
+  'Kenaikan Agung',        // 8
+  'Peleburan Hampa',       // 9
+  'Ranah Abadi'            // 10
+];
+
+const FORBIDDEN_WORDS_REGEX = /\b(nascent\s*soul|late|early|middle|realm|reputation|position|insight|travel\s*speed|focus)\b/gi;
+
+/**
+ * Format cultivation realm and stage into 100% pure Indonesian.
+ * Eliminates English words like "Nascent Soul", "Late", "Early", "Middle", etc.
+ */
+export function formatRealm(realmIndexOrObj: any, stage?: any): string {
+  let idx = 0;
+  let rawStage = stage;
+
+  if (typeof realmIndexOrObj === 'object' && realmIndexOrObj !== null) {
+    idx = Number(realmIndexOrObj.realmIndex ?? realmIndexOrObj.index ?? realmIndexOrObj.level ?? 0);
+    if (!rawStage && realmIndexOrObj.stage) {
+      rawStage = realmIndexOrObj.stage;
+    }
+  } else if (typeof realmIndexOrObj === 'number') {
+    idx = realmIndexOrObj;
+  } else if (typeof realmIndexOrObj === 'string') {
+    const num = parseInt(realmIndexOrObj, 10);
+    if (!isNaN(num) && /^\d+$/.test(realmIndexOrObj.trim())) {
+      idx = num;
+    } else {
+      const lower = realmIndexOrObj.toLowerCase();
+      if (lower.includes('nascent') || lower.includes('jiwa baru')) idx = 4;
+      else if (lower.includes('golden') || lower.includes('inti')) idx = 3;
+      else if (lower.includes('foundation') || lower.includes('pembangunan') || lower.includes('pondasi spiritual')) idx = 2;
+      else if (lower.includes('qi') || lower.includes('pemurnian qi')) idx = 1;
+      else if (lower.includes('mortal') || lower.includes('fana')) idx = 0;
+      else if (lower.includes('soul formation') || lower.includes('pembentukan jiwa')) idx = 5;
+      else if (lower.includes('void') || lower.includes('kekosongan') || lower.includes('hampa')) idx = 6;
+      else if (lower.includes('body') || lower.includes('penyatuan')) idx = 7;
+      else if (lower.includes('ascension') || lower.includes('kenaikan')) idx = 8;
+      else idx = 0;
+
+      if (!rawStage) {
+        if (lower.includes('peak') || lower.includes('puncak')) rawStage = 'peak';
+        else if (lower.includes('late') || lower.includes('akhir')) rawStage = 'late';
+        else if (lower.includes('middle') || lower.includes('mid') || lower.includes('tengah')) rawStage = 'middle';
+        else if (lower.includes('early') || lower.includes('awal')) rawStage = 'early';
+      }
+    }
+  }
+
+  const baseName = REALM_NAMES_ID[idx] || (idx < 0 ? REALM_NAMES_ID[0] : `Ranah Tingkat ${idx}`);
+
+  let stageStr = '';
+  if (rawStage !== undefined && rawStage !== null && rawStage !== '') {
+    const s = String(rawStage).toLowerCase().trim();
+    if (s === 'early' || s === 'awal' || s.includes('early') || s.includes('awal')) {
+      stageStr = 'Tahap Awal';
+    } else if (s === 'middle' || s === 'mid' || s === 'tengah' || s.includes('middle') || s.includes('mid') || s.includes('tengah')) {
+      stageStr = 'Tahap Tengah';
+    } else if (s === 'late' || s === 'akhir' || s.includes('late') || s.includes('akhir')) {
+      stageStr = 'Tahap Akhir';
+    } else if (s === 'peak' || s === 'puncak' || s.includes('peak') || s.includes('puncak')) {
+      stageStr = 'Tahap Puncak';
+    } else {
+      const stageNum = parseInt(s, 10);
+      if (!isNaN(stageNum)) {
+        stageStr = `Tahap ${stageNum}`;
+      }
+    }
+  }
+
+  const result = stageStr ? `${baseName} ${stageStr}` : baseName;
+  return result.replace(FORBIDDEN_WORDS_REGEX, '').replace(/\s+/g, ' ').trim();
+}

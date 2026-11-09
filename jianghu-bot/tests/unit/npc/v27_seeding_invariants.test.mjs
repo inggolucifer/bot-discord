@@ -152,9 +152,9 @@ describe('V27 Master Seeding Invariants Suite (I1 - I14)', () => {
 
   it('I13: Essential NPCs have isEssential: true and valid essentialRole', () => {
     const essentialNpcs = npcs.filter(n => n.vitalStatus && n.vitalStatus.isEssential);
-    expect(essentialNpcs.length).toBe(14); // Exactly 14 story characters in V28
-
     const essentialNames = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../../world-data/npc-essential-v27.json'), 'utf8'));
+    expect(essentialNpcs.length).toBe(essentialNames.length);
+
     for (const eNpc of essentialNpcs) {
       expect(essentialNames).toContain(eNpc.name);
     }

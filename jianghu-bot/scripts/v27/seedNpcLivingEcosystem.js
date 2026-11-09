@@ -167,7 +167,7 @@ function buildEcosystemDataset(options = {}) {
       regionSlug: targetAnchor.region || 'central_plains',
       targetRealmIndex: realmIndex,
       targetStage: fb.targetStage || 4,
-      isEssential: false,
+      isEssential: true,
       essentialRole: fb.role,
       zoneId: 'tianyuan_world_map'
     }, `seed_fallback_${fb.name}`);
@@ -322,7 +322,7 @@ function buildEcosystemDataset(options = {}) {
       npc.schedule.targetDestination = null;
 
       // Ensure essential flag matches official list
-      npc.vitalStatus.isEssential = essentialNames.includes(npc.name);
+      npc.vitalStatus.isEssential = essentialNames.includes(npc.name) || essentialNames.includes((npc._id || '').toString());
       npc.vitalStatus.isAlive = true;
       npc.vitalStatus.isInjured = false;
       npc.vitalStatus.injurySeverity = 0;

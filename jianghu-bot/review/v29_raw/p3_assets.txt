@@ -1,0 +1,5 @@
+Command: git grep -En "toi_scenery|xihua_standing" web-dashboard web-api
+Matches: 0 (exit code 1, no matches found)
+Deleted files:
+- web-dashboard/public/assets/npc/toi_scenery_background.jpg
+- web-dashboard/public/assets/npc/xihua_standing_perfect.png

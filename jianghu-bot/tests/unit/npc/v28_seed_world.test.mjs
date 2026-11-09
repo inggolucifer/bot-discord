@@ -47,31 +47,31 @@ describe('NPC World Seed & Invariants V1-V14 (V28 / B1)', () => {
     expect(invariantResult.violations).toEqual([]);
   });
 
-  it('3. [V1] all 14 essential story NPCs exist in ecosystem', () => {
-    expect(essentialNames.length).toBe(14);
+  it('3. [V1] all essential story NPCs exist in ecosystem', () => {
+    expect(essentialNames.length).toBeGreaterThanOrEqual(14);
     for (const name of essentialNames) {
       const found = snapshot.npcs.find(n => n.name === name);
       expect(found).toBeDefined();
     }
   });
 
-  it('4. [V1] all 14 essential story NPCs are alive', () => {
+  it('4. [V1] all essential story NPCs are alive', () => {
     for (const name of essentialNames) {
       const found = snapshot.npcs.find(n => n.name === name);
       expect(found.vitalStatus?.isAlive).toBe(true);
     }
   });
 
-  it('5. [V1] all 14 essential story NPCs are marked isEssential: true', () => {
+  it('5. [V1] all essential story NPCs are marked isEssential: true', () => {
     for (const name of essentialNames) {
       const found = snapshot.npcs.find(n => n.name === name);
       expect(found.vitalStatus?.isEssential).toBe(true);
     }
   });
 
-  it('6. [V2] exactly 14 NPCs have isEssential: true (no other NPC is marked essential)', () => {
+  it('6. [V2] exactly all listed NPCs have isEssential: true (no other NPC is marked essential)', () => {
     const essentials = snapshot.npcs.filter(n => n.vitalStatus?.isEssential);
-    expect(essentials.length).toBe(14);
+    expect(essentials.length).toBe(essentialNames.length);
     for (const ess of essentials) {
       expect(essentialNames).toContain(ess.name);
     }
@@ -189,12 +189,12 @@ describe('NPC World Seed & Invariants V1-V14 (V28 / B1)', () => {
     }
   });
 
-  it('20. 4 fallback backup NPCs (Shuang Ke, Wu Binglin, Yin Ci, Li Keke) exist with isEssential: false', () => {
+  it('20. 4 fallback backup NPCs (Shuang Ke, Wu Binglin, Yin Ci, Li Keke) exist with isEssential: true (V29 Essential Story NPCs)', () => {
     const backupNames = ['Shuang Ke', 'Wu Binglin', 'Yin Ci', 'Li Keke'];
     for (const name of backupNames) {
       const found = snapshot.npcs.find(n => n.name === name);
       expect(found).toBeDefined();
-      expect(found.vitalStatus.isEssential).toBe(false);
+      expect(found.vitalStatus.isEssential).toBe(true);
     }
   });
 

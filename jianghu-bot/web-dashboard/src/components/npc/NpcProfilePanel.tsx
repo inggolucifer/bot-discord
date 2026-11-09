@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { NpcFullProfile, NpcPlayerRelationData } from '@/types/npc';
 import { StatRow } from './StatRow';
 import { GlyphClose } from './glyphs';
@@ -11,6 +12,7 @@ import {
   repTier,
   reputationDisplay,
   charismaTier,
+  formatRealm,
   PERSONALITY,
   DAO,
   DESTINY,
@@ -82,13 +84,24 @@ export function NpcProfilePanel({
     }
   }, [activeTab, npc?._id]);
 
+  // Body scroll lock
+  useEffect(() => {
+    if (isOpen && typeof document !== 'undefined') {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   // Portrait image resolution
   const portraitUrl =
     (GLOBAL_ASSETS as any)?.npcs?.[npc.name] ||
     npc.portraitUrl ||
-    (npc.name === 'Xi Hua' ? '/assets/npc/xihua_standing_perfect.png' : '');
+    '';
 
   // Morality alignment calculation
   const morality = Math.max(0, Math.min(100, npc.personality?.morality ?? 50));
@@ -162,15 +175,18 @@ export function NpcProfilePanel({
     { key: 'taoist', label: UI_TABS.taoistMind }
   ];
 
-  return (
+  const panelContent = (
     <div
       data-npc-root="true"
       role="dialog"
       aria-modal="true"
       aria-label={`Profil ${npc.name}`}
-      className="npc-ui fixed inset-0 z-[99990] w-screen h-screen overflow-y-auto flex flex-col items-center justify-start p-2 sm:p-6 select-none"
+      className="npc-ui fixed inset-0 w-screen h-screen overflow-y-auto flex flex-col items-center justify-start p-2 sm:p-6 select-none"
       style={{
-        backgroundColor: 'rgba(7, 10, 16, 0.94)',
+        position: 'fixed',
+        inset: 0,
+        zIndex: 2147483000,
+        backgroundColor: 'var(--npc-night, #0e0f12)',
         fontFamily: 'var(--npc-font, system-ui, sans-serif)'
       }}
     >
@@ -515,7 +531,7 @@ export function NpcProfilePanel({
               <div>
                 <StatRow label="Sekte:" value={npc.sectName || 'Tanpa Sekte'} />
                 <StatRow label="Jabatan:" value={label(ROLE, npc.social?.role) !== '(tak dikenal)' ? label(ROLE, npc.social?.role) : (npc.social?.sectRank || 'Tetua')} />
-                <StatRow label="Ranah:" value={npc.cultivation?.realmName || 'Nascent Soul (VI) Akhir'} />
+                <StatRow label="Ranah:" value={formatRealm(npc.cultivation?.realmIndex, npc.cultivation?.stage) || formatRealm(npc.cultivation?.realmName) || 'Jiwa Baru Lahir Tahap Akhir'} />
                 <StatRow label="Reputasi:" value={reputationDisplay(npc.reputation || 24146)} />
               </div>
               <div>
@@ -903,4 +919,8 @@ export function NpcProfilePanel({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined'
+    ? createPortal(panelContent, document.body)
+    : panelContent;
 }

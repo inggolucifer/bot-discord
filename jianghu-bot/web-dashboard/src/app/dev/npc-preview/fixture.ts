@@ -13,8 +13,8 @@ export const NPC_FIXTURE: NpcFullProfile = {
   sectName: 'Sekte Roh Suci Cabang Yun Mo',
   reputation: 24146,
   interests: ['Bambu', 'Seruling Xiao'],
-  portraitUrl: '/assets/npc/xihua_standing_perfect.png',
-  imageUrl: '/assets/npc/xihua_standing_perfect.png',
+  portraitUrl: undefined,
+  imageUrl: undefined,
   greeting: 'Salam rekan pendekar. Angin dingin berhembus lembut di puncak pegunungan hari ini.',
   personality: {
     primary: 'righteous',
@@ -91,7 +91,7 @@ export const NPC_FIXTURE: NpcFullProfile = {
   cultivation: {
     realmIndex: 4,
     stage: 9,
-    realmName: 'Nascent Soul (VI) Akhir',
+    realmName: 'Jiwa Baru Lahir Tahap Akhir',
     stageLabel: 'Tingkat 9',
     exp: 45000,
     breakthroughRate: 0.85,

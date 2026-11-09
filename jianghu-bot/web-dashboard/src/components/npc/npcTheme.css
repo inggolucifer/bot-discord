@@ -13,7 +13,7 @@
   --npc-chip-blue: #3b4fa8;
   --npc-chip-grey: #565960;
   --npc-chip-orange: #c97a2b;
-  --npc-btn: #cfcfcf;
+  --npc-btn: var(--npc-parchment, #d8d2c0);
   --npc-btn-ink: #1b1b1b;
   --npc-btn-off: #3c3f45;
   --npc-btn-off-ink: #a6a9ae;   /* nonaktif: kontras >= 3:1 */
@@ -23,6 +23,10 @@
   --npc-radius: 2px;
   --npc-font: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   --npc-font-display: var(--font-serif, "Noto Serif SC", "Songti SC", Georgia, serif);
+}
+
+.npc-ui button {
+  font-family: inherit;
 }
 
 @keyframes mouseBlink {

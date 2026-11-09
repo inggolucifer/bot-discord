@@ -5,6 +5,7 @@
  */
 
 const mongoose = require('mongoose');
+const Item = require('../models/Item');
 const { hasEnoughCurrency, payCurrency, addCopper } = require('../utils/currency');
 
 function sigmoid(z) {
@@ -426,39 +427,121 @@ function evaluateAction(action, { player, npc, relation, payload = {}, rng = DEF
         };
       }
 
-      const availableIdx = (npc.inventory || []).findIndex(i => i.quantity > 0);
-      if (availableIdx === -1) {
+      const staminaCost = 5;
+      const currentSta = player.currentStamina ?? player.stamina ?? 0;
+      if (currentSta < staminaCost) {
         return {
           success: false,
           status: 400,
+          message: `Stamina tidak mencukupi untuk meminta bantuan (Butuh min ${staminaCost} Stamina).`
+        };
+      }
+
+      const inv = npc.inventory || [];
+      const eligibleCandidates = [];
+      for (let idx = 0; idx < inv.length; idx++) {
+        const item = inv[idx];
+        if (!item.equippedSlot && (item.quantity ?? 1) > 0) {
+          eligibleCandidates.push({ item, idx });
+        }
+      }
+
+      const executeTransfer = (pickedItem, pickedIdx) => {
+        if (player.currentStamina !== undefined) player.currentStamina -= staminaCost;
+        else if (player.stamina !== undefined) player.stamina -= staminaCost;
+
+        if (pickedItem.quantity > 1) {
+          pickedItem.quantity -= 1;
+        } else {
+          inv.splice(pickedIdx, 1);
+        }
+
+        player.inventory = player.inventory || [];
+        const pInvSlot = player.inventory.find(i =>
+          i.itemId?.toString() === pickedItem.itemId.toString()
+        );
+
+        if (pInvSlot) {
+          pInvSlot.quantity += 1;
+        } else {
+          player.inventory.push({
+            itemId: pickedItem.itemId,
+            quantity: 1,
+            name: pickedItem.name,
+            creatorName: npc.name
+          });
+        }
+
+        return {
+          success: true,
+          status: 200,
+          message: `${npc.name} memberikan Anda sebuah ${pickedItem.name || 'barang berharga'}: "Pergunakanlah ini dengan bijak, Rekan Dao."`,
+          resultData: {
+            receivedItem: pickedItem.name || 'Barang Berharga',
+            itemId: pickedItem.itemId
+          }
+        };
+      };
+
+      const needsAsync = eligibleCandidates.some(c => (!c.item.itemId || !mongoose.isValidObjectId(c.item.itemId)) && c.item.name);
+
+      if (needsAsync) {
+        return (async () => {
+          let validPicked = null;
+          let validIdx = -1;
+
+          for (const cand of eligibleCandidates) {
+            if (cand.item.itemId && mongoose.isValidObjectId(cand.item.itemId)) {
+              validPicked = cand.item;
+              validIdx = cand.idx;
+              break;
+            } else if (cand.item.name) {
+              const def = await Item.findOne({ name: cand.item.name });
+              if (def) {
+                cand.item.itemId = def._id;
+                validPicked = cand.item;
+                validIdx = cand.idx;
+                break;
+              }
+            }
+          }
+
+          if (!validPicked) {
+            return {
+              success: false,
+              status: 200,
+              reason: 'npc_nothing_to_give',
+              message: `${npc.name} menggeleng menyesal: "Maaf Rekan Dao, aku tidak memiliki apa pun untuk diberikan saat ini."`
+            };
+          }
+
+          return executeTransfer(validPicked, validIdx);
+        })();
+      }
+
+      // Sync path (all candidates already have itemId)
+      let validPicked = null;
+      let validIdx = -1;
+      for (const cand of eligibleCandidates) {
+        if (cand.item.itemId && mongoose.isValidObjectId(cand.item.itemId)) {
+          validPicked = cand.item;
+          validIdx = cand.idx;
+          break;
+        }
+      }
+
+      if (!validPicked) {
+        return {
+          success: false,
+          status: 200,
+          reason: 'npc_nothing_to_give',
           message: `${npc.name} menggeleng menyesal: "Maaf Rekan Dao, aku tidak memiliki apa pun untuk diberikan saat ini."`
         };
       }
 
-      const transferredItem = npc.inventory[availableIdx];
-      if (transferredItem.quantity > 1) {
-        transferredItem.quantity -= 1;
-      } else {
-        npc.inventory.splice(availableIdx, 1);
-      }
-
-      player.inventory = player.inventory || [];
-      const pInvSlot = player.inventory.find(i =>
-        i.itemId?.toString() === (transferredItem.itemId || transferredItem._id)?.toString()
-      );
-
-      if (pInvSlot) {
-        pInvSlot.quantity += 1;
-      } else {
-        player.inventory.push({
-          itemId: transferredItem.itemId || new mongoose.Types.ObjectId(),
-          quantity: 1,
-          creatorName: npc.name
-        });
-      }
-
-      message = `${npc.name} memberikan Anda sebuah ${transferredItem.name || 'barang berharga'}: "Pergunakanlah ini dengan bijak, Rekan Dao."`;
-      resultData.receivedItem = transferredItem.name || 'Barang Berharga';
+      const res = executeTransfer(validPicked, validIdx);
+      message = res.message;
+      resultData = res.resultData;
       break;
     }
 

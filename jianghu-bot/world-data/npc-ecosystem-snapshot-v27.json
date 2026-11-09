@@ -270,7 +270,7 @@
         "isInjured": false,
         "injurySeverity": 0,
         "isMissing": false,
-        "isEssential": false,
+        "isEssential": true,
         "essentialRole": "alchemist",
         "downedUntil": null
       },
@@ -19529,7 +19529,7 @@
         "isInjured": false,
         "injurySeverity": 0,
         "isMissing": false,
-        "isEssential": false,
+        "isEssential": true,
         "essentialRole": "cultivator",
         "downedUntil": null
       },
@@ -38761,7 +38761,7 @@
         "isInjured": false,
         "injurySeverity": 0,
         "isMissing": false,
-        "isEssential": false,
+        "isEssential": true,
         "essentialRole": "cultivator",
         "downedUntil": null
       },
@@ -93692,7 +93692,7 @@
         "isInjured": false,
         "injurySeverity": 0,
         "isMissing": false,
-        "isEssential": false,
+        "isEssential": true,
         "essentialRole": "alchemist",
         "downedUntil": null
       },

@@ -182,6 +182,31 @@ function checkInvariants({ npcs = [], families = [], anchors = [], config = null
     }
   }
 
+  // V15: Every ID/name in essential_sources.txt present in DB/snapshot must have isEssential === true
+  const sourcesFilePath = path.join(rootDir, 'review/v29_raw/essential_sources.txt');
+  if (fs.existsSync(sourcesFilePath)) {
+    const rawSources = fs.readFileSync(sourcesFilePath, 'utf8');
+    const sourceEntries = rawSources
+      .split('\n')
+      .map(l => l.trim())
+      .filter(l => l && !l.startsWith('#'))
+      .map(l => l.split('|')[0].trim());
+
+    for (const entry of sourceEntries) {
+      const found = npcs.find(n =>
+        (n._id && n._id.toString() === entry) ||
+        n.name === entry ||
+        n.slug === entry ||
+        n.name.toLowerCase() === entry.replace(/^npc_/, '').replace(/_/g, ' ').toLowerCase()
+      );
+      if (found) {
+        if (!found.vitalStatus?.isEssential) {
+          violations.push({ code: 'V15', message: `Story NPC from essential_sources "${entry}" (${found.name}) is present in DB but vitalStatus.isEssential is false` });
+        }
+      }
+    }
+  }
+
   return {
     violations,
     stats: {

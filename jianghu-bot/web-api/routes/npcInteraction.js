@@ -184,7 +184,7 @@ router.post('/action/:npcId', authenticateToken, async (req, res) => {
     const rng = makeRng(`${player._id}_${npcId}_${Date.now()}`);
 
     // 3. Authoritative Action Evaluation
-    const actionResult = evaluateAction(action, {
+    const actionResult = await evaluateAction(action, {
       player,
       npc,
       relation,
@@ -234,7 +234,7 @@ router.post('/action/:npcId', authenticateToken, async (req, res) => {
 // GET /api/npc/ambush/pending
 router.get('/ambush/pending', authenticateToken, async (req, res) => {
   try {
-    const player = await loadPlayer(req.user.id || req.user.userId);
+    const player = await loadPlayer(req.user);
     if (!player) {
       return res.status(404).json({ success: false, error: 'Pemain tidak ditemukan.' });
     }
@@ -286,19 +286,20 @@ router.get('/ambush/pending', authenticateToken, async (req, res) => {
 router.post('/ambush/:id/resolve', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { choice = 'fight' } = req.body;
-
-  const player = await loadPlayer(req.user.id || req.user.userId);
-  if (!player) {
-    return res.status(404).json({ success: false, error: 'Pemain tidak ditemukan.' });
-  }
-
-  const lockKey = `player_${player._id}`;
-  const releaseLock = await LockManager.acquire(lockKey);
-  if (!releaseLock) {
-    return res.status(429).json({ success: false, message: 'Aksi ambush sedang diproses.' });
-  }
+  let releaseLock = null;
 
   try {
+    const player = await loadPlayer(req.user);
+    if (!player) {
+      return res.status(404).json({ success: false, error: 'Pemain tidak ditemukan.' });
+    }
+
+    const lockKey = `player_${player._id}`;
+    releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) {
+      return res.status(429).json({ success: false, message: 'Aksi ambush sedang diproses.' });
+    }
+
     const NpcAmbush = require('../../models/NpcAmbush');
     const NpcVendetta = require('../../models/NpcVendetta');
     const Npc = require('../../models/Npc');
@@ -307,6 +308,10 @@ router.post('/ambush/:id/resolve', authenticateToken, async (req, res) => {
     const ambush = await NpcAmbush.findById(id);
     if (!ambush) {
       return res.status(404).json({ success: false, error: 'Penyergapan tidak ditemukan.' });
+    }
+
+    if (ambush.targetPlayerId && ambush.targetPlayerId.toString() !== player._id.toString()) {
+      return res.status(403).json({ success: false, error: 'Penyergapan ini bukan milikmu.' });
     }
 
     const hunter = await Npc.findById(ambush.hunterNpcId);

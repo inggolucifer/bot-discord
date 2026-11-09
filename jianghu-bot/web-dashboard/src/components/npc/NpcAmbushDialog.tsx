@@ -120,11 +120,7 @@ export function NpcAmbushDialog() {
   const portraitUrl =
     (GLOBAL_ASSETS as any)?.npcs?.[hunter.name] ||
     hunter.portraitUrl ||
-    (hunter.name === 'Xi Hua' ? '/assets/npc/xihua_standing_perfect.png' : '');
-
-  const sceneryUrl =
-    (GLOBAL_ASSETS as any)?.npcs?.default_scenery ||
-    '/assets/npc/toi_scenery_background.jpg';
+    '';
 
   const modalNode = (
     <div
@@ -139,7 +135,7 @@ export function NpcAmbushDialog() {
       }}
     >
       {/* 1. Backdrop */}
-      <InkBackdrop backdropUrl={sceneryUrl} />
+      <InkBackdrop />
 
       {/* 2. Top Warning Banner */}
       <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-2 border shadow-lg"

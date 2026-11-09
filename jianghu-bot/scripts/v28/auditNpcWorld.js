@@ -42,7 +42,7 @@ async function runAudit() {
     });
     process.exit(1);
   } else {
-    console.log(`[AuditNpcWorld] PASSED: 0 violations! All invariants V1-V14 satisfied.`);
+    console.log(`[AuditNpcWorld] PASSED: 0 violations! All invariants V1-V15 satisfied.`);
     process.exit(0);
   }
 }
