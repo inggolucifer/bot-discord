@@ -5,6 +5,7 @@ import WorldPageContent from '@/app/world/WorldPageContent';
 import DashboardModal from '@/components/modals/DashboardModal';
 import PlayerStatsModal from '@/components/modals/PlayerStatsModal';
 import NpcInteractionModal from '@/components/modals/NpcInteractionModal';
+import { NpcAmbushDialog } from '@/components/npc/NpcAmbushDialog';
 import AchievementsModal from '@/components/modals/AchievementsModal';
 import SettingsModal from '@/components/modals/SettingsModal';
 import LandingMenu from '@/components/menu/LandingMenu';
@@ -133,6 +134,7 @@ export default function RootApp() {
       <DashboardModal />
       <PlayerStatsModal />
       <NpcInteractionModal />
+      <NpcAmbushDialog />
       <AchievementsModal />
       <SettingsModal />
     </div>
