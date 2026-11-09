@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 const { generateDeterministicNpc } = require('../../services/npcGenerator');
 const { generateFamilyClan } = require('../../services/npcFamilyEngine');
 const { isTileWalkable } = require('../v28/lib/invariants');
-const { makeRng } = require('../../utils/npcRng');
+const { makeRng, hash32 } = require('../../utils/npcRng');
 
 const rootDir = path.resolve(__dirname, '../../');
 const worldDataDir = path.join(rootDir, 'world-data');
@@ -320,6 +320,8 @@ function buildEcosystemDataset(options = {}) {
       npc.schedule.tileY = tileY;
       npc.schedule.activityState = 'idle';
       npc.schedule.targetDestination = null;
+      npc.schedule.stayUntil = null;
+      npc.schedule.lastJourneyDay = -1;
 
       // Ensure essential flag matches official list
       npc.vitalStatus.isEssential = essentialNames.includes(npc.name) || essentialNames.includes((npc._id || '').toString());
@@ -327,6 +329,10 @@ function buildEcosystemDataset(options = {}) {
       npc.vitalStatus.isInjured = false;
       npc.vitalStatus.injurySeverity = 0;
       npc.vitalStatus.downedUntil = null;
+
+      const idStr = String(npc._id || npc.id || npc.name);
+      const h = hash32(idStr);
+      npc.schedule.wanderLevel = npc.vitalStatus.isEssential ? 0 : (h % 100 >= 15 ? 0 : (h % 3 !== 0 ? 1 : 2));
 
       // Ensure age <= maxAge
       if (npc.lifespan.currentAge > npc.lifespan.maxAge) {
@@ -352,11 +358,37 @@ async function seedNpcLivingEcosystem(options = {}) {
   if (fs.existsSync(snapshotPath) && !forceRegenerate) {
     console.log(`[SeedNpc] Loading existing snapshot from ${snapshotPath}...`);
     dataset = JSON.parse(fs.readFileSync(snapshotPath, 'utf8'));
+
+    // V30: Update wanderLevel, stayUntil, lastJourneyDay deterministically on snapshot NPCs
+    let updatedCount = 0;
+    for (const npc of dataset.npcs) {
+      if (!npc.schedule) npc.schedule = {};
+      if (npc.schedule.stayUntil === undefined) npc.schedule.stayUntil = null;
+      if (npc.schedule.lastJourneyDay === undefined) npc.schedule.lastJourneyDay = -1;
+      const isEssential = !!(npc.vitalStatus && npc.vitalStatus.isEssential);
+      const idStr = String(npc.id || npc._id);
+      const h = hash32(idStr);
+      const wanderLevel = isEssential ? 0 : (h % 100 >= 15 ? 0 : (h % 3 !== 0 ? 1 : 2));
+      if (npc.schedule.wanderLevel !== wanderLevel) {
+        npc.schedule.wanderLevel = wanderLevel;
+        updatedCount++;
+      }
+    }
+    if (updatedCount > 0 || process.argv.includes('--update-snapshot') || process.argv.includes('--dry-run')) {
+      fs.writeFileSync(snapshotPath, JSON.stringify(dataset, null, 2), 'utf-8');
+      console.log(`[SeedNpc] Snapshot synchronized on disk: ${dataset.npcs.length} NPCs (${updatedCount} wanderLevels updated).`);
+    }
   } else {
     console.log(`[SeedNpc] Generating new deterministic ecosystem dataset...`);
     dataset = buildEcosystemDataset();
     fs.writeFileSync(snapshotPath, JSON.stringify(dataset, null, 2), 'utf-8');
     console.log(`[SeedNpc] Snapshot saved to ${snapshotPath} (${dataset.npcs.length} NPCs, ${dataset.families.length} families).`);
+  }
+
+  const isDryRun = process.argv.includes('--dry-run') || options.dryRun === true;
+  if (isDryRun) {
+    console.log(`[SeedNpc] Dry-run complete. No MongoDB connection initiated.`);
+    return dataset;
   }
 
   const mongoUri = process.env.MONGODB_URI;

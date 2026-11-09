@@ -73,8 +73,14 @@ function shuffle(rng, array) {
   return copy;
 }
 
+function hash32(str) {
+  return stringToSeed(str);
+}
+
 module.exports = {
   makeRng,
+  hash32,
+  stringToSeed,
   rangeInt,
   rangeFloat,
   pickOne,

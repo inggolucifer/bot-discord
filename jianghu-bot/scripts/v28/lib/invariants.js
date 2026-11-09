@@ -207,6 +207,69 @@ function checkInvariants({ npcs = [], families = [], anchors = [], config = null
     }
   }
 
+  // Invariant V16: persentase NPC dengan wanderLevel>0 antara 8% dan 20%
+  const wanderingNpcs = npcs.filter(n => (n.schedule?.wanderLevel || 0) > 0);
+  const wanderPct = (wanderingNpcs.length / npcs.length) * 100;
+  if (wanderPct < 8 || wanderPct > 20) {
+    violations.push({
+      code: 'V16',
+      message: `Percentage of wandering NPCs (${wanderPct.toFixed(2)}%) outside required range [8%, 20%]`
+    });
+  }
+
+  // Invariant V17: tidak ada NPC esensial dengan wanderLevel>0 atau targetDestination.type==='journey'
+  for (const n of npcs) {
+    if (n.vitalStatus?.isEssential) {
+      if ((n.schedule?.wanderLevel || 0) > 0) {
+        violations.push({
+          code: 'V17',
+          message: `Essential NPC "${n.name}" (${n._id || n.id}) has wanderLevel > 0: ${n.schedule?.wanderLevel}`
+        });
+      }
+      if (n.schedule?.targetDestination?.type === 'journey') {
+        violations.push({
+          code: 'V17',
+          message: `Essential NPC "${n.name}" (${n._id || n.id}) has targetDestination.type === 'journey'`
+        });
+      }
+    }
+  }
+
+  // Invariant V18: setiap NPC dengan targetDestination.type==='journey' punya legs array tidak kosong, semua angka finite, etaAt > startedAt
+  for (const n of npcs) {
+    const dest = n.schedule?.targetDestination;
+    if (dest && dest.type === 'journey') {
+      if (!Array.isArray(dest.legs) || dest.legs.length === 0) {
+        violations.push({
+          code: 'V18',
+          message: `NPC "${n.name}" journey has empty legs array`
+        });
+      } else {
+        let finite = true;
+        for (const leg of dest.legs) {
+          if (!Number.isFinite(leg.ax) || !Number.isFinite(leg.ay) ||
+              !Number.isFinite(leg.bx) || !Number.isFinite(leg.by) ||
+              !Number.isFinite(leg.len)) {
+            finite = false;
+            break;
+          }
+        }
+        if (!finite) {
+          violations.push({
+            code: 'V18',
+            message: `NPC "${n.name}" journey has non-finite leg coordinates/len`
+          });
+        }
+      }
+      if (!Number.isFinite(dest.startedAt) || !Number.isFinite(dest.etaAt) || dest.etaAt <= dest.startedAt) {
+        violations.push({
+          code: 'V18',
+          message: `NPC "${n.name}" journey has invalid timing: startedAt=${dest.startedAt}, etaAt=${dest.etaAt}`
+        });
+      }
+    }
+  }
+
   return {
     violations,
     stats: {

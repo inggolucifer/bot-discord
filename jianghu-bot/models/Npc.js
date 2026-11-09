@@ -126,7 +126,10 @@ const npcSchema = new mongoose.Schema({
     tileX: { type: Number, default: 0 },
     tileY: { type: Number, default: 0 },
     activityState: { type: String, default: 'idle' },
-    targetDestination: { type: mongoose.Schema.Types.Mixed, default: null }
+    targetDestination: { type: mongoose.Schema.Types.Mixed, default: null },
+    wanderLevel: { type: Number, default: 0, min: 0, max: 2 },
+    stayUntil: { type: Date, default: null },
+    lastJourneyDay: { type: Number, default: -1 }
   },
 
   social: {
