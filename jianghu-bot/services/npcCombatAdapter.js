@@ -127,7 +127,7 @@ async function handleNpcBattleResolution({
   }
 
   let npc = npcDoc;
-  if (!npc && npcDbId && Npc.db && Npc.db.readyState === 1) {
+  if (!npc && npcDbId && (Npc.db?.readyState === 1 || Object.prototype.hasOwnProperty.call(Npc, 'findById'))) {
     try {
       npc = await Npc.findById(npcDbId);
     } catch (_) {}
@@ -135,7 +135,7 @@ async function handleNpcBattleResolution({
   if (!npc) return { handled: false };
 
   let relation = session.relationDoc || null;
-  if (!relation && NpcPlayerRelation.db && NpcPlayerRelation.db.readyState === 1) {
+  if (!relation && (NpcPlayerRelation.db?.readyState === 1 || Object.prototype.hasOwnProperty.call(NpcPlayerRelation, 'findOne'))) {
     try {
       relation = await NpcPlayerRelation.findOne({ playerId: player._id, npcId: npc._id });
     } catch (_) {}

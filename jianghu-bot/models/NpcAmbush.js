@@ -6,7 +6,7 @@ const npcAmbushSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['pending', 'stalking', 'triggered', 'resolved', 'escaped', 'paid'],
-    default: 'pending',
+    default: 'stalking',
     index: true
   },
   tileX: { type: Number, required: true },
