@@ -1,0 +1,22 @@
+{
+  "version": "v28",
+  "residentsPerType": {
+    "hamlet": 4,
+    "village": 8,
+    "town": 16,
+    "major_city": 40,
+    "capital_city": 80,
+    "sect": 30,
+    "outpost": 6,
+    "port": 14,
+    "island": 4,
+    "secret_realm": 0,
+    "danger_zone": 0
+  },
+  "coreRoles": [
+    "innkeeper",
+    "blacksmith",
+    "alchemist"
+  ],
+  "maxTotal": 1200
+}

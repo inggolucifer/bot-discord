@@ -294,6 +294,18 @@ const setupServer = (client) => {
         } catch (e) {
             console.error('[CORE-ITEMS-IMPORT-ERROR]', e);
         }
+
+        try {
+            if (process.env.NPC_SEED_ON_BOOT !== 'false') {
+                const Npc = require('../models/Npc');
+                const NpcFamily = require('../models/NpcFamily');
+                const { ensureNpcWorld } = require('../services/npcBootstrap');
+                ensureNpcWorld({ Npc, NpcFamily })
+                    .catch(err => console.error('[NPC-BOOTSTRAP-ERROR]', err));
+            }
+        } catch (e) {
+            console.error('[NPC-BOOTSTRAP-IMPORT-ERROR]', e);
+        }
     });
 
     // Setup Socket.io

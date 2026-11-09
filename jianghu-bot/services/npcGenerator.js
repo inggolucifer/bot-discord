@@ -193,7 +193,7 @@ function generateDeterministicNpc(options = {}, seed = 'jianghu_npc_seed') {
     questIds: [],
     isActive: true,
     minRealmIndexToTalk: 0,
-    zoneId: '',
+    zoneId: options.zoneId || 'tianyuan_world_map',
     tileX: options.tileX !== undefined ? options.tileX : 0,
     tileY: options.tileY !== undefined ? options.tileY : 0,
 
