@@ -1,0 +1,9 @@
+=== VITEST: tests/unit/npc/v30_schema.test.mjs ===
+ RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
+
+ ✓ tests/unit/npc/v30_schema.test.mjs (4 tests) 45ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  23:06:20
+   Duration  2.43s (import 87%, transform 8%, tests 3%, worker 2%)

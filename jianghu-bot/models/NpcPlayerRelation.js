@@ -28,7 +28,8 @@ const npcPlayerRelationSchema = new mongoose.Schema({
     isMaster: { type: Boolean, default: false },
     isApprentice: { type: Boolean, default: false },
     isSwornSibling: { type: Boolean, default: false }
-  }
+  },
+  lastAmbushAt: { type: Date, default: null }
 }, { timestamps: true });
 
 npcPlayerRelationSchema.index({ playerId: 1, npcId: 1 }, { unique: true });

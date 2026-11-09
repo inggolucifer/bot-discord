@@ -12,6 +12,8 @@ const npcAmbushSchema = new mongoose.Schema({
   tileX: { type: Number, required: true },
   tileY: { type: Number, required: true },
   battleSessionId: { type: String, default: null },
+  kind: { type: String, enum: ['vendetta', 'hostile'], default: 'vendetta' },
+  reason: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now },
   expiresAt: { type: Date, default: () => new Date(Date.now() + 3600 * 1000) }
 }, { timestamps: true });
