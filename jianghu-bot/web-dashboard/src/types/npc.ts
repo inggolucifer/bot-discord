@@ -26,9 +26,16 @@ export interface NpcAttributes {
   critRate: number;
   critRes: number;
   critDmg: number;
+  critDr?: number;
   travelSpeed: number;
   martialRes: number;
   spiritualRes: number;
+  mood?: number;
+  stamina?: number;
+  charisma?: number;
+  maxVitality?: number;
+  maxEnergy?: number;
+  maxFocus?: number;
   roots: {
     fire: number;
     water: number;
@@ -53,6 +60,7 @@ export interface NpcAttributes {
     fishing: number;
     cooking: number;
     talismans: number;
+    fengshui?: number;
   };
 }
 
@@ -68,6 +76,7 @@ export interface NpcInventoryItem {
 export interface NpcPlayerRelationData {
   affinity: number;
   affinityStage: AffinityStage;
+  stage?: AffinityStage;
   interactionCountDaily: {
     chat: number;
     gift: number;
@@ -93,10 +102,14 @@ export interface NpcFullProfile {
   name: string;
   title: string;
   gender: 'male' | 'female' | 'neutral';
+  race?: string;
   description: string;
   regionSlug: string;
   settlementName: string;
   buildingName: string;
+  sectName?: string;
+  reputation?: number;
+  interests?: string[];
   portraitUrl?: string | null;
   imageUrl?: string | null;
   greeting?: string;
@@ -124,6 +137,8 @@ export interface NpcFullProfile {
   attributes: NpcAttributes;
   cultivation: {
     realmIndex: number;
+    realmName?: string;
+    stageLabel?: string;
     stage: number;
     exp: number;
     breakthroughRate?: number;
@@ -145,6 +160,7 @@ export interface NpcFullProfile {
   };
   inventory: NpcInventoryItem[];
   social: {
+    role?: string;
     familyId?: string | null;
     sectId?: string | null;
     sectRank?: string;

@@ -122,6 +122,30 @@ router.get('/relations/:npcId', authenticateToken, async (req, res) => {
   }
 });
 
+// GET /api/npc/history/:npcId
+router.get('/history/:npcId', authenticateToken, async (req, res) => {
+  try {
+    const { npcId } = req.params;
+    const events = await NpcEvent.find({ npcId })
+      .sort({ createdAt: -1 })
+      .limit(40)
+      .lean();
+
+    const history = (events || []).map(e => ({
+      at: e.createdAt,
+      text: e.description || e.eventType || 'Peristiwa Jianghu'
+    }));
+
+    return res.json({
+      success: true,
+      history
+    });
+  } catch (error) {
+    console.error('[NPC History API Error]', error);
+    return res.status(500).json({ success: false, message: 'Gagal memuat riwayat hidup NPC.' });
+  }
+});
+
 // POST /api/npc/action/:npcId
 router.post('/action/:npcId', authenticateToken, async (req, res) => {
   const { npcId } = req.params;

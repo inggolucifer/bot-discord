@@ -24,3 +24,12 @@
   --npc-font: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   --npc-font-display: var(--font-serif, "Noto Serif SC", "Songti SC", Georgia, serif);
 }
+
+@keyframes mouseBlink {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.9; }
+}
+
+.npc-mouse-indicator {
+  animation: mouseBlink 1.4s ease-in-out infinite;
+}
