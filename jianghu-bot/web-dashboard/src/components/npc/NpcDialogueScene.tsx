@@ -372,8 +372,7 @@ export function NpcDialogueScene({
           {/* Mouse prompt indicator (blinking only when typewriter finished) */}
           {!runnerState.isTyping && !actionLoading && (
             <div
-              className="absolute bottom-3 right-4 flex items-center gap-1.5 animate-pulse text-[color:var(--npc-ink-soft,#4b473d)]"
-              style={{ animationDuration: '1.4s' }}
+              className="absolute bottom-3 right-4 flex items-center gap-1.5 npc-mouse-indicator text-[color:var(--npc-ink-soft,#4b473d)]"
             >
               <GlyphMouse size={16} />
             </div>
