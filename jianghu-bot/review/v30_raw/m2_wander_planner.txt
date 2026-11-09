@@ -1,0 +1,9 @@
+=== VITEST: tests/unit/npc/v30_wander_planner.test.mjs ===
+ RUN  v5.0.5 D:/gitub/bot-discord
+
+ ✓ jianghu-bot/tests/unit/npc/v30_wander_planner.test.mjs (8 tests) 34ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  22:46:51
+   Duration  683ms (transform 37%, import 30%, tests 21%, worker 11%)
