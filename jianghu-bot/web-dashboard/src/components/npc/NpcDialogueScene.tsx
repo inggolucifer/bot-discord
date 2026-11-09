@@ -379,9 +379,9 @@ export function NpcDialogueScene({
             boxShadow: '0 1px 0 rgba(0,0,0,0.35)'
           }}
         >
-          {/* Nameplate: Player (Left) or NPC (Right) */}
+          {/* Nameplate: Player (Left) or NPC (Right) with inline activity label */}
           <div
-            className="absolute -top-[27px] px-6 h-[26px] flex items-center font-semibold text-[13px] tracking-wide pointer-events-none"
+            className="absolute -top-[28px] px-5 h-[27px] flex items-center gap-2 font-semibold text-[13px] tracking-wide pointer-events-none"
             style={{
               [isPlayerActive ? 'left' : 'right']: '12px',
               backgroundColor: 'var(--npc-night, #0e0f12)',
@@ -390,20 +390,13 @@ export function NpcDialogueScene({
               letterSpacing: '0.03em'
             }}
           >
-            {isPlayerActive ? 'Pendekar' : npc.name}
+            <span>{isPlayerActive ? 'Pendekar' : npc.name}</span>
+            {!isPlayerActive && (
+              <span className="text-[11px] font-normal opacity-75">
+                • {activityLabel((npc as any).activityState || (npc as any).schedule?.activityState, (npc as any).journeyTo || (npc as any).schedule?.journeyTo)}
+              </span>
+            )}
           </div>
-
-          {/* Activity label below nameplate for NPC */}
-          {!isPlayerActive && (
-            <div
-              className="absolute -top-[2px] right-4 text-[11px] font-normal tracking-tight pointer-events-none"
-              style={{
-                color: 'var(--npc-ink-soft, #5a5448)'
-              }}
-            >
-              {activityLabel((npc as any).activityState || (npc as any).schedule?.activityState, (npc as any).journeyTo || (npc as any).schedule?.journeyTo)}
-            </div>
-          )}
 
           {/* Dialogue Text Content with Tabular numbers & aria live */}
           <div

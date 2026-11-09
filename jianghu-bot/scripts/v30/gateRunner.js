@@ -62,12 +62,19 @@ const COMMANDS = [
 
 function checkPort(port) {
   return new Promise((resolve) => {
-    const req = http.get(`http://localhost:${port}`, () => resolve(true));
-    req.on('error', () => resolve(false));
-    req.setTimeout(2000, () => {
-      req.destroy();
-      resolve(false);
-    });
+    const tryUrl = (host, fallback) => {
+      const req = http.get(`http://${host}:${port}`, () => resolve(true));
+      req.on('error', () => {
+        if (fallback) fallback();
+        else resolve(false);
+      });
+      req.setTimeout(8000, () => {
+        req.destroy();
+        if (fallback) fallback();
+        else resolve(false);
+      });
+    };
+    tryUrl('127.0.0.1', () => tryUrl('localhost', null));
   });
 }
 
