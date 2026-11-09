@@ -1,11 +1,12 @@
 /**
- * Combat Adapter for Living NPCs (V27)
- * Bridges living NPC documents to InteractiveBattleService and battle.js routes.
+ * Combat Adapter for Living NPCs (V28 / B5)
+ * Bridges living NPC documents to InteractiveBattleService with single death door protection for essential NPCs.
  */
 
 const Npc = require('../models/Npc');
 const NpcPlayerRelation = require('../models/NpcPlayerRelation');
 const NpcAmbush = require('../models/NpcAmbush');
+const NpcVendetta = require('../models/NpcVendetta');
 const { killNpc } = require('./npcLifecycle');
 
 function getPrimaryElement(roots = {}) {
@@ -24,7 +25,6 @@ function generateNpcCombatSkills(npc) {
   const skills = [];
   const primaryElement = getPrimaryElement(npc.attributes ? npc.attributes.roots : {});
 
-  // 1. Basic Attack Skill
   skills.push({
     skillId: 'npc_basic_strike',
     name: `Serangan ${npc.title || 'Pendekar'}`,
@@ -35,7 +35,6 @@ function generateNpcCombatSkills(npc) {
     currentCooldown: 0
   });
 
-  // 2. Elemental / Technique Skill
   const elemName = primaryElement !== 'neutral' ? primaryElement.toUpperCase() : 'QI MURNI';
   skills.push({
     skillId: 'npc_special_art',
@@ -48,7 +47,6 @@ function generateNpcCombatSkills(npc) {
     element: primaryElement
   });
 
-  // 3. Defensive Stance
   skills.push({
     skillId: 'npc_guard_stance',
     name: 'Kuda-kuda Pelindung Dantian',
@@ -112,101 +110,161 @@ function convertNpcToBattleAlly(npc) {
 }
 
 async function handleNpcBattleResolution({
-  session,
+  session = {},
   player,
   isVictory = true,
   npcDbId,
-  mode = 'npc_spar'
+  npcDoc = null,
+  mode = 'npc_spar',
+  chainDepth = 0
 }) {
-  if (!npcDbId) return { handled: false };
+  // Idempotency check: Ensure battle resolution only runs once per battle session
+  if (session && session.resolvedNpcBattle) {
+    return { handled: true, alreadyResolved: true };
+  }
+  if (session) {
+    session.resolvedNpcBattle = true;
+  }
 
-  const npc = await Npc.findById(npcDbId);
+  let npc = npcDoc;
+  if (!npc && npcDbId && Npc.db && Npc.db.readyState === 1) {
+    try {
+      npc = await Npc.findById(npcDbId);
+    } catch (_) {}
+  }
   if (!npc) return { handled: false };
 
   let relation = session.relationDoc || null;
-  if (!relation) {
+  if (!relation && NpcPlayerRelation.db && NpcPlayerRelation.db.readyState === 1) {
     try {
       relation = await NpcPlayerRelation.findOne({ playerId: player._id, npcId: npc._id });
-    } catch (e) {}
+    } catch (_) {}
   }
 
+  // 1. Sparring Mode: Non-lethal, HP >= 1, modifies affinity
   if (mode === 'npc_spar') {
-    // Non-lethal sparring: Increase affinity +3 on win/draw
+    if (npc.attributes) {
+      npc.attributes.hp = Math.max(1, npc.attributes.hp || 100);
+    }
+    if (npc.vitalStatus) {
+      npc.vitalStatus.isAlive = true;
+    }
     if (relation) {
-      relation.affinity = Math.min(100, Math.max(-100, relation.affinity + 3));
-      await relation.save();
+      relation.affinity = Math.min(100, Math.max(-100, (relation.affinity || 0) + (isVictory ? 3 : -1)));
+      if (typeof relation.save === 'function' && relation.constructor?.db?.readyState === 1) {
+        await relation.save();
+      }
     }
     return {
       handled: true,
       mode: 'npc_spar',
-      message: `Pertarungan sparring persahabatan dengan ${npc.name} berakhir. Anda berdua saling membungkuk hormat! (Afinitas +3)`
+      isVictory,
+      message: `Pertarungan sparring persahabatan dengan ${npc.name} berakhir. Anda berdua saling membungkuk hormat! (Afinitas ${isVictory ? '+3' : '-1'})`
     };
   }
 
-  if (mode === 'npc_duel') {
-    if (isVictory) {
-      // Lethal Duel: Player killed NPC! Call single death door
-      await killNpc(npc, {
-        id: player._id,
-        type: 'player',
-        name: player.characterName
-      });
+  // 2. Player Defeat in Lethal Modes: NPC remains alive
+  if (!isVictory) {
+    return {
+      handled: true,
+      mode,
+      isVictory: false,
+      playerDied: true,
+      message: `Anda dikalahkan oleh ${npc.name}!`
+    };
+  }
 
-      // Check if duel was in settlement (adds wanted level)
-      let wantedIncrease = 0;
-      if (session.battleConfig && (session.battleConfig.isSettlement || session.battleConfig.settlementName)) {
-        wantedIncrease = 2;
-        player.wantedLevel = Math.min(5, (player.wantedLevel || 0) + wantedIncrease);
-        player.reputation = Math.max(0, (player.reputation || 100) - 30);
+  // 3. Player Victory: Check Essential Protection
+  const isEssential = !!(npc.vitalStatus?.isEssential || npc.isEssential);
+  const killerInfo = {
+    id: player._id,
+    type: 'player',
+    name: player.characterName || player.name || 'Pendekar',
+    power: player.stats?.baseAtk || 50,
+    chainDepth
+  };
+
+  const deathResult = await killNpc(npc, killerInfo);
+
+  if (isEssential || deathResult.status === 'downed') {
+    return {
+      handled: true,
+      mode,
+      isVictory: true,
+      downed: true,
+      isLethal: false,
+      npcDead: false,
+      droppedItems: [],
+      message: `${npc.name} telah tumbang, bukan tewas! Dantian mereka terluka parah dan membutuhkan masa pemulihan.`
+    };
+  }
+
+  // Regular NPC Death
+  let wantedIncrease = 0;
+  if (session.battleConfig && (session.battleConfig.isSettlement || session.battleConfig.settlementName)) {
+    wantedIncrease = 2;
+    player.wantedLevel = Math.min(5, (player.wantedLevel || 0) + wantedIncrease);
+    player.reputation = Math.max(0, (player.reputation || 100) - 30);
+  }
+
+  const droppedItems = [];
+  if (Array.isArray(npc.inventory) && player.inventory) {
+    for (const item of npc.inventory) {
+      if (item.itemId) {
+        player.inventory.push({
+          itemId: item.itemId,
+          quantity: item.quantity || 1,
+          isEquipped: false
+        });
+        droppedItems.push(item.name || 'Harta Rampasan');
       }
-
-      // Drop NPC Inventory items into player inventory
-      const droppedItems = [];
-      if (Array.isArray(npc.inventory)) {
-        for (const item of npc.inventory) {
-          if (item.itemId) {
-            player.inventory.push({
-              itemId: item.itemId,
-              quantity: item.quantity || 1,
-              isEquipped: false
-            });
-            droppedItems.push(item.name || 'Harta Rampasan');
-          }
-        }
-      }
-
-      await player.save();
-
-      return {
-        handled: true,
-        mode: 'npc_duel',
-        isLethal: true,
-        npcDead: true,
-        wantedIncrease,
-        droppedItems,
-        message: `${npc.name} telah tewas dalam duel hidup-mati! ${wantedIncrease > 0 ? `Tingkat buronan Anda bertambah +${wantedIncrease}!` : ''}`
-      };
     }
   }
 
+  if (typeof player.save === 'function' && player.constructor?.db?.readyState === 1) {
+    await player.save();
+  }
+
+  // Resolve Ambush & Vendetta if in ambush mode
   if (mode === 'npc_ambush') {
-    // Resolve ambush
     if (NpcAmbush.db && NpcAmbush.db.readyState === 1) {
       try {
         await NpcAmbush.updateMany(
-          { hunterNpcId: npc._id, targetPlayerId: player._id, status: 'triggered' },
+          { hunterNpcId: npc._id, targetPlayerId: player._id, status: { $in: ['pending', 'triggered'] } },
           { status: 'resolved' }
         );
-      } catch (e) {}
+      } catch (_) {}
     }
-    return {
-      handled: true,
-      mode: 'npc_ambush',
-      message: `Anda berhasil mematahkan serangan mendadak (Ambush) dari ${npc.name}!`
-    };
+
+    if (session.vendettaDoc) {
+      session.vendettaDoc.resolved = true;
+      session.vendettaDoc.resolutionType = 'hunter_died';
+      session.vendettaDoc.resolvedAt = new Date();
+      if (typeof session.vendettaDoc.save === 'function' && session.vendettaDoc.constructor?.db?.readyState === 1) {
+        await session.vendettaDoc.save();
+      }
+    }
+
+    if (NpcVendetta.db && NpcVendetta.db.readyState === 1) {
+      try {
+        await NpcVendetta.updateMany(
+          { hunterNpcId: npc._id, targetId: player._id, resolved: false },
+          { resolved: true, resolutionType: 'hunter_died', resolvedAt: new Date() }
+        );
+      } catch (_) {}
+    }
   }
 
-  return { handled: true };
+  return {
+    handled: true,
+    mode,
+    isVictory: true,
+    isLethal: true,
+    npcDead: true,
+    wantedIncrease,
+    droppedItems,
+    message: `${npc.name} telah tewas dalam duel hidup-mati! ${wantedIncrease > 0 ? `Tingkat buronan Anda bertambah +${wantedIncrease}!` : ''}`
+  };
 }
 
 module.exports = {

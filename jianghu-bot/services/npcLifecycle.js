@@ -89,6 +89,10 @@ async function killNpc(npcOrId, killerInfoOrType = {}, killerId = null, options 
   }
 
   // 1. Mark Vital Status for regular NPC
+  const killerName = killerInfo.name || 'Takdir Fana';
+  const killerType = killerInfo.type || 'nature';
+  const resolvedKillerId = killerInfo.id || null;
+
   npc.vitalStatus = npc.vitalStatus || {};
   npc.vitalStatus.isAlive = false;
   npc.vitalStatus.isInjured = false;
@@ -98,15 +102,14 @@ async function killNpc(npcOrId, killerInfoOrType = {}, killerId = null, options 
 
   npc.lifespan = npc.lifespan || {};
   npc.lifespan.deathTimestamp = new Date();
+  npc.lifespan.deathCause = killerType;
+  npc.lifespan.killerName = killerName;
   npc.lifespan.currentAge = npc.lifespan.maxAge;
 
   npc.schedule = npc.schedule || {};
   npc.schedule.activityState = 'dead';
 
   // 2. Generate Death Event
-  const killerName = killerInfo.name || 'Takdir Fana';
-  const killerType = killerInfo.type || 'nature';
-  const resolvedKillerId = killerInfo.id || null;
 
   const deathDescription = killerType === 'player'
     ? `${npc.name} telah gugur setelah dikalahkan oleh pendekar ${killerName} dalam pertarungan hidup-mati.`

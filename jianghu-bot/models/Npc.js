@@ -59,6 +59,8 @@ const npcSchema = new mongoose.Schema({
     currentAge: { type: Number, default: 20 },
     maxAge: { type: Number, default: 100 },
     deathTimestamp: { type: Date, default: null },
+    deathCause: { type: String, default: null },
+    killerName: { type: String, default: null },
     isImmortal: { type: Boolean, default: false }
   },
 
