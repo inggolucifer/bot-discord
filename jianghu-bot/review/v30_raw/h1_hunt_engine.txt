@@ -1,0 +1,9 @@
+=== VITEST: tests/unit/npc/v30_hunt_engine.test.mjs ===
+ RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
+
+ ✓ tests/unit/npc/v30_hunt_engine.test.mjs (9 tests) 16ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  23:08:35
+   Duration  2.40s (import 88%, transform 9%, worker 2%, tests 1%)
