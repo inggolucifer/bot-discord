@@ -1,283 +1,385 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { NpcFullProfile, NpcPlayerRelationData } from '@/types/npc';
+import { GlyphClose, GlyphMouse } from './glyphs';
+import { InkBackdrop } from './InkBackdrop';
+import { Silhouette } from './Silhouette';
+import {
+  createRunner,
+  tick,
+  advance,
+  isLastLine,
+  currentSpeaker,
+  getVisibleText,
+  DialogueLine,
+  DialogueRunnerState
+} from '@/lib/npcDialogueRunner';
 import api from '@/lib/api';
-import { NpcFullProfile, NpcPlayerRelationData, DialogueChoice } from '@/types/npc';
+import { GLOBAL_ASSETS } from '@/config/globalAssets';
+import './npcTheme.css';
 
-interface NpcDialogueSceneProps {
+export interface NpcDialogueSceneProps {
   npc: NpcFullProfile;
   relation: NpcPlayerRelationData;
-  isOpen: boolean;
+  isOpen?: boolean;
   onClose: () => void;
   onOpenProfile: () => void;
   onRefreshRelation?: () => void;
   onStartBattle?: (mode: 'npc_spar' | 'npc_duel') => void;
+  initialLines?: DialogueLine[];
 }
 
-const ACTION_CHOICES: DialogueChoice[] = [
-  // Sosial
-  { id: 'chat', label: 'Bicara Santai', icon: '💬', actionType: 'chat', category: 'social' },
-  { id: 'inquire', label: 'Tanya Kabar & Petunjuk', icon: '📜', actionType: 'inquire', category: 'social' },
-  { id: 'request_favor', label: 'Minta Bantuan', icon: '🤝', actionType: 'request_favor', category: 'social' },
-
-  // Hadiah & Suap
-  { id: 'gift', label: 'Beri Hadiah', icon: '🎁', actionType: 'gift', category: 'gift' },
-  { id: 'bribe', label: 'Suap Koin Tembaga', icon: '🪙', actionType: 'bribe', category: 'gift' },
-
-  // Beladiri
-  { id: 'spar', label: 'Latihan Sparring', icon: '⚔️', actionType: 'spar', category: 'martial' },
-  { id: 'duel', label: 'Tantang Duel Hidup-Mati', icon: '💀', actionType: 'duel', category: 'martial' },
-
-  // Hubungan Khusus
-  { id: 'recruit', label: 'Ajak Berpetualang', icon: '🏕️', actionType: 'recruit', category: 'special' },
-  { id: 'confess', label: 'Ungkapkan Perasaan', icon: '💌', actionType: 'confess', category: 'special' },
-  { id: 'propose', label: 'Lamar Pasangan Dao', icon: '💍', actionType: 'propose', category: 'special' },
-  { id: 'adopt', label: 'Angkat Murid Perguruan', icon: '🥋', actionType: 'adopt', category: 'special' },
-  { id: 'divorce', label: 'Putus Ikatan Pasangan Dao', icon: '💔', actionType: 'divorce', category: 'special' },
-  { id: 'break_relations', label: 'Putus Hubungan', icon: '✂️', actionType: 'break_relations', category: 'special' },
-
-  // Intrik
-  { id: 'steal', label: 'Copet Diam-diam', icon: '🧤', actionType: 'steal', category: 'intrigue' },
-  { id: 'threaten', label: 'Ancam & Peras', icon: '🗡️', actionType: 'threaten', category: 'intrigue' }
-];
-
-export const NpcDialogueScene: React.FC<NpcDialogueSceneProps> = ({
+export function NpcDialogueScene({
   npc,
   relation,
-  isOpen,
+  isOpen = true,
   onClose,
   onOpenProfile,
   onRefreshRelation,
-  onStartBattle
-}) => {
-  const [activeCategory, setActiveCategory] = useState<'social' | 'gift' | 'martial' | 'special' | 'intrigue'>('social');
-  const [displayedText, setDisplayedText] = useState<string>('');
-  const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [loadingAction, setLoadingAction] = useState<boolean>(false);
-  const [currentAffinity, setCurrentAffinity] = useState<number>(relation.affinity);
-  const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const fullTextRef = useRef<string>('');
+  onStartBattle,
+  initialLines
+}: NpcDialogueSceneProps) {
+  // Determine scenery background
+  const sceneryUrl =
+    (GLOBAL_ASSETS as any)?.npcs?.default_scenery ||
+    '/assets/npc/toi_scenery_background.jpg';
 
-  const isAlive = npc.vitalStatus?.isAlive !== false;
-  const initialGreeting = !isAlive
-    ? `Sosok ${npc.name} telah wafat di dunia persilatan. Jasadnya telah bersemayam dalam ketenangan abadi.`
-    : (npc.greeting || `Salam, pengelana. Saya ${npc.name}, ${npc.title || 'Warga'} dari ${npc.settlementName}. Ada yang bisa kubantu?`);
+  // Determine portraits
+  const npcAsset =
+    (GLOBAL_ASSETS as any)?.npcs?.[npc.name] ||
+    npc.portraitUrl ||
+    (npc.name === 'Xi Hua' ? '/assets/npc/xihua_standing_perfect.png' : '');
 
-  // Typewriter text effect
-  const typeText = (fullText: string) => {
-    fullTextRef.current = fullText;
-    if (typingTimerRef.current) clearInterval(typingTimerRef.current);
-    setIsTyping(true);
-    setDisplayedText('');
-
-    let charIdx = 0;
-    typingTimerRef.current = setInterval(() => {
-      if (charIdx < fullText.length) {
-        setDisplayedText(fullText.slice(0, charIdx + 1));
-        charIdx++;
-      } else {
-        if (typingTimerRef.current) clearInterval(typingTimerRef.current);
-        setIsTyping(false);
-      }
-    }, 18);
-  };
-
-  const skipTyping = () => {
-    if (isTyping && typingTimerRef.current) {
-      clearInterval(typingTimerRef.current);
-      setDisplayedText(fullTextRef.current);
-      setIsTyping(false);
+  // Default initial greeting line
+  const defaultLines: DialogueLine[] = initialLines || [
+    {
+      speaker: 'npc',
+      speakerName: npc.name,
+      text:
+        relation.affinity > 50
+          ? `Salam hangat, sahabatku! Senang sekali melihat langkahmu tiba di sini hari ini.`
+          : relation.affinity < -20
+          ? `Mau apa lagi kamu datang ke sini? Jangan sampai pedangku kehilangan kesabaran.`
+          : `Salam, rekan pendekar. Angin persilatan bertiup tenang di pemukiman hari ini. Ada urusan apa menemuiku?`
     }
-  };
+  ];
 
+  const [runnerState, setRunnerState] = useState<DialogueRunnerState>(() =>
+    createRunner(defaultLines)
+  );
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const lastTimeRef = useRef<number>(performance.now());
+  const rafRef = useRef<number | null>(null);
+
+  // Focus root when opened
   useEffect(() => {
-    if (isOpen) {
-      setCurrentAffinity(relation.affinity);
-      typeText(initialGreeting);
+    if (isOpen && containerRef.current) {
+      containerRef.current.focus();
     }
-    return () => {
-      if (typingTimerRef.current) clearInterval(typingTimerRef.current);
+  }, [isOpen]);
+
+  // Main animation frame tick loop for typewriter
+  useEffect(() => {
+    lastTimeRef.current = performance.now();
+
+    const loop = (time: number) => {
+      const dt = Math.max(0, time - lastTimeRef.current);
+      lastTimeRef.current = time;
+
+      setRunnerState((prev) => {
+        if (!prev.isTyping || prev.completed) return prev;
+        return tick(prev, dt, 45);
+      });
+
+      rafRef.current = requestAnimationFrame(loop);
     };
-  }, [isOpen, npc._id]);
 
-  if (!isOpen) return null;
+    rafRef.current = requestAnimationFrame(loop);
 
-  const handleActionClick = async (choice: DialogueChoice) => {
-    if (loadingAction) return;
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, []);
 
-    if (isTyping) {
-      skipTyping();
+  // Advance dialogue handler
+  const handleAdvance = useCallback(() => {
+    setRunnerState((prev) => advance(prev));
+  }, []);
+
+  // Keyboard controls: Space/Enter advances, Escape closes
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      } else if (e.key === ' ' || e.key === 'Enter') {
+        // Prevent default spacebar scroll
+        e.preventDefault();
+        handleAdvance();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose, handleAdvance]);
+
+  // Execute dialogue choice action
+  const handleChoice = async (actionId: string) => {
+    if (actionLoading) return;
+
+    if (actionId === 'view_profile') {
+      onOpenProfile();
       return;
     }
 
-    // Special quick navigation
-    if (choice.actionType === 'spar' && onStartBattle) {
-      onStartBattle('npc_spar');
+    if (actionId === 'dismiss') {
+      onClose();
       return;
     }
-    if (choice.actionType === 'duel' && onStartBattle) {
-      onStartBattle('npc_duel');
+
+    if (actionId === 'spar') {
+      if (onStartBattle) {
+        onStartBattle('npc_spar');
+      }
       return;
     }
+
+    setActionLoading(true);
+    setActionError(null);
 
     try {
-      setLoadingAction(true);
       const res = await api.post(`/npc/action/${npc._id}`, {
-        action: choice.actionType,
+        action: actionId,
         payload: { amount: 100 }
       });
 
-      if (res.data.success) {
-        if (res.data.newAffinity !== undefined) {
-          setCurrentAffinity(res.data.newAffinity);
-        }
-        typeText(res.data.message);
+      if (res.data?.success) {
         if (onRefreshRelation) onRefreshRelation();
+
+        const replyText =
+          res.data.dialogue?.text ||
+          res.data.message ||
+          'Tanggapan diterima dengan tenang.';
+
+        // Push NPC response as next line and advance to it
+        setRunnerState((prev) => {
+          const nextLines: DialogueLine[] = [
+            ...prev.lines,
+            {
+              speaker: 'npc',
+              speakerName: npc.name,
+              text: replyText
+            }
+          ];
+          const nextIndex = prev.lines.length;
+          return {
+            lines: nextLines,
+            lineIndex: nextIndex,
+            charProgress: 0,
+            isTyping: true,
+            choicesVisible: false,
+            completed: false
+          };
+        });
+      } else {
+        setActionError(res.data?.message || 'Aksi tidak dapat dilaksanakan.');
       }
     } catch (err: any) {
-      const errMsg = err.response?.data?.message || 'Gagal memproses aksi interaksi.';
-      typeText(errMsg);
+      setActionError(
+        err?.response?.data?.message || 'Gagal menghubungi tokoh persilatan.'
+      );
     } finally {
-      setLoadingAction(false);
+      setActionLoading(false);
     }
   };
 
-  const getAffinityColor = (aff: number) => {
-    if (aff >= 80) return 'text-purple-400 border-purple-500/50 bg-purple-950/60';
-    if (aff >= 50) return 'text-emerald-400 border-emerald-500/50 bg-emerald-950/60';
-    if (aff >= 20) return 'text-cyan-400 border-cyan-500/50 bg-cyan-950/60';
-    if (aff >= 0) return 'text-stone-300 border-stone-600/50 bg-stone-900/60';
-    if (aff >= -20) return 'text-amber-400 border-amber-600/50 bg-amber-950/60';
-    return 'text-rose-500 border-rose-600/50 bg-rose-950/60';
-  };
+  if (!isOpen) return null;
 
-  const currentChoices = ACTION_CHOICES.filter(c => c.category === activeCategory);
+  const speaker = currentSpeaker(runnerState);
+  const isPlayerActive = speaker === 'player';
+  const isNpcActive = speaker === 'npc';
+  const visibleText = getVisibleText(runnerState);
+  const lastLine = isLastLine(runnerState);
+  const showChoices = lastLine && !runnerState.isTyping;
+
+  // Available interaction choices (pure text, 0 emoji)
+  const choices = [
+    { id: 'chat', label: 'Bicara' },
+    { id: 'gift', label: 'Beri Hadiah' },
+    { id: 'spar', label: 'Adu Latih' },
+    { id: 'debate', label: 'Berdebat' },
+    { id: 'dual_cultivation', label: 'Latihan Bersama' },
+    { id: 'request_favor', label: 'Minta Bantuan' },
+    { id: 'view_profile', label: 'Lihat Profil' },
+    { id: 'dismiss', label: 'Pamit' }
+  ];
 
   return (
-    <div className="fixed inset-0 z-[99990] bg-black/85 backdrop-blur-md flex flex-col justify-between overflow-hidden font-serif select-none">
-      {/* Top Header Bar */}
-      <div className="w-full px-6 py-4 flex items-center justify-between border-b border-[#3d2b1f]/60 bg-gradient-to-b from-[#140e0a]/90 to-transparent">
-        <div className="flex items-center space-x-3">
-          <span className="text-2xl">🏮</span>
-          <div>
-            <h2 className="text-[#c5a880] text-lg font-bold tracking-wider">{npc.name}</h2>
-            <p className="text-xs text-stone-400">{npc.title} • {npc.settlementName} ({npc.buildingName})</p>
-          </div>
+    <div
+      ref={containerRef}
+      tabIndex={-1}
+      data-npc-root="true"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Percakapan dengan ${npc.name}`}
+      className="npc-ui fixed inset-0 z-[99990] w-screen h-screen overflow-hidden flex flex-col justify-end select-none outline-none"
+      style={{
+        backgroundColor: 'var(--npc-night, #0e0f12)',
+        fontFamily: 'var(--npc-font, system-ui, sans-serif)'
+      }}
+    >
+      {/* 1. Backdrop Layer (Authentic Scenery or Ink Mountain SVG) */}
+      <InkBackdrop backdropUrl={sceneryUrl} />
+
+      {/* 2. Top Bar: Title & Close Button */}
+      <div className="absolute top-4 right-4 z-50 flex items-center gap-3">
+        <button
+          onClick={onClose}
+          aria-label="Tutup Percakapan"
+          className="w-8 h-8 flex items-center justify-center border transition cursor-pointer"
+          style={{
+            backgroundColor: 'var(--npc-night-2, #17181c)',
+            borderColor: 'var(--npc-line, #2c2e34)',
+            color: 'var(--npc-cream, #e8e2d0)',
+            borderRadius: 'var(--npc-radius, 2px)'
+          }}
+        >
+          <GlyphClose size={16} />
+        </button>
+      </div>
+
+      {/* 3. Standing Portraits Stage */}
+      <div className="relative w-full flex-1 flex items-end justify-between px-6 md:px-20 pointer-events-none pb-0 max-h-[calc(100vh-170px)]">
+        {/* Left: Player Standing Figure */}
+        <div
+          className={`hidden sm:flex flex-col items-center justify-end w-[320px] max-h-[74vh] transition-all duration-180 ${
+            isPlayerActive
+              ? 'opacity-100 scale-100 translate-y-0'
+              : 'opacity-55 brightness-80 translate-y-2'
+          }`}
+        >
+          <Silhouette gender="male" className="h-[65vh] w-auto" />
         </div>
 
-        <div className="flex items-center space-x-3">
-          <div className={`px-3 py-1 rounded border text-xs font-mono font-bold ${getAffinityColor(currentAffinity)}`}>
-            Afinitas: {currentAffinity > 0 ? `+${currentAffinity}` : currentAffinity}/100
-          </div>
-          <button
-            onClick={onOpenProfile}
-            className="px-3 py-1.5 bg-[#251912] hover:bg-[#3d2b1f] border border-[#5a3f2d] text-[#e8d5b5] rounded text-xs transition"
-          >
-            📋 Buka Profil 7-Tab
-          </button>
-          <button
-            onClick={onClose}
-            className="px-3 py-1.5 bg-stone-900/80 hover:bg-stone-800 border border-stone-700 text-stone-300 rounded text-xs transition"
-          >
-            ✕ Tutup
-          </button>
+        {/* Right: NPC Standing Figure (Xi Hua / Authentic Asset) */}
+        <div
+          className={`flex flex-col items-center justify-end w-full sm:w-[380px] max-h-[74vh] transition-all duration-180 mx-auto sm:mx-0 ${
+            isNpcActive
+              ? 'opacity-100 scale-100 translate-y-0'
+              : 'opacity-55 brightness-80 translate-y-2'
+          }`}
+        >
+          {npcAsset ? (
+            <div
+              className="relative max-h-[74vh] flex items-end justify-center overflow-hidden"
+              style={{
+                maskImage:
+                  'linear-gradient(to top, transparent 0%, black 18%, black 100%)',
+                WebkitMaskImage:
+                  'linear-gradient(to top, transparent 0%, black 18%, black 100%)'
+              }}
+            >
+              <img
+                src={npcAsset}
+                alt={npc.name}
+                className="max-h-[74vh] w-auto object-contain select-none pointer-events-none"
+              />
+            </div>
+          ) : (
+            <Silhouette gender={npc.gender} className="h-[65vh] w-auto" />
+          )}
         </div>
       </div>
 
-      {/* Main Character Stage (Portrait + Atmospheric Backdrop) */}
-      <div className="flex-1 flex items-center justify-center relative p-4">
-        <div className="relative flex flex-col items-center">
-          {/* Spiritual Aura Ring */}
-          <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-amber-600/20 via-cyan-600/10 to-transparent blur-xl pointer-events-none animate-pulse" />
-
-          {/* NPC Portrait / Visual Archetype */}
-          <div className="w-44 h-44 sm:w-56 sm:h-56 rounded-full border-2 border-[#5a3f2d] overflow-hidden bg-[#12161f] shadow-2xl relative flex items-center justify-center">
-            {npc.portraitUrl ? (
-              <img src={npc.portraitUrl} alt={npc.name} className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-6xl sm:text-7xl">
-                {npc.gender === 'female' ? '🧝‍♀️' : '🥷'}
-              </span>
-            )}
-          </div>
-
-          <div className="mt-3 px-3 py-0.5 bg-[#17110d]/90 border border-[#3d2b1f] rounded-full text-xs text-[#c5a880] font-mono tracking-wider">
-            Ranah Tingkat {npc.cultivation.realmIndex} (Tahap {npc.cultivation.stage})
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Dialogue Box (Dark Ink Silk Scroll) */}
-      <div className="w-full max-w-4xl mx-auto px-4 pb-6">
-        <div className="bg-[#0e1219]/95 border-2 border-[#3d2b1f] rounded-lg shadow-2xl overflow-hidden backdrop-blur-lg flex flex-col">
-          {/* NPC Speaker Tag */}
-          <div className="px-5 py-2.5 bg-gradient-to-r from-[#211610] via-[#2d1e15] to-[#211610] border-b border-[#3d2b1f] flex items-center justify-between">
-            <span className="text-[#f3e5ab] text-sm font-bold tracking-wide">
-              {npc.name}
-            </span>
-            <span className="text-[11px] text-stone-400 italic">
-              Kepribadian: {npc.personality.primary.toUpperCase()}
-            </span>
-          </div>
-
-          {/* Typewriter Dialogue Text Area */}
-          <div
-            onClick={skipTyping}
-            className="p-5 min-h-[90px] text-sm sm:text-base text-stone-200 leading-relaxed font-sans cursor-pointer hover:bg-white/[0.02] transition"
-            title={isTyping ? 'Klik untuk lewati animasi teks' : undefined}
-          >
-            {displayedText}
-            {isTyping && <span className="inline-block w-1.5 h-4 ml-1 bg-amber-400 animate-ping" />}
-          </div>
-
-          {/* Category Tabs */}
-          <div className="px-4 py-1.5 bg-[#090c10] border-t border-[#231b14] flex space-x-1.5 overflow-x-auto text-xs">
-            {[
-              { key: 'social', label: 'Sosial', icon: '💬' },
-              { key: 'gift', label: 'Hadiah', icon: '🎁' },
-              { key: 'martial', label: 'Beladiri', icon: '⚔️' },
-              { key: 'special', label: 'Ikatan', icon: '💍' },
-              { key: 'intrigue', label: 'Intrik', icon: '🧤' }
-            ].map(cat => (
+      {/* 4. Choice Options Overlay (Floating above dialogue box, right-aligned) */}
+      {showChoices && (
+        <div className="relative z-40 max-w-[900px] w-[min(94vw,900px)] mx-auto flex flex-col items-end mb-2 px-2 pointer-events-auto">
+          <div className="w-full sm:w-[280px] flex flex-col gap-1.5">
+            {choices.map((c) => (
               <button
-                key={cat.key}
-                onClick={() => setActiveCategory(cat.key as any)}
-                className={`px-3 py-1 rounded transition text-xs flex items-center space-x-1 ${
-                  activeCategory === cat.key
-                    ? 'bg-[#3d2b1f] text-[#f3e5ab] font-bold shadow'
-                    : 'text-stone-400 hover:text-stone-200 hover:bg-[#1a1410]'
-                }`}
+                key={c.id}
+                onClick={() => handleChoice(c.id)}
+                disabled={actionLoading}
+                className="w-full h-[38px] px-4 flex items-center justify-center font-medium text-sm transition cursor-pointer border"
+                style={{
+                  backgroundColor: 'var(--npc-btn, #cfcfcf)',
+                  color: 'var(--npc-btn-ink, #1b1b1b)',
+                  borderColor: 'var(--npc-parchment-edge, #8c8672)',
+                  borderRadius: 'var(--npc-radius, 2px)'
+                }}
               >
-                <span>{cat.icon}</span>
-                <span>{cat.label}</span>
+                {c.label}
               </button>
             ))}
           </div>
+        </div>
+      )}
 
-          {/* Action Choice Buttons */}
-          <div className="p-3 bg-[#0d1017] border-t border-[#231b14] grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {!isAlive ? (
-              <div className="col-span-full py-3 text-center text-xs text-rose-400/90 italic font-serif">
-                Sosok ini telah berpulang ke haribaan semesta. Tiada lagi interaksi fana yang dapat dilakukan.
-              </div>
+      {/* 5. Main Visual Novel Dialogue Box */}
+      <div className="relative z-30 w-full pb-4 sm:pb-6 px-3 flex flex-col items-center">
+        <div
+          onClick={handleAdvance}
+          className="relative max-w-[900px] w-[min(94vw,900px)] min-h-[140px] sm:h-[150px] p-5 sm:px-7 sm:py-5 cursor-pointer select-none transition"
+          style={{
+            backgroundColor: 'var(--npc-parchment, #d8d2c0)',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E")`,
+            border: '2px solid var(--npc-parchment-edge, #8c8672)',
+            borderRadius: 'var(--npc-radius, 2px)',
+            boxShadow: '0 1px 0 rgba(0,0,0,0.35)'
+          }}
+        >
+          {/* Nameplate: Player (Left) or NPC (Right) */}
+          <div
+            className="absolute -top-[27px] px-6 h-[26px] flex items-center font-semibold text-[13px] tracking-wide pointer-events-none"
+            style={{
+              [isPlayerActive ? 'left' : 'right']: '12px',
+              backgroundColor: 'var(--npc-night, #0e0f12)',
+              color: 'var(--npc-cream, #e8e2d0)',
+              clipPath: 'polygon(0 0, 100% 0, 94% 100%, 6% 100%)',
+              letterSpacing: '0.03em'
+            }}
+          >
+            {isPlayerActive ? 'Pendekar' : npc.name}
+          </div>
+
+          {/* Dialogue Text Content with Tabular numbers & aria live */}
+          <div
+            aria-live="polite"
+            className="w-full h-full overflow-y-auto text-[17px] leading-[1.65]"
+            style={{
+              color: 'var(--npc-ink, #1d1c19)',
+              fontFamily: 'var(--npc-font, system-ui, sans-serif)'
+            }}
+          >
+            {actionLoading ? (
+              <span className="text-[color:var(--npc-ink-soft)]">...</span>
+            ) : actionError ? (
+              <span className="text-[color:var(--npc-seal,#a3231f)] font-medium">
+                {actionError}
+              </span>
             ) : (
-              currentChoices.map(choice => (
-                <button
-                  key={choice.id}
-                  onClick={() => handleActionClick(choice)}
-                  disabled={loadingAction}
-                  className="px-3 py-2 bg-[#171d27]/90 hover:bg-[#252f3f] border border-[#2d2218] hover:border-[#5a3f2d] text-stone-200 rounded text-xs flex items-center space-x-2 transition disabled:opacity-50 text-left"
-                >
-                  <span className="text-base">{choice.icon}</span>
-                  <span className="truncate">{choice.label}</span>
-                </button>
-              ))
+              visibleText
             )}
           </div>
+
+          {/* Mouse prompt indicator (blinking only when typewriter finished) */}
+          {!runnerState.isTyping && !actionLoading && (
+            <div
+              className="absolute bottom-3 right-4 flex items-center gap-1.5 animate-pulse text-[color:var(--npc-ink-soft,#4b473d)]"
+              style={{ animationDuration: '1.4s' }}
+            >
+              <GlyphMouse size={16} />
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
-};
-
-export default NpcDialogueScene;
+}

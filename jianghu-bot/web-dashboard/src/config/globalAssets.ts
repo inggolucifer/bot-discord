@@ -409,6 +409,9 @@ export const GLOBAL_ASSETS = {
   // Key = NPC.name
   // =========================================================================
   npcs: {
+    "Xi Hua": "/assets/npc/xihua_standing_perfect.png",
+    "default_standing": "/assets/npc/xihua_standing_perfect.png",
+    "default_scenery": "/assets/npc/toi_scenery_background.jpg",
     // Tokoh & Tetua Desa Xingcun (Central Plains)
     "Penatua Zhou": "",
     "Ahli Tani Lian": "",
