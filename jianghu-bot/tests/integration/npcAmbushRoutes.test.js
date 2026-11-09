@@ -90,7 +90,7 @@ describe('NPC Ambush Routes Integration (P0)', () => {
     if (mongoServer) await mongoServer.stop();
   });
 
-  it('GET /api/npc/ambush/pending returns 200 and loads pending ambush for owner', async () => {
+  it('GET /api/npc/ambush/pending returns 200 and loads pending ambush for owner with kind vendetta', async () => {
     const res = await request(app)
       .get('/api/npc/ambush/pending')
       .set('Authorization', `Bearer ${token1}`);
@@ -99,6 +99,37 @@ describe('NPC Ambush Routes Integration (P0)', () => {
     expect(res.body.success).toBe(true);
     expect(res.body.ambush).not.toBeNull();
     expect(res.body.ambush.id.toString()).toBe(ambush1._id.toString());
+    expect(res.body.ambush.kind).toBe('vendetta');
+    expect(res.body.ambush.hunterName).toBe(hunter.name);
+    expect(res.body.ambush.familyName).toBeDefined();
+    expect(res.body.ambush.reason).toBeDefined();
+  });
+
+  it('GET /api/npc/ambush/pending distinguishes hostile kind', async () => {
+    // Create hostile ambush for player 2
+    const hostileAmbush = await NpcAmbush.create({
+      hunterNpcId: hunter._id,
+      targetPlayerId: player2._id,
+      kind: 'hostile',
+      reason: 'benci',
+      status: 'pending',
+      tileX: 2450,
+      tileY: 2480,
+      expiresAt: new Date(Date.now() + 3600 * 1000)
+    });
+
+    const res = await request(app)
+      .get('/api/npc/ambush/pending')
+      .set('Authorization', `Bearer ${token2}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.ambush).not.toBeNull();
+    expect(res.body.ambush.kind).toBe('hostile');
+    expect(res.body.ambush.reason).toBe('benci');
+    expect(res.body.ambush.hunterName).toBe(hunter.name);
+
+    await NpcAmbush.deleteOne({ _id: hostileAmbush._id });
   });
 
   it('POST /api/npc/ambush/:id/resolve with choice fight resolves ambush', async () => {

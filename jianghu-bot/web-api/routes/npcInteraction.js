@@ -241,6 +241,7 @@ router.get('/ambush/pending', authenticateToken, async (req, res) => {
 
     const NpcAmbush = require('../../models/NpcAmbush');
     const NpcVendetta = require('../../models/NpcVendetta');
+    const NpcFamily = require('../../models/NpcFamily');
 
     const ambush = await NpcAmbush.findOne({
       targetPlayerId: player._id,
@@ -259,6 +260,22 @@ router.get('/ambush/pending', authenticateToken, async (req, res) => {
       resolved: false
     });
 
+    const kind = ambush.kind || (vendetta ? 'vendetta' : 'hostile');
+    let familyName = '';
+    if (kind === 'vendetta') {
+      if (hunter?.social?.familyId) {
+        try {
+          const fam = await NpcFamily.findById(hunter.social.familyId);
+          if (fam?.familyName) familyName = fam.familyName;
+        } catch (_) {}
+      }
+      if (!familyName && hunter?.name) {
+        familyName = hunter.name.split(' ')[0];
+      }
+      if (!familyName) familyName = 'Musuh';
+    }
+
+    const reason = ambush.reason || vendetta?.reason || (kind === 'vendetta' ? 'Dendam darah' : 'Kebencian');
     const grudgeLevel = vendetta?.grudgeLevel ?? 5;
     const hunterRealm = hunter?.cultivation?.realmIndex ?? 0;
     const payCost = 50 * grudgeLevel * (hunterRealm + 1);
@@ -268,12 +285,24 @@ router.get('/ambush/pending', authenticateToken, async (req, res) => {
       success: true,
       ambush: {
         id: ambush._id,
+        _id: ambush._id,
+        kind,
+        reason,
         hunterId: hunter?._id,
         hunterName: hunter?.name || 'Pemburu Misterius',
-        reason: vendetta?.reason || 'Dendam darah masa lalu',
+        familyName: kind === 'vendetta' ? familyName : undefined,
         grudgeLevel,
         payCost,
-        remainingSeconds
+        demandAmount: payCost,
+        expiresAt: ambush.expiresAt,
+        remainingSeconds,
+        hunterNpc: hunter ? {
+          _id: hunter._id,
+          name: hunter.name,
+          gender: hunter.gender,
+          portraitUrl: hunter.portraitUrl,
+          cultivation: hunter.cultivation
+        } : undefined
       }
     });
   } catch (err) {

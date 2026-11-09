@@ -9,16 +9,23 @@ import { GLOBAL_ASSETS } from '@/config/globalAssets';
 import './npcTheme.css';
 
 export interface PendingAmbushData {
-  _id: string;
-  hunterNpc: {
-    _id: string;
-    name: string;
+  _id?: string;
+  id?: string;
+  kind?: 'vendetta' | 'hostile';
+  reason?: string;
+  hunterName?: string;
+  familyName?: string;
+  hunterNpc?: {
+    _id?: string;
+    name?: string;
     gender?: string;
     portraitUrl?: string;
     cultivation?: { realmIndex?: number; realmName?: string };
   };
-  demandAmount: number;
-  expiresAt: string | Date;
+  demandAmount?: number;
+  payCost?: number;
+  expiresAt?: string | Date;
+  remainingSeconds?: number;
 }
 
 export function NpcAmbushDialog() {
@@ -32,7 +39,7 @@ export function NpcAmbushDialog() {
     setMounted(true);
   }, []);
 
-  // Poll for pending ambushes every 20s when visible
+  // Poll for pending ambushes every 10s when visible
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
@@ -50,7 +57,7 @@ export function NpcAmbushDialog() {
 
     // Initial check after 3 seconds
     const initialTimer = setTimeout(checkPendingAmbush, 3000);
-    interval = setInterval(checkPendingAmbush, 20000);
+    interval = setInterval(checkPendingAmbush, 10000);
 
     return () => {
       clearTimeout(initialTimer);
@@ -63,6 +70,7 @@ export function NpcAmbushDialog() {
     if (!ambush) return;
 
     const updateTimer = () => {
+      if (!ambush.expiresAt) return;
       const remainingMs = new Date(ambush.expiresAt).getTime() - Date.now();
       const sec = Math.max(0, Math.floor(remainingMs / 1000));
       setTimeLeftSec(sec);
@@ -78,12 +86,13 @@ export function NpcAmbushDialog() {
   }, [ambush, loading, feedback]);
 
   const handleResolve = async (action: 'fight' | 'pay' | 'flee') => {
-    if (!ambush || loading) return;
+    const ambushId = ambush?.id || ambush?._id;
+    if (!ambushId || loading) return;
     setLoading(true);
     setFeedback(null);
 
     try {
-      const res = await api.post(`/npc/ambush/${ambush._id}/resolve`, { action });
+      const res = await api.post(`/npc/ambush/${ambushId}/resolve`, { choice: action, action });
       if (res.data?.success) {
         const msg = res.data.result?.message || 'Penyergapan telah diselesaikan.';
         setFeedback(msg);
@@ -116,18 +125,25 @@ export function NpcAmbushDialog() {
 
   if (!mounted || !ambush) return null;
 
-  const hunter = ambush.hunterNpc;
+  const isHostile = ambush.kind === 'hostile';
+  const hunterName = ambush.hunterName || ambush.hunterNpc?.name || 'Pemburu';
+  const familyName = ambush.familyName || 'Musuh';
+  const hunterGender = ambush.hunterNpc?.gender || 'male';
+  const demandCost = ambush.payCost ?? ambush.demandAmount ?? 50;
+
   const portraitUrl =
-    (GLOBAL_ASSETS as any)?.npcs?.[hunter.name] ||
-    hunter.portraitUrl ||
+    (GLOBAL_ASSETS as any)?.npcs?.[hunterName] ||
+    ambush.hunterNpc?.portraitUrl ||
     '';
+
+  const titleText = isHostile ? `${hunterName} menghadangmu` : `Keluarga ${familyName} memburumu`;
 
   const modalNode = (
     <div
       data-npc-root="true"
       role="dialog"
       aria-modal="true"
-      aria-label={`Penyergapan oleh ${hunter.name}`}
+      aria-label={titleText}
       className="npc-ui fixed inset-0 z-[99995] w-screen h-screen overflow-hidden flex flex-col justify-end select-none"
       style={{
         backgroundColor: 'var(--npc-night, #0e0f12)',
@@ -138,7 +154,8 @@ export function NpcAmbushDialog() {
       <InkBackdrop />
 
       {/* 2. Top Warning Banner */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-2 border shadow-lg"
+      <div
+        className="absolute top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-2 border shadow-lg"
         style={{
           backgroundColor: 'var(--npc-seal, #a3231f)',
           borderColor: '#c43a36',
@@ -147,7 +164,7 @@ export function NpcAmbushDialog() {
         }}
       >
         <span className="text-xs font-bold tracking-wider uppercase">
-          Penyergapan Dendam Darah: Sisa Waktu {timeLeftSec} Detik
+          {titleText}: Sisa Waktu {timeLeftSec} Detik
         </span>
       </div>
 
@@ -166,12 +183,12 @@ export function NpcAmbushDialog() {
             >
               <img
                 src={portraitUrl}
-                alt={hunter.name}
+                alt={hunterName}
                 className="max-h-[74vh] w-auto object-contain select-none pointer-events-none"
               />
             </div>
           ) : (
-            <Silhouette gender={hunter.gender || 'male'} className="h-[65vh] w-auto" />
+            <Silhouette gender={hunterGender} className="h-[65vh] w-auto" />
           )}
         </div>
       </div>
@@ -182,7 +199,7 @@ export function NpcAmbushDialog() {
           <button
             onClick={() => handleResolve('fight')}
             disabled={loading}
-            className="w-full h-[38px] px-4 flex items-center justify-center font-bold text-sm border transition cursor-pointer"
+            className="w-full h-[40px] px-4 flex items-center justify-center font-bold text-sm border transition cursor-pointer"
             style={{
               backgroundColor: 'var(--npc-seal, #a3231f)',
               color: 'var(--npc-cream, #e8e2d0)',
@@ -195,7 +212,7 @@ export function NpcAmbushDialog() {
           <button
             onClick={() => handleResolve('pay')}
             disabled={loading}
-            className="w-full h-[38px] px-4 flex items-center justify-center font-medium text-sm border transition cursor-pointer"
+            className="w-full h-[40px] px-4 flex items-center justify-center font-medium text-sm border transition cursor-pointer"
             style={{
               backgroundColor: 'var(--npc-btn, #cfcfcf)',
               color: 'var(--npc-btn-ink, #1b1b1b)',
@@ -203,12 +220,12 @@ export function NpcAmbushDialog() {
               borderRadius: 'var(--npc-radius, 2px)'
             }}
           >
-            Bayar Ganti Rugi ({ambush.demandAmount} Tembaga)
+            Bayar Ganti Rugi ({demandCost} Tembaga)
           </button>
           <button
             onClick={() => handleResolve('flee')}
             disabled={loading}
-            className="w-full h-[38px] px-4 flex items-center justify-center font-medium text-sm border transition cursor-pointer"
+            className="w-full h-[40px] px-4 flex items-center justify-center font-medium text-sm border transition cursor-pointer"
             style={{
               backgroundColor: 'var(--npc-btn, #cfcfcf)',
               color: 'var(--npc-btn-ink, #1b1b1b)',
@@ -243,7 +260,7 @@ export function NpcAmbushDialog() {
               letterSpacing: '0.03em'
             }}
           >
-            {hunter.name} (Pemburu Dendam)
+            {hunterName} ({isHostile ? 'Musuh Bebuyutan' : 'Pemburu Dendam'})
           </div>
 
           <div
@@ -257,8 +274,10 @@ export function NpcAmbushDialog() {
               <span className="font-semibold text-[color:var(--npc-seal,#a3231f)]">
                 {feedback}
               </span>
+            ) : isHostile ? (
+              `Ia menyimpan dendam padamu dan menyergap di jalan sepi.`
             ) : (
-              `${hunter.name} menghadang jalan Anda dengan tatapan dingin penuh dendam! "Darah harus dibayar dengan darah, atau serahkan kompensasi ganti rugi jika ingin lewat hidup-hidup!"`
+              `${hunterName} menghadang karena kematian kerabatnya.`
             )}
           </div>
         </div>
