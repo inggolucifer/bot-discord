@@ -77,7 +77,7 @@ function evaluateNpcSchedule(npc, gameHour, options = {}) {
   const prevFacility = npc.schedule?.currentFacility;
   const changed = prevActivity !== currentActivity.activityState || prevFacility !== currentActivity.targetFacility;
 
-  const anchorId = npc.schedule?.homeAnchorId || npc.schedule?.currentAnchorId || 'desa_xingcun';
+  const anchorId = npc.schedule?.currentAnchorId || npc.schedule?.homeAnchorId || 'desa_xingcun';
 
   // Coordinate handling
   let tx = npc.schedule?.tileX ?? npc.tileX ?? 2455;
@@ -130,5 +130,8 @@ function updateNpcScheduleState(npc, jianghuTime = getJianghuTime()) {
 module.exports = {
   resolveCurrentActivity,
   evaluateNpcSchedule,
-  updateNpcScheduleState
+  updateNpcScheduleState,
+  get runScheduleBatchTick() {
+    return require('./npcTicker').runScheduleBatchTick;
+  }
 };

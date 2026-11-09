@@ -9,6 +9,7 @@ const { evaluateNpcSchedule } = require('./npcScheduler');
 const { runRecoveryTick } = require('./npcLifecycle');
 const { runPopulationTick } = require('./npcPopulationManager');
 const { runVendettaTick } = require('./npcVendettaEngine');
+const { runJourneyTick } = require('./npcJourneyTick');
 
 let activeIntervals = [];
 let isLeader = false;
@@ -46,7 +47,11 @@ async function runScheduleBatchTick({ Npc, now = Date.now(), isWalkableFn = null
   if (!Npc || typeof Npc.find !== 'function') return 0;
 
   const gameHour = Math.floor(now / (3600 * 1000 / 24)) % 24;
-  const activeNpcs = await Npc.find({ 'vitalStatus.isAlive': true });
+  const activeNpcs = await Npc.find({
+    'vitalStatus.isAlive': true,
+    'schedule.targetDestination.type': { $ne: 'journey' },
+    'schedule.activityState': { $nin: ['traveling', 'hunting'] }
+  });
   const bulkOps = [];
 
   for (const npc of activeNpcs) {
@@ -145,6 +150,12 @@ function startNpcTicker({
   }, 600000);
   activeIntervals.push(populationInterval);
 
+  // Cache world anchors and travelGraph once for ticker loops (V30)
+  const anchorsList = require('../world-data/anchors.json');
+  const anchorMap = {};
+  for (const a of anchorsList) anchorMap[a.id] = a;
+  const { travelGraph } = require('../utils/travelGraph');
+
   // 4. Vendetta Loop: Every 60 seconds
   const vendettaInterval = setInterval(async () => {
     try {
@@ -153,12 +164,32 @@ function startNpcTicker({
         const hasLock = await acquireSimulationLock(db, lockHolder, Date.now());
         if (!hasLock) return;
       }
-      await runVendettaTick({ now: Date.now() });
+      await runVendettaTick({ now: Date.now(), anchors: anchorsList });
     } catch (err) {
       console.error('[NpcTicker] Vendetta tick error:', err);
     }
   }, 60000);
   activeIntervals.push(vendettaInterval);
+
+  // 5. Journey Loop: Every 60 seconds (V30)
+  const journeyInterval = setInterval(async () => {
+    try {
+      const db = getDb();
+      if (db) {
+        const hasLock = await acquireSimulationLock(db, lockHolder, Date.now());
+        if (!hasLock) return;
+      }
+      await runJourneyTick({
+        Npc: NpcModel,
+        now: Date.now(),
+        anchorMap,
+        graph: travelGraph
+      });
+    } catch (err) {
+      console.error('[NpcTicker] Journey tick error:', err);
+    }
+  }, 60000);
+  activeIntervals.push(journeyInterval);
 
   console.log(`[NpcTicker] Living simulation ticker started (Leader: ${lockHolder}).`);
   return { stop };
@@ -173,5 +204,6 @@ module.exports = {
   startNpcTicker,
   stopNpcTicker,
   acquireSimulationLock,
-  runScheduleBatchTick
+  runScheduleBatchTick,
+  runJourneyTick
 };
