@@ -12,7 +12,7 @@ Selamat datang di repositori **Jianghu Bot (Immortal-X)**. Dokumen ini adalah in
 
 Filosofi Desain:
 - **Server Authoritative**: Semua kalkulasi spasial, konsumsi stamina, peluang ambush, transaksi ekonomi, dan perolehan barang dihitung secara deterministik dan terlindungi di server backend.
-- **Rich Aesthetics**: Menggunakan antarmuka gelap premium (Dark Ink Wuxia style), aksen emas/amber (`#c5a880`), gradien sutra, dan glassmorphism.
+- **Rich Aesthetics**: UI NPC mengikuti `web-dashboard/src/components/npc/npcTheme.css`: datar, tinta-dan-perkamen, tanpa emoji, tanpa glassmorphism, tanpa glow, sudut <= 2px. Setiap perubahan UI NPC wajib lulus `scripts/v28/layoutProbe.js` dan tes `v28_antislop_static`.
 - **Aset 1-to-1 Sinkron**: Semua nama item, monster, NPC, dan fasilitas yang membutuhkan gambar memiliki slot terdaftar di `web-dashboard/src/config/globalAssets.ts` dengan fallback visual/emoji elegan.
 
 ---

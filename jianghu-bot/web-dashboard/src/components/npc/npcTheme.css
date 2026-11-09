@@ -1,0 +1,26 @@
+.npc-ui {
+  --npc-ink: #1d1c19;          /* teks di atas perkamen */
+  --npc-ink-soft: #4b473d;
+  --npc-parchment: #d8d2c0;    /* kotak teks, tombol aktif */
+  --npc-parchment-edge: #8c8672;
+  --npc-night: #0e0f12;        /* latar panel status */
+  --npc-night-2: #17181c;
+  --npc-line: #2c2e34;         /* garis tipis 1px */
+  --npc-cream: #e8e2d0;        /* teks di atas gelap */
+  --npc-mute: #9a9686;
+  --npc-seal: #a3231f;         /* merah segel: Curi/Serang, Demonic */
+  --npc-jade: #3f7f6e;         /* Righteous */
+  --npc-chip-blue: #3b4fa8;
+  --npc-chip-grey: #565960;
+  --npc-chip-orange: #c97a2b;
+  --npc-btn: #cfcfcf;
+  --npc-btn-ink: #1b1b1b;
+  --npc-btn-off: #3c3f45;
+  --npc-btn-off-ink: #a6a9ae;   /* nonaktif: kontras >= 3:1 */
+  --npc-wash-1: #7c9391;
+  --npc-wash-2: #6a8482;
+  --npc-wash-3: #587371;        /* latar tinta */
+  --npc-radius: 2px;
+  --npc-font: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  --npc-font-display: var(--font-serif, "Noto Serif SC", "Songti SC", Georgia, serif);
+}
