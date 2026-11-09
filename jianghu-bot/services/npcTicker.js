@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const { evaluateNpcSchedule } = require('./npcScheduler');
 const { runRecoveryTick } = require('./npcLifecycle');
 const { runPopulationTick } = require('./npcPopulationManager');
+const { runVendettaTick } = require('./npcVendettaEngine');
 
 let activeIntervals = [];
 let isLeader = false;
@@ -143,6 +144,21 @@ function startNpcTicker({
     }
   }, 600000);
   activeIntervals.push(populationInterval);
+
+  // 4. Vendetta Loop: Every 60 seconds
+  const vendettaInterval = setInterval(async () => {
+    try {
+      const db = getDb();
+      if (db) {
+        const hasLock = await acquireSimulationLock(db, lockHolder, Date.now());
+        if (!hasLock) return;
+      }
+      await runVendettaTick({ now: Date.now() });
+    } catch (err) {
+      console.error('[NpcTicker] Vendetta tick error:', err);
+    }
+  }, 60000);
+  activeIntervals.push(vendettaInterval);
 
   console.log(`[NpcTicker] Living simulation ticker started (Leader: ${lockHolder}).`);
   return { stop };

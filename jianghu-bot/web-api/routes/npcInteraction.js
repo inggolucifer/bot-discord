@@ -207,4 +207,110 @@ router.post('/action/:npcId', authenticateToken, async (req, res) => {
   }
 });
 
+// GET /api/npc/ambush/pending
+router.get('/ambush/pending', authenticateToken, async (req, res) => {
+  try {
+    const player = await loadPlayer(req.user.id || req.user.userId);
+    if (!player) {
+      return res.status(404).json({ success: false, error: 'Pemain tidak ditemukan.' });
+    }
+
+    const NpcAmbush = require('../../models/NpcAmbush');
+    const NpcVendetta = require('../../models/NpcVendetta');
+
+    const ambush = await NpcAmbush.findOne({
+      targetPlayerId: player._id,
+      status: 'pending',
+      expiresAt: { $gt: new Date() }
+    }).populate('hunterNpcId');
+
+    if (!ambush) {
+      return res.json({ success: true, ambush: null });
+    }
+
+    const hunter = ambush.hunterNpcId;
+    const vendetta = await NpcVendetta.findOne({
+      hunterNpcId: hunter?._id,
+      targetId: player._id,
+      resolved: false
+    });
+
+    const grudgeLevel = vendetta?.grudgeLevel ?? 5;
+    const hunterRealm = hunter?.cultivation?.realmIndex ?? 0;
+    const payCost = 50 * grudgeLevel * (hunterRealm + 1);
+    const remainingSeconds = Math.max(0, Math.floor((new Date(ambush.expiresAt).getTime() - Date.now()) / 1000));
+
+    return res.json({
+      success: true,
+      ambush: {
+        id: ambush._id,
+        hunterId: hunter?._id,
+        hunterName: hunter?.name || 'Pemburu Misterius',
+        reason: vendetta?.reason || 'Dendam darah masa lalu',
+        grudgeLevel,
+        payCost,
+        remainingSeconds
+      }
+    });
+  } catch (err) {
+    console.error('[Ambush Pending Error]', err);
+    return res.status(500).json({ success: false, error: 'Gagal memuat status ambush.' });
+  }
+});
+
+// POST /api/npc/ambush/:id/resolve
+router.post('/ambush/:id/resolve', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { choice = 'fight' } = req.body;
+
+  const player = await loadPlayer(req.user.id || req.user.userId);
+  if (!player) {
+    return res.status(404).json({ success: false, error: 'Pemain tidak ditemukan.' });
+  }
+
+  const lockKey = `player_${player._id}`;
+  const releaseLock = await LockManager.acquire(lockKey);
+  if (!releaseLock) {
+    return res.status(429).json({ success: false, message: 'Aksi ambush sedang diproses.' });
+  }
+
+  try {
+    const NpcAmbush = require('../../models/NpcAmbush');
+    const NpcVendetta = require('../../models/NpcVendetta');
+    const Npc = require('../../models/Npc');
+    const { resolveAmbushAction } = require('../../services/npcVendettaEngine');
+
+    const ambush = await NpcAmbush.findById(id);
+    if (!ambush) {
+      return res.status(404).json({ success: false, error: 'Penyergapan tidak ditemukan.' });
+    }
+
+    const hunter = await Npc.findById(ambush.hunterNpcId);
+    const vendetta = await NpcVendetta.findOne({
+      hunterNpcId: ambush.hunterNpcId,
+      targetId: player._id,
+      resolved: false
+    });
+
+    const result = await resolveAmbushAction({
+      ambush,
+      player,
+      hunter,
+      vendetta,
+      choice
+    });
+
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+
+    return res.json(result);
+  } catch (err) {
+    console.error('[Ambush Resolve Error]', err);
+    return res.status(500).json({ success: false, error: 'Gagal menyelesaikan penyergapan.' });
+  } finally {
+    if (releaseLock) releaseLock();
+  }
+});
+
 module.exports = router;

@@ -8,6 +8,7 @@ const npcVendettaSchema = new mongoose.Schema({
   reason: { type: String, required: true },
   victimNpcName: { type: String, default: '' },
   victimRelation: { type: String, default: '' },
+  lastAmbushAt: { type: Date, default: null },
   resolved: { type: Boolean, default: false, index: true },
   resolvedAt: { type: Date, default: null },
   resolutionType: {

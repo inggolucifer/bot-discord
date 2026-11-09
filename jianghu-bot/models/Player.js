@@ -769,6 +769,16 @@ playerSchema.virtual('realmIndex').get(function () {
   return getRealmIndex(this.systemCultivation?.realm || this.realm);
 });
 
+// Virtual getter & setter agar copperCoins selalu merefleksikan currency.copper
+playerSchema.virtual('copperCoins')
+  .get(function () {
+    return this.currency?.copper ?? 0;
+  })
+  .set(function (val) {
+    if (!this.currency) this.currency = {};
+    this.currency.copper = val;
+  });
+
 // Virtual getter & setter agar stamina selalu merefleksikan currentStamina
 playerSchema.virtual('stamina')
   .get(function () {

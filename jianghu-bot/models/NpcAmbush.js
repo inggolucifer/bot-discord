@@ -5,8 +5,8 @@ const npcAmbushSchema = new mongoose.Schema({
   targetPlayerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Player', required: true, index: true },
   status: {
     type: String,
-    enum: ['stalking', 'triggered', 'resolved', 'escaped'],
-    default: 'stalking',
+    enum: ['pending', 'stalking', 'triggered', 'resolved', 'escaped', 'paid'],
+    default: 'pending',
     index: true
   },
   tileX: { type: Number, required: true },
