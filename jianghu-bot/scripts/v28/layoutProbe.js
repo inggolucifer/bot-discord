@@ -11,7 +11,7 @@ const PREVIEW_URL = targetArg.includes('/dev/npc-preview')
   ? targetArg
   : `${targetArg.replace(/\/$/, '')}/dev/npc-preview`;
 
-const RAW_DIR = path.resolve(__dirname, '../../review/v29_raw');
+const RAW_DIR = process.env.RAW_DIR || path.resolve(__dirname, '../../review/v30_raw');
 const RAW_OUTPUT_PATH = path.join(RAW_DIR, 'layout_probe.json');
 
 const VIEWPORTS = [
@@ -77,7 +77,7 @@ async function runLayoutProbe() {
         const page = await context.newPage();
 
         try {
-          await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+          await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 });
           // Wait for [data-npc-root] selector up to 30s
           await page.waitForSelector('[data-npc-root]', { timeout: 30000 });
           // Wait 1.5s for layout stabilization and typewriter completion
@@ -268,6 +268,99 @@ async function runLayoutProbe() {
             };
           }, { vpWidth: vp.width, vpHeight: vp.height, viewName: view, forbiddenWords: FORBIDDEN_ENGLISH_WORDS });
 
+          let choicesChecked = false;
+          if (view === 'dialogue') {
+            console.log(`[choices check] Advancing dialogue to reveal action choices...`);
+            let bicaraBtn = await page.$('text=Bicara');
+            for (let i = 0; i < 12 && !bicaraBtn; i++) {
+              await page.keyboard.press('Enter');
+              await page.waitForTimeout(1200);
+              bicaraBtn = await page.$('text=Bicara');
+            }
+
+            if (!bicaraBtn) {
+              try {
+                await page.waitForSelector('text=Bicara', { timeout: 8000 });
+                bicaraBtn = await page.$('text=Bicara');
+              } catch (e) {}
+            }
+
+            if (!bicaraBtn) {
+              evaluation.violations.push('P13: Action choices not shown after pressing Enter (text=Bicara missing)');
+            } else {
+              choicesChecked = true;
+              // P14: tombol "Bicara", "Beri Hadiah", "Adu Latih", "Pamit", "Lainnya" semuanya ada dan boundingBox().height >= 40
+              const requiredButtons = ['Bicara', 'Beri Hadiah', 'Adu Latih', 'Pamit', 'Lainnya'];
+              for (const label of requiredButtons) {
+                const btn = await page.$(`button:has-text("${label}")`);
+                if (!btn) {
+                  evaluation.violations.push(`P14: Missing button "${label}"`);
+                } else {
+                  const box = await btn.boundingBox();
+                  if (!box || box.height < 40) {
+                    evaluation.violations.push(`P14: Button "${label}" height is ${box ? box.height : 0}px < 40px`);
+                  }
+                }
+              }
+
+              // P15: kotak pilihan tidak beririsan dengan kotak dialog: pastikan choices.bottom <= dialogue.top + 2
+              const choicesContainer = await page.$('[data-npc-choices-container]') || await page.$('[data-npc-root] .flex-col.items-end');
+              const dialogueBox = await page.$('[data-npc-dialogue-box]');
+              if (!choicesContainer) {
+                evaluation.violations.push('P15: Missing choices container');
+              } else if (!dialogueBox) {
+                evaluation.violations.push('P15: Missing [data-npc-dialogue-box] element');
+              } else {
+                const choicesBox = await choicesContainer.boundingBox();
+                const dlgBox = await dialogueBox.boundingBox();
+                if (choicesBox && dlgBox) {
+                  if (choicesBox.y + choicesBox.height > dlgBox.y + 2) {
+                    evaluation.violations.push(`P15: Choices container bottom (${(choicesBox.y + choicesBox.height).toFixed(1)}) overlaps dialogue top (${dlgBox.y.toFixed(1)})`);
+                  }
+                }
+              }
+
+              // P16: semua tombol berada penuh di dalam viewport (x>=0, x+width<=vpWidth, y>=0, y+height<=vpHeight)
+              const allButtons = await page.$$('[data-npc-root] button');
+              for (const btn of allButtons) {
+                const isVisible = await btn.isVisible();
+                if (!isVisible) continue;
+                const b = await btn.boundingBox();
+                if (!b) continue;
+                const btnText = (await btn.innerText() || '').trim();
+                if (b.x < 0 || b.x + b.width > vp.width || b.y < 0 || b.y + b.height > vp.height) {
+                  evaluation.violations.push(`P16: Button "${btnText}" (${b.x.toFixed(0)},${b.y.toFixed(0)},${b.width.toFixed(0)},${b.height.toFixed(0)}) exceeds viewport (${vp.width}x${vp.height})`);
+                }
+              }
+
+              // simpan screenshot dlg_choices_mobile.png / dlg_choices_desktop.png
+              const choicesScreenshotName = `dlg_choices_${vp.name}.png`;
+              const choicesScreenshotPath = path.join(RAW_DIR, choicesScreenshotName);
+              await page.screenshot({ path: choicesScreenshotPath, fullPage: true });
+              console.log(`Choices screenshot saved to ${choicesScreenshotName}`);
+
+              // klik "Lainnya", pastikan 4 tombol tambahan muncul dan P16 tetap lolos
+              const lainnyaBtn = await page.$('button:has-text("Lainnya")');
+              if (lainnyaBtn) {
+                await lainnyaBtn.click();
+                await page.waitForTimeout(500);
+
+                const secondaryButtons = ['Berdebat', 'Latihan Bersama', 'Minta Bantuan', 'Lihat Profil'];
+                for (const label of secondaryButtons) {
+                  const secBtn = await page.$(`button:has-text("${label}")`);
+                  if (!secBtn) {
+                    evaluation.violations.push(`P14-sec: Missing secondary button "${label}" after clicking Lainnya`);
+                  } else {
+                    const b = await secBtn.boundingBox();
+                    if (b && (b.x < 0 || b.x + b.width > vp.width || b.y < 0 || b.y + b.height > vp.height)) {
+                      evaluation.violations.push(`P16: Secondary button "${label}" exceeds viewport (${vp.width}x${vp.height})`);
+                    }
+                  }
+                }
+              }
+            }
+          }
+
           console.log(`Evaluated ${evaluation.textNodesCount} text nodes, ${evaluation.buttonCount} buttons.`);
           if (evaluation.violations.length === 0) {
             console.log(`✓ [${view} @ ${vp.name}] PASSED: 0 violations.`);
@@ -281,6 +374,7 @@ async function runLayoutProbe() {
             view,
             viewport: vp.name,
             dimensions: `${vp.width}x${vp.height}`,
+            choicesChecked: view === 'dialogue' ? choicesChecked : undefined,
             violations: evaluation.violations,
             status: evaluation.violations.length === 0 ? 'PASS' : 'FAIL'
           });

@@ -1,8 +1,0 @@
- RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
-
- ✓ tests/integration/npcRequestFavor.test.js (5 tests) 1855ms
-
- Test Files  1 passed (1)
-      Tests  5 passed (5)
-   Start at  15:48:17
-   Duration  5.36s (import 58%, tests 39%, transform 1%, worker 1%)

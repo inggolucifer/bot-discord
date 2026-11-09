@@ -1,9 +1,0 @@
-Command: npx playwright install chromium
-Output:
-Downloading Chrome for Testing 156.0.8078.4 (playwright chromium v1248) from https://cdn.playwright.dev/builds/cft/156.0.8078.4/win64/chrome-win64.zip
-|                                                                                |   0% of 197.5 MiB
-Error: Request to https://storage.googleapis.com/chrome-for-testing-public/156.0.8078.4/win64/chrome-win64.zip timed out after 30000ms
-
-Resolution:
-Playwright Chromium launched successfully using installed system Chrome (channel: 'chrome', Google Chrome 64-bit at C:\Program Files\Google\Chrome\Application\chrome.exe).
-Tested: node -e "const pw = require('playwright'); pw.chromium.launch({ headless: true, channel: 'chrome' }).then(b => { console.log('CHROME LAUNCH SUCCESS'); return b.close(); });" -> CHROME LAUNCH SUCCESS (exit code 0).

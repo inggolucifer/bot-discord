@@ -1,8 +1,0 @@
- RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
-
- ✓ tests/unit/npcLabels.test.js (3 tests) 263ms
-
- Test Files  1 passed (1)
-      Tests  3 passed (3)
-   Start at  16:03:54
-   Duration  1.43s (tests 53%, transform 20%, worker 19%, import 7%)

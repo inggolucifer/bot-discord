@@ -1,0 +1,104 @@
+=== Command 1: travelGraph inspect ===
+Proto: constructor, shortestPath, travelDurationMs
+Path: {"path":[],"totalLi":null}
+
+=== Command 2: npc snapshot inspect ===
+Keys: name, title, gender, description, regionSlug, settlementName, buildingName, portraitUrl, imageUrl, greeting, dialogLines, questIds, isActive, minRealmIndexToTalk, zoneId, tileX, tileY, personality, dao, destiny, lifespan, attributes, inventory, cultivation, schedule, social, vitalStatus, _id, guildId
+Personalities: {"aloof":124,"free_spirited":141,"honest":68,"ruthless":67,"eccentric":118,"righteous":85,"pragmatic":40,"ambitious":121}
+
+=== Command 3: travelSpeed in models/Npc.js ===
+81:     travelSpeed: { type: Number, default: 10 },
+
+=== Command 4: module.exports in utils/npcRng.js ===
+module.exports = {
+  makeRng,
+  rangeInt,
+  rangeFloat,
+  pickOne,
+  pickWeighted,
+  diceRoll,
+  shuffle
+};
+
+
+=== Command 5: module.exports in utils/npcTime.js ===
+module.exports = {
+  HEAVENLY_STEMS,
+  EARTHLY_BRANCHES,
+  SHICHEN_LIST,
+  SEASONS,
+  getShichenFromHour,
+  getJianghuTime,
+  isNightTime,
+  isWorkTime,
+  formatWuxiaDate
+
+=== Command 6: models/NpcAmbush.js lines 1-40 ===
+const mongoose = require('mongoose');
+
+const npcAmbushSchema = new mongoose.Schema({
+  hunterNpcId: { type: mongoose.Schema.Types.ObjectId, ref: 'Npc', required: true, index: true },
+  targetPlayerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Player', required: true, index: true },
+  status: {
+    type: String,
+    enum: ['pending', 'stalking', 'triggered', 'resolved', 'escaped', 'paid'],
+    default: 'stalking',
+    index: true
+  },
+  tileX: { type: Number, required: true },
+  tileY: { type: Number, required: true },
+  battleSessionId: { type: String, default: null },
+  createdAt: { type: Date, default: Date.now },
+  expiresAt: { type: Date, default: () => new Date(Date.now() + 3600 * 1000) }
+}, { timestamps: true });
+
+npcAmbushSchema.index({ targetPlayerId: 1, status: 1 });
+npcAmbushSchema.index({ tileX: 1, tileY: 1, status: 1 });
+
+module.exports = mongoose.models.NpcAmbush || mongoose.model('NpcAmbush', npcAmbushSchema);
+
+
+=== Command 7: models/NpcPlayerRelation.js lines 1-40 ===
+const mongoose = require('mongoose');
+
+const npcPlayerRelationSchema = new mongoose.Schema({
+  playerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Player', required: true, index: true },
+  npcId: { type: mongoose.Schema.Types.ObjectId, ref: 'Npc', required: true, index: true },
+  affinity: { type: Number, default: 0, min: -100, max: 100 },
+  interactionCountDaily: {
+    chat: { type: Number, default: 0 },
+    gift: { type: Number, default: 0 },
+    spar: { type: Number, default: 0 },
+    steal: { type: Number, default: 0 },
+    threaten: { type: Number, default: 0 },
+    date: { type: String, default: () => new Date().toISOString().slice(0, 10) }
+  },
+  dailyLimits: {
+    steal: { type: Number, default: 0 },
+    threaten: { type: Number, default: 0 },
+    date: { type: String, default: () => new Date().toISOString().slice(0, 10) }
+  },
+  history: [{
+    timestamp: { type: Date, default: Date.now },
+    action: { type: String, required: true },
+    delta: { type: Number, default: 0 },
+    note: { type: String, default: '' }
+  }],
+  specialStatus: {
+    isDaoCompanion: { type: Boolean, default: false },
+    isMaster: { type: Boolean, default: false },
+    isApprentice: { type: Boolean, default: false },
+    isSwornSibling: { type: Boolean, default: false }
+  }
+}, { timestamps: true });
+
+npcPlayerRelationSchema.index({ playerId: 1, npcId: 1 }, { unique: true });
+
+module.exports = mongoose.models.NpcPlayerRelation || mongoose.model('NpcPlayerRelation', npcPlayerRelationSchema);
+
+
+
+=== CRITICAL R0 FINDING: travelGraph node identifiers ===
+distancesLi keys are Anchor Names, e.g. Desa Xingcun, not anchor IDs.
+travelGraph.shortestPath(Desa Xingcun, Gua Purba Bunga Aprikot) returns: {"path":["Desa Xingcun","Gua Purba Bunga Aprikot"],"totalLi":14}
+Adaptor toAnchorPath(rawPath) must handle rawPath.path array, converting names to IDs if needed, returning null if path is empty or totalLi is Infinity.

@@ -293,7 +293,7 @@ export function NpcDialogueScene({
 
       {/* 4. Choice Options Overlay (Floating above dialogue box, right-aligned, clear of nameplate) */}
       {showChoices && (
-        <div className="relative z-40 max-w-[900px] w-[min(94vw,900px)] mx-auto flex flex-col items-end mb-8 sm:mb-9 px-2 pointer-events-auto">
+        <div data-npc-choices-container="true" className="relative z-40 max-w-[900px] w-[min(94vw,900px)] mx-auto flex flex-col items-end mb-8 sm:mb-9 px-2 pointer-events-auto">
           <div className="w-full sm:w-[320px] grid grid-cols-2 sm:flex sm:flex-col gap-1.5">
             {!showMoreActions ? (
               <>
@@ -367,6 +367,7 @@ export function NpcDialogueScene({
       {/* 5. Main Visual Novel Dialogue Box */}
       <div className="relative z-30 w-full pb-4 sm:pb-6 px-3 flex flex-col items-center">
         <div
+          data-npc-dialogue-box="true"
           onClick={handleAdvance}
           className="relative max-w-[900px] w-[min(94vw,900px)] min-h-[140px] sm:h-[150px] p-5 sm:px-7 sm:py-5 cursor-pointer select-none transition"
           style={{

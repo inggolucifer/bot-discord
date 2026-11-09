@@ -680,7 +680,6 @@ export function NpcProfilePanel({
                   </div>
                   <StatRow label="Alkimia" value={Math.floor(npc.attributes?.professions?.alchemy ?? 173)} />
                   <StatRow label="Tempa" value={Math.floor(npc.attributes?.professions?.smithing ?? 37)} />
-                  <StatRow label="Feng Shui" value={Math.floor((npc.attributes?.professions as any)?.fengshui ?? 38)} />
                   <StatRow label="Kertas Jimat" value={Math.floor(npc.attributes?.professions?.talismans ?? 26)} />
                   <StatRow label="Herba" value={Math.floor(npc.attributes?.professions?.farming ?? 60)} />
                   <StatRow label="Tambang" value={Math.floor(npc.attributes?.professions?.mining ?? 20)} />

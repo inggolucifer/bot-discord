@@ -3,4 +3,5 @@ node_modules/
 *.log
 .next/
 graphify-out/
+/review/
 jianghu-bot/assets_picked/
