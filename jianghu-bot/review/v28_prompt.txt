@@ -1,0 +1,370 @@
+<USER_REQUEST>
+# V28 — PERBAIKAN V27: NPC YANG BENAR-BENAR BERFUNGSI DAN TAMPILAN YANG TIDAK "AI SLOP"
+Repo `jianghu-bot`, HEAD awal `04150a0`. Folder kerja `jianghu-bot/`. Acuan konsep: `KONSEP_SISTEM_NPC_V27.md` (tetap berlaku untuk tujuan akhir). Dokumen ini hanya berisi PERBAIKAN dan langkahnya.
+
+---
+## 0. HASIL AUDIT V27 (DIUKUR, BUKAN DITEBAK)
+Yang benar: `tsc` bersih, `next build` berhasil, vitest 33 berkas / 314 tes lulus, snapshot 290 NPC lolos `validateSync()` skema `Npc` (0 invalid), 8 keluarga tanpa referensi yatim.
+
+Yang SALAH (setiap butir sudah dibuktikan dengan perintah):
+| # | Masalah | Bukti |
+|---|---|---|
+| B1 | `npm test` GAGAL: 8 berkas `tests/unit/npc/*.test.js` memakai `import` ESM di berkas `.js` (CommonJS). Vitest menjalankannya, tetapi gerbang `npm test` (syntax check) menolaknya. | `npm test` → "8 berkas bermasalah sintaks" |
+| B2 | **Semua aksi NPC kemungkinan besar ditolak 401.** Token JWT berisi `userId` = `discordId`. Route mencari `Player.findById(req.user.id)` (tidak ada) lalu `Player.findOne({ userId })` (field `userId` tidak ada di skema `Player`). Keduanya tidak menemukan pemain. | `web-api/routes/npcInteraction.js` L145-L150; `auth.js` `tokenPayload`; `Player.js` hanya punya `discordId` |
+| B3 | **NPC inti bisa dibunuh.** `killNpc` tidak memeriksa `isEssential`. Saya memanggilnya pada NPC `isEssential: true` ("Zhou Haotian") dan hasilnya `isAlive = false`. | skrip uji langsung |
+| B4 | Arti "inti" salah: seeder menandai 156 dari 290 NPC (semua pemilik kedai, pandai besi, apoteker) sebagai `isEssential: true`. Padahal NPC inti = tokoh jalan cerita; peran dagang harus bisa mati dan DIGANTI generator. Generator pengganti juga memakai `isEssential: true`. 4 NPC cadangan nyata (Shuang Ke, Wu Binglin, Yin Ci, Li Keke) tidak masuk seeder. | `npc-ecosystem-snapshot-v27.json`; `npcPopulationManager.js`; `seedNpcLivingEcosystem.js` |
+| B5 | Route aksi tidak memeriksa jarak, perjalanan, atau kunci. Pemain bisa berinteraksi dengan NPC dari mana saja. | tidak ada `checkNpcProximity` / `LockManager` di route |
+| B6 | **Celah uang tak terbatas:** `steal` memberi 25 tembaga dari udara tanpa batas harian; `threaten` memberi 50 tembaga tanpa batas; `bribe` tanpa batas. `request_favor` hanya menulis kalimat "memberikan ramuan" tetapi tidak memberi apa pun (bohong ke pemain). `gift` tanpa `itemId` mengambil barang PERTAMA di tas. `recruit`, `propose`, `adopt` langsung sukses hanya karena afinitas, tanpa peluang penerimaan. | `npcInteraction.js` kasus-kasus itu |
+| B7 | Pencarian atribut pemain salah: `player.attributes.insight`, `player.attributes.agility`, `player.attack` tidak ada di skema `Player` (yang ada, sudah diverifikasi: `extendedStats.insight`, `extendedStats.agility`, `stats.baseAtk`, `stats.baseDef`). Hasilnya selalu nilai bawaan. | `Player.js` |
+| B8 | Mesin dialog `npcDialogueEngine.js` + 1 berkas naskah TIDAK dipakai oleh route maupun UI. Pesan aksi ditulis keras di route; pilihan dialog ditulis keras di klien. | `grep` hanya menemukan mesin itu sendiri |
+| B9 | **Simulasi tidak terpasang.** `npcScheduler`, `npcMovementSimulator`, `npcPopulationManager` tidak diimpor oleh server. Seluruh 290 NPC berstatus `idle`, tidak bergerak, tidak diganti. Dendam hanya membuat baris data; tidak ada yang memburu. | `grep` impor; semua `activityState: 'idle'` |
+| B10 | Data seed: 290 NPC (rencana 700–1.000), 5 nama kembar, semua ranah 0–1 (termasuk di wilayah tier 6), NPC juga ditaruh di `secret_realm` dan `danger_zone`, `zoneId` kosong, `schedule.tileX/Y` = 0 sehingga `nearby.js` (memakai `??`) menaruh mereka di koordinat (0,0), 290 NPC hanya menempati 52 tile berbeda (satu tumpukan berisi 20 NPC), 32 NPC punya `schedule.tileX/Y` = 0,0, dan 24 NPC berada di jangkar `secret_realm`/`danger_zone`. `/world/npcs` menyaring `zoneId` dan `guildId`, sehingga NPC hasil seed tidak pernah muncul. Seeder tidak otomatis dijalankan saat server naik, dan `findOneAndUpdate({name}, npcData)` membawa `_id` sehingga gagal pada dokumen yang sudah ada. | skrip pengukuran; `nearby.js` L170; `world.js` L1295 |
+| B11 | Dendam salah rancang: `killNpc` membuat dendam untuk SEMUA anggota keluarga dengan tingkat 5 tanpa melihat hubungan, tanpa kerabat inti, tanpa kondisi pengendali lemah. `advanceNpcLifeTick` memanggil `killNpc` tanpa `await`. | `npcLifecycle.js` |
+| B12 | Laporan V27 PALSU: `scripts/v27/gateRunner.js` menulis `status: 'PASS'` dan kalimat "290 nama autentik", "14/14 invarian lulus" dengan tangan (tertulis di kode). Tidak ada pemeriksa invarian I1–I14 sama sekali. `npm test` sebenarnya merah (B1). | `gateRunner.js` L83–L107 |
+| B13 | Jumlah tes NPC hanya 63 (rencana ≥ 230), semuanya tanpa DB dan banyak yang memeriksa data bawaan. Tidak ada tes untuk route, kematian NPC inti, pencurian, atau jarak. | `gate_summary.json` |
+| UI1 | **Adegan dialog bukan visual novel.** Hasil render (browser nyata, 1440×900 dan 390×844): lingkaran emoji 🥷 di tengah halaman hitam, tanpa latar, tanpa potret pemain, tanpa pita nama, tanpa kotak gulungan; menu 15 tombol beremoji. Tidak menutupi layar: header situs tetap terlihat; pada ponsel bagian atas terpotong di bawah header. | render saya |
+| UI2 | **Penuh emoji:** 41 emoji di `NpcProfilePanel.tsx` dan 26 di `NpcDialogueScene.tsx` (💬📜🤝🎁🪙⚔️💀💍🥋💔✂️🧤🗡️ dst.). | pemindaian karakter |
+| UI3 | Panel status: kolom "General" bertabrakan (Lifespan menimpa Vitality, Mood menimpa Energy, Health menimpa Focus); "Reputation: none(1080)" (kunci tier tidak terpetakan); "Sect" berisi nama kota, bukan sekte; tombol nonaktif nyaris tak terlihat; label campur Inggris/Indonesia/mentah (`AMBITIOUS`, `tiger bone`, `Pragmatic`). Pada ponsel tab terpotong header. | render saya |
+| UI4 | `AGENTS.md` di akar repo menyuruh agen memakai "glassmorphism", "gradien sutra", "aksen emas", yang menghasilkan tampilan generik. | `AGENTS.md` bagian 1 |
+
+TUJUAN V28: memperbaiki B1–B13 dan UI1–UI4 tanpa membangun ulang dari nol. **Pertahankan skema V27 yang sudah ada** (`vitalStatus`, `lifespan`, `personality`, `dao`, `destiny`, `schedule`, `social`; afinitas −100..100). Jangan memigrasi ke skema di KONSEP lama; selaraskan angka di KONSEP bila perlu lewat `review/v28_raw/deviations.md`.
+
+---
+## 1. ATURAN KERJA (WAJIB)
+1. Satu tugas pada satu waktu, berurutan. Setiap tugas: **FILE**, **ISI**, **JALANKAN**, **HARUS**. Jika hasil berbeda dari HARUS: BERHENTI, tulis `review/v28_blocker.md` (tugas, perintah, 30 baris keluaran terakhir). Jangan lanjut, jangan cari jalan pintas.
+2. Simpan keluaran mentah: `mkdir -p review/v28_raw` lalu `perintah 2>&1 | tee review/v28_raw/<kode>.txt`.
+3. Satu commit per tugas: `v28(<kode>): ringkasan`. Jangan commit `package-lock.json`, `.next`, `node_modules`, `.env`, dan JANGAN menambah dependency npm. Jangan commit file `AGENTS.md` yang dibuat otomatis oleh `next dev` di `web-dashboard/` (hapus bila muncul).
+4. DILARANG: mengubah tes agar lulus; menulis "PASS", angka, atau kalimat hasil dengan tangan di laporan atau skrip (semua angka harus dihitung dari keluaran perintah); mock untuk model Mongoose (pakai `new Model({...})`, `validateSync()`, `toObject()` asli); `Math.random()` di logika NPC (pakai `makeRng` dari `utils/npcRng.js`; ubah default `rng = Math.random` menjadi wajib diberikan); membuat file di luar daftar FILE; mengubah gerbang V20–V27 yang sudah lulus.
+5. Field yang tidak ada di skema DIBUANG DIAM-DIAM saat `save()`. Sebelum memakai field model, `grep -n` di `models/*.js`. Setiap field BARU wajib punya tes `new Model(...).toObject()` yang memuatnya.
+6. Setelah tiap tugas: `git status --short` hanya boleh memuat file dari daftar FILE tugas itu dan `review/v28_raw/*`.
+7. Gagal 3 kali pada langkah yang sama: berhenti dan tulis blocker.
+8. Semua teks tampil ke pemain: Bahasa Indonesia. Kode tetap Inggris/Indonesia seperti sekitarnya.
+9. Setiap bug yang diperbaiki WAJIB punya tes yang GAGAL sebelum perbaikan dan LULUS sesudahnya. Tulis tesnya dulu, jalankan (harus merah), perbaiki, jalankan lagi (hijau). Simpan kedua keluaran (`<kode>_before.txt`, `<kode>_after.txt`).
+
+---
+# GELOMBANG A — KOREKSI KEBENARAN (tanpa mengubah tampilan)
+
+## A0 — Baseline dan pengintaian (tanpa mengubah kode)
+Jalankan dan simpan ke `review/v28_raw/A0.txt`:
+```
+git log -1 --format=%h
+npm test 2>&1 | tail -12
+npx vitest run 2>&1 | grep -E "Test Files|Tests "
+sed -n 1,60p models/Npc.js
+grep -n "inventoryItemSchema" -A14 models/Player.js | head -30
+grep -n "agility\|attack" models/Player.js | head
+grep -n "zoneId" web-api/routes/world.js | sed -n 1,40p
+node -e "const a=require('./world-data/anchors.json');const t={};a.forEach(x=>t[x.type]=(t[x.type]||0)+1);console.log(JSON.stringify(t))"
+```
+Tulis `review/v28_raw/recon.md` dengan jawaban (kutip baris kode) untuk:
+ R1 Bentuk `Npc.inventory` (field apa saja). R2 Field slot `Player.inventory` (apakah ada penanda dipakai/terkunci/terikat).
+ R3 Konfirmasi path stat pemain: `extendedStats.insight`, `extendedStats.agility`, `stats.baseAtk`, `stats.baseDef` (sudah saya verifikasi di skema; kutip barisnya).
+ R6 Bagaimana status "sedang berpindah" dan "sedang bertarung" pemain disimpan. Field `player.isTraveling` dan `player.activeBattleId` TIDAK ADA di skema `Player` (route zona instans V25 memeriksanya sia-sia). Cari yang nyata: `grep -n "Travel\b\|BattleSession.findOne\|activeBattle" web-api/routes/world.js web-api/routes/battle.js models/*.js | head -20` dan kutip.
+ R4 Dari mana `player.gridPosition.zoneId` berasal saat melangkah (`/zone/step-move`): fungsi mana yang memetakan koordinat dunia ke `zoneId`. Kutip.
+ R5 Apa yang dipakai kode pencarian posisi `player.currentLocation` (permukiman) dan bagaimana pemain "masuk gedung".
+HARUS: berkas tercipta; hasil `npm test` mencatat 8 berkas bermasalah (ini yang diperbaiki di A1). Commit: `v28(A0)`.
+
+## A1 — Perbaiki gerbang `npm test` (B1)
+FILE: `tests/unit/npc/*.test.js` → ganti nama.
+JALANKAN:
+```
+cd tests/unit/npc && for f in *.test.js; do git mv "$f" "${f%.js}.mjs"; done && cd ../../..
+npm test 2>&1 | tail -3 | tee review/v28_raw/A1_npmtest.txt
+npx vitest run 2>&1 | grep -E "Test Files|Tests " | tee review/v28_raw/A1.txt
+```
+HARUS: `npm test` tanpa "SYNTAX-CHECK FAILED"; vitest 33 berkas / 314 tes lulus (angka sama dengan sebelum). Jika jumlah tes berubah: berhenti.
+
+## A2 — Identitas pemain di route NPC (B2, B7 sebagian)
+FILE (baru): `web-api/utils/playerLookup.js`, `tests/unit/playerLookup.test.js`; EDIT: `web-api/routes/npcInteraction.js`.
+Isi `playerLookup.js` (salin pola `instancedZones.js` yang sudah terbukti):
+```js
+const mongoose = require('mongoose');
+function getPlayerQuery(userId) {
+  if (!userId) return { _id: null };
+  const isObjId = mongoose.Types.ObjectId.isValid(userId) && String(new mongoose.Types.ObjectId(userId)) === String(userId);
+  return isObjId ? { $or: [{ discordId: userId }, { _id: userId }] } : { discordId: String(userId) };
+}
+function getUserIdFromReq(req) { return (req.user && (req.user.userId || req.user.id || req.user.discordId)) || null; }
+async function loadPlayer(Player, req) { const id = getUserIdFromReq(req); return id ? Player.findOne(getPlayerQuery(id)) : null; }
+module.exports = { getPlayerQuery, getUserIdFromReq, loadPlayer };
+```
+Di `npcInteraction.js`: hapus semua pola `Player.findById(playerId)` / `Player.findOne({ userId })`; ganti dengan `const player = await loadPlayer(Player, req); if (!player) return res.status(401)...`. Di `profile` dan `action`, pakai `player._id` sebagai `playerId` relasi.
+Tes (≥ 8, tanpa DB): payload `{userId:'123456789012345678'}` → `{ discordId }`; payload `{userId: <ObjectId 24 hex>}` → `$or`; payload `{id:..}` dan `{discordId:..}` terbaca; kosong → `{ _id: null }`; `loadPlayer` memanggil `Player.findOne` tepat sekali dengan filter itu (pakai objek `Player` palsu SEDERHANA yang hanya merekam argumen; ini satu-satunya tempat objek palsu diperbolehkan karena yang diuji adalah filter, bukan skema); `req.user.userId` yang berupa angka diubah menjadi string. Tambahkan tes pemindai: `grep` pada isi `npcInteraction.js` TIDAK boleh memuat `findById(playerId)` atau `{ userId:`.
+HARUS: tes lulus; keluaran "sebelum" memperlihatkan tes pemindai gagal.
+
+## A3 — Pintu kematian yang benar dan arti "NPC inti" (B3, B4, B11)
+FILE: `models/Npc.js` (EDIT: tambah `vitalStatus.downedUntil: { type: Date, default: null }`), `services/npcLifecycle.js`, `services/npcPopulationManager.js`, `world-data/npc-essential-v27.json` (baru), `tests/unit/npc/v28_death_door.test.mjs` (baru).
+1. **Arti baku**: `vitalStatus.isEssential === true` HANYA untuk tokoh cerita utama yang tidak boleh mati. `vitalStatus.essentialRole` (innkeeper, blacksmith, alchemist) hanyalah label PERAN dan TIDAK membuat NPC kebal.
+2. `world-data/npc-essential-v27.json`: `{ "version":"v28","needsOwnerReview":true,"essential":[ {"name":"Shuang Ke"},{"name":"Wu Binglin"},{"name":"Yin Ci"},{"name":"Li Keke"},{"name":"Penatua Zhou"} ] }`. Nama harus persis sama dengan `SETTLEMENT_FALLBACK_NPCS` di `web-api/routes/world.js` (baca daftar itu; untuk `Penatua Zhou` periksa ejaan di `grep -rn "Zhou" web-api/routes/world.js`; bila nama berbeda pakai nama yang ada di kode dan catat). Pemilik akan menambah tokoh cerita lain.
+3. `killNpc` — tambahkan di awal (setelah pemeriksaan `!npc`), PERSIS:
+```js
+  if (npc.vitalStatus && npc.vitalStatus.isEssential === true) {
+    // NPC inti tidak pernah mati: tumbang sebentar lalu pulih.
+    npc.vitalStatus.isInjured = true;
+    npc.vitalStatus.injurySeverity = 3;
+    npc.vitalStatus.downedUntil = new Date(Date.now() + 6 * 60 * 60 * 1000);
+    if (npc.attributes) npc.attributes.hp = 1;
+    if (npc.save && typeof npc.save === 'function' && npc.constructor.db && npc.constructor.db.readyState === 1) {
+      try { await npc.save(); } catch (e) { console.warn('[npcLifecycle] gagal menyimpan NPC tumbang:', e.message); }
+    }
+    return { npc, deathEvent: null, createdVendettas: [], isEssential: true, downed: true };
+  }
+```
+   Ganti semua `catch (e) {}` senyap di berkas itu dengan `console.warn` yang menyebut konteks.
+4. `advanceNpcLifeTick`: jangan mati tua bila `vitalStatus.isEssential` (umur ditahan di `maxAge - 1`); ubah menjadi `async` dan `await killNpc(...)`; tidak ada pemanggilan `killNpc` tanpa `await` di seluruh repo (`grep -rn "killNpc(" --include=*.js . | grep -v await | grep -v "async function killNpc"` harus kosong, kecuali baris tes yang memakai `await`).
+5. Dendam (B11): ganti pembuatan dendam untuk "semua anggota keluarga" menjadi berdasarkan hubungan. Pemetaan `member.role` → tingkat (`grudgeLevel` 1–5): `parent,child,spouse,partner,father,mother,son,daughter,wife,husband` = 5; `sibling,brother,sister,sworn` = 4; `master,apprentice,disciple` = 3; peran lain = lewati. Lewati kerabat yang `vitalStatus.isEssential` (inti memaafkan; tidak memburu) dan kerabat yang sudah mati. Jika kekuatan kerabat (`attributes.attack + attributes.defense + attributes.maxHp/10`) < 70% kekuatan pembunuh (bila pembunuh pemain, ambil dari `killerInfo.power`), buat dendam dengan `status: 'dormant'` (periksa field status di `models/NpcVendetta.js`; bila tidak ada tambahkan `status: { type: String, enum: ['active','dormant','satisfied','expired'], default: 'active' }` dan tes `toObject()`). Rantai dendam: `killerInfo.chainDepth` (default 0); bila `chainDepth >= 2` jangan buat dendam baru; dendam baru menyimpan `chainDepth + 1` (tambahkan field bila belum ada, dengan tes).
+6. `npcPopulationManager.replenishMissingRoles`: ganti `isEssential: true` menjadi `isEssential: false` (peran tetap lewat `essentialRole`).
+7. Tes `v28_death_door.test.mjs` (≥ 14, model Mongoose ASLI tanpa DB): (a) NPC `isEssential:true` → `killNpc` mengembalikan `downed:true`, `isAlive` tetap `true`, `downedUntil` terisi, `createdVendettas` kosong; ulangi dengan 50 pembunuh acak berbenih; (b) NPC non-inti mati, `deathTimestamp` terisi; (c) kematian ganda idempoten; (d) tua: `advanceNpcLifeTick` tidak membunuh inti; (e) dendam: anak → level 5, saudara → 4, murid → 3, teman → tidak ada; kerabat inti dilewati; pengendali lemah → `dormant`; `chainDepth` 2 → tidak ada dendam; (f) penggantian peran menghasilkan `isEssential:false`; (g) pemindai: tidak ada berkas di `services/`, `web-api/`, `utils/` yang menulis `isAlive = false` selain `services/npcLifecycle.js` (regex pada isi file); (h) `npc-essential-v27.json` ter-parse dan nama unik.
+JALANKAN: tes dulu (harus ada yang merah: (a) dan (g)), lalu perbaiki, lalu `npx vitest run tests/unit/npc/v28_death_door.test.mjs`.
+HARUS: ≥ 14 tes lulus; keluaran "sebelum" memuat kegagalan (a).
+
+## A4 — Route aksi yang aman (B5, B6, B7)
+FILE: `web-api/routes/npcInteraction.js`, `services/npcProximity.js` (baru), `services/npcActions.js` (baru, logika murni), `models/NpcPlayerRelation.js` (EDIT), `models/Player.js` (EDIT kecil), `tests/unit/npc/v28_actions.test.mjs`, `tests/unit/npc/v28_proximity.test.mjs`.
+**Pisahkan logika dari I/O.** `services/npcActions.js` mengekspor fungsi MURNI `evaluateAction({ action, payload, npc, relation, player, now, rng })` yang mengembalikan `{ ok, code, message, effects }`; route hanya memuat dokumen, memanggilnya, menerapkan `effects`, menyimpan, dan membalas.
+1. **Registri aksi** `ACTIONS` (di `npcActions.js`; juga `module.exports.ACTIONS`): `chat, inquire, gift, bribe, spar, duel, steal, threaten, request_favor, debate, dual_cultivation, sworn, propose, adopt, mark, unmark, divorce, break_relations`. Aksi `recruit` dan `invite` mengembalikan `{ ok:false, code:'NOT_AVAILABLE', message:'Fitur ini belum tersedia.' }`. `confess` dihapus dari route dan UI (tidak ada di rancangan). Pemetaan nama tombol UI (referensi screenshot) → aksi server: Talk→`chat`, Bond→`sworn`, Partner→`propose`, Mentorship→`adopt`, Request→`request_favor`, Gift→`gift`, Spar→(pertempuran lewat `/battle/start`), Dual Cultivation→`dual_cultivation`, Debate→`debate`, Invite→`invite`, Recruitment→`recruit`, Mark→`mark`, Theft→`steal`, Attack→(pertempuran lewat `/battle/start`, `npc_duel`).
+2. **Batas harian** (per hari Asia/Jakarta: `new Date(now + 7*3600*1000).toISOString().slice(0,10)`). Tambahkan ke `NpcPlayerRelation.interactionCountDaily` field `Number default 0` untuk: `inquire, bribe, steal, threaten, request_favor, debate, dual, sworn, propose, adopt` (field lama `chat, gift, spar` dipertahankan) dan field `cooldownUntil: { type: Date, default: null }` di tingkat dokumen relasi; tambahkan `marked: { type: Boolean, default: false }`. Batas: `chat 5, inquire 3, gift 3, spar 2, bribe 2, steal 3, threaten 2, request_favor 1, debate 3, dual 1, sworn 1, propose 1, adopt 1`. Setelah batas: `{ ok:false, code:'DAILY_CAP', message:'Batas harian aksi ini tercapai.' }`. Reset bila `date` berbeda.
+3. **Batas harian GLOBAL pemain** untuk sumber uang: tambah subdokumen `Player.npcDaily: { date: String, steals: Number, threatens: Number, bribes: Number }` (default semua 0). Batas: `steals 10`, `threatens 5`. Uang curian/peras = `5 * (npc.cultivation.realmIndex + 1)` tembaga (bukan 25/50 tetap). Tes `toObject()` memuat `npcDaily`.
+4. **Jarak dan keadaan**: `services/npcProximity.js` mengekspor fungsi murni `checkProximity(player, npc, maxTiles = 2)`. Salin PERSIS semantik `checkNpcProximity` di `web-api/routes/world.js` (L1210–L1260; kutip di recon): bila `player.gridPosition.zoneId` ada → bandingkan `zoneId` dan jarak Chebyshev dari `gridPosition.tileX/Y` ke `npc.tileX/Y` (bila `npc.zoneId` kosong, anggap zona sama selama koordinat valid); jika tidak ada koordinat NPC → fallback pencocokan `settlementName/buildingName` dengan `player.currentLocation`. Tolak juga bila pemain sedang berpindah atau bertarung (pakai mekanisme nyata dari recon R6, BUKAN `player.isTraveling`/`player.activeBattleId` yang tidak ada), NPC `!vitalStatus.isAlive`, NPC `downedUntil > now` ("NPC sedang tumbang"), NPC `activityState === 'sleeping'` kecuali `affinity >= 60`. Semua aksi kecuali `mark/unmark/break_relations` memerlukan jarak.
+5. **Kunci**: bungkus pemrosesan dengan `LockManager.acquire('npc_' + player._id + '_' + npc._id)` (`require('../utils/lockManager')`, pola sama seperti `instancedZones.js`); `finally` melepas kunci.
+6. **Perbaikan per aksi** (di `evaluateAction`):
+   - `gift`: wajib `payload.itemId`. Cari slot inventaris yang cocok (`String(slot.itemId) === String(itemId)`, `quantity > 0`, dan tidak berstatus dipakai/terkunci menurut R2). Tidak ada `itemId` → hanya diperbolehkan `payload.type === 'tea'` (bayar 50 tembaga lewat `payCurrency`). Afinitas = `clamp(3 + 3 * (item.tier || 1), 3, 30)`; kepribadian `ruthless/aloof` × 0.7, `ambitious` × 1.2 (dibulatkan). Barang dikurangi tepat 1.
+   - `bribe`: tembaga dipotong; `righteous/honest` → −10; lainnya +6; batas harian 2; jumlah 50–500.
+   - `steal`: peluang = `clamp(0.35 + (pemain.extendedStats.agility − npc.attributes.insight)/400, 0.05, 0.90)` memakai `rng` berbenih dari `makeRng(hashSeed(player._id, npc._id, tanggalHariIni, nomorPercobaan))`. Sukses: tambah tembaga (butir 3) lewat `addCopper(player.currency, n)`; gagal: afinitas −30, `player.wantedLevel` +1 (maks 5), `cooldownUntil` = now + 30 menit.
+   - `threaten`: berhasil bila `(pemain.stats.baseAtk + pemain.level) > npc.attributes.defense × 1.2`; bila `stats.baseAtk` tidak finit, TOLAK dengan `NOT_AVAILABLE` (jangan memakai angka bawaan); sukses memberi tembaga butir 3 dan afinitas −15; gagal −25.
+   - `request_favor`: afinitas ≥ 50; efek NYATA: pulihkan stamina pemain +15 (maks `maxStamina`) lewat `currentStamina`; ubah pesan agar sesuai ("memberi sebutir ramuan penyegar", bukan barang yang tak ada). Batas 1/hari.
+   - `sworn`, `propose`, `adopt`: syarat afinitas (60, 85, 40), belum terikat jenis yang sama, `lifespan.currentAge >= 18` untuk `propose`, dan **peluang penerimaan** = `clamp(0.30 + afinitas/200 + (1 jika personality.primary ∈ {righteous,honest} dan pemain.alignment.righteous ≥ pemain.alignment.demonic, selain itu 0)×0.10 − (0.15 jika personality.primary === 'aloof') − (0.15 jika player.wantedLevel ≥ 2), 0.05, 0.90)`. Gagal: pesan penolakan + `cooldownUntil` = now + 24 jam; TIDAK mengubah afinitas. Sukses: atur `specialStatus`. `sworn` maksimal 3 per pemain (hitung relasi dengan `specialStatus.isSwornSibling`). Tes memakai `rng` berbenih (jangan `Math.random`).
+   - `debate`: afinitas ≥ 20; menang jika `pemain.extendedStats.insight + rng()*20 > npc.attributes.insight + 10`; menang +10, kalah +3.
+   - `dual_cultivation`: afinitas ≥ 40; butuh stamina ≥ 20 (potong 20); afinitas +12.
+   - `mark`/`unmark`: ubah `relation.marked`; maksimal 20 relasi ber-`marked` per pemain (hitung `NpcPlayerRelation.countDocuments({ playerId, marked:true })`).
+   - `spar` dan `duel`: TIDAK diselesaikan di route ini; route mengembalikan `{ success:true, startBattle:{ targetType:'npc_spar'|'npc_duel', targetId } }` dan klien memanggil `/battle/start`. `duel` memerlukan `payload.confirm === true`, selain itu `CONFIRM_REQUIRED`.
+   - `divorce`/`break_relations` tetap; `break_relations` tidak menghapus `marked`.
+7. **Penerapan efek di route**: afinitas selalu lewat `applyAffinity(current, delta)` = `Math.max(-100, Math.min(100, current + delta))`; tembaga hanya lewat `utils/currency.js`; tidak ada `player.silver`. Setelah `relation.save()` dan `player.save()`, balas `{ success, message, code, deltaAffinity, newAffinity, affinityStage, relation:{ specialStatus, marked, cooldownUntil }, dialogue }`.
+8. Tes `v28_actions.test.mjs` (≥ 40) dan `v28_proximity.test.mjs` (≥ 10), model ASLI: satu tes sukses dan satu tolak per aksi; batas harian per aksi dan global (`steals` 11 → ditolak); celah uang: 100 percobaan `steal` berbenih dalam satu hari menghasilkan total tembaga ≤ batas harian × nilai maksimum; `gift` tanpa `itemId` ditolak; `gift` mengurangi barang yang benar (bukan barang pertama); `request_favor` benar-benar menaikkan `currentStamina` dan tidak melebihi `maxStamina`; `sworn` penolakan tidak mengubah afinitas dan menetapkan cooldown; maksimal 3 sworn; `propose` untuk umur < 18 ditolak; semua `toObject()` memuat `interactionCountDaily.steal`, `marked`, `cooldownUntil`, `Player.npcDaily`; jarak: zona beda, 3 tile, 2 tile, tepat 2, koordinat kosong → fallback permukiman; tidur; tumbang; sedang berpindah/bertarung ditolak; `ACTIONS` memuat semua nama di pemetaan; pemindai: `grep "player.silver\|player.spiritStones\|Math.random\|player.attributes\|player.attack\b"` pada `services/npcActions.js` dan `web-api/routes/npcInteraction.js` kosong.
+JALANKAN: tes dulu (merah), perbaiki, `npx vitest run tests/unit/npc/v28_actions.test.mjs tests/unit/npc/v28_proximity.test.mjs && npm test | tail -2`.
+HARUS: ≥ 50 tes lulus; `npm test` bersih.
+
+## A5 — Profil NPC: daftar-putih bidang dan kabut (B7)
+FILE: `services/npcVisibility.js` (baru, murni), `web-api/routes/npcInteraction.js` (EDIT `GET /profile/:npcId`), `tests/unit/npc/v28_visibility.test.mjs`.
+`buildVisibleProfile({ npc, relation, player, labels })` mengembalikan HANYA bidang berikut (tanpa `inventory` mentah, tanpa `social` mentah, tanpa `_id` kerabat selain nama, tanpa `schedule.tileX/Y`): `_id, name, title, gender, description, settlementName, buildingName, portraitUrl, imageUrl, greeting, personality {primary, secondary}, dao, destiny, lifespan {currentAge, maxAge}, cultivation {realmIndex, stage}, activity {state, label}, isEssential (boolean), equipped [{name, category, qualityTier}] (hanya yang `equippedSlot != null`), stats (objek angka atau null)`. **Kabut**: bila `npc.cultivation.realmIndex > player.realmIndex` DAN `player.extendedStats.insight < npc.attributes.insight` → semua angka di `stats` bernilai `null` dan `cultivation.stage` = `null`. Barang tak terpakai tidak pernah dikirim kecuali afinitas ≥ 20 (maka tampil sebagai `carried [{name, category}]`, tanpa kuantitas rahasia). Route memakai fungsi ini; hapus `player.attributes.insight`.
+Tes (≥ 8): bidang terlarang tidak ada (`JSON.stringify` tidak memuat `inventory`, `seed`, `tileX`); kabut aktif/nonaktif di batas insight sama; afinitas 19 vs 20 untuk barang bawaan; NPC inti hanya `isEssential:true` tanpa `essentialRole`; tidak ada `NaN`.
+HARUS: lulus.
+
+## A6 — Hubungkan mesin dialog ke server dan klien (B8)
+FILE: `services/npcDialogueEngine.js` (baca dulu, EDIT minimal), `web-api/routes/npcInteraction.js` (EDIT), `tests/unit/npc/v28_dialogue_wiring.test.mjs`.
+1. Baca `resolveDialogue(npc, player, actionType, outcome, context)` dan `world-data/npc-dialogue-scripts-v27.json`; tulis di recon struktur kunci naskah (`actionType` × `outcome`).
+2. Setiap respons `POST /action/:npcId` menyertakan `dialogue: { speaker: npc.name, text }` yang dihasilkan `resolveDialogue(npc, player, action, outcome, { affinity })`, dengan `outcome` dari hasil `evaluateAction` (`success|fail|refuse|cap`). Pesan teknis (`message`) tetap ada untuk log.
+3. Endpoint baru `GET /api/npc/greeting/:npcId` → `{ dialogue }` memakai `resolveGreeting` (sapaan awal; juga mengisi `{greeting}` pada profil). Jika NPC sedang tidur → ucapan "sedang tidur" dari naskah (tambahkan kategori `sleeping` dan `downed` ke JSON bila belum ada; ≥ 4 baris tiap kategori).
+4. Tes: untuk setiap `action ∈ ACTIONS` × `outcome ∈ {success, fail, refuse, cap}` × 8 kepribadian, `resolveDialogue` menghasilkan teks tidak kosong, tanpa penampung `{...}` tersisa dan tanpa kata "undefined"/"null"; deterministik untuk `rng` yang sama. Jika kombinasi tidak ada di naskah, mesin jatuh ke `chat/success` (tes membuktikan fallback, tidak melempar).
+HARUS: lulus.
+
+**── CHECKPOINT A. Berhenti, push, dan beri tahu pemilik untuk audit. ──**
+
+---
+# GELOMBANG B — DUNIA HIDUP
+
+## B0 — Pengintaian data dunia (tanpa mengubah kode)
+Tulis `review/v28_raw/recon_B.md`: R4 (pemetaan koordinat → `zoneId`), bentuk koleksi `ZoneTile` bertipe `npc_spawn`, fungsi walkability V24 (nama fungsi dan tanda tangan untuk menguji sebuah tile berjalan: cari `walkabilityPolicy`, `isCellBlocked`, `getTileAt`), dan hitung jumlah jangkar per tipe (sudah dari A0). Jawab juga: apakah `Npc.guildId` default `'global'` dan apa `player.guildId` nyata (lihat token JWT `guildId`).
+HARUS: berkas ada, setiap pertanyaan berisi kutipan atau "TIDAK DITEMUKAN".
+
+## B1 — Data seed yang benar dan pemasangan saat server naik (B10, B4)
+FILE: `scripts/v27/seedNpcLivingEcosystem.js` (EDIT), `services/npcGenerator.js` (EDIT kecil bila perlu), `services/npcBootstrap.js` (baru), `web-api/server.js` (EDIT: satu panggilan di dekat `ensureCoreItems`, dibungkus try/catch dan `NPC_SEED_ON_BOOT !== 'false'`), `world-data/npc-population-v28.json` (baru), `tests/unit/npc/v28_seed_world.test.mjs`, `scripts/v28/auditNpcWorld.js`, `scripts/v28/lib/invariants.js`.
+1. `world-data/npc-population-v28.json`: `{ "residentsPerType": { "hamlet":4, "village":8, "town":16, "major_city":40, "capital_city":80, "sect":30, "outpost":6, "port":14, "island":4, "secret_realm":0, "danger_zone":0 }, "coreRoles":["innkeeper","blacksmith","alchemist"], "maxTotal":1200 }`.
+2. Seeder: (a) muat anchors dan fasilitas; (b) untuk tiap jangkar, jumlah penduduk = `residentsPerType[type]` (0 → lewati jangkar itu sama sekali; **core roles hanya untuk jangkar yang memiliki fasilitas terkait** `inn/tavern→innkeeper`, `workshop→blacksmith`, `market→alchemist`, memakai `settlement-facilities-v20.json`); (c) ranah dasar = tier wilayah − 1 (`region-ladder-v23.json`: `regions[anchor.region].tier`), dengan 60% sama, 25% +1, 5% +2, 10% −1 (batas bawah 0, atas `SYSTEM_REALMS.length-1`), tokoh pemimpin sekte +1..+2; (d) **posisi tersebar**: tiap NPC ditempatkan di tile berjalan acak berbenih dalam radius 2–6 tile dari titik jangkar, tidak ada dua NPC di tile yang sama (set tile terpakai), tile diuji dengan fungsi walkability dari B0; jika tidak ada tile, geser radius sampai 10; (e) isi `tileX/tileY` (tingkat atas) DAN `schedule.tileX/tileY` dengan nilai yang sama; `zoneId` = hasil pemetaan R4; (f) nama unik (tolak dan ambil ulang dari seed+1); (g) `guildId: 'global'`; (h) NPC cerita dari `npc-essential-v27.json`: ambil data nyata dari `SETTLEMENT_FALLBACK_NPCS` (nama, gelar, permukiman) dan buat dokumen penuh dengan generator + `isEssential: true`, `essentialRole: ''`; **hanya mereka** yang `isEssential`.
+3. **Idempoten dan aman**: seeder TIDAK menghasilkan ulang bila `world-data/npc-ecosystem-snapshot-v27.json` sudah ada kecuali argumen `--regenerate`. Penulisan ke DB memakai `updateOne({ _id }, { $set: rest }, { upsert: true })` dengan `_id` stabil dari snapshot (bukan `findOneAndUpdate({name})`). Untuk dokumen NPC yang sudah ada di DB dengan nama sama tetapi `_id` berbeda: JANGAN timpa; pertahankan `dialogLines`, `questIds`, `greeting`, `portraitUrl` lama dan hanya set field baru. Keluarga: ganti `members[].npcId` agar menunjuk `_id` yang benar. Tanpa `MONGODB_URI` → hanya menulis snapshot.
+4. `services/npcBootstrap.js` `ensureNpcWorld({ Npc, NpcFamily })`: bila `Npc.countDocuments({ 'schedule.currentAnchorId': { $exists: true } })` < jumlah di snapshot → panggil logika upsert di atas (kelompok 200 dokumen via `bulkWrite`); catat jumlah. Dipanggil dari `server.js`.
+5. **Pemeriksa invarian NYATA** `scripts/v28/lib/invariants.js` `checkInvariants({ npcs, families, anchors, config })` → `{ violations, stats }`. Aturan (nama kode tetap): `V1` semua NPC cerita (`npc-essential-v27.json`) ada, hidup, `isEssential:true`; `V2` tidak ada `isEssential:true` di luar daftar itu; `V3` nama unik; `V4` `currentAge <= maxAge`; `V5` tidak ada dua NPC hidup di tile yang sama; `V6` semua tile berjalan (fungsi B0); `V7` `schedule.tileX/Y == tileX/Y` dan bukan 0,0; `V8` ranah dalam [dasar−1, dasar+3] terhadap tier wilayah; `V9` tidak ada NPC di `secret_realm`/`danger_zone`; `V10` setiap jangkar berfasilitas inn/tavern/workshop/market punya peran inti terkait yang hidup; `V11` total ≤ 1200 dan jumlah per jangkar = target tipe (toleransi 0); `V12` relasi keluarga: tiap `members[].npcId` ada; `V13` anak lebih muda ≥ 18 tahun dari orang tua; `V14` `guildId` terisi. `auditNpcWorld.js` menulis `review/v28_raw/npc_audit.json` dan exit code ≠ 0 bila ada pelanggaran.
+6. Tes `v28_seed_world.test.mjs` (≥ 20): satu tes per aturan V1–V14 yang SENGAJA melanggar dan harus terdeteksi; satu tes dunia bersih; determinisme dua kali bangun → snapshot sama; tidak ada penulisan DB tanpa `MONGODB_URI`.
+JALANKAN: `node scripts/v27/seedNpcLivingEcosystem.js --regenerate` (tanpa MONGODB_URI), `node scripts/v28/auditNpcWorld.js`, tes.
+HARUS: jumlah NPC antara 650 dan 900; `pelanggaran: 0`; tes lulus; snapshot lama diganti (commit snapshot baru).
+
+## B2 — NPC terlihat di dunia dan di "Sekitar Anda" (B10)
+FILE: `web-api/routes/world.js` (EDIT hanya `GET /npcs` dan `GET /npc/:id`), `web-api/routes/nearby.js` (EDIT blok NPC), `utils/nearbyEngine.js` (hanya jika perlu), `tests/unit/npc/v28_visibility_queries.test.mjs`.
+1. `world.js`: ganti `guildId: player.guildId` menjadi `guildId: { $in: [player.guildId, 'global'] }` dan tambahkan `'vitalStatus.isAlive': { $ne: false }`; klausa `zoneId` tidak lagi satu-satunya jalan: tambahkan `$or` koordinat tanpa `zoneId` (`tileX/tileY` dalam kotak ±2) agar NPC hasil seed muncul.
+2. `nearby.js`: kuantisasi dan penentuan posisi pakai fungsi `resolveNpcTile(n, fallback)` (tulis sebagai fungsi murni di berkas baru `utils/npcPosition.js`): ambil `schedule.tileX/Y` hanya bila keduanya bukan (0,0) dan finit; jika tidak, `tileX/Y`; jika tidak, abaikan NPC (JANGAN ditaruh di tengah chunk). Filter `guildId` sama seperti butir 1. Jangan mengirim `personality` mentah; kirim `activityLabel` (Indonesia).
+3. Tes (≥ 10): fungsi `resolveNpcTile` (0,0 → fallback; NaN → null; nilai sah); pembentuk query memuat `$in` dua guild; NPC mati tidak termasuk.
+HARUS: lulus; `grep -n "?? (cx \* 32" web-api/routes/nearby.js` kosong.
+
+## B3 — Pasang simulasi: jadwal, gerak, penggantian peran (B9)
+FILE: `services/npcTicker.js` (baru), `web-api/server.js` (EDIT: mulai SEKALI), `tests/unit/npc/v28_ticker.test.mjs`.
+Baca `services/npcScheduler.js`, `npcMovementSimulator.js`, `npcPopulationManager.js` dan tulis di recon_B.md tanda tangan yang dipakai. Lalu `npcTicker.js`:
+```js
+function startNpcTicker({ Npc, NpcFamily, nearbyBroadcaster, now = () => Date.now(), log = console }) {
+  if (process.env.NPC_SIM_ENABLED === 'false') return { stop() {} };
+  const timers = [];
+  timers.push(setInterval(() => runScheduleTick({ Npc, now, log }).catch(e => log.warn('[npc] schedule', e.message)), 5 * 60 * 1000));
+  timers.push(setInterval(() => runRecoveryTick({ Npc, now, log }).catch(e => log.warn('[npc] recovery', e.message)), 60 * 1000));
+  timers.push(setInterval(() => runPopulationTick({ Npc, NpcFamily, now, log }).catch(e => log.warn('[npc] population', e.message)), 10 * 60 * 1000));
+  return { stop() { timers.forEach(clearInterval); } };
+}
+```
+- `runScheduleTick`: ambil NPC hidup dalam batch 300 (`cursor`), panggil `updateNpcScheduleState` + `simulateAbstractTick` (lewat `makeRng` berbenih dari `npcId + gameHour`), hanya tulis jika nilai berubah, via `bulkWrite`. NPC `stationary` (peran inti) tetap di pos; NPC `routine` berpindah antar fasilitas jangkar; gerak jauh antar jangkar hanya untuk NPC dengan `personality.primary === 'free_spirited'` atau `eccentric` (pengembara), maksimum 1 perjalanan per 6 jam game, tujuan hanya di wilayah yang sama (`region`) dan tile tujuan harus berjalan (fungsi B0).
+- `runRecoveryTick`: NPC dengan `vitalStatus.downedUntil < now` → hapus `downedUntil`, `isInjured=false`, pulihkan `attributes.hp`.
+- `runPopulationTick`: untuk tiap jangkar, panggil `checkAnchorCoreRoles` pada NPC hidup; peran kosong yang kematiannya sudah ≥ 24 jam game (`lifespan.deathTimestamp`) diisi `replenishMissingRoles` (pendatang) dengan posisi tersebar seperti B1 (butir 2d); hasil ditulis dengan `insertMany` dan ditandai `generation: 'replenished'`? (jangan tambah field baru; cukup catat peristiwa `NpcEvent` bertipe `arrival`). Tidak melebihi `maxTotal`.
+- **Satu pemimpin**: gunakan `mongoose.connection.collection('npc_sim_lock').findOneAndUpdate({ _id:'leader' }, { $set: { holder: process.pid+'@'+hostname, until: now()+120000 } }, { upsert:true })` hanya bila `until < now()` atau `holder` sama; tick lain tidak berjalan bila bukan pemimpin.
+- `server.js`: panggil `startNpcTicker(...)` SEKALI di luar `io.on('connection')` (di tempat yang sama dengan `nearbyBroadcaster.start`). `grep -c "startNpcTicker" web-api/server.js` = 2 (impor + panggilan).
+Tes (≥ 14, jam dipalsukan, model asli): jadwal memilih aktivitas sesuai jam; tidak ada tulis bila tidak berubah; NPC peran inti tetap di jangkarnya; pengembara tidak keluar wilayah; tujuan selalu tile berjalan (fungsi walkability dipalsukan menolak 70%); `runRecoveryTick` memulihkan NPC inti tumbang; `runPopulationTick` mengisi peran yang mati ≥ 24 jam dan tidak mengisi yang < 24 jam; idempoten (dua kali berturut-turut menghasilkan nol penambahan); batas `maxTotal`; pemimpin kedua tidak berjalan.
+HARUS: lulus; `grep -rn "Math.random" services/npc*.js utils/npc*.js` kosong (ubah default parameter `rng = Math.random` menjadi `rng` wajib atau default `makeRng(0xC0FFEE)`).
+
+## B4 — Dendam yang benar-benar memburu (B9, B11)
+FILE: `services/npcVendettaEngine.js` (EDIT), `services/npcTicker.js` (tambah `runVendettaTick`), `web-api/routes/npcInteraction.js` (tambah dua endpoint), `tests/unit/npc/v28_vendetta.test.mjs`.
+1. `runVendettaTick` tiap 60 detik: ambil `NpcVendetta` `active` milik pemain yang online (aktivitas `updatedAt` pemain ≤ 2 menit; catat sebagai pendekatan karena tidak ada `lastSeenAt`). Untuk tiap vendetta, maksimal 3 per pemain: bila pemain berada di luar jari-jari permukiman terdekat (gunakan `exclusionRadius` dari `anchors.json` per tipe: hamlet 6, village 10, town 14, major_city 24, capital 36, sect 16, outpost 8, port 10) dan jarak Chebyshev pemburu ke pemain ≤ 24 tile (pemburu "dimaterialkan" dekat pemain bila ETA abstrak sudah tiba), jeda sejak `lastAmbushAt` ≥ 3 jam, dan peluang `rng() < 0.35` (berbenih) → buat `NpcAmbush` (`status:'pending'`, `expiresAt` = now + 10 menit; model sudah ada; periksa field di `models/NpcAmbush.js` dan jangan menambah field tanpa tes `toObject()`). Tidak boleh ada dua ambush `pending` untuk pemain yang sama.
+2. Endpoint: `GET /api/npc/ambush/pending` → ambush `pending` pemain (nama pemburu, alasan dendam, sisa waktu, biaya ganti rugi) atau `null`. `POST /api/npc/ambush/:id/resolve` body `{ choice: 'fight'|'pay'|'flee' }`: `fight` → balas `startBattle:{ targetType:'npc_ambush', targetId: hunterNpcId }`; `pay` → biaya = `50 × grudgeLevel × (realmIndexPemburu + 1)` tembaga (`hasEnoughCurrency/payCurrency`), tandai `paid`, turunkan dendam (`grudgeLevel` −2, bila ≤ 1 → `satisfied`); `flee` → peluang `clamp(0.4 + (pemain.extendedStats.agility − pemburu.attributes.agility)/400, 0.1, 0.9)`, gagal → seperti `fight`. Semua dengan `LockManager` dan pemeriksaan kepemilikan ambush.
+3. Tes (≥ 14): tidak ada ambush di permukiman; tidak ada bila pemain offline; jeda 3 jam; jarak 25 tile ditolak, 24 diterima; peluang ≈ 35% pada 2.000 evaluasi berbenih (±5%); maksimal 3 vendetta aktif dievaluasi; satu ambush pending; `pay` mengurangi tembaga tepat dan menurunkan dendam; tidak mampu bayar → ditolak; `flee` deterministik; ambush kedaluwarsa tidak bisa diselesaikan; pemain lain tidak bisa menyelesaikan ambush orang lain.
+HARUS: lulus.
+
+## B5 — Pertempuran dengan NPC aman untuk NPC inti (B3)
+FILE: `services/npcCombatAdapter.js` (EDIT), `tests/unit/npc/v28_battle_resolution.test.mjs`.
+`handleNpcBattleResolution` sudah memanggil `killNpc`. Pastikan: (a) kemenangan `npc_duel`/`npc_ambush` atas NPC inti → `killNpc` mengembalikan `downed:true` dan pesan hasil menyebut "tumbang, bukan tewas" (tidak ada loot dan tidak ada dendam); (b) kemenangan atas NPC biasa → `killNpc` dengan `killerInfo = { type:'player', id: player._id, name, power, chainDepth: <chainDepth vendetta bila lawan adalah pemburu, selain itu 0> }`; (c) `npc_spar` TIDAK PERNAH membunuh (HP NPC min 1) dan hanya menambah afinitas ±; (d) pemain kalah dari pemburu tidak menimbulkan penghapusan NPC; (e) vendetta pemburu yang kalah ditandai `satisfied`.
+Tes (≥ 10) dengan model asli: tiap kasus a–e, termasuk spar terhadap NPC inti dan non-inti; `killNpc` tidak dipanggil dua kali untuk satu pertempuran (idempoten).
+HARUS: lulus.
+
+**── CHECKPOINT B. Berhenti, push, dan beri tahu pemilik untuk audit. ──**
+
+---
+# GELOMBANG C — TAMPILAN (ANTI "AI SLOP")
+
+## 2. APA ITU "AI SLOP" DI PROYEK INI (DAFTAR LARANGAN, DIPERIKSA OTOMATIS)
+Semua berikut DILARANG di `web-dashboard/src/components/npc/**` dan `NpcInteractionModal.tsx`:
+1. Emoji atau karakter piktografik di teks, atribut, atau kode (`💬🎁⚔️🥷` dsb.) — pakai teks atau ikon SVG kustom satu-warna dari `src/components/npc/glyphs.tsx` (butir C1) yang sama gayanya, dan HANYA bila benar-benar membantu (tombol aksi: teks saja, seperti referensi).
+2. `backdrop-blur` / glassmorphism, `blur` pada panel, lingkaran bercahaya, `shadow` berpendar (`shadow-[0_0_...]`), animasi `pulse`/`ping` dekoratif, teks bergradien, border bergradien emas.
+3. Sudut sangat bulat (`rounded-xl`, `rounded-2xl`, `rounded-full` selain titik indikator 8px); kartu berlapis-lapis; badge pil berwarna-warni.
+4. Huruf kapital semua + `tracking-widest` sebagai gaya default.
+5. Label campuran Inggris/Indonesia atau kunci mentah (`AMBITIOUS`, `tiger_bone`, `none`).
+6. Teks pemandu pemasaran ("Buka Profil 7-Tab", "✨", "Eksplorasi...") dan angka tanpa makna.
+7. Warna selain token di bagian 3.
+
+## 3. TOKEN DESAIN (SATU-SATUNYA SUMBER WARNA/UKURAN)
+Buat `web-dashboard/src/components/npc/npcTheme.css` (diimpor sekali oleh `NpcInteractionModal.tsx`) berisi variabel di bawah dan pakai HANYA lewat `var(--npc-*)`:
+```css
+.npc-ui {
+  --npc-ink: #1d1c19;          /* teks di atas perkamen */
+  --npc-ink-soft: #4b473d;
+  --npc-parchment: #d8d2c0;    /* kotak teks, tombol aktif */
+  --npc-parchment-edge: #8c8672;
+  --npc-night: #0e0f12;        /* latar panel status */
+  --npc-night-2: #17181c;
+  --npc-line: #2c2e34;         /* garis tipis 1px */
+  --npc-cream: #e8e2d0;        /* teks di atas gelap */
+  --npc-mute: #9a9686;
+  --npc-seal: #a3231f;         /* merah segel: Curi/Serang, Demonic */
+  --npc-jade: #3f7f6e;         /* Righteous */
+  --npc-chip-blue: #3b4fa8; --npc-chip-grey: #565960; --npc-chip-orange: #c97a2b;
+  --npc-btn: #cfcfcf; --npc-btn-ink: #1b1b1b;
+  --npc-btn-off: #3c3f45; --npc-btn-off-ink: #a6a9ae;   /* nonaktif: kontras >= 3:1 */
+  --npc-wash-1: #7c9391; --npc-wash-2: #6a8482; --npc-wash-3: #587371; /* latar tinta */
+  --npc-radius: 2px;
+  --npc-font: var(--font-sans);          /* Inter, seperti referensi */
+  --npc-font-display: var(--font-serif); /* hanya untuk label hubungan miring */
+}
+```
+Aturan tipografi: teks dialog 17px/1.65 `--npc-font` warna `--npc-ink`; pita nama 13px berat 600 `letter-spacing:0.03em` (bukan huruf besar semua); label statistik 12.5px; angka memakai `font-variant-numeric: tabular-nums`; satu-satunya teks miring serif adalah label hubungan ("Orang Asing") ukuran 28px seperti referensi. Tanpa bayangan kecuali `0 1px 0 rgba(0,0,0,.35)` pada kotak teks.
+
+## C0 — Aturan agen dan pemindai statis
+FILE: `AGENTS.md` (akar repo, EDIT: ganti kalimat "Rich Aesthetics ... glassmorphism" menjadi aturan di bawah), `web-dashboard/src/components/npc/npcTheme.css` (baru), `tests/unit/npc/v28_antislop_static.test.mjs` (baru).
+Teks pengganti di `AGENTS.md` bagian Filosofi Desain: "UI NPC mengikuti `web-dashboard/src/components/npc/npcTheme.css`: datar, tinta-dan-perkamen, tanpa emoji, tanpa glassmorphism, tanpa glow, sudut ≤ 2px. Setiap perubahan UI NPC wajib lulus `scripts/v28/layoutProbe.js` dan tes `v28_antislop_static`."
+Tes pemindai (baca berkas sebagai teks; tanpa DOM): untuk semua berkas di `web-dashboard/src/components/npc/` dan `web-dashboard/src/components/modals/NpcInteractionModal.tsx`:
+```js
+const EMOJI = /\p{Extended_Pictographic}/u;
+const BANNED = [/backdrop-blur/, /blur-(sm|md|lg|xl)/, /shadow-\[0_0/, /animate-(pulse|ping)/, /rounded-(xl|2xl|3xl|full)/, /bg-gradient-to/, /text-transparent/, /bg-clip-text/, /tracking-widest/];
+```
+Gagal bila `EMOJI.test(source)` atau salah satu `BANNED` cocok (kecuali baris yang memuat komentar `/* allow-slop: alasan */` — maksimal 3 pengecualian di seluruh folder, tiap pengecualian wajib alasan). Tes juga memeriksa: tidak ada kunci mentah Inggris di berkas label (`npcLabels.ts` harus memuat SEMUA kunci kepribadian, dao, takdir dari B0/A5: `aloof, ambitious, eccentric, free_spirited, honest, pragmatic, righteous, ruthless` dan 16 dao, 9 takdir bawaan, 6 takdir didapat, hati `serene`; sumber daftar dibaca langsung dari `npc-ecosystem-snapshot-v27.json` oleh tes sehingga kunci baru yang tak berlabel menggagalkan tes).
+JALANKAN: tes (harus merah pada kode V27 sekarang; ini bukti). Simpan `C0_before.txt`.
+HARUS: merah sebelum perbaikan C1–C4, hijau di akhir gelombang C.
+
+## C1 — Label Indonesia dan glif
+FILE (baru): `web-dashboard/src/components/npc/npcLabels.ts`, `web-dashboard/src/components/npc/glyphs.tsx`.
+`npcLabels.ts`: objek `PERSONALITY`, `DAO`, `DESTINY`, `HEART`, `ACTIVITY`, `ROLE`, `STAGE` (kunci tahap hubungan dari server: `nemesis, hateful, wary, neutral, friendly, close_friend, soulmate` → "Musuh Bebuyutan, Bermusuhan, Waspada, Orang Asing, Kenalan, Sahabat, Orang Kepercayaan"), tiap nilai `{ label, effect }` (kalimat 1 baris Indonesia tentang pengaruh pada perilaku NPC). Fungsi `label(map, key)` yang mengembalikan label, atau `'(tak dikenal)'` BILA KUNCI TIDAK ADA (jangan pernah menampilkan kunci mentah). Tier reputasi: `repTier(n)` → `<100 Tak Dikenal, <1000 Dikenal, <10000 Terkenal, <100000 Termasyhur, selain itu Legenda`; karisma `charismaTier(n)`: `<25 Biasa, <50 Menarik, <75 Memukau, selain itu Ilahi`. Perbaiki "Reputation: none(1080)".
+`glyphs.tsx`: hanya 3 komponen SVG satu-warna (`currentColor`, stroke 1.5, 16px): `GlyphClose` (silang), `GlyphMouse` (ikon mouse untuk "klik lanjut", seperti referensi), `GlyphSearch` (kaca pembesar). Tidak ada ikon lain.
+Tes: setiap kunci di snapshot terpetakan; `label()` untuk kunci asing tidak mengandung garis bawah.
+
+## C2 — Adegan dialog visual novel (UI1, UI2)
+FILE: `web-dashboard/src/components/npc/NpcDialogueScene.tsx` (TULIS ULANG), `web-dashboard/src/components/npc/InkBackdrop.tsx` (baru), `web-dashboard/src/components/npc/Silhouette.tsx` (baru), `web-dashboard/src/lib/npcDialogueRunner.ts` (baru, murni), `tests/unit/npcDialogueRunner.test.mjs`.
+**Tata letak (meniru screenshot dialog, ukuran viewport 1440×900):**
+```
+ fixed inset-0, z-index 99990, TIDAK ada elemen situs di atasnya (verifikasi: elementFromPoint(5,5) berada di dalam [data-npc-root])
+ ┌───────────────────────────────────────────────────────────────┐
+ │ InkBackdrop (SVG gunung 3 lapis --npc-wash-1..3 + kabut)       │
+ │  [PEMAIN: kiri, tinggi 74vh, bawah rata dengan atas kotak teks] │  [NPC: kanan, tinggi 74vh]
+ │      pita nama pemain (kiri)            pita nama NPC (kanan)    │
+ │ ┌──────────── kotak teks: lebar min(94vw, 900px), tinggi 150px ─┐ │
+ │ │ teks 17px/1.65                                         [mouse]│ │
+ │ └──────────────────────────────────────────────────────────────┘ │
+ └───────────────────────────────────────────────────────────────┘
+```
+Aturan: (1) pembicara aktif `opacity:1`, lawan bicara `opacity:.55` + `filter: brightness(.8)` + turun 8px, transisi 180ms; (2) pita nama: latar `--npc-night`, teks `--npc-cream`, tinggi 26px, tepi miring dengan `clip-path: polygon(0 0, 100% 0, 94% 100%, 6% 100%)`, menempel di atas pojok kiri (pemain) / kanan (NPC) kotak teks; (3) kotak teks: latar `--npc-parchment` dengan tekstur kertas tipis (`background-image` SVG `feTurbulence` baseFrequency .9, opacity .07, tertanam sebagai data-URI), border 2px `--npc-parchment-edge`, radius 2px, padding 20px 28px; (4) ikon `GlyphMouse` di pojok kanan bawah kotak, berkedip opacity 0.35↔0.9 selama 1.4 detik HANYA saat teks selesai diketik; (5) teks mesin tik 45 karakter/detik; klik di mana saja, Spasi, atau Enter: jika masih mengetik → tampilkan penuh; jika sudah → baris berikutnya; Esc menutup; (6) di baris terakhir, **daftar pilihan** muncul sebagai kolom tombol teks rata kanan di atas kotak teks (lebar 280px, tinggi tiap tombol 38px, latar `--npc-btn`, teks `--npc-btn-ink`, radius 2px, jarak 6px), TANPA ikon, maksimal 6 pilihan: `Bicara`, `Beri Hadiah`, `Adu Latih`, `Berdebat`, `Latihan Bersama`, `Minta Bantuan`, `Lihat Profil`, `Pamit` (yang tidak tersedia disembunyikan, bukan dinonaktifkan); pilihan mengirim `POST /npc/action/:id` dan menampilkan `dialogue.text` dari server sebagai baris NPC berikutnya, lalu kembali ke daftar pilihan; (7) potret: `portraitUrl`/`GLOBAL_ASSETS.npcs[name]`; jika tidak ada → `<Silhouette gender/age>` (SVG jubah berdiri warna `#1d1f22` opasitas .88 dengan pemudaran bawah `mask-image: linear-gradient(to top, transparent 0, #000 22%)`); pemain: avatar bila ada, selain itu `<Silhouette>`; (8) **ponsel (<640px)**: hanya potret pembicara aktif tampil 60vh di tengah, kotak teks tinggi 34vh menempel bawah, pilihan menjadi daftar penuh lebar di atas kotak; (9) `safe-area-inset-bottom` dihormati; (10) `role="dialog"`, `aria-live="polite"` pada teks, fokus ke root saat dibuka; (11) loading: teks "…" satu baris (tanpa spinner dekoratif); error: satu baris di kotak teks dengan tombol "Tutup".
+**`InkBackdrop.tsx`**: SVG viewBox `0 0 1600 900` `preserveAspectRatio="xMidYMax slice"`, tiga poligon gunung (`points` tetap; tinggi puncak 38%/50%/62%) berwarna `--npc-wash-1/2/3` dan satu pita kabut `rgba(255,255,255,.16)` antar lapisan; tanpa blur kecuali `filter: blur(1.5px)` pada lapis terjauh. Jika `GLOBAL_ASSETS` memiliki latar permukiman untuk `backdropId` jangkar, pakai gambar itu dengan `object-fit:cover` dan overlay `rgba(10,14,16,.28)`; selain itu pakai SVG ini.
+**`npcDialogueRunner.ts`** (murni, tanpa React): `createRunner(lines)`, `tick(state, dtMs, cps=45)`, `advance(state)`, `isLastLine`, `currentSpeaker`. Tes (≥ 10): klik saat mengetik menyelesaikan teks; maju per baris; di baris terakhir `choicesVisible`; tidak melewati batas; deterministik; baris kosong aman; `cps` 0 tidak membagi nol.
+
+## C3 — Panel status (UI3)
+FILE: `web-dashboard/src/components/npc/NpcProfilePanel.tsx` (EDIT BESAR: bersihkan, jangan tulis ulang struktur tab yang sudah benar), `web-dashboard/src/components/npc/StatRow.tsx` (baru).
+1. **Hapus semua emoji** dan ikon dekoratif; tombol aksi teks saja. Tombol: grid 2 kolom lebar 100% kolom kiri (≤ 236px), tinggi 30px, radius 2px; aktif `--npc-btn`/`--npc-btn-ink`; **nonaktif** `--npc-btn-off`/`--npc-btn-off-ink` (kontras ≥ 3:1) dengan alasan penolakan dari server sebagai teks kecil 11px di bawah grid ("Butuh kedekatan 60"), bukan tooltip yang tak terbaca. Tombol merah `Curi`, `Serang`: latar `--npc-seal`, teks `--npc-cream`; klik pertama mengubah teks menjadi "Yakin?" selama 3 detik; klik kedua mengirim (untuk Serang kirim `confirm:true` lalu `/battle/start` `npc_duel`).
+2. **Perbaiki tabrakan kolom** dengan `StatRow`: `<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 items-baseline text-[12.5px]"><span class="min-w-0 truncate text-[color:var(--npc-mute)]">{label}</span><span class="tabular-nums text-right">{value}</span></div>`; lima kolom dibungkus `grid grid-cols-[repeat(5,minmax(0,1fr))] gap-x-6`; nilai dengan dua bagian (mis. Lifespan `49/150`) ditulis sebagai satu string. Di layar < 900px kolom menjadi 2 kolom lalu 1 kolom (`grid-cols-2`, `grid-cols-1`) sehingga tidak pernah ada teks bertumpuk. Nilai `null` → `???`.
+3. **Isi yang benar**: `Sekte` = `npc.sectName` bila ada, jika tidak "Tanpa sekte" (BUKAN nama kota); `Jabatan` = label peran (`ROLE`) bukan gelar mentah bila tidak ada jabatan sekte; `Ranah` = nama ranah dari `SYSTEM_REALMS` yang dikirim server (tambahkan `cultivation.realmName` dan `stageLabel` di `buildVisibleProfile` memakai `utils/cultivation.js` — jika modul tak dapat dimuat murni, kirim nama dari tabel statis kecil di `services/npcVisibility.js`), `Reputasi` = `repTier` + angka, `Karisma` = `charismaTier`, `Minat` dari data NPC (bila tidak ada → tidak ditampilkan barisnya); Sifat Dao internal/eksternal dan takdir memakai `npcLabels`; chip takdir tiga warna dari token; tab Taoist Mind menampilkan `label` dan `effect` tiap sifat.
+4. Label seluruh antarmuka dalam Bahasa Indonesia KONSISTEN (satu bahasa): Stats→"Status", Skills→"Jurus", Artifact→"Pusaka", Backstory→"Riwayat", Family→"Keluarga", Social→"Hubungan", Taoist Mind→"Hati Dao"; tombol: Talk→"Bicara", Bond→"Ikatan", Partner→"Pasangan Dao", Mentorship→"Bimbingan", Request→"Minta", Gift→"Hadiah", Spar→"Adu Latih", Dual Cultivation→"Latihan Bersama", Debate→"Debat", Invite→"Ajak", Recruitment→"Rekrutmen", Mark→"Tandai", Theft→"Curi", Attack→"Serang".
+5. Struktur dasar tetap seperti screenshot referensi: potret berdiri di kiri dengan label hubungan miring di atasnya dan bar Righteous/Demonic di bawah; tab di atas; blok identitas dua kolom; Destiny di kanan; lima kolom statistik di bawah. Latar panel `--npc-night`, garis `--npc-line` 1px, tanpa kartu bersarang.
+6. Tab `Riwayat` membaca endpoint `GET /api/npc/history/:npcId` (tambahkan di route: 40 `NpcEvent` terakhir `{ at, text }`, aman bila koleksi kosong → "Belum ada catatan."). Tab `Keluarga` memakai `/relations/:id` yang sudah ada dan menampilkan nama, hubungan, hidup/wafat, ranah.
+7. Tidak ada `fixed`-ketinggian yang memotong konten: root `max-h-[100dvh] overflow-y-auto`; tab bar `sticky top-0`.
+
+## C4 — Pembungkus modal dan ambush (UI1 ponsel)
+FILE: `web-dashboard/src/components/modals/NpcInteractionModal.tsx` (EDIT), `web-dashboard/src/components/npc/NpcAmbushDialog.tsx` (baru), `web-dashboard/src/app/page.tsx` (hanya memasang `NpcAmbushDialog` di dekat `NpcInteractionModal`).
+1. Root kedua tampilan diberi atribut `data-npc-root` dan kelas `npc-ui`, `position: fixed; inset: 0; z-index: 99990` dan dirender lewat `createPortal(…, document.body)` agar tidak terpotong oleh header situs (alasan UI1: header tetap terlihat di atas/di sekitar modal). Mengunci scroll `body` saat terbuka (`overflow:hidden`) dan memulihkannya saat tutup.
+2. Alur: klik NPC → profil + sapaan (`/greeting/:id`) → mode `dialogue`; tombol "Lihat Profil" membuka panel status; tombol tutup "Esc".
+3. `NpcAmbushDialog`: polling `GET /api/npc/ambush/pending` tiap 20 detik HANYA bila `document.visibilityState==='visible'` dan halaman dunia aktif; memakai `NpcDialogueScene` dengan baris pembuka dari naskah (`vendetta_confront`), tiga pilihan teks: "Lawan", "Bayar ganti rugi (N tembaga)", "Kabur"; hitung mundur dari sisa waktu server; setelah selesai memanggil `/ambush/:id/resolve`.
+4. Hapus semua pemanggilan route lama yang tidak ada lagi.
+
+## C5 — Halaman pratinjau dan penguji tata letak (gerbang OBJEKTIF anti-slop)
+FILE (baru): `web-dashboard/src/app/dev/npc-preview/page.tsx`, `web-dashboard/src/app/dev/npc-preview/fixture.ts`, `scripts/v28/layoutProbe.js`.
+1. `fixture.ts` mengekspor `NPC_FIXTURE` (salin satu NPC nyata dari snapshot, ranah 1, dengan semua bidang profil seperti keluaran `buildVisibleProfile`) dan `RELATION_FIXTURE`. `page.tsx`: komponen klien; `mode` awal DIAMBIL setelah mount (`useEffect` membaca `new URLSearchParams(location.search).get('view')`) supaya TIDAK terjadi galat hydration; `?view=dialogue` atau `?view=profile`; guard: bila `process.env.NODE_ENV === 'production'` panggil `notFound()`.
+2. `layoutProbe.js` (Playwright, sudah ada di `package.json`; bila `chromium.launch()` gagal, tulis `review/v28_raw/layout_probe.json` dengan `status:"SKIPPED"` dan alasan, JANGAN menulis lulus). Jalankan terhadap `PREVIEW_URL` (bawaan `http://localhost:3100`), empat viewport (1440×900, 1024×768, 390×844, 360×640) × dua tampilan. Pemeriksaan (semua dihitung dari DOM, hasil ditulis ke JSON, exit code ≠ 0 bila ada pelanggaran):
+```js
+// P1 emoji: teks root tidak boleh cocok /\p{Extended_Pictographic}/u
+// P2 tanpa scroll horizontal: document.documentElement.scrollWidth <= innerWidth
+// P3 menutup layar: root [data-npc-root] getBoundingClientRect = {0,0,vw,vh} dan document.elementFromPoint(5,5).closest('[data-npc-root]') != null dan elementFromPoint(vw-5, 5) juga
+// P4 tidak ada teks bertumpuk: ambil semua elemen daun bernode-teks yang terlihat di dalam root; untuk tiap pasangan yang bukan leluhur/keturunan, luas irisan rect > 4 px^2 => pelanggaran
+// P5 tidak ada teks terpotong: elemen overflow hidden/clip dengan scrollWidth > clientWidth + 1 tanpa atribut data-ellipsis
+// P6 kontras: untuk setiap <button> terlihat, rasio kontras warna teks vs latar >= 3
+// P7 gaya terlarang (getComputedStyle): backdropFilter !== 'none'; boxShadow dengan blur > 12px; borderRadius > 8px (kecuali elemen dengan data-dot); backgroundImage mengandung 'linear-gradient' pada <button>
+// P8 ukuran sentuh: tiap <button> terlihat tinggi >= 28px (desktop) dan >= 40px (lebar < 640)
+// P9 dialog: elemen [role=dialog] ada; teks dialog tidak kosong setelah 2 detik
+```
+Tulis fungsi bantu kontras (luminansi relatif WCAG) di dalam skrip. Tambahkan skrip npm TIDAK diperlukan; jalankan manual.
+JALANKAN: `cd web-dashboard && (npx next dev -p 3100 &) ; sleep 20; cd .. && node scripts/v28/layoutProbe.js 2>&1 | tee review/v28_raw/C5.txt; pkill -f "next dev"`; hapus `web-dashboard/AGENTS.md` bila dibuat otomatis.
+HARUS: `pelanggaran: 0` pada 16 kombinasi (atau SKIPPED dengan alasan jelas); `v28_antislop_static` hijau; `npx tsc --noEmit` bersih; `npx next build` berhasil.
+
+**── CHECKPOINT C. Berhenti, push, dan beri tahu pemilik. Pemilik akan membandingkan secara visual dengan kedua screenshot referensi. ──**
+
+---
+# PENUTUP
+
+## D0 — Laporan jujur
+FILE: `scripts/v27/gateRunner.js` (TULIS ULANG), `review/report_v28.md` (dihasilkan), `review/v28_raw/open_decisions.md`.
+1. Hapus semua nilai `status: 'PASS'` dan kalimat hasil yang ditulis tangan di `gateRunner.js`. Skrip baru menjalankan perintah: `npm test`, `npx vitest run`, `node scripts/v28/auditNpcWorld.js`, `node scripts/v23/auditZones.js`, `node scripts/v25/auditTierCap.js`, `node scripts/v26/auditEntry.js`, `node scripts/v20/auditSettlements.js`, `cd web-dashboard && npx tsc --noEmit && npx next build`, lalu `node scripts/v28/layoutProbe.js` (jika server pratinjau menyala). Setiap hasil DIAMBIL dari kode keluar dan teks keluaran (jumlah tes dari baris `Tests  N passed`, pelanggaran dari JSON audit). Skrip menolak menulis LULUS bila ada kode keluar ≠ 0 atau bila berkas keluaran kosong.
+2. `report_v28.md`: HEAD, tanggal, tabel A0–C5 berisi angka dari keluaran, daftar tugas yang dilewati/di-SKIP beserta alasan, dan bagian "Tidak diuji": MongoDB nyata (route diuji lewat fungsi murni dan model tanpa DB), soket langsung, visual selain probe, beban banyak pemain.
+3. `open_decisions.md`: (1) daftar tokoh cerita final di `npc-essential-v27.json`; (2) `residentsPerType`; (3) batas pencurian/peras harian dan harga ganti rugi dendam; (4) menikah dengan NPC dan anak; (5) rekrutmen NPC ke sekte pemain; (6) gambar potret berdiri unik; (7) arti kata "Sekte" untuk NPC (saat ini "Tanpa sekte" karena belum ada data sekte NPC).
+HARUS: semua gerbang lulus dihitung otomatis; `report_v28.md` tercipta.
+
+## TABEL GATE
+| Tugas | Ukuran | Ambang |
+|---|---|---|
+| A1 | `npm test` | bersih; 33 berkas / 314 tes |
+| A2 | tes identitas | ≥ 8 lulus; "sebelum" merah |
+| A3 | pintu kematian | ≥ 14 lulus; NPC inti tak pernah mati |
+| A4 | aksi + jarak | ≥ 50 lulus; celah uang tertutup |
+| A5 | profil/kabut | ≥ 8 lulus |
+| A6 | dialog | lulus; tidak ada penampung tersisa |
+| B1 | seed + invarian V1–V14 | 650–900 NPC; 0 pelanggaran |
+| B2 | visibilitas | ≥ 10 lulus |
+| B3 | ticker | ≥ 14 lulus; terpasang sekali |
+| B4 | dendam | ≥ 14 lulus |
+| B5 | tempur | ≥ 10 lulus |
+| C0–C1 | pemindai anti-slop + label | hijau |
+| C2–C4 | UI | `tsc` bersih; `next build` berhasil |
+| C5 | probe tata letak | 0 pelanggaran × 16 kombinasi |
+| D0 | regresi + laporan otomatis | semua lulus |
+
+## JIKA ADA YANG TIDAK JELAS
+Berhenti. Tulis `review/v28_blocker.md`. Lebih baik berhenti di A4 dengan blocker jelas daripada menyelesaikan D0 dengan hasil yang salah.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-11-09T05:34:27+07:00.
+</ADDITIONAL_METADATA>

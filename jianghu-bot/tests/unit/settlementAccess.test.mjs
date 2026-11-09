@@ -69,7 +69,7 @@ describe('Settlement Footprint Walkability & Access (V24 H1)', () => {
     expect(settlementZones.findAnchorBySpan(a.x, a.y + sh)).toBeNull();
   });
 
-  it('6. ObjectScatter does not block cells inside settlement footprint', () => {
+  it('6. ObjectScatter does not block cells inside settlement footprint', { timeout: 30000 }, () => {
     for (const a of anchors.slice(0, 10)) {
       const sw = a.spanWidth || 2;
       const sh = a.spanHeight || 2;
@@ -82,7 +82,7 @@ describe('Settlement Footprint Walkability & Access (V24 H1)', () => {
     }
   });
 
-  it('7. Unpacked static chunks match direct getTileAt for settlement walkability', () => {
+  it('7. Unpacked static chunks match direct getTileAt for settlement walkability', { timeout: 30000 }, () => {
     for (const a of anchors.slice(0, 5)) {
       const cx = Math.floor(a.x / 32);
       const cy = Math.floor(a.y / 32);

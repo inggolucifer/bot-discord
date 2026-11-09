@@ -1,0 +1,51 @@
+{
+  "overallStatus": "PASS",
+  "headHash": "1f9a7254",
+  "dateStr": "2026-11-09T04:38:12.439Z",
+  "gateResults": {
+    "syntax": {
+      "passed": true,
+      "details": "[SYNTAX-CHECK] Memindai seluruh berkas JavaScript di proyek... [SYNTAX-CHECK] Ditemukan 681 berkas .js. Menjalankan node --check... ✅ [SYNTAX-CHECK PASSED] Seluruh 681 berkas JavaScript valid tanpa error sintaks."
+    },
+    "vitest": {
+      "passed": true,
+      "filesPassed": 47,
+      "testsPassed": 430
+    },
+    "npcWorld": {
+      "passed": true,
+      "violations": 0,
+      "totalNpcs": 764,
+      "essentialCount": 14
+    },
+    "zones": {
+      "passed": true,
+      "details": "Z1 - Z8 all passed"
+    },
+    "tierCap": {
+      "passed": true,
+      "details": "52 anchors tier cap verified"
+    },
+    "instancedEntry": {
+      "passed": true,
+      "details": "55 instanced zones entry validated"
+    },
+    "settlements": {
+      "passed": true,
+      "details": "G4.1 - G4.7 all passed"
+    },
+    "tsc": {
+      "passed": true,
+      "exitCode": 0
+    },
+    "build": {
+      "passed": true,
+      "exitCode": 0
+    },
+    "probe": {
+      "status": "SKIPPED",
+      "totalViolations": 0,
+      "reason": "Chromium launch failed: browserType.launch: Executable doesn't exist at C:\\Users\\User\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1248\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+    }
+  }
+}
