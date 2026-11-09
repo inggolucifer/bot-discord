@@ -50,6 +50,9 @@ function ensureDailyStructures(player, relation) {
   }
 }
 
+const { makeRng } = require('../utils/npcRng');
+const DEFAULT_RNG = makeRng(0xC0FFEE);
+
 /**
  * Evaluates an interaction action authoritatively.
  *
@@ -62,7 +65,7 @@ function ensureDailyStructures(player, relation) {
  * @param {Function} context.rng - Seeded random function returning 0..1
  * @returns {Object} { success, status, message, deltaAffinity, resultData }
  */
-function evaluateAction(action, { player, npc, relation, payload = {}, rng = Math.random }) {
+function evaluateAction(action, { player, npc, relation, payload = {}, rng = DEFAULT_RNG }) {
   if (!player || !npc || !relation) {
     return { success: false, status: 400, message: 'Konteks interaksi tidak valid.' };
   }

@@ -1,5 +1,5 @@
 /**
- * Activity Scheduling Engine for Living NPCs (V27)
+ * Activity Scheduling Engine for Living NPCs (V27 / V28)
  * Maps Jianghu 12 Shichen into daily cultivator routines.
  */
 
@@ -67,6 +67,48 @@ function resolveCurrentActivity(npc, jianghuTime) {
   };
 }
 
+function evaluateNpcSchedule(npc, gameHour, options = {}) {
+  const isWalkableFn = options.isWalkableFn || require('../scripts/v28/lib/invariants').isTileWalkable;
+
+  const shichen = getShichenFromHour(gameHour);
+  const currentActivity = resolveCurrentActivity(npc, { hour: gameHour, shichenId: shichen.id });
+
+  const prevActivity = npc.schedule?.activityState;
+  const prevFacility = npc.schedule?.currentFacility;
+  const changed = prevActivity !== currentActivity.activityState || prevFacility !== currentActivity.targetFacility;
+
+  const anchorId = npc.schedule?.homeAnchorId || npc.schedule?.currentAnchorId || 'desa_xingcun';
+
+  // Coordinate handling
+  let tx = npc.schedule?.tileX ?? npc.tileX ?? 2455;
+  let ty = npc.schedule?.tileY ?? npc.tileY ?? 2485;
+
+  if (!isWalkableFn(tx, ty)) {
+    let found = false;
+    for (let r = 1; r <= 10 && !found; r++) {
+      for (let dx = -r; dx <= r && !found; dx++) {
+        for (let dy = -r; dy <= r && !found; dy++) {
+          if (isWalkableFn(tx + dx, ty + dy)) {
+            tx += dx;
+            ty += dy;
+            found = true;
+          }
+        }
+      }
+    }
+  }
+
+  return {
+    changed,
+    activityState: currentActivity.activityState,
+    currentFacility: currentActivity.targetFacility,
+    anchorId,
+    regionSlug: npc.regionSlug || 'central_plains',
+    tileX: tx,
+    tileY: ty
+  };
+}
+
 function updateNpcScheduleState(npc, jianghuTime = getJianghuTime()) {
   if (!npc || !npc.vitalStatus || !npc.vitalStatus.isAlive) {
     if (npc && npc.schedule) npc.schedule.activityState = 'dead';
@@ -87,5 +129,6 @@ function updateNpcScheduleState(npc, jianghuTime = getJianghuTime()) {
 
 module.exports = {
   resolveCurrentActivity,
+  evaluateNpcSchedule,
   updateNpcScheduleState
 };

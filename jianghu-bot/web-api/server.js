@@ -341,6 +341,9 @@ const setupServer = (client) => {
     const { nearbyBroadcaster } = require('../services/nearbyBroadcaster');
     nearbyBroadcaster.start(io, 500);
 
+    const { startNpcTicker } = require('../services/npcTicker');
+    startNpcTicker();
+
     async function getPlayerChunk(socket) {
         const userId = socket.user?.userId || socket.user?.id || socket.user?.discordId;
         if (!userId) return null;

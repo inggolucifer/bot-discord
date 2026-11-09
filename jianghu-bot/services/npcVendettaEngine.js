@@ -56,12 +56,15 @@ async function getActiveVendettasForTarget(targetId, targetType = 'player') {
   }).populate('hunterNpcId');
 }
 
+const { makeRng } = require('../utils/npcRng');
+const DEFAULT_RNG = makeRng(0xC0FFEE);
+
 function evaluateAmbushTrigger({
   hunterNpc,
   player,
   tileInfo = {},
   grudgeLevel = 5,
-  rng = Math.random
+  rng = DEFAULT_RNG
 }) {
   // Ambush Invariant: DILARANG ambush di dalam pemukiman atau safe zone
   if (tileInfo.isSettlement || tileInfo.isSafeZone) {

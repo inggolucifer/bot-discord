@@ -3,7 +3,10 @@
  * Near-Tick (5s step-by-step for active chunks) & Abstract-Tick (5m batch off-screen).
  */
 
-function simulateNearTick(npc, targetCoords = {}, deltaSeconds = 5, rng = Math.random) {
+const { makeRng } = require('../utils/npcRng');
+const DEFAULT_RNG = makeRng(0xC0FFEE);
+
+function simulateNearTick(npc, targetCoords = {}, deltaSeconds = 5, rng = DEFAULT_RNG) {
   if (!npc || !npc.vitalStatus || !npc.vitalStatus.isAlive) {
     return { moved: false };
   }
@@ -68,7 +71,7 @@ function simulateNearTick(npc, targetCoords = {}, deltaSeconds = 5, rng = Math.r
   };
 }
 
-function simulateAbstractTick(npc, targetCoords = {}, deltaMinutes = 5, rng = Math.random) {
+function simulateAbstractTick(npc, targetCoords = {}, deltaMinutes = 5, rng = DEFAULT_RNG) {
   if (!npc || !npc.vitalStatus || !npc.vitalStatus.isAlive) {
     return { updated: false };
   }

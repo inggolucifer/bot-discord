@@ -232,8 +232,36 @@ function advanceNpcLifeTick(npc, deltaMonths = 1, rng) {
   return { status: 'alive', npc };
 }
 
+async function runRecoveryTick(now = Date.now(), options = {}) {
+  const NpcModel = options.Npc || require('../models/Npc');
+  const downedNpcs = await NpcModel.find({
+    'vitalStatus.isAlive': true,
+    'vitalStatus.downedUntil': { $lte: new Date(now), $ne: null }
+  });
+
+  let count = 0;
+  for (const npc of downedNpcs) {
+    if (npc.vitalStatus) {
+      npc.vitalStatus.isInjured = false;
+      npc.vitalStatus.injurySeverity = 0;
+      npc.vitalStatus.downedUntil = null;
+    }
+    npc.attributes = npc.attributes || {};
+    npc.attributes.hp = npc.attributes.maxHp || 100;
+    if (npc.schedule) {
+      npc.schedule.activityState = 'idle';
+    }
+    if (typeof npc.save === 'function' && npc.constructor?.db?.readyState === 1) {
+      await npc.save();
+    }
+    count++;
+  }
+  return count;
+}
+
 module.exports = {
   killNpc,
   advanceNpcLifeTick,
-  calculateKinGrudge
+  calculateKinGrudge,
+  runRecoveryTick
 };

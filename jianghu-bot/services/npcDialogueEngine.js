@@ -117,7 +117,10 @@ function getDefaultDialogueChoices(relation) {
   return choices;
 }
 
-function generateDialogueLine({ npc, player = {}, relation = {}, actionContext = 'greeting', rng = Math.random, payload = {} }) {
+const { makeRng } = require('../utils/npcRng');
+const DEFAULT_RNG = makeRng(0xC0FFEE);
+
+function generateDialogueLine({ npc, player = {}, relation = {}, actionContext = 'greeting', rng = DEFAULT_RNG, payload = {} }) {
   const affinity = relation?.affinity ?? 0;
   let text = '';
 
