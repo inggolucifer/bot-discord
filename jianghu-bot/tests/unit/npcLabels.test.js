@@ -28,11 +28,13 @@ const FORBIDDEN_WORDS = [
 
 describe('P6 NPC Labels & Indonesian Realm Formatting Unit Tests', () => {
   let formatRealm;
+  let activityLabel;
 
   beforeAll(async () => {
     const modulePath = path.resolve(__dirname, '../../web-dashboard/src/components/npc/npcLabels.ts');
     const mod = await import(modulePath);
     formatRealm = mod.formatRealm;
+    activityLabel = mod.activityLabel;
   });
 
   it('1. formatRealm is defined and exported as function', () => {
@@ -70,5 +72,30 @@ describe('P6 NPC Labels & Indonesian Realm Formatting Unit Tests', () => {
 
     const res4 = formatRealm(3, 'peak');
     expect(res4).toBe('Inti Emas Tahap Puncak');
+  });
+
+  it('4. activityLabel maps all living NPC states accurately without English words', () => {
+    expect(typeof activityLabel).toBe('function');
+
+    const expectations = [
+      { state: 'traveling', journeyTo: 'Desa Xingcun', expected: 'Sedang dalam perjalanan ke Desa Xingcun' },
+      { state: 'visiting', expected: 'Sedang bertamu' },
+      { state: 'hunting', expected: 'Sedang memburu seseorang' },
+      { state: 'working', expected: 'Sedang bekerja' },
+      { state: 'sleeping', expected: 'Sedang tidur' },
+      { state: 'socializing', expected: 'Sedang bersantai' },
+      { state: 'training', expected: 'Sedang berlatih' },
+      { state: 'meditating', expected: 'Sedang bermeditasi' },
+      { state: 'idle', expected: 'Sedang senggang' }
+    ];
+
+    for (const item of expectations) {
+      const label = activityLabel(item.state, item.journeyTo);
+      expect(label).toBe(item.expected);
+      for (const word of FORBIDDEN_WORDS) {
+        const regex = new RegExp(`\\b${word}\\b`, 'i');
+        expect(regex.test(label)).toBe(false);
+      }
+    }
   });
 });

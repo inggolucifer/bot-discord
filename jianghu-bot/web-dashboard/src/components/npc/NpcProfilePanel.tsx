@@ -13,6 +13,7 @@ import {
   reputationDisplay,
   charismaTier,
   formatRealm,
+  activityLabel,
   PERSONALITY,
   DAO,
   DESTINY,
@@ -599,6 +600,7 @@ export function NpcProfilePanel({
                   >
                     Dasar
                   </div>
+                  <StatRow label="Aktivitas" value={activityLabel((npc as any).activityState || (npc as any).schedule?.activityState, (npc as any).journeyTo || (npc as any).schedule?.journeyTo)} />
                   <StatRow label="Usia Hidup" value={`${npc.lifespan?.currentAge || 380}/${npc.lifespan?.maxAge || 810}`} />
                   <StatRow label="Suasana Hati" value={`${Math.floor(npc.attributes?.mood ?? 70)}/100`} />
                   <StatRow label="Kesehatan" value={`${Math.floor(npc.attributes?.hp ?? 100)}/${Math.floor(npc.attributes?.maxHp ?? 100)}`} />

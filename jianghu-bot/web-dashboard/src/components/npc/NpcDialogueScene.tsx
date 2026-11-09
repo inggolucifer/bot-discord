@@ -6,6 +6,7 @@ import { NpcFullProfile, NpcPlayerRelationData } from '@/types/npc';
 import { GlyphClose, GlyphMouse } from './glyphs';
 import { InkBackdrop } from './InkBackdrop';
 import { Silhouette } from './Silhouette';
+import { activityLabel } from './npcLabels';
 import {
   createRunner,
   tick,
@@ -391,6 +392,18 @@ export function NpcDialogueScene({
           >
             {isPlayerActive ? 'Pendekar' : npc.name}
           </div>
+
+          {/* Activity label below nameplate for NPC */}
+          {!isPlayerActive && (
+            <div
+              className="absolute -top-[2px] right-4 text-[11px] font-normal tracking-tight pointer-events-none"
+              style={{
+                color: 'var(--npc-ink-soft, #5a5448)'
+              }}
+            >
+              {activityLabel((npc as any).activityState || (npc as any).schedule?.activityState, (npc as any).journeyTo || (npc as any).schedule?.journeyTo)}
+            </div>
+          )}
 
           {/* Dialogue Text Content with Tabular numbers & aria live */}
           <div

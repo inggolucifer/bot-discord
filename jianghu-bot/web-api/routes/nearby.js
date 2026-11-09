@@ -9,6 +9,9 @@ const { computeNearbyEntities } = require('../../utils/nearbyEngine');
 const zonesV23 = require('../../world-data/zones-v23.json');
 const { getRealmIndex } = require('../../utils/cultivation');
 const { resolveNpcTile } = require('../../utils/npcPosition');
+const anchorsList = require('../../world-data/anchors.json');
+const anchorMap = {};
+for (const a of anchorsList) anchorMap[a.id] = a;
 
 const warnedNpcMap = new Set();
 
@@ -198,6 +201,9 @@ router.get('/', authenticateToken, async (req, res) => {
         portraitUrl: n.portraitUrl || null,
         personality: n.personality?.primary || 'righteous',
         activityState: n.schedule?.activityState || 'idle',
+        journeyTo: (n.schedule?.activityState === 'traveling' && n.schedule?.targetDestination?.toId)
+          ? (anchorMap[n.schedule.targetDestination.toId]?.name || n.schedule.targetDestination.toId)
+          : null,
         visibility: 'public'
       });
     }

@@ -470,3 +470,22 @@ export function formatRealm(realmIndexOrObj: any, stage?: any): string {
   const result = stageStr ? `${baseName} ${stageStr}` : baseName;
   return result.replace(FORBIDDEN_WORDS_REGEX, '').replace(/\s+/g, ' ').trim();
 }
+
+/**
+ * Returns human-readable Indonesian activity status for NPCs (V30).
+ */
+export function activityLabel(state?: string, journeyTo?: string | null): string {
+  const s = String(state || 'idle').toLowerCase().trim();
+  if (s === 'traveling') {
+    return journeyTo ? `Sedang dalam perjalanan ke ${journeyTo}` : 'Sedang dalam perjalanan';
+  }
+  if (s === 'visiting') return 'Sedang bertamu';
+  if (s === 'hunting') return 'Sedang memburu seseorang';
+  if (s === 'working') return 'Sedang bekerja';
+  if (s === 'sleeping') return 'Sedang tidur';
+  if (s === 'socializing') return 'Sedang bersantai';
+  if (s === 'training') return 'Sedang berlatih';
+  if (s === 'meditating') return 'Sedang bermeditasi';
+  if (s === 'idle') return 'Sedang senggang';
+  return 'Sedang senggang';
+}

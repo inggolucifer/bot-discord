@@ -6,6 +6,9 @@
 
 const { getRealmName } = require('../utils/cultivation');
 const { getPlayerRealmIndex } = require('./npcActions');
+const anchorsData = require('../world-data/anchors.json');
+const anchorMap = {};
+for (const a of anchorsData) anchorMap[a.id] = a;
 
 /**
  * Builds visible NPC profile safe for transmission to client.
@@ -33,7 +36,11 @@ function buildVisibleProfile(npc, player = {}, relation = {}) {
     imageUrl: npc.imageUrl || null,
     regionSlug: npc.regionSlug || 'wilayah_fana',
     settlementName: npc.settlementName || 'Desa Bunga Persik',
-    buildingName: npc.buildingName || null
+    buildingName: npc.buildingName || null,
+    activityState: npc.schedule?.activityState || 'idle',
+    journeyTo: (npc.schedule?.activityState === 'traveling' && npc.schedule?.targetDestination?.toId)
+      ? (anchorMap[npc.schedule.targetDestination.toId]?.name || npc.schedule.targetDestination.toId)
+      : null
   };
 
   // 2. Personality (Morality & Temperament masked unless affinity >= 40)

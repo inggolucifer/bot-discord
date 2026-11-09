@@ -1,0 +1,9 @@
+=== VITEST: tests/unit/npcLabels.test.js ===
+ RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
+
+ ✓ tests/unit/npcLabels.test.js (4 tests) 61ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  23:04:00
+   Duration  877ms (tests 33%, worker 29%, import 20%, transform 17%, environment 1%)
