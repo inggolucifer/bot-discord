@@ -239,6 +239,15 @@ async function resolveAmbushAction({
   return { success: false, error: 'Pilihan aksi tidak valid.' };
 }
 
+async function saveDocIfConnected(doc) {
+  if (doc && typeof doc.save === 'function' && doc.constructor?.db?.readyState === 1) {
+    await doc.save();
+  }
+}
+
+/**
+ * Transitions a hunter back to idle and sets stayUntil so F1 schedules return home when away/displaced.
+ */
 async function resetHunterToIdle(hunter, now) {
   if (!hunter) return;
   hunter.schedule = hunter.schedule || {};
@@ -255,6 +264,157 @@ async function resetHunterToIdle(hunter, now) {
   if (typeof hunter.save === 'function') {
     await hunter.save();
   }
+}
+
+/**
+ * Resets hunting NPCs whose vendetta resolved, entered cooldown, or target went offline (>10m).
+ */
+async function cleanupStaleHunters({ Vendetta, PlayerMod, NpcMod, now, tenMinutesAgo, cooldownMs }) {
+  if (!NpcMod) return;
+  const huntingNpcs = await NpcMod.find({ 'schedule.activityState': 'hunting' });
+
+  for (const h of huntingNpcs) {
+    const activeVendetta = await Vendetta.findOne({ hunterNpcId: h._id, resolved: false });
+    if (!activeVendetta) {
+      await resetHunterToIdle(h, now);
+      continue;
+    }
+
+    const onCooldown = activeVendetta.lastAmbushAt && (now - new Date(activeVendetta.lastAmbushAt).getTime() < cooldownMs);
+    if (onCooldown) {
+      await resetHunterToIdle(h, now);
+      continue;
+    }
+
+    const targetPlayer = await PlayerMod.findById(activeVendetta.targetId);
+    const offline = !targetPlayer || !targetPlayer.updatedAt || new Date(targetPlayer.updatedAt).getTime() < tenMinutesAgo.getTime();
+    if (offline) {
+      await resetHunterToIdle(h, now);
+    }
+  }
+}
+
+async function createAndSaveAmbush(Ambush, fields) {
+  const ambush = new Ambush(fields);
+  await saveDocIfConnected(ambush);
+  return ambush;
+}
+
+/**
+ * Moves vendetta hunters toward an online player and evaluates vendetta ambushes.
+ */
+async function evaluateVendettasForPlayer({ player, px, py, Vendetta, Ambush, NpcMod, anchors, isWalkableFn, now, cooldownMs, rng }) {
+  const vendettas = await Vendetta.find({ targetId: player._id, resolved: false }).limit(3);
+
+  for (const v of vendettas) {
+    if (v.lastAmbushAt && (now - new Date(v.lastAmbushAt).getTime() < cooldownMs)) {
+      continue;
+    }
+
+    const hunter = NpcMod ? await NpcMod.findById(v.hunterNpcId) : null;
+    if (!hunter || !hunter.vitalStatus?.isAlive) continue;
+
+    const step = huntStep({ hunter, player, anchors, isWalkableFn, now });
+    const enteringOrSteppingHunt = step.moved || (
+      step.state === 'hunting' &&
+      (hunter.schedule?.activityState !== 'hunting' || hunter.schedule?.targetDestination)
+    );
+
+    if (enteringOrSteppingHunt) {
+      hunter.schedule = hunter.schedule || {};
+      if (step.moved) {
+        hunter.schedule.tileX = step.newX;
+        hunter.schedule.tileY = step.newY;
+        hunter.tileX = step.newX;
+        hunter.tileY = step.newY;
+      }
+      hunter.schedule.activityState = 'hunting';
+      hunter.schedule.targetDestination = null;
+      hunter.schedule.stayUntil = null;
+      if (typeof hunter.markModified === 'function') hunter.markModified('schedule');
+      if (typeof hunter.save === 'function') await hunter.save();
+    } else if (step.state === 'idle' && hunter.schedule?.activityState === 'hunting') {
+      await resetHunterToIdle(hunter, now);
+    }
+
+    const hx = hunter.schedule?.tileX ?? hunter.tileX ?? px;
+    const hy = hunter.schedule?.tileY ?? hunter.tileY ?? py;
+    const dist = Math.max(Math.abs(px - hx), Math.abs(py - hy));
+    if (dist > 24) continue;
+
+    const playerRng = rng || makeRng(hash32(String(player._id) + ':' + Math.floor(now / 60000)));
+    const trig = evaluateAmbushTrigger({
+      hunterNpc: hunter,
+      player: { tileX: px, tileY: py },
+      tileInfo: { isSettlement: false },
+      grudgeLevel: v.grudgeLevel,
+      rng: playerRng
+    });
+
+    if (trig.canAmbush) {
+      await createAndSaveAmbush(Ambush, {
+        hunterNpcId: hunter._id,
+        targetPlayerId: player._id,
+        kind: 'vendetta',
+        reason: v.reason || 'dendam',
+        status: 'pending',
+        tileX: px,
+        tileY: py,
+        expiresAt: new Date(now + 10 * 60 * 1000)
+      });
+      v.lastAmbushAt = new Date(now);
+      await saveDocIfConnected(v);
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Evaluates hostile ambushes from deeply resentful NPCs (affinity <= -60) near the player.
+ */
+async function evaluateHostileRelationsForPlayer({ player, px, py, RelationMod, Ambush, NpcMod, now, rng }) {
+  if (!RelationMod || !NpcMod) return false;
+
+  const hostileRelations = await RelationMod.find({
+    playerId: player._id,
+    affinity: { $lte: -60 }
+  }).sort({ affinity: 1 }).limit(5);
+
+  for (const rel of hostileRelations) {
+    if (rel.lastAmbushAt && (now - new Date(rel.lastAmbushAt).getTime() < 6 * 3600 * 1000)) {
+      continue;
+    }
+
+    const npc = await NpcMod.findById(rel.npcId);
+    if (!npc || !npc.vitalStatus?.isAlive || npc.vitalStatus?.isEssential || npc.vitalStatus?.isInjured) continue;
+    if (npc.vitalStatus?.downedUntil && new Date(npc.vitalStatus.downedUntil).getTime() > now) continue;
+
+    const nx = npc.schedule?.tileX ?? npc.tileX ?? 0;
+    const ny = npc.schedule?.tileY ?? npc.tileY ?? 0;
+    const dist = Math.max(Math.abs(px - nx), Math.abs(py - ny));
+    if (dist > 12) continue;
+
+    const roll = rng ? rng() : makeRng(hash32(String(npc._id) + ':' + String(player._id) + ':' + Math.floor(now / 60000)))();
+    if (roll < 0.10) {
+      await createAndSaveAmbush(Ambush, {
+        hunterNpcId: npc._id,
+        targetPlayerId: player._id,
+        kind: 'hostile',
+        reason: 'benci',
+        status: 'pending',
+        tileX: px,
+        tileY: py,
+        expiresAt: new Date(now + 10 * 60 * 1000)
+      });
+      rel.lastAmbushAt = new Date(now);
+      await saveDocIfConnected(rel);
+      return true;
+    }
+  }
+
+  return false;
 }
 
 async function runVendettaTick({
@@ -276,45 +436,20 @@ async function runVendettaTick({
 
   if (!PlayerMod || !Vendetta || !Ambush) return 0;
 
-  // 1. Find online players (updatedAt <= 10 minutes ago)
   const tenMinutesAgo = new Date(now - 10 * 60 * 1000);
+  const cooldownMs = 3 * 3600 * 1000;
   const onlinePlayers = await PlayerMod.find({ updatedAt: { $gte: tenMinutesAgo } });
 
-  // Reset hunters whose targets are offline or whose vendetta was resolved
-  if (NpcMod) {
-    const huntingNpcs = await NpcMod.find({ 'schedule.activityState': 'hunting' });
-    for (const h of huntingNpcs) {
-      const activeVendetta = await Vendetta.findOne({
-        hunterNpcId: h._id,
-        resolved: false
-      });
-      let shouldStop = false;
-      if (!activeVendetta) {
-        shouldStop = true;
-      } else {
-        const targetPlayer = await PlayerMod.findById(activeVendetta.targetId);
-        if (!targetPlayer || !targetPlayer.updatedAt || new Date(targetPlayer.updatedAt).getTime() < tenMinutesAgo.getTime()) {
-          shouldStop = true;
-        }
-      }
-
-      if (shouldStop) {
-        await resetHunterToIdle(h, now);
-      }
-    }
-  }
+  await cleanupStaleHunters({ Vendetta, PlayerMod, NpcMod, now, tenMinutesAgo, cooldownMs });
 
   let triggeredCount = 0;
-  const cooldownMs = 3 * 3600 * 1000;
 
   for (const player of onlinePlayers) {
     const px = Math.floor(player.gridPosition?.tileX ?? player.tileX ?? 0);
     const py = Math.floor(player.gridPosition?.tileY ?? player.tileY ?? 0);
 
-    // Check settlement exclusion zone for player
     if (isPlayerInsideSettlementExclusion(px, py, anchors)) continue;
 
-    // Check if player already has an active pending ambush
     const existingPending = await Ambush.findOne({
       targetPlayerId: player._id,
       status: 'pending',
@@ -322,144 +457,19 @@ async function runVendettaTick({
     });
     if (existingPending) continue;
 
-    let playerAmbushedThisTick = false;
-
-    // A. Check vendettas (family grudges)
-    const vendettas = await Vendetta.find({
-      targetId: player._id,
-      resolved: false
-    }).limit(3);
-
-    for (const v of vendettas) {
-      if (v.lastAmbushAt && (now - new Date(v.lastAmbushAt).getTime() < cooldownMs)) {
-        continue;
-      }
-
-      let hunter = null;
-      if (NpcMod) {
-        hunter = await NpcMod.findById(v.hunterNpcId);
-      }
-      if (!hunter || !hunter.vitalStatus?.isAlive) continue;
-
-      // Call huntStep first
-      const step = huntStep({
-        hunter,
-        player,
-        anchors,
-        isWalkableFn,
-        now
-      });
-
-      if (step.moved || (step.state === 'hunting' && (hunter.schedule?.activityState !== 'hunting' || hunter.schedule?.targetDestination))) {
-        hunter.schedule = hunter.schedule || {};
-        if (step.moved) {
-          hunter.schedule.tileX = step.newX;
-          hunter.schedule.tileY = step.newY;
-          hunter.tileX = step.newX;
-          hunter.tileY = step.newY;
-        }
-        hunter.schedule.activityState = 'hunting';
-        hunter.schedule.targetDestination = null;
-        hunter.schedule.stayUntil = null;
-        if (typeof hunter.markModified === 'function') {
-          hunter.markModified('schedule');
-        }
-        if (typeof hunter.save === 'function') {
-          await hunter.save();
-        }
-      } else if (step.state === 'idle' && hunter.schedule?.activityState === 'hunting') {
-        await resetHunterToIdle(hunter, now);
-      }
-
-      // Recompute distance from hunter's current/updated coordinates
-      const hx = hunter.schedule?.tileX ?? hunter.tileX ?? px;
-      const hy = hunter.schedule?.tileY ?? hunter.tileY ?? py;
-      const dist = Math.max(Math.abs(px - hx), Math.abs(py - hy));
-
-      if (dist <= 24) {
-        const playerRng = rng || makeRng(hash32(String(player._id) + ':' + Math.floor(now / 60000)));
-        const trig = evaluateAmbushTrigger({
-          hunterNpc: hunter,
-          player: { tileX: px, tileY: py },
-          tileInfo: { isSettlement: false },
-          grudgeLevel: v.grudgeLevel,
-          rng: playerRng
-        });
-
-        if (trig.canAmbush) {
-          const ambush = new Ambush({
-            hunterNpcId: hunter._id,
-            targetPlayerId: player._id,
-            kind: 'vendetta',
-            reason: v.reason || 'dendam',
-            status: 'pending',
-            tileX: px,
-            tileY: py,
-            expiresAt: new Date(now + 10 * 60 * 1000)
-          });
-          if (typeof ambush.save === 'function' && ambush.constructor.db?.readyState === 1) {
-            await ambush.save();
-          }
-          v.lastAmbushAt = new Date(now);
-          if (typeof v.save === 'function' && v.constructor.db?.readyState === 1) {
-            await v.save();
-          }
-          triggeredCount++;
-          playerAmbushedThisTick = true;
-          break; // Max 1 ambush per tick per player
-        }
-      }
+    const vendettaTriggered = await evaluateVendettasForPlayer({
+      player, px, py, Vendetta, Ambush, NpcMod, anchors, isWalkableFn, now, cooldownMs, rng
+    });
+    if (vendettaTriggered) {
+      triggeredCount++;
+      continue;
     }
 
-    // B. Hostile ambush (affinity <= -60) if player was not ambushed by vendetta
-    if (!playerAmbushedThisTick && RelationMod && NpcMod) {
-      const hostileRelations = await RelationMod.find({
-        playerId: player._id,
-        affinity: { $lte: -60 }
-      }).sort({ affinity: 1 }).limit(5);
-
-      for (const rel of hostileRelations) {
-        // Cooldown 6 hours
-        if (rel.lastAmbushAt && (now - new Date(rel.lastAmbushAt).getTime() < 6 * 3600 * 1000)) {
-          continue;
-        }
-
-        const npc = await NpcMod.findById(rel.npcId);
-        if (!npc) continue;
-        if (!npc.vitalStatus?.isAlive) continue;
-        if (npc.vitalStatus?.isEssential) continue;
-        if (npc.vitalStatus?.isInjured) continue;
-        if (npc.vitalStatus?.downedUntil && new Date(npc.vitalStatus.downedUntil).getTime() > now) continue;
-
-        const nx = npc.schedule?.tileX ?? npc.tileX ?? 0;
-        const ny = npc.schedule?.tileY ?? npc.tileY ?? 0;
-        const dist = Math.max(Math.abs(px - nx), Math.abs(py - ny));
-        if (dist > 12) continue; // Only attacks if close to player
-
-        // 10% chance per minute
-        const roll = rng ? rng() : makeRng(hash32(String(npc._id) + ':' + String(player._id) + ':' + Math.floor(now / 60000)))();
-        if (roll < 0.10) {
-          const ambush = new Ambush({
-            hunterNpcId: npc._id,
-            targetPlayerId: player._id,
-            kind: 'hostile',
-            reason: 'benci',
-            status: 'pending',
-            tileX: px,
-            tileY: py,
-            expiresAt: new Date(now + 10 * 60 * 1000)
-          });
-          if (typeof ambush.save === 'function' && ambush.constructor.db?.readyState === 1) {
-            await ambush.save();
-          }
-          rel.lastAmbushAt = new Date(now);
-          if (typeof rel.save === 'function' && rel.constructor.db?.readyState === 1) {
-            await rel.save();
-          }
-          triggeredCount++;
-          break; // Max 1 ambush per tick per player
-        }
-      }
+    const hostileTriggered = await evaluateHostileRelationsForPlayer({
+      player, px, py, RelationMod, Ambush, NpcMod, now, rng
+    });
+    if (hostileTriggered) {
+      triggeredCount++;
     }
   }
 

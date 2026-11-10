@@ -375,4 +375,48 @@ describe('NPC Hunter vs Scheduled Journey Conflict Integration (V31 F3)', () => 
     expect(checked.schedule.activityState).toBe('idle');
     expect(checked.schedule.stayUntil).toBeNull();
   });
+
+  it('(f) Hunter stands down to idle and prepares return when vendetta enters 3h cooldown after striking ambush', async () => {
+    let now = 50000000;
+    const player = await Player.create({
+      discordId: 'player_cooldown_hunter',
+      characterName: 'Pendekar Disergap',
+      gridPosition: { tileX: 200, tileY: 200 }
+    });
+    await Player.updateOne({ _id: player._id }, { $set: { updatedAt: new Date(now) } }, { timestamps: false });
+
+    const hunter = await Npc.create({
+      _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799439026'),
+      name: 'Pemburu Cooldown',
+      gender: 'male',
+      vitalStatus: { isAlive: true, isEssential: false },
+      tileX: 210,
+      tileY: 200,
+      schedule: {
+        tileX: 210,
+        tileY: 200,
+        currentAnchorId: 'desa_b',
+        homeAnchorId: 'desa_a',
+        wanderLevel: 1,
+        activityState: 'hunting',
+        targetDestination: null,
+        stayUntil: null
+      }
+    });
+
+    await NpcVendetta.create({
+      hunterNpcId: hunter._id,
+      targetId: player._id,
+      targetType: 'player',
+      reason: 'Dendam cooldown',
+      resolved: false,
+      lastAmbushAt: new Date(now - 60000) // Struck ambush 1 min ago (inside 3h cooldown)
+    });
+
+    await runVendettaTick({ now, anchors: dummyAnchors, isWalkableFn });
+
+    const checked = await Npc.findById(hunter._id);
+    expect(checked.schedule.activityState).toBe('idle');
+    expect(checked.schedule.stayUntil).not.toBeNull();
+  });
 });

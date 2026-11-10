@@ -352,4 +352,56 @@ describe('NPC Journey Full Lifecycle Integration (V31 F1)', () => {
     expect(checked.schedule.targetDestination).toBeNull();
     expect(checked.schedule.currentAnchorId).toBe('desa_b');
   });
+
+  it('(l) Legacy NPC with unknown/deleted currentAnchorId falls back to direct walk-back to homeAnchorId', async () => {
+    let now = 36000000;
+    const orphanNpc = await Npc.create({
+      _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799439015'),
+      name: 'Pengelana Yatim Anchor',
+      gender: 'female',
+      vitalStatus: { isAlive: true, isEssential: false },
+      tileX: 250,
+      tileY: 150,
+      schedule: {
+        currentAnchorId: 'anchor_terhapus',
+        homeAnchorId: 'desa_a',
+        wanderLevel: 1,
+        activityState: 'visiting',
+        stayUntil: new Date(now - 5000),
+        tileX: 250,
+        tileY: 150
+      },
+      attributes: { travelSpeed: 10 }
+    });
+
+    await runJourneyTick({
+      Npc,
+      now,
+      anchorMap: dummyAnchorMap,
+      graph: dummyGraph,
+      isWalkableFn
+    });
+
+    let checked = await Npc.findById(orphanNpc._id);
+    expect(checked.schedule.activityState).toBe('traveling');
+    expect(checked.schedule.targetDestination).not.toBeNull();
+    expect(checked.schedule.targetDestination.purpose).toBe('pulang');
+    expect(checked.schedule.targetDestination.toId).toBe('desa_a');
+
+    now = checked.schedule.targetDestination.etaAt + 1000;
+    await runJourneyTick({
+      Npc,
+      now,
+      anchorMap: dummyAnchorMap,
+      graph: dummyGraph,
+      isWalkableFn
+    });
+
+    checked = await Npc.findById(orphanNpc._id);
+    expect(checked.schedule.currentAnchorId).toBe('desa_a');
+    expect(checked.schedule.activityState).toBe('idle');
+    expect(checked.schedule.stayUntil).toBeNull();
+    expect(checked.tileX).toBe(100);
+    expect(checked.tileY).toBe(100);
+  });
 });
