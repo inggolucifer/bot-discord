@@ -121,11 +121,14 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
         moved++;
       }
     } else {
-      // Case 2: NPC is idle / visiting and may start a journey
+      // Case 2: NPC is idle / visiting / etc and may return or start a journey
       const activityState = npc.schedule?.activityState || 'idle';
+      const currentAnchorId = npc.schedule?.currentAnchorId || npc.schedule?.homeAnchorId;
+      const homeAnchorId = npc.schedule?.homeAnchorId;
+      const away = homeAnchorId && currentAnchorId && currentAnchorId !== homeAnchorId;
       const stayUntil = npc.schedule?.stayUntil;
 
-      if (activityState === 'visiting' && stayUntil && new Date(stayUntil).getTime() <= now) {
+      if (away && stayUntil && new Date(stayUntil).getTime() <= now && activityState !== 'hunting') {
         // Return journey home
         const returnPlan = planReturnHome(npc, { anchorMap, graph, now });
         if (returnPlan && Array.isArray(returnPlan.pathAnchors) && returnPlan.pathAnchors.length >= 2) {
@@ -153,20 +156,28 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
             started++;
           }
         }
-      } else if (activityState === 'idle' || activityState === 'socializing' || activityState === 'working') {
-        const currentAnchorId = npc.schedule?.currentAnchorId || npc.schedule?.homeAnchorId;
-        const homeAnchorId = npc.schedule?.homeAnchorId;
-
+      } else if (away && !stayUntil) {
+        // NPC stuck without stay limit (legacy data): set stayUntil = now + 30 minutes
+        bulkOps.push({
+          updateOne: {
+            filter: { _id: npc._id },
+            update: {
+              $set: {
+                'schedule.stayUntil': new Date(now + 30 * 60000)
+              }
+            }
+          }
+        });
+      } else if (!away && ['idle', 'socializing', 'working', 'sleeping', 'training', 'meditating'].includes(activityState)) {
         // Only start outward journeys if currently at home
-        if (!currentAnchorId || currentAnchorId === homeAnchorId) {
-          const destPlan = chooseDestination(npc, {
-            anchors: Object.values(anchorMap || {}),
-            anchorMap,
-            graph,
-            ladder,
-            gameDay,
-            now
-          });
+        const destPlan = chooseDestination(npc, {
+          anchors: Object.values(anchorMap || {}),
+          anchorMap,
+          graph,
+          ladder,
+          gameDay,
+          now
+        });
 
           if (destPlan && Array.isArray(destPlan.pathAnchors) && destPlan.pathAnchors.length >= 2) {
             const speed = Math.max(6, Math.min(30, npc.attributes?.travelSpeed ?? 10));
@@ -198,7 +209,6 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
         }
       }
     }
-  }
 
   if (bulkOps.length > 0 && typeof Npc.bulkWrite === 'function') {
     await Npc.bulkWrite(bulkOps);

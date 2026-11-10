@@ -50,7 +50,7 @@ async function runScheduleBatchTick({ Npc, now = Date.now(), isWalkableFn = null
   const activeNpcs = await Npc.find({
     'vitalStatus.isAlive': true,
     'schedule.targetDestination.type': { $ne: 'journey' },
-    'schedule.activityState': { $nin: ['traveling', 'hunting'] }
+    'schedule.activityState': { $nin: ['traveling', 'hunting', 'visiting'] }
   });
   const bulkOps = [];
 
