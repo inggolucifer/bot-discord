@@ -8,8 +8,10 @@ const fs = require('fs');
 const path = require('path');
 const http = require('http');
 
-const RAW_DIR = path.resolve(__dirname, '../../review/v30_raw');
+const RAW_DIR = path.resolve(__dirname, '../../review/v31_raw');
 const GATE_OUTPUT = path.join(RAW_DIR, 'gate.json');
+const RAW_DIR_V30 = path.resolve(__dirname, '../../review/v30_raw');
+const GATE_OUTPUT_V30 = path.join(RAW_DIR_V30, 'gate.json');
 const ROOT_DIR = path.resolve(__dirname, '../..');
 
 const COMMANDS = [
@@ -57,6 +59,12 @@ const COMMANDS = [
     cmd: 'node',
     args: ['scripts/v30/antislopScan.js'],
     timeout: 30000
+  },
+  {
+    step: '9. npx vitest run tests/integration/npcJourneyLifecycle.test.js tests/integration/npcHuntJourneyConflict.test.js tests/unit/npc/v31_snap_walkable.test.mjs',
+    cmd: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+    args: ['vitest', 'run', 'tests/integration/npcJourneyLifecycle.test.js', 'tests/integration/npcHuntJourneyConflict.test.js', 'tests/unit/npc/v31_snap_walkable.test.mjs'],
+    timeout: 120000
   }
 ];
 
@@ -278,6 +286,9 @@ async function main() {
   };
 
   fs.writeFileSync(GATE_OUTPUT, JSON.stringify(gateReport, null, 2));
+  if (fs.existsSync(RAW_DIR_V30)) {
+    fs.writeFileSync(GATE_OUTPUT_V30, JSON.stringify(gateReport, null, 2));
+  }
 
   console.log(`\n======================================================`);
   console.log(`[GATE SUMMARY TABLE V30]`);
