@@ -1,11 +1,17 @@
-=== LAPORAN SIMULASI PERJALANAN NPC (48 JAM GAME) ===
+=== LAPORAN SIMULASI PERJALANAN NPC (48 JAM GAME — V31 MAXIMIZED) ===
 Waktu Simulasi: 48 Jam Game (Langkah: 10 Menit, Total: 288 Steps)
 Jumlah Populasi NPC: 764 Karakter
-Jumlah Perjalanan Terjadi: 3382
+Jumlah Perjalanan Terjadi: 3382 (Berangkat: 1709, Pulang: 1673)
 Panjang Rata-rata Perjalanan: 391.9 Petak (Tile)
 Jumlah Anchor Berbeda Dikunjungi: 45 Anchor
+Total Tick Pergerakan Dievaluasi SnapWalkable: 13340
+Titik Mentah Non-Walkable Dicegat: 1320
+Titik ok:false Dipertahankan di Daratan Lama: 301
+Pelanggaran Posisi Non-Walkable Tertulis: 0
+NPC Sedang Jalan / Bertamu di Akhir Simulasi: 39 / 25
+NPC Macet Away Tanpa stayUntil: 0
 Pelanggaran NPC Esensial Berjalan: 0
-Pelanggaran Jarak > 900 Tile: 0
+Pelanggaran Jarak > 900 Tile (Berangkat): 0
 Pelanggaran Koordinat Non-Integer: 0
 
 5 Contoh Perjalanan Nyata:

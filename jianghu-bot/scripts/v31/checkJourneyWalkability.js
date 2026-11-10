@@ -1,6 +1,7 @@
 /**
  * Journey Walkability Audit Script (V31 / F2)
- * Tests sample anchor paths across Jianghu to verify snapWalkable effectiveness.
+ * Evaluates both the standard sample (i += 5, j += 9) and the full 2-hop anchor census
+ * to measure snapWalkable effectiveness honestly.
  */
 
 const fs = require('fs');
@@ -14,69 +15,85 @@ const anchorsPath = path.resolve(__dirname, '../../world-data/anchors.json');
 const anchors = JSON.parse(fs.readFileSync(anchorsPath, 'utf8'));
 const anchorMap = Object.fromEntries(anchors.map(a => [a.id, a]));
 
-let totalPoints = 0;
-let rawNonWalkable = 0;
-let okFalseCount = 0;
+function evaluatePairs({ stepI = 1, stepJ = 1, maxHops = Infinity, maxTiles = 1200 }) {
+  let routeCount = 0;
+  let totalPoints = 0;
+  let rawNonWalkable = 0;
+  let okFalseCount = 0;
+  const routeFails = {};
 
-console.log('=== PEMERIKSAAN KELAYAKAN TITIK JALUR PERJALANAN (V31 F2) ===');
-console.log(`Menguji sampel pasangan 52 anchor (i += 5, j += 9)...`);
+  for (let i = 0; i < anchors.length; i += stepI) {
+    for (let j = 0; j < anchors.length; j += stepJ) {
+      if (i === j) continue;
+      const fromAnchor = anchors[i];
+      const toAnchor = anchors[j];
 
-const sampledPaths = [];
+      const rawPath = travelGraph.shortestPath(fromAnchor.name, toAnchor.name);
+      const pathAnchors = toAnchorPath(rawPath, anchorMap);
+      if (!pathAnchors || pathAnchors.length < 2) continue;
+      if (pathAnchors.length - 1 > maxHops) continue;
 
-for (let i = 0; i < anchors.length; i += 5) {
-  for (let j = 0; j < anchors.length; j += 9) {
-    if (i === j) continue;
-    const fromAnchor = anchors[i];
-    const toAnchor = anchors[j];
+      const journey = buildJourney({
+        pathAnchors,
+        anchorMap,
+        now: 1000000,
+        tilesPerMinute: 10,
+        maxTiles
+      });
+      if (!journey) continue;
 
-    const rawPath = travelGraph.shortestPath(fromAnchor.name, toAnchor.name);
-    const pathAnchors = toAnchorPath(rawPath, anchorMap);
-    if (!pathAnchors || pathAnchors.length < 2) continue;
+      routeCount++;
+      const totalDuration = journey.etaAt - journey.startedAt;
 
-    const journey = buildJourney({
-      pathAnchors,
-      anchorMap,
-      now: 1000000,
-      tilesPerMinute: 10,
-      maxTiles: 1200
-    });
-    if (!journey) continue;
+      for (let step = 0; step <= 10; step++) {
+        const pointTime = journey.startedAt + (step / 10) * totalDuration;
+        const rawPos = positionAt(journey, pointTime);
+        if (!rawPos) continue;
 
-    sampledPaths.push({ from: fromAnchor.name, to: toAnchor.name, journey });
-
-    const totalDuration = journey.etaAt - journey.startedAt;
-
-    // Sample points every 10% along path (0%, 10%, ..., 100%)
-    for (let step = 0; step <= 10; step++) {
-      const t = step / 10;
-      const pointTime = journey.startedAt + t * totalDuration;
-      const rawPos = positionAt(journey, pointTime);
-      if (!rawPos) continue;
-
-      totalPoints++;
-      const isRawWalkable = isTileWalkable(rawPos.x, rawPos.y);
-      if (!isRawWalkable) {
-        rawNonWalkable++;
-      }
-
-      const snap = snapWalkable(rawPos.x, rawPos.y, isTileWalkable);
-      if (snap.ok === false) {
-        okFalseCount++;
+        totalPoints++;
+        if (!isTileWalkable(rawPos.x, rawPos.y)) {
+          rawNonWalkable++;
+          const snap = snapWalkable(rawPos.x, rawPos.y, isTileWalkable);
+          if (snap.ok === false) {
+            okFalseCount++;
+            const key = `${fromAnchor.name} -> ${toAnchor.name}`;
+            routeFails[key] = (routeFails[key] || 0) + 1;
+          }
+        }
       }
     }
   }
+
+  const rawPct = totalPoints > 0 ? ((rawNonWalkable / totalPoints) * 100).toFixed(2) : '0.00';
+  const okFalsePct = totalPoints > 0 ? ((okFalseCount / totalPoints) * 100).toFixed(2) : '0.00';
+  const topFails = Object.entries(routeFails)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8)
+    .map(([r, c]) => `  - ${r}: ${c} titik ok:false`);
+
+  return { routeCount, totalPoints, rawNonWalkable, rawPct, okFalseCount, okFalsePct, topFails };
 }
 
-const rawFailPercent = totalPoints > 0 ? ((rawNonWalkable / totalPoints) * 100).toFixed(2) : '0.00';
-const okFalsePercent = totalPoints > 0 ? ((okFalseCount / totalPoints) * 100).toFixed(2) : '0.00';
+const sample = evaluatePairs({ stepI: 5, stepJ: 9, maxHops: Infinity, maxTiles: 1200 });
+const census = evaluatePairs({ stepI: 1, stepJ: 1, maxHops: 2, maxTiles: 900 });
 
 const report = [
   '=== HASIL AUDIT WALKABILITY TITIK PERJALANAN NPC (V31 F2) ===',
-  `Jumlah Rute Sampel Teruji: ${sampledPaths.length}`,
-  `Total Titik Jalur Dievaluasi: ${totalPoints}`,
-  `Jumlah Titik Non-Walkable Sebelum Snap: ${rawNonWalkable} (${rawFailPercent}%)`,
-  `Jumlah Titik ok:false Setelah Snap (Radius 40): ${okFalseCount} (${okFalsePercent}%)`,
-  `Status Ambang Batas (<= 1%): ${Number(okFalsePercent) <= 1.0 ? 'PASSED (LOLOS)' : 'FAILED (GAGAL)'}`
+  '',
+  '[1] Sampel Standar Audit (i += 5, j += 9):',
+  `Jumlah Rute Sampel Teruji: ${sample.routeCount}`,
+  `Total Titik Jalur Dievaluasi: ${sample.totalPoints}`,
+  `Jumlah Titik Non-Walkable Sebelum Snap: ${sample.rawNonWalkable} (${sample.rawPct}%)`,
+  `Jumlah Titik ok:false Setelah Snap (Radius 40): ${sample.okFalseCount} (${sample.okFalsePct}%)`,
+  `Status Ambang Batas (<= 1%): ${Number(sample.okFalsePct) <= 1.0 ? 'PASSED (LOLOS)' : 'FAILED (GAGAL)'}`,
+  '',
+  '[2] Sensus Lengkap Seluruh Rute Aktif <= 2 Hop & <= 900 Tile:',
+  `Jumlah Rute 2-Hop Valid: ${census.routeCount}`,
+  `Total Titik Jalur Dievaluasi: ${census.totalPoints}`,
+  `Jumlah Titik Non-Walkable Sebelum Snap: ${census.rawNonWalkable} (${census.rawPct}%)`,
+  `Jumlah Titik ok:false Setelah Snap (Radius 40): ${census.okFalseCount} (${census.okFalsePct}%)`,
+  'Rute Teratas Penyumbang ok:false (Diblokir oleh guard runJourneyTick):',
+  ...census.topFails
 ].join('\n');
 
 console.log(report);

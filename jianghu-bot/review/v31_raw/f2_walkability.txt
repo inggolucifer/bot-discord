@@ -1,6 +1,23 @@
 === HASIL AUDIT WALKABILITY TITIK PERJALANAN NPC (V31 F2) ===
+
+[1] Sampel Standar Audit (i += 5, j += 9):
 Jumlah Rute Sampel Teruji: 21
 Total Titik Jalur Dievaluasi: 231
 Jumlah Titik Non-Walkable Sebelum Snap: 18 (7.79%)
 Jumlah Titik ok:false Setelah Snap (Radius 40): 1 (0.43%)
 Status Ambang Batas (<= 1%): PASSED (LOLOS)
+
+[2] Sensus Lengkap Seluruh Rute Aktif <= 2 Hop & <= 900 Tile:
+Jumlah Rute 2-Hop Valid: 378
+Total Titik Jalur Dievaluasi: 4158
+Jumlah Titik Non-Walkable Sebelum Snap: 586 (14.09%)
+Jumlah Titik ok:false Setelah Snap (Radius 40): 92 (2.21%)
+Rute Teratas Penyumbang ok:false (Diblokir oleh guard runJourneyTick):
+  - Dermaga Donghai -> Pulau Penyu Raksasa: 4 titik ok:false
+  - Pulau Penyu Raksasa -> Dermaga Donghai: 4 titik ok:false
+  - Pulau Penyu Raksasa -> Istana Giok Laut Timur: 4 titik ok:false
+  - Istana Giok Laut Timur -> Pulau Penyu Raksasa: 4 titik ok:false
+  - Pulau Penyu Raksasa -> Sarang Naga Karang Timur: 3 titik ok:false
+  - Pulau Penyu Raksasa -> Kota Kecil Canghai: 3 titik ok:false
+  - Pulau Penyu Raksasa -> Dusun Pondok Karang: 3 titik ok:false
+  - Sarang Naga Karang Timur -> Pulau Penyu Raksasa: 3 titik ok:false

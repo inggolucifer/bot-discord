@@ -39,6 +39,23 @@ describe('snapWalkable Unit & Coordinate Protection Tests (V31 F2)', () => {
     expect(Number.isInteger(res.y)).toBe(true);
   });
 
+  it('6. Perimeter ring finds closest Chebyshev ring (r=5) before farther ring (r=10)', () => {
+    const isWalkableFn = (x, y) =>
+      (x === 105 && y === 105) || (x === 110 && y === 100);
+    const res = snapWalkable(100, 100, isWalkableFn);
+    expect(res).toEqual({ x: 105, y: 105, ok: true });
+  });
+
+  it('8. Worst-case radius 40 scan runs fast (< 250ms for 100 full misses)', () => {
+    const t0 = Date.now();
+    for (let i = 0; i < 100; i++) {
+      const res = snapWalkable(100, 100, () => false);
+      expect(res.ok).toBe(false);
+    }
+    const elapsed = Date.now() - t0;
+    expect(elapsed).toBeLessThan(250);
+  });
+
   describe('Integration: NPC on ok: false tile preserves existing coordinates', () => {
     let mongoServer;
 
@@ -105,6 +122,58 @@ describe('snapWalkable Unit & Coordinate Protection Tests (V31 F2)', () => {
       expect(updated.schedule.tileY).toBe(50);
       expect(updated.tileX).toBe(50);
       expect(updated.tileY).toBe(50);
+    });
+
+    it('7. On arrival (pos.arrived === true), if snapWalkable returns ok: false, preserves last valid coordinates instead of writing unwalkable coords', async () => {
+      const npc = await Npc.create({
+        name: 'Pengelana Tiba Laut',
+        gender: 'female',
+        vitalStatus: { isAlive: true, isEssential: false },
+        cultivation: { realmIndex: 1 },
+        tileX: 50,
+        tileY: 50,
+        schedule: {
+          tileX: 50,
+          tileY: 50,
+          currentAnchorId: 'desa_a',
+          homeAnchorId: 'desa_a',
+          wanderLevel: 1,
+          activityState: 'traveling',
+          targetDestination: {
+            type: 'journey',
+            fromId: 'desa_a',
+            toId: 'desa_b',
+            purpose: 'berkelana',
+            startedAt: 100000,
+            etaAt: 200000,
+            totalTiles: 100,
+            legs: [
+              { ax: 50, ay: 50, bx: 150, by: 50, len: 100 }
+            ]
+          }
+        }
+      });
+
+      const anchorMap = {
+        desa_b: { id: 'desa_b', name: 'Desa B', tileX: 150, tileY: 50 }
+      };
+
+      // Past etaAt with neverWalkable: transitions to visiting desa_b, MUST preserve (50, 50)
+      await runJourneyTick({
+        Npc,
+        now: 250000,
+        anchorMap,
+        graph: {},
+        isWalkableFn: () => false
+      });
+
+      const arrived = await Npc.findById(npc._id);
+      expect(arrived.schedule.activityState).toBe('visiting');
+      expect(arrived.schedule.currentAnchorId).toBe('desa_b');
+      expect(arrived.schedule.tileX).toBe(50);
+      expect(arrived.schedule.tileY).toBe(50);
+      expect(arrived.tileX).toBe(50);
+      expect(arrived.tileY).toBe(50);
     });
   });
 });

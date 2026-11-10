@@ -23,19 +23,29 @@ function snapWalkable(x, y, isWalkableFn) {
 
   if (isWalkable(ix, iy)) return { x: ix, y: iy, ok: true };
 
+  // Iterate only the perimeter of concentric Chebyshev rings (8*r checks per ring vs (2r+1)^2)
   for (let r = 1; r <= 40; r++) {
     for (let dx = -r; dx <= r; dx++) {
-      for (let dy = -r; dy <= r; dy++) {
-        if (Math.max(Math.abs(dx), Math.abs(dy)) === r) {
-          if (isWalkable(ix + dx, iy + dy)) {
-            return { x: ix + dx, y: iy + dy, ok: true };
-          }
-        }
-      }
+      if (isWalkable(ix + dx, iy - r)) return { x: ix + dx, y: iy - r, ok: true };
+      if (isWalkable(ix + dx, iy + r)) return { x: ix + dx, y: iy + r, ok: true };
+    }
+    for (let dy = -r + 1; dy <= r - 1; dy++) {
+      if (isWalkable(ix - r, iy + dy)) return { x: ix - r, y: iy + dy, ok: true };
+      if (isWalkable(ix + r, iy + dy)) return { x: ix + r, y: iy + dy, ok: true };
     }
   }
 
   return { x: ix, y: iy, ok: false };
+}
+
+function applySnapCoords(fields, snap) {
+  if (snap && snap.ok !== false) {
+    fields['schedule.tileX'] = snap.x;
+    fields['schedule.tileY'] = snap.y;
+    fields.tileX = snap.x;
+    fields.tileY = snap.y;
+  }
+  return fields;
 }
 
 /**
@@ -70,60 +80,44 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
       const snapped = snapWalkable(pos.x, pos.y, isWalkableFn);
 
       if (pos.arrived) {
+        let landing = snapped;
         const destAnchor = anchorMap ? anchorMap[destination.toId] : null;
-        let finalX = snapped.x;
-        let finalY = snapped.y;
         if (destAnchor) {
           const ax = destAnchor.tileX ?? destAnchor.x;
           const ay = destAnchor.tileY ?? destAnchor.y;
           if (Number.isFinite(ax) && Number.isFinite(ay)) {
             const anchorSnap = snapWalkable(ax, ay, isWalkableFn);
-            finalX = anchorSnap.x;
-            finalY = anchorSnap.y;
+            if (anchorSnap.ok !== false || landing.ok === false) {
+              landing = anchorSnap;
+            }
           }
         }
 
         const isHome = destination.purpose === 'pulang';
-        const nextState = isHome ? 'idle' : 'visiting';
-        const stayDuration = destination.stayMs || 1800000;
-        const stayUntil = isHome ? null : new Date(now + stayDuration);
+        const arrivalFields = applySnapCoords({
+          'schedule.currentAnchorId': destination.toId,
+          'schedule.activityState': isHome ? 'idle' : 'visiting',
+          'schedule.targetDestination': null,
+          'schedule.currentFacility': '',
+          'schedule.stayUntil': isHome ? null : new Date(now + (destination.stayMs || 1800000))
+        }, landing);
 
         bulkOps.push({
           updateOne: {
             filter: { _id: npc._id },
-            update: {
-              $set: {
-                'schedule.tileX': finalX,
-                'schedule.tileY': finalY,
-                tileX: finalX,
-                tileY: finalY,
-                'schedule.currentAnchorId': destination.toId,
-                'schedule.activityState': nextState,
-                'schedule.targetDestination': null,
-                'schedule.currentFacility': '',
-                'schedule.stayUntil': stayUntil
-              }
-            }
+            update: { $set: arrivalFields }
           }
         });
         arrived++;
       } else {
-        const updateFields = {
+        const updateFields = applySnapCoords({
           'schedule.activityState': 'traveling',
           'schedule.currentFacility': ''
-        };
-        if (snapped.ok !== false) {
-          updateFields['schedule.tileX'] = snapped.x;
-          updateFields['schedule.tileY'] = snapped.y;
-          updateFields.tileX = snapped.x;
-          updateFields.tileY = snapped.y;
-        }
+        }, snapped);
         bulkOps.push({
           updateOne: {
             filter: { _id: npc._id },
-            update: {
-              $set: updateFields
-            }
+            update: { $set: updateFields }
           }
         });
         moved++;
