@@ -18,21 +18,24 @@ function defaultIsWalkable(x, y) {
 
 function snapWalkable(x, y, isWalkableFn) {
   const isWalkable = typeof isWalkableFn === 'function' ? isWalkableFn : defaultIsWalkable;
-  if (isWalkable(x, y)) return { x, y };
+  const ix = Math.round(Number(x) || 0);
+  const iy = Math.round(Number(y) || 0);
 
-  for (let r = 1; r <= 10; r++) {
+  if (isWalkable(ix, iy)) return { x: ix, y: iy, ok: true };
+
+  for (let r = 1; r <= 40; r++) {
     for (let dx = -r; dx <= r; dx++) {
       for (let dy = -r; dy <= r; dy++) {
         if (Math.max(Math.abs(dx), Math.abs(dy)) === r) {
-          if (isWalkable(x + dx, y + dy)) {
-            return { x: x + dx, y: y + dy };
+          if (isWalkable(ix + dx, iy + dy)) {
+            return { x: ix + dx, y: iy + dy, ok: true };
           }
         }
       }
     }
   }
 
-  return { x, y };
+  return { x: ix, y: iy, ok: false };
 }
 
 /**
@@ -103,18 +106,21 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
         });
         arrived++;
       } else {
+        const updateFields = {
+          'schedule.activityState': 'traveling',
+          'schedule.currentFacility': ''
+        };
+        if (snapped.ok !== false) {
+          updateFields['schedule.tileX'] = snapped.x;
+          updateFields['schedule.tileY'] = snapped.y;
+          updateFields.tileX = snapped.x;
+          updateFields.tileY = snapped.y;
+        }
         bulkOps.push({
           updateOne: {
             filter: { _id: npc._id },
             update: {
-              $set: {
-                'schedule.tileX': snapped.x,
-                'schedule.tileY': snapped.y,
-                tileX: snapped.x,
-                tileY: snapped.y,
-                'schedule.activityState': 'traveling',
-                'schedule.currentFacility': ''
-              }
+              $set: updateFields
             }
           }
         });

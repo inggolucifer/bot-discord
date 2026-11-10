@@ -1,0 +1,6 @@
+=== HASIL AUDIT WALKABILITY TITIK PERJALANAN NPC (V31 F2) ===
+Jumlah Rute Sampel Teruji: 21
+Total Titik Jalur Dievaluasi: 231
+Jumlah Titik Non-Walkable Sebelum Snap: 18 (7.79%)
+Jumlah Titik ok:false Setelah Snap (Radius 40): 1 (0.43%)
+Status Ambang Batas (<= 1%): PASSED (LOLOS)
