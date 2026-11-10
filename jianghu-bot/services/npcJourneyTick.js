@@ -48,7 +48,8 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
 
   const npcs = await Npc.find({
     'vitalStatus.isAlive': true,
-    'schedule.wanderLevel': { $gt: 0 }
+    'schedule.wanderLevel': { $gt: 0 },
+    'schedule.activityState': { $ne: 'hunting' }
   });
 
   const gameDay = Math.floor(now / 3600000);
@@ -58,6 +59,7 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
   const bulkOps = [];
 
   for (const npc of npcs) {
+    if (npc.schedule?.activityState === 'hunting') continue;
     const destination = npc.schedule?.targetDestination;
 
     // Case 1: NPC is currently traveling along a journey

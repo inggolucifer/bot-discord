@@ -270,16 +270,27 @@ async function runVendettaTick({
         hunterNpcId: h._id,
         resolved: false
       });
+      let shouldStop = false;
       if (!activeVendetta) {
-        h.schedule = h.schedule || {};
-        h.schedule.activityState = 'idle';
-        if (typeof h.save === 'function') await h.save();
-        continue;
+        shouldStop = true;
+      } else {
+        const targetPlayer = await PlayerMod.findById(activeVendetta.targetId);
+        if (!targetPlayer || !targetPlayer.updatedAt || new Date(targetPlayer.updatedAt).getTime() < tenMinutesAgo.getTime()) {
+          shouldStop = true;
+        }
       }
-      const targetPlayer = await PlayerMod.findById(activeVendetta.targetId);
-      if (!targetPlayer || !targetPlayer.updatedAt || new Date(targetPlayer.updatedAt).getTime() < tenMinutesAgo.getTime()) {
+
+      if (shouldStop) {
         h.schedule = h.schedule || {};
         h.schedule.activityState = 'idle';
+        const curAnchor = h.schedule?.currentAnchorId || h.schedule?.homeAnchorId;
+        const homeAnchor = h.schedule?.homeAnchorId;
+        if (curAnchor && homeAnchor && curAnchor !== homeAnchor && !h.schedule.stayUntil) {
+          h.schedule.stayUntil = new Date(now);
+        }
+        if (typeof h.markModified === 'function') {
+          h.markModified('schedule');
+        }
         if (typeof h.save === 'function') await h.save();
       }
     }
@@ -338,13 +349,23 @@ async function runVendettaTick({
         hunter.tileX = step.newX;
         hunter.tileY = step.newY;
         hunter.schedule.activityState = 'hunting';
+        hunter.schedule.targetDestination = null;
+        hunter.schedule.stayUntil = null;
+        if (typeof hunter.markModified === 'function') {
+          hunter.markModified('schedule');
+        }
         if (typeof hunter.save === 'function') {
           await hunter.save();
         }
       } else if (step.state === 'hunting') {
-        if (hunter.schedule?.activityState !== 'hunting') {
+        if (hunter.schedule?.activityState !== 'hunting' || hunter.schedule?.targetDestination) {
           hunter.schedule = hunter.schedule || {};
           hunter.schedule.activityState = 'hunting';
+          hunter.schedule.targetDestination = null;
+          hunter.schedule.stayUntil = null;
+          if (typeof hunter.markModified === 'function') {
+            hunter.markModified('schedule');
+          }
           if (typeof hunter.save === 'function') {
             await hunter.save();
           }
