@@ -239,6 +239,24 @@ async function resolveAmbushAction({
   return { success: false, error: 'Pilihan aksi tidak valid.' };
 }
 
+async function resetHunterToIdle(hunter, now) {
+  if (!hunter) return;
+  hunter.schedule = hunter.schedule || {};
+  hunter.schedule.activityState = 'idle';
+  const curAnchor = hunter.schedule.currentAnchorId || hunter.schedule.homeAnchorId;
+  const homeAnchor = hunter.schedule.homeAnchorId;
+  const away = curAnchor && homeAnchor && curAnchor !== homeAnchor;
+  if ((away || homeAnchor) && !hunter.schedule.stayUntil) {
+    hunter.schedule.stayUntil = new Date(now);
+  }
+  if (typeof hunter.markModified === 'function') {
+    hunter.markModified('schedule');
+  }
+  if (typeof hunter.save === 'function') {
+    await hunter.save();
+  }
+}
+
 async function runVendettaTick({
   NpcVendetta: NpcVendettaModel = null,
   NpcAmbush: NpcAmbushModel = null,
@@ -281,17 +299,7 @@ async function runVendettaTick({
       }
 
       if (shouldStop) {
-        h.schedule = h.schedule || {};
-        h.schedule.activityState = 'idle';
-        const curAnchor = h.schedule?.currentAnchorId || h.schedule?.homeAnchorId;
-        const homeAnchor = h.schedule?.homeAnchorId;
-        if (curAnchor && homeAnchor && curAnchor !== homeAnchor && !h.schedule.stayUntil) {
-          h.schedule.stayUntil = new Date(now);
-        }
-        if (typeof h.markModified === 'function') {
-          h.markModified('schedule');
-        }
-        if (typeof h.save === 'function') await h.save();
+        await resetHunterToIdle(h, now);
       }
     }
   }
@@ -342,12 +350,14 @@ async function runVendettaTick({
         now
       });
 
-      if (step.moved) {
+      if (step.moved || (step.state === 'hunting' && (hunter.schedule?.activityState !== 'hunting' || hunter.schedule?.targetDestination))) {
         hunter.schedule = hunter.schedule || {};
-        hunter.schedule.tileX = step.newX;
-        hunter.schedule.tileY = step.newY;
-        hunter.tileX = step.newX;
-        hunter.tileY = step.newY;
+        if (step.moved) {
+          hunter.schedule.tileX = step.newX;
+          hunter.schedule.tileY = step.newY;
+          hunter.tileX = step.newX;
+          hunter.tileY = step.newY;
+        }
         hunter.schedule.activityState = 'hunting';
         hunter.schedule.targetDestination = null;
         hunter.schedule.stayUntil = null;
@@ -357,19 +367,8 @@ async function runVendettaTick({
         if (typeof hunter.save === 'function') {
           await hunter.save();
         }
-      } else if (step.state === 'hunting') {
-        if (hunter.schedule?.activityState !== 'hunting' || hunter.schedule?.targetDestination) {
-          hunter.schedule = hunter.schedule || {};
-          hunter.schedule.activityState = 'hunting';
-          hunter.schedule.targetDestination = null;
-          hunter.schedule.stayUntil = null;
-          if (typeof hunter.markModified === 'function') {
-            hunter.markModified('schedule');
-          }
-          if (typeof hunter.save === 'function') {
-            await hunter.save();
-          }
-        }
+      } else if (step.state === 'idle' && hunter.schedule?.activityState === 'hunting') {
+        await resetHunterToIdle(hunter, now);
       }
 
       // Recompute distance from hunter's current/updated coordinates

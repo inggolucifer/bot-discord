@@ -48,6 +48,22 @@ function applySnapCoords(fields, snap) {
   return fields;
 }
 
+function pushJourneyStart(bulkOps, npcId, journey, extra = {}) {
+  bulkOps.push({
+    updateOne: {
+      filter: { _id: npcId },
+      update: {
+        $set: {
+          'schedule.targetDestination': journey,
+          'schedule.activityState': 'traveling',
+          'schedule.currentFacility': '',
+          ...extra
+        }
+      }
+    }
+  });
+}
+
 /**
  * Executes one tick of NPC journeys (typically every 60s).
  */
@@ -58,8 +74,12 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
 
   const npcs = await Npc.find({
     'vitalStatus.isAlive': true,
-    'schedule.wanderLevel': { $gt: 0 },
-    'schedule.activityState': { $ne: 'hunting' }
+    'schedule.activityState': { $ne: 'hunting' },
+    $or: [
+      { 'schedule.wanderLevel': { $gt: 0 } },
+      { 'schedule.targetDestination.type': 'journey' },
+      { 'schedule.stayUntil': { $ne: null } }
+    ]
   });
 
   const gameDay = Math.floor(now / 3600000);
@@ -130,6 +150,22 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
       const away = homeAnchorId && currentAnchorId && currentAnchorId !== homeAnchorId;
       const stayUntil = npc.schedule?.stayUntil;
 
+      const homeAnchorObj = anchorMap && homeAnchorId ? anchorMap[homeAnchorId] : null;
+      const hx = npc.schedule?.tileX ?? npc.tileX;
+      const hy = npc.schedule?.tileY ?? npc.tileY;
+      const homeX = homeAnchorObj?.tileX ?? homeAnchorObj?.x;
+      const homeY = homeAnchorObj?.tileY ?? homeAnchorObj?.y;
+      const disp = (
+        !away &&
+        homeAnchorObj &&
+        Number.isFinite(hx) &&
+        Number.isFinite(hy) &&
+        Number.isFinite(homeX) &&
+        Number.isFinite(homeY)
+      )
+        ? Math.max(Math.abs(hx - homeX), Math.abs(hy - homeY))
+        : 0;
+
       if (away && stayUntil && new Date(stayUntil).getTime() <= now && activityState !== 'hunting') {
         // Return journey home
         const returnPlan = planReturnHome(npc, { anchorMap, graph, now });
@@ -144,18 +180,7 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
             maxTiles: 10000
           });
           if (journey) {
-            bulkOps.push({
-              updateOne: {
-                filter: { _id: npc._id },
-                update: {
-                  $set: {
-                    'schedule.targetDestination': journey,
-                    'schedule.activityState': 'traveling',
-                    'schedule.currentFacility': ''
-                  }
-                }
-              }
-            });
+            pushJourneyStart(bulkOps, npc._id, journey);
             started++;
           }
         }
@@ -164,27 +189,35 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
         bulkOps.push({
           updateOne: {
             filter: { _id: npc._id },
-            update: {
-              $set: {
-                'schedule.stayUntil': new Date(now + 30 * 60000)
-              }
-            }
+            update: { $set: { 'schedule.stayUntil': new Date(now + 30 * 60000) } }
           }
         });
+      } else if (!away && disp > 30 && (!stayUntil || new Date(stayUntil).getTime() <= now) && activityState !== 'visiting') {
+        // Walk back home from wilderness displacement (e.g. hunter finished chasing mid-route)
+        const speed = Math.max(6, Math.min(30, npc.attributes?.travelSpeed ?? 10));
+        const durationMs = Math.ceil((disp / speed) * 60000);
+        const walkBack = {
+          type: 'journey',
+          purpose: 'pulang',
+          fromId: homeAnchorId,
+          toId: homeAnchorId,
+          pathAnchors: [homeAnchorId],
+          startedAt: now,
+          etaAt: now + durationMs,
+          totalTiles: disp,
+          legs: [{ ax: hx, ay: hy, bx: homeX, by: homeY, len: disp }]
+        };
+        pushJourneyStart(bulkOps, npc._id, walkBack);
+        started++;
       } else if (!away && activityState === 'visiting') {
         // Self-heal: NPC already at homeAnchorId should return to idle and clear stayUntil
         bulkOps.push({
           updateOne: {
             filter: { _id: npc._id },
-            update: {
-              $set: {
-                'schedule.activityState': 'idle',
-                'schedule.stayUntil': null
-              }
-            }
+            update: { $set: { 'schedule.activityState': 'idle', 'schedule.stayUntil': null } }
           }
         });
-      } else if (!away && ['idle', 'socializing', 'working', 'sleeping', 'training', 'meditating'].includes(activityState)) {
+      } else if (!away && (npc.schedule?.wanderLevel || 0) > 0 && ['idle', 'socializing', 'working', 'sleeping', 'training', 'meditating'].includes(activityState)) {
         // Only start outward journeys if currently at home
         const destPlan = chooseDestination(npc, {
           anchors: Object.values(anchorMap || {}),
@@ -195,36 +228,41 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
           now
         });
 
-          if (destPlan && Array.isArray(destPlan.pathAnchors) && destPlan.pathAnchors.length >= 2) {
-            const speed = Math.max(6, Math.min(30, npc.attributes?.travelSpeed ?? 10));
-            const journey = buildJourney({
-              pathAnchors: destPlan.pathAnchors,
-              anchorMap,
-              now,
-              tilesPerMinute: speed,
-              purpose: destPlan.purpose
-            });
-            if (journey) {
-              journey.stayMs = destPlan.stayMs;
-              bulkOps.push({
-                updateOne: {
-                  filter: { _id: npc._id },
-                  update: {
-                    $set: {
-                      'schedule.targetDestination': journey,
-                      'schedule.lastJourneyDay': gameDay,
-                      'schedule.activityState': 'traveling',
-                      'schedule.currentFacility': ''
-                    }
-                  }
-                }
-              });
-              started++;
-            }
+        let journeyScheduled = false;
+        if (destPlan && Array.isArray(destPlan.pathAnchors) && destPlan.pathAnchors.length >= 2) {
+          const speed = Math.max(6, Math.min(30, npc.attributes?.travelSpeed ?? 10));
+          const journey = buildJourney({
+            pathAnchors: destPlan.pathAnchors,
+            anchorMap,
+            now,
+            tilesPerMinute: speed,
+            purpose: destPlan.purpose
+          });
+          if (journey) {
+            journey.stayMs = destPlan.stayMs;
+            pushJourneyStart(bulkOps, npc._id, journey, { 'schedule.lastJourneyDay': gameDay });
+            started++;
+            journeyScheduled = true;
           }
         }
+        if (!journeyScheduled && disp <= 30 && stayUntil) {
+          bulkOps.push({
+            updateOne: {
+              filter: { _id: npc._id },
+              update: { $set: { 'schedule.stayUntil': null } }
+            }
+          });
+        }
+      } else if (!away && disp <= 30 && stayUntil) {
+        bulkOps.push({
+          updateOne: {
+            filter: { _id: npc._id },
+            update: { $set: { 'schedule.stayUntil': null } }
+          }
+        });
       }
     }
+  }
 
   if (bulkOps.length > 0 && typeof Npc.bulkWrite === 'function') {
     await Npc.bulkWrite(bulkOps);
