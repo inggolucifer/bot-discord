@@ -146,7 +146,8 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
             anchorMap,
             now,
             tilesPerMinute: speed,
-            purpose: 'pulang'
+            purpose: 'pulang',
+            maxTiles: 10000
           });
           if (journey) {
             bulkOps.push({
@@ -172,6 +173,19 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
             update: {
               $set: {
                 'schedule.stayUntil': new Date(now + 30 * 60000)
+              }
+            }
+          }
+        });
+      } else if (!away && activityState === 'visiting') {
+        // Self-heal: NPC already at homeAnchorId should return to idle and clear stayUntil
+        bulkOps.push({
+          updateOne: {
+            filter: { _id: npc._id },
+            update: {
+              $set: {
+                'schedule.activityState': 'idle',
+                'schedule.stayUntil': null
               }
             }
           }
