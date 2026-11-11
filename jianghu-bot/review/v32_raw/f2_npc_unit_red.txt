@@ -1,0 +1,139 @@
+RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
+
+ ✓ tests/unit/npc/v27_seeding_invariants.test.mjs (14 tests) 1031ms
+   ✓ V27 Master Seeding Invariants Suite (I1 - I14) (14)
+     ✓ I14: Full backward compatibility: all NPCs conform to Mongoose Npc schema 379ms
+ ✓ tests/unit/npc/v31_snap_walkable.test.mjs (8 tests) 2320ms
+ ✓ tests/unit/npc/v28_ticker.test.mjs (14 tests) 1100ms
+   ✓ NPC Living Simulation Ticker (V28 / B3) (14)
+     ✓ 1. evaluateNpcSchedule selects sleeping activity at night (hour 23) 798ms
+ ✓ tests/unit/npc/v28_actions.test.mjs (5 tests) 211ms
+ ✓ tests/unit/npc/v28_battle_resolution.test.mjs (10 tests) 288ms
+ ✓ tests/unit/npc/v27_lifecycle_vendetta.test.mjs (4 tests) 132ms
+ ✓ tests/unit/npc/v28_vendetta.test.mjs (15 tests) 136ms
+ ✓ tests/unit/npc/v28_dialogue_wiring.test.mjs (3 tests) 228ms
+ ✓ tests/unit/npc/v28_antislop_static.test.mjs (4 tests) 162ms
+ ✓ tests/unit/npc/v27_generator_family.test.mjs (4 tests) 116ms
+stdout | tests/unit/npc/v28_seed_world.test.mjs > NPC World Seed & Invariants V1-V14 (V28 / B1) > 21. ensureNpcWorld respects NPC_SEED_ON_BOOT="false"
+[NpcBootstrap] NPC_SEED_ON_BOOT is false, skipping bootstrap.
+
+ ✓ tests/unit/npc/v28_seed_world.test.mjs (22 tests) 5739ms
+   ✓ NPC World Seed & Invariants V1-V14 (V28 / B1) (22)
+     ✓ 10. [V6] all NPC coordinates are on walkable tiles 841ms
+     ✓ 18. [V13] all 764 NPC documents pass validateSync() on Npc Mongoose model 4420ms
+ ✓ tests/unit/npc/v28_visibility.test.mjs (4 tests) 133ms
+ ✓ tests/unit/npcLabels.test.js (4 tests) 82ms
+ ✓ tests/unit/npc/v27_schema_integrity.test.mjs (7 tests) 101ms
+ ✓ tests/unit/npc/v27_static_data.test.mjs (6 tests) 57ms
+ ✓ tests/unit/npc/v27_scheduler_movement.test.mjs (4 tests) 97ms
+ ✓ tests/unit/npc/v27_math_time_stats.test.mjs (10 tests) 39ms
+ ✓ tests/unit/npc/v28_death_door.test.mjs (3 tests) 62ms
+ ✓ tests/unit/npc/v30_wander_planner.test.mjs (8 tests) 46ms
+ ❯ tests/unit/npc/v32_route.test.mjs (14 tests | 3 failed) 70ms
+   ✓ NPC Pure Routing Module (V32 F1) (10)
+     ✓ (a) segmen yang tidak menyilang barrier mengembalikan [A, B] 8ms
+     ✓ (b) menyilang azure_wall (2400,3000) -> (2400,3700) memilih pass detour terkecil dengan y=3098 dan y=3602 4ms
+     ✓ (c) tidak ada sub-segmen hasil yang menyilang barrier kecuali di koridor celah 13ms
+     ✓ (d) arah sebaliknya (B ke A) menghasilkan celah yang sama 1ms
+     ✓ (e) west_cliff dilintasi lewat merchant_pass pada sumbu X (x=1448, x=1602, y=2250) 1ms
+     ✓ (f) great_rift dilintasi lewat chain_bridge pada sumbu Y 1ms
+     ✓ (g) menuju pulau_penyu_raksasa (4350,2750) dari (3920,2700) atau melintasi rintangan tanpa celah mengembalikan null 1ms
+     ✓ (h) endpoint di dalam bounds barrier membuat barrier itu diabaikan (segmentCrossesBarrier = false) 1ms
+     ✓ (i) deterministik (2x panggil identik), semua koordinat integer, dan tanpa titik duplikat berurutan 4ms
+     ✓ (j) celah pilihan benar-benar memiliki detour chebyshev(A, pass) + chebyshev(pass, B) terkecil 4ms
+   ❯ buildJourney routeFn Integration (V32 F2) (4)
+     ✓ (1) tanpa routeFn hasil identik dengan perilaku garis lurus sebelumnya 1ms
+     × (2) dengan routeFn menyilang, legs.length > jumlah anchor - 1, sum(len) === totalTiles, dan null jika diblokir 13ms
+     × (3) detour yang membuat totalTiles > maxTiles (900) mengembalikan null meski garis lurus <= 900 10ms
+     × (4) positionAt pada t=0, t=1, dan titik tengah leg ber-waypoint terinterpolasi akurat 2ms
+ ✓ tests/unit/npc/v30_schema.test.mjs (4 tests) 34ms
+ ✓ tests/unit/npc/v28_visibility_queries.test.mjs (12 tests) 56ms
+ ✓ tests/unit/npc/v27_dialogue_engine.test.mjs (3 tests) 17ms
+ ✓ tests/unit/npc/v30_journey_math.test.mjs (10 tests) 25ms
+ ✓ tests/unit/npc/v30_wander_seed.test.mjs (2 tests) 13ms
+ ✓ tests/unit/npc/v30_hunt_engine.test.mjs (9 tests) 21ms
+ ✓ tests/unit/npc/v28_npc_labels.test.mjs (4 tests) 17ms
+ ✓ tests/unit/npc/v28_dialogue_runner.test.mjs (11 tests) 25ms
+ ✓ tests/unit/npc/v28_proximity.test.mjs (4 tests) 8ms
+
+ Test Files  1 failed | 28 passed (29)
+      Tests  3 failed | 219 passed (222)
+   Start at  10:39:44
+   Duration  33.57s (import 80%, tests 15%, transform 3%, worker 2%)
+
+    Isolate  29 workers spawned · ~545ms startup each (spawn + environment, per file)
+             at least ~4.72s faster with isolate: false — reuses workers across files instead of one per file
+
+
+stderr | tests/unit/npc/v28_dialogue_wiring.test.mjs
+[SECURITY] JWT_SECRET environment variable is unset. Using default development secret.
+
+stderr | tests/unit/npc/v28_dialogue_wiring.test.mjs
+[SECURITY] JWT_SECRET environment variable is unset. Using default development secret.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/npc/v32_route.test.mjs > buildJourney routeFn Integration (V32 F2) > (2) dengan routeFn menyilang, legs.length > jumlah anchor - 1, sum(len) === totalTiles, dan null jika diblokir
+AssertionError: expected 1 to be greater than 1
+ ❯ tests/unit/npc/v32_route.test.mjs:220:33
+    218|     });
+    219|     expect(jRouted).not.toBeNull();
+    220|     expect(jRouted.legs.length).toBeGreaterThan(1);
+       |                                 ^
+    221|     const sumLen = jRouted.legs.reduce((s, l) => s + l.len, 0);
+    222|     expect(sumLen).toBe(jRouted.totalTiles);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/unit/npc/v32_route.test.mjs > buildJourney routeFn Integration (V32 F2) > (3) detour yang membuat totalTiles > maxTiles (900) mengembalikan null meski garis lurus <= 900
+AssertionError: expected { type: 'journey', …(8) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "etaAt": 5101000,
+  "fromId": "utara_jauh",
+  "legs": [
+    {
+      "ax": 2400,
+      "ay": 3000,
+      "bx": 2100,
+      "by": 3850,
+      "len": 850,
+    },
+  ],
+  "pathAnchors": [
+    "utara_jauh",
+    "selatan_jauh",
+  ],
+  "purpose": "berkelana",
+  "startedAt": 1000,
+  "toId": "selatan_jauh",
+  "totalTiles": 850,
+  "type": "journey",
+}
+
+ ❯ tests/unit/npc/v32_route.test.mjs:253:30
+    251|       routeFn: defaultRouteFn
+    252|     });
+    253|     expect(routedDefaultCap).toBeNull();
+       |                              ^
+    254|   });
+    255|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/unit/npc/v32_route.test.mjs > buildJourney routeFn Integration (V32 F2) > (4) positionAt pada t=0, t=1, dan titik tengah leg ber-waypoint terinterpolasi akurat
+TypeError: Cannot read properties of undefined (reading 'len')
+ ❯ tests/unit/npc/v32_route.test.mjs:277:41
+    275|     const leg0 = journey.legs[0];
+    276|     const leg1 = journey.legs[1];
+    277|     const targetTiles = leg0.len + leg1.len * 0.5;
+       |                                         ^
+    278|     const duration = journey.etaAt - journey.startedAt;
+    279|     const midTime = journey.startedAt + (targetTiles / journey.totalTi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯

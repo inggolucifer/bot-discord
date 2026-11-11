@@ -10,6 +10,7 @@ const {
   routeLeg,
   defaultRouteFn
 } = require('../../../utils/npcRoute');
+const { buildJourney, positionAt } = require('../../../utils/npcJourney');
 
 function cheb(ax, ay, bx, by) {
   return Math.max(Math.abs(bx - ax), Math.abs(by - ay));
@@ -174,5 +175,110 @@ describe('NPC Pure Routing Module (V32 F1)', () => {
       expect(pts).not.toBeNull();
       expect(pts).toContainEqual({ x: expectedPass.x, y: expectedPass.y });
     }
+  });
+});
+
+describe('buildJourney routeFn Integration (V32 F2)', () => {
+  const anchorMap = {
+    utara: { id: 'utara', x: 2500, y: 3000 },
+    selatan: { id: 'selatan', x: 2500, y: 3700 },
+    utara_jauh: { id: 'utara_jauh', x: 2400, y: 3000 },
+    selatan_jauh: { id: 'selatan_jauh', x: 2100, y: 3850 },
+    donghai: { id: 'donghai', x: 3920, y: 2700 },
+    pulau: { id: 'pulau', x: 4350, y: 2750 }
+  };
+
+  it('(1) tanpa routeFn hasil identik dengan perilaku garis lurus sebelumnya', () => {
+    const jDefault = buildJourney({
+      pathAnchors: ['utara', 'selatan'],
+      anchorMap,
+      now: 1000,
+      tilesPerMinute: 10
+    });
+    const jNullFn = buildJourney({
+      pathAnchors: ['utara', 'selatan'],
+      anchorMap,
+      now: 1000,
+      tilesPerMinute: 10,
+      routeFn: null
+    });
+    expect(jDefault).not.toBeNull();
+    expect(jDefault.legs).toEqual([{ ax: 2500, ay: 3000, bx: 2500, by: 3700, len: 700 }]);
+    expect(jDefault.totalTiles).toBe(700);
+    expect(jNullFn).toEqual(jDefault);
+  });
+
+  it('(2) dengan routeFn menyilang, legs.length > jumlah anchor - 1, sum(len) === totalTiles, dan null jika diblokir', () => {
+    const jRouted = buildJourney({
+      pathAnchors: ['utara', 'selatan'],
+      anchorMap,
+      now: 1000,
+      tilesPerMinute: 10,
+      routeFn: defaultRouteFn
+    });
+    expect(jRouted).not.toBeNull();
+    expect(jRouted.legs.length).toBeGreaterThan(1);
+    const sumLen = jRouted.legs.reduce((s, l) => s + l.len, 0);
+    expect(sumLen).toBe(jRouted.totalTiles);
+
+    const jBlocked = buildJourney({
+      pathAnchors: ['donghai', 'pulau'],
+      anchorMap,
+      now: 1000,
+      tilesPerMinute: 10,
+      routeFn: defaultRouteFn
+    });
+    expect(jBlocked).toBeNull();
+  });
+
+  it('(3) detour yang membuat totalTiles > maxTiles (900) mengembalikan null meski garis lurus <= 900', () => {
+    // Straight distance (2400,3000) -> (2100,3850) = 850 <= 900
+    const straight = buildJourney({
+      pathAnchors: ['utara_jauh', 'selatan_jauh'],
+      anchorMap,
+      now: 1000,
+      tilesPerMinute: 10
+    });
+    expect(straight).not.toBeNull();
+    expect(straight.totalTiles).toBe(850);
+
+    // Detour through north_pass raises totalTiles above 900 -> null
+    const routedDefaultCap = buildJourney({
+      pathAnchors: ['utara_jauh', 'selatan_jauh'],
+      anchorMap,
+      now: 1000,
+      tilesPerMinute: 10,
+      routeFn: defaultRouteFn
+    });
+    expect(routedDefaultCap).toBeNull();
+  });
+
+  it('(4) positionAt pada t=0, t=1, dan titik tengah leg ber-waypoint terinterpolasi akurat', () => {
+    const journey = buildJourney({
+      pathAnchors: ['utara', 'selatan'],
+      anchorMap,
+      now: 10000,
+      tilesPerMinute: 10,
+      routeFn: defaultRouteFn
+    });
+    expect(journey).not.toBeNull();
+
+    const pStart = positionAt(journey, journey.startedAt);
+    expect(pStart.x).toBe(2500);
+    expect(pStart.y).toBe(3000);
+
+    const pEnd = positionAt(journey, journey.etaAt);
+    expect(pEnd.x).toBe(2500);
+    expect(pEnd.y).toBe(3700);
+
+    // Check midpoint of leg 1 (masuk -> tengah)
+    const leg0 = journey.legs[0];
+    const leg1 = journey.legs[1];
+    const targetTiles = leg0.len + leg1.len * 0.5;
+    const duration = journey.etaAt - journey.startedAt;
+    const midTime = journey.startedAt + (targetTiles / journey.totalTiles) * duration;
+    const pMid = positionAt(journey, midTime);
+    expect(pMid.x).toBe(Math.round((leg1.ax + leg1.bx) / 2));
+    expect(pMid.y).toBe(Math.round((leg1.ay + leg1.by) / 2));
   });
 });

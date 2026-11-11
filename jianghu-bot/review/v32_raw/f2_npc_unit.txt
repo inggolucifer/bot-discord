@@ -1,0 +1,54 @@
+RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
+
+ ✓ tests/unit/npc/v32_route.test.mjs (14 tests) 80ms
+ ✓ tests/unit/npc/v28_ticker.test.mjs (14 tests) 371ms
+ ✓ tests/unit/npc/v31_snap_walkable.test.mjs (8 tests) 2126ms
+ ✓ tests/unit/npc/v27_seeding_invariants.test.mjs (14 tests) 965ms
+   ✓ V27 Master Seeding Invariants Suite (I1 - I14) (14)
+     ✓ I10: ZERO-DECIMAL policy: all numerical attributes across all NPCs are pure integers 435ms
+ ✓ tests/unit/npc/v28_battle_resolution.test.mjs (10 tests) 594ms
+ ✓ tests/unit/npc/v28_actions.test.mjs (5 tests) 236ms
+ ✓ tests/unit/npc/v28_dialogue_wiring.test.mjs (3 tests) 176ms
+ ✓ tests/unit/npc/v28_antislop_static.test.mjs (4 tests) 49ms
+ ✓ tests/unit/npc/v28_vendetta.test.mjs (15 tests) 146ms
+ ✓ tests/unit/npc/v28_visibility.test.mjs (4 tests) 135ms
+ ✓ tests/unit/npc/v27_lifecycle_vendetta.test.mjs (4 tests) 157ms
+ ✓ tests/unit/npc/v27_generator_family.test.mjs (4 tests) 129ms
+ ✓ tests/unit/npc/v27_schema_integrity.test.mjs (7 tests) 124ms
+stdout | tests/unit/npc/v28_seed_world.test.mjs > NPC World Seed & Invariants V1-V14 (V28 / B1) > 21. ensureNpcWorld respects NPC_SEED_ON_BOOT="false"
+[NpcBootstrap] NPC_SEED_ON_BOOT is false, skipping bootstrap.
+
+ ✓ tests/unit/npc/v28_seed_world.test.mjs (22 tests) 5502ms
+   ✓ NPC World Seed & Invariants V1-V14 (V28 / B1) (22)
+     ✓ 10. [V6] all NPC coordinates are on walkable tiles 457ms
+     ✓ 18. [V13] all 764 NPC documents pass validateSync() on Npc Mongoose model 4526ms
+ ✓ tests/unit/npcLabels.test.js (4 tests) 107ms
+ ✓ tests/unit/npc/v27_scheduler_movement.test.mjs (4 tests) 92ms
+ ✓ tests/unit/npc/v27_static_data.test.mjs (6 tests) 64ms
+ ✓ tests/unit/npc/v30_wander_planner.test.mjs (8 tests) 60ms
+ ✓ tests/unit/npc/v27_math_time_stats.test.mjs (10 tests) 39ms
+ ✓ tests/unit/npc/v28_death_door.test.mjs (3 tests) 91ms
+ ✓ tests/unit/npc/v28_visibility_queries.test.mjs (12 tests) 63ms
+ ✓ tests/unit/npc/v28_dialogue_runner.test.mjs (11 tests) 25ms
+ ✓ tests/unit/npc/v30_journey_math.test.mjs (10 tests) 29ms
+ ✓ tests/unit/npc/v30_hunt_engine.test.mjs (9 tests) 26ms
+ ✓ tests/unit/npc/v27_dialogue_engine.test.mjs (3 tests) 28ms
+ ✓ tests/unit/npc/v28_npc_labels.test.mjs (4 tests) 18ms
+ ✓ tests/unit/npc/v30_wander_seed.test.mjs (2 tests) 24ms
+ ✓ tests/unit/npc/v30_schema.test.mjs (4 tests) 55ms
+ ✓ tests/unit/npc/v28_proximity.test.mjs (4 tests) 12ms
+
+ Test Files  29 passed (29)
+      Tests  222 passed (222)
+   Start at  10:40:40
+   Duration  31.02s (import 82%, tests 16%, worker 2%, transform 1%)
+
+    Isolate  29 workers spawned · ~590ms startup each (spawn + environment, per file)
+             at least ~5.12s faster with isolate: false — reuses workers across files instead of one per file
+
+
+stderr | tests/unit/npc/v28_dialogue_wiring.test.mjs
+[SECURITY] JWT_SECRET environment variable is unset. Using default development secret.
+
+stderr | tests/unit/npc/v28_dialogue_wiring.test.mjs
+[SECURITY] JWT_SECRET environment variable is unset. Using default development secret.

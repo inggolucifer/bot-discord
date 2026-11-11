@@ -45,9 +45,9 @@ function toAnchorPath(rawPath, anchorMap = null) {
 
 /**
  * Builds a deterministic journey object between anchors.
- * Returns null if path is invalid, < 2 anchors, totalTiles > maxTiles, or totalTiles === 0.
+ * Returns null if path is invalid, < 2 anchors, blocked by routeFn, totalTiles > maxTiles, or totalTiles === 0.
  */
-function buildJourney({ pathAnchors, anchorMap, now = Date.now(), tilesPerMinute = 10, purpose = 'berkelana', maxTiles = 900 }) {
+function buildJourney({ pathAnchors, anchorMap, now = Date.now(), tilesPerMinute = 10, purpose = 'berkelana', maxTiles = 900, routeFn = null }) {
   if (!Array.isArray(pathAnchors) || pathAnchors.length < 2) {
     return null;
   }
@@ -72,10 +72,26 @@ function buildJourney({ pathAnchors, anchorMap, now = Date.now(), tilesPerMinute
       return null;
     }
 
-    // Chebyshev distance: max(|dx|, |dy|)
-    const len = Math.max(Math.abs(bx - ax), Math.abs(by - ay));
-    legs.push({ ax, ay, bx, by, len });
-    totalTiles += len;
+    if (typeof routeFn === 'function') {
+      const pts = routeFn(ax, ay, bx, by);
+      if (!Array.isArray(pts)) {
+        return null;
+      }
+      for (let k = 0; k < pts.length - 1; k++) {
+        const p1 = pts[k];
+        const p2 = pts[k + 1];
+        const len = Math.max(Math.abs(p2.x - p1.x), Math.abs(p2.y - p1.y));
+        if (len > 0) {
+          legs.push({ ax: p1.x, ay: p1.y, bx: p2.x, by: p2.y, len });
+          totalTiles += len;
+        }
+      }
+    } else {
+      // Chebyshev distance: max(|dx|, |dy|)
+      const len = Math.max(Math.abs(bx - ax), Math.abs(by - ay));
+      legs.push({ ax, ay, bx, by, len });
+      totalTiles += len;
+    }
   }
 
   if (totalTiles === 0 || totalTiles > maxTiles) {
