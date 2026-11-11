@@ -1,0 +1,26 @@
+RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
+
+ ❯ tests/unit/npc/v32_route.test.mjs (0 test)
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  10:37:59
+   Duration  707ms (worker 99%, environment 1%)
+
+
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/npc/v32_route.test.mjs [ tests/unit/npc/v32_route.test.mjs ]
+Error: Cannot find module '../../../utils/npcRoute'
+Require stack:
+- D:\gitub\bot-discord\jianghu-bot\tests\unit\npc\v32_route.test.mjs
+ ❯ tests/unit/npc/v32_route.test.mjs:12:5
+     10|   routeLeg,
+     11|   defaultRouteFn
+     12| } = require('../../../utils/npcRoute');
+       |     ^
+     13|
+     14| function cheb(ax, ay, bx, by) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
