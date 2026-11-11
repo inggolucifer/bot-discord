@@ -10,7 +10,12 @@ const {
   routeLeg,
   defaultRouteFn
 } = require('../../../utils/npcRoute');
-const { buildJourney, positionAt } = require('../../../utils/npcJourney');
+const {
+  buildJourney,
+  positionAt,
+  buildLegsFromPoints,
+  resolveTravelSpeed
+} = require('../../../utils/npcJourney');
 
 function cheb(ax, ay, bx, by) {
   return Math.max(Math.abs(bx - ax), Math.abs(by - ay));
@@ -176,6 +181,46 @@ describe('NPC Pure Routing Module (V32 F1)', () => {
       expect(pts).toContainEqual({ x: expectedPass.x, y: expectedPass.y });
     }
   });
+
+  it('(k) koordinat non-finite (NaN / Infinity) ditolak aman sebagai null dan tidak menyilang barrier', () => {
+    const azureWall = barriers.find((b) => b.id === 'azure_wall');
+    expect(segmentCrossesBarrier(NaN, 3000, 2400, 3700, azureWall)).toBe(false);
+    expect(defaultRouteFn(NaN, 3000, 2400, 3700)).toBeNull();
+    expect(defaultRouteFn(2400, 3000, Infinity, 3700)).toBeNull();
+  });
+
+  it('(l) titik awal tepat pada batas luar barrier (y=3100) tetap keluar ke sisi masuk yang benar (y=3098)', () => {
+    const expectedPass = bestPassFor(2400, 3100, 2400, 3700, 'azure_wall');
+    const res = defaultRouteFn(2400, 3100, 2400, 3700);
+    expect(res).toEqual([
+      { x: 2400, y: 3100 },
+      { x: expectedPass.x, y: 3098 },
+      { x: expectedPass.x, y: expectedPass.y },
+      { x: expectedPass.x, y: 3602 },
+      { x: 2400, y: 3700 }
+    ]);
+  });
+
+  it('(m) segmen panjang melewati great_rift + azure_wall menyambungkan chain_bridge dan north_pass; kedalaman > 3 mengembalikan null', () => {
+    const res = defaultRouteFn(2200, 1700, 2200, 3700);
+    expect(res).not.toBeNull();
+    expect(res).toContainEqual({ x: 2300, y: 1950 });
+    expect(res).toContainEqual({ x: 2200, y: 3350 });
+
+    // 4 consecutive synthetic barriers require > depth 3 splits -> null
+    const stackedBarriers = [1, 2, 3, 4].map((k) => ({
+      id: `wall_${k}`,
+      bounds: { minX: 0, maxX: 1000, minY: k * 100, maxY: k * 100 + 20 }
+    }));
+    const stackedPasses = [1, 2, 3, 4].map((k) => ({
+      id: `pass_${k}`,
+      barrierId: `wall_${k}`,
+      x: 500 + (k % 2 === 0 ? -50 : 50),
+      y: k * 100 + 10,
+      width: 3
+    }));
+    expect(routeLeg(500, 50, 500, 500, { barriers: stackedBarriers, passes: stackedPasses })).toBeNull();
+  });
 });
 
 describe('buildJourney routeFn Integration (V32 F2)', () => {
@@ -280,5 +325,24 @@ describe('buildJourney routeFn Integration (V32 F2)', () => {
     const pMid = positionAt(journey, midTime);
     expect(pMid.x).toBe(Math.round((leg1.ax + leg1.bx) / 2));
     expect(pMid.y).toBe(Math.round((leg1.ay + leg1.by) / 2));
+  });
+
+  it('(5) helper bersama buildLegsFromPoints dan resolveTravelSpeed membuang leg panjang 0 dan mengapit kecepatan [6, 30]', () => {
+    const built = buildLegsFromPoints([
+      { x: 100, y: 100 },
+      { x: 100, y: 100 },
+      { x: 130, y: 140 },
+      { x: 130, y: 160 }
+    ]);
+    expect(built.legs).toEqual([
+      { ax: 100, ay: 100, bx: 130, by: 140, len: 40 },
+      { ax: 130, ay: 140, bx: 130, by: 160, len: 20 }
+    ]);
+    expect(built.totalTiles).toBe(60);
+
+    expect(resolveTravelSpeed({})).toBe(10);
+    expect(resolveTravelSpeed({ attributes: { travelSpeed: 2 } })).toBe(6);
+    expect(resolveTravelSpeed({ attributes: { travelSpeed: 99 } })).toBe(30);
+    expect(resolveTravelSpeed({ attributes: { travelSpeed: 18 } })).toBe(18);
   });
 });

@@ -94,4 +94,24 @@ describe('Invariant V19: Journey Leg Continuity & Pass-Only Barrier Crossing (V3
     const v19 = res.violations.filter((v) => v.code === 'V19');
     expect(v19).toEqual([]);
   });
+
+  it('HIJAU pada journey multi-barrier ber-routeFn (great_rift + azure_wall)', () => {
+    const multiAnchors = {
+      utara_rift: { id: 'utara_rift', x: 2200, y: 1700 },
+      selatan_wall: { id: 'selatan_wall', x: 2200, y: 3700 }
+    };
+    const validMulti = buildJourney({
+      pathAnchors: ['utara_rift', 'selatan_wall'],
+      anchorMap: multiAnchors,
+      now,
+      tilesPerMinute: 10,
+      maxTiles: 3000,
+      routeFn: defaultRouteFn
+    });
+    expect(validMulti).not.toBeNull();
+    expect(validMulti.legs.length).toBeGreaterThanOrEqual(7);
+
+    const res = checkInvariants({ npcs: [makeNpcWithJourney(validMulti)], anchors });
+    expect(res.violations.filter((v) => v.code === 'V19')).toEqual([]);
+  });
 });

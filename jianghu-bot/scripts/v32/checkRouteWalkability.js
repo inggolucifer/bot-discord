@@ -12,23 +12,13 @@ const { travelGraph } = require('../../utils/travelGraph');
 const { toAnchorPath, buildJourney } = require('../../utils/npcJourney');
 const { defaultRouteFn, loadRouteData } = require('../../utils/npcRoute');
 const { snapWalkable } = require('../../services/npcJourneyTick');
-const { isTileWalkable } = require('../v28/lib/invariants');
+const { isTileWalkable, createCachedWalkableFn } = require('../v28/lib/invariants');
 
 const anchorsPath = path.resolve(__dirname, '../../world-data/anchors.json');
 const anchors = JSON.parse(fs.readFileSync(anchorsPath, 'utf8'));
 const anchorMap = Object.fromEntries(anchors.map((a) => [a.id, a]));
-const { barriers } = loadRouteData();
-
-const walkCache = new Map();
-function cachedIsTileWalkable(x, y) {
-  const key = (x + 1000) * 100000 + (y + 1000);
-  let val = walkCache.get(key);
-  if (val === undefined) {
-    val = isTileWalkable(x, y);
-    walkCache.set(key, val);
-  }
-  return val;
-}
+const { barriers, passes } = loadRouteData();
+const cachedIsTileWalkable = createCachedWalkableFn(isTileWalkable);
 
 function pointInAnyBarrier(x, y) {
   return barriers
@@ -47,6 +37,8 @@ function runCensus() {
   let totalPoints = 0;
   let rawNonWalkable = 0;
   let okFalseCount = 0;
+  let okFalseByBarrierInterior = 0;
+  let okFalseByTerrain = 0;
   const routeFails = {};
 
   for (let i = 0; i < anchors.length; i++) {
@@ -105,12 +97,18 @@ function runCensus() {
               if (!routeFails[routeKey]) {
                 const startB = pointInAnyBarrier(fromAnchor.x, fromAnchor.y);
                 const endB = pointInAnyBarrier(toAnchor.x, toAnchor.y);
-                const cause = [...startB, ...endB].length > 0
+                const hasInterior = [...startB, ...endB].length > 0;
+                const cause = hasInterior
                   ? `endpoint di dalam barrier (${[...new Set([...startB, ...endB])].join(',')})`
                   : 'medan padat di luar radius snap 40';
-                routeFails[routeKey] = { count: 0, cause };
+                routeFails[routeKey] = { count: 0, cause, hasInterior };
               }
               routeFails[routeKey].count++;
+              if (routeFails[routeKey].hasInterior) {
+                okFalseByBarrierInterior++;
+              } else {
+                okFalseByTerrain++;
+              }
             }
           }
         }
@@ -128,6 +126,12 @@ function runCensus() {
     .slice(0, 10)
     .map(([route, info], idx) => `  ${idx + 1}. ${route}: ${info.count} titik ok:false (${info.cause})`);
 
+  const passCheck = passes.map((p) => {
+    const ok = cachedIsTileWalkable(p.x, p.y);
+    return { id: p.id, barrierId: p.barrierId, x: p.x, y: p.y, walkable: ok };
+  });
+  const blockedPasses = passCheck.filter((p) => !p.walkable);
+
   const report = [
     '=== SENSUS PENUH WALKABILITY RUTE ANTAR-ANCHOR (V32 F4) ===',
     `Jumlah Pasangan Anchor Dicoba (All-Pairs): ${attemptedRoutes}`,
@@ -140,6 +144,9 @@ function runCensus() {
     `Total Titik Leg Dievaluasi (tiap 10% per leg): ${totalPoints}`,
     `Titik Non-Walkable Sebelum Snap: ${rawNonWalkable} (${rawPct}%)`,
     `Titik ok:false Setelah Snap (Radius 40): ${okFalseCount} (${okFalsePct}%)`,
+    `  - Dari endpoint anchor di dalam bounds barrier: ${okFalseByBarrierInterior}`,
+    `  - Dari medan padat di luar radius snap 40: ${okFalseByTerrain}`,
+    `Status Walkability Celah Resmi (${passes.length - blockedPasses.length}/${passes.length} walkable): ${blockedPasses.length === 0 ? 'SEMUA WALKABLE' : blockedPasses.map((p) => `${p.id}(${p.x},${p.y})`).join(', ')}`,
     `Status Ambang Exit Skrip (<= 1.00%): ${okFalsePctNum <= 1.0 ? 'PASSED' : 'FAILED'} (Target Ideal <= 0.50%: ${okFalsePctNum <= 0.5 ? 'TERCAPAI' : 'BELUM TERCAPAI'})`,
     '',
     'Top 10 Rute Penyumbang ok:false Terbanyak:',

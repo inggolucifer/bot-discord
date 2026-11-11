@@ -1,8 +1,8 @@
 RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
 
- ✓ tests/unit/npc/v32_route.test.mjs (10 tests) 38ms
+ ✓ tests/unit/npc/v32_route.test.mjs (18 tests) 33ms
 
  Test Files  1 passed (1)
-      Tests  10 passed (10)
-   Start at  10:38:45
-   Duration  571ms (transform 42%, tests 21%, import 21%, worker 16%)
+      Tests  18 passed (18)
+   Start at  13:07:52
+   Duration  442ms (import 34%, tests 31%, worker 23%, transform 11%)

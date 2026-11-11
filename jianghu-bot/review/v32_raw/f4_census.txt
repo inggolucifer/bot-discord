@@ -9,6 +9,9 @@ Jumlah Rute Ditolak Total: 2047
 Total Titik Leg Dievaluasi (tiap 10% per leg): 15323
 Titik Non-Walkable Sebelum Snap: 1334 (8.71%)
 Titik ok:false Setelah Snap (Radius 40): 102 (0.67%)
+  - Dari endpoint anchor di dalam bounds barrier: 96
+  - Dari medan padat di luar radius snap 40: 6
+Status Walkability Celah Resmi (6/6 walkable): SEMUA WALKABLE
 Status Ambang Exit Skrip (<= 1.00%): PASSED (Target Ideal <= 0.50%: BELUM TERCAPAI)
 
 Top 10 Rute Penyumbang ok:false Terbanyak:

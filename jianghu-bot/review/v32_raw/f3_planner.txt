@@ -1,17 +1,20 @@
 RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
 
- ✓ tests/unit/npc/v32_planner_route.test.mjs (4 tests) 1739ms
-   ✓ NPC Wander Planner Route & Island Ban (V32 F3) (4)
-     ✓ (a) 500 seed acak deterministik (termasuk realmIndex >= 3 di dermaga_donghai) tidak pernah memilih atau melintasi anchor bertipe island 715ms
-     ✓ (b) dari 500 seed acak, tidak ada rencana yang buildJourney(..., routeFn) nya null dan semua membawa plan.journey valid 1016ms
+ ✓ tests/unit/npc/v32_planner_route.test.mjs (5 tests) 1311ms
+   ✓ NPC Wander Planner Route & Island Ban (V32 F3) (5)
+     ✓ (a) 500 seed acak deterministik (termasuk realmIndex >= 3 di dermaga_donghai) tidak pernah memilih atau melintasi anchor bertipe island 634ms
+     ✓ (b) dari 500 seed acak, tidak ada rencana yang buildJourney(..., routeFn) nya null dan semua membawa plan.journey valid 668ms
 stdout | tests/integration/npcJourneyLifecycle.test.js > NPC Journey Full Lifecycle Integration (V31 F1) > (m) Stranded NPC at pulau_penyu_raksasa whose return route is blocked teleports safely to homeAnchorId tile and logs teleport pulang
 [NpcJourney] teleport pulang Pengelana Terdampar Pulau
 
- ✓ tests/integration/npcJourneyLifecycle.test.js (7 tests) 1549ms
-   ✓ NPC Journey Full Lifecycle Integration (V31 F1) (7)
-     ✓ Full lifecycle: depart -> travel mid-way protected -> arrive visiting -> stay protected from schedule -> return home -> idle -> depart 24h later 425ms
+stdout | tests/integration/npcJourneyLifecycle.test.js > NPC Journey Full Lifecycle Integration (V31 F1) > (o) Displaced idle NPC separated from home by an impassable barrier teleports safely home
+[NpcJourney] teleport pulang Nelayan Terseret Ombak
+
+ ✓ tests/integration/npcJourneyLifecycle.test.js (9 tests) 1361ms
+   ✓ NPC Journey Full Lifecycle Integration (V31 F1) (9)
+     ✓ Full lifecycle: depart -> travel mid-way protected -> arrive visiting -> stay protected from schedule -> return home -> idle -> depart 24h later 349ms
 
  Test Files  2 passed (2)
-      Tests  11 passed (11)
-   Start at  10:44:24
-   Duration  4.25s (tests 57%, import 41%, worker 1%)
+      Tests  14 passed (14)
+   Start at  13:08:23
+   Duration  3.90s (tests 57%, import 40%, transform 2%, worker 1%)

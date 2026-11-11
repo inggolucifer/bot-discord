@@ -169,4 +169,47 @@ describe('NPC Wander Planner Route & Island Ban (V32 F3)', () => {
     expect(res.purpose).toBe('pulang');
     expect(res.teleport).toBe(true);
   });
+
+  it('(e) planReturnHome rute daratan jarak jauh (>900 tile) melintasi azure_wall memakai maxTiles 10000 dan melewati koridor celah', () => {
+    const longNpc = {
+      _id: 'npc_long_return',
+      name: 'Kultivator Pulang Jauh',
+      attributes: { travelSpeed: 12 },
+      schedule: {
+        currentAnchorId: 'desa_tianhe', // (2200, 3950) south of azure_wall
+        homeAnchorId: 'desa_xingcun',   // (2050, 2650) north of azure_wall (> 900 tiles)
+        activityState: 'visiting'
+      }
+    };
+    const res = planReturnHome(longNpc, {
+      anchorMap,
+      graph: travelGraph,
+      now: 4000000
+    });
+    expect(res).not.toBeNull();
+    expect(res.teleport).toBe(false);
+    expect(res.journey).not.toBeNull();
+    expect(res.journey.totalTiles).toBeGreaterThan(900);
+    const passesXCorridor = res.journey.legs.some((l) =>
+      azurePasses.some((p) => Math.abs(l.bx - p.x) <= 3 && l.by >= 3100 && l.by <= 3600)
+    );
+    expect(passesXCorridor).toBe(true);
+
+    // Direct cross-wall return without intermediate pass anchor (> 900 tiles) inserts exact pass waypoint
+    const directMap = {
+      selatan_jauh: { id: 'selatan_jauh', name: 'Selatan Jauh', x: 2500, y: 3900 },
+      utara_jauh: { id: 'utara_jauh', name: 'Utara Jauh', x: 2500, y: 2900 }
+    };
+    const directGraph = {
+      shortestPath: (f, t) => ({ path: [f, t], totalLi: 100 })
+    };
+    const directRes = planReturnHome({
+      _id: 'npc_direct_long',
+      attributes: { travelSpeed: 10 },
+      schedule: { currentAnchorId: 'selatan_jauh', homeAnchorId: 'utara_jauh', activityState: 'visiting' }
+    }, { anchorMap: directMap, graph: directGraph, now: 4000000 });
+    expect(directRes.teleport).toBe(false);
+    expect(directRes.journey.totalTiles).toBeGreaterThan(900);
+    expect(directRes.journey.legs.some((l) => azurePasses.some((p) => l.bx === p.x && l.by === p.y))).toBe(true);
+  });
 });

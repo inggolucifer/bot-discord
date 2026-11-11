@@ -44,6 +44,38 @@ function toAnchorPath(rawPath, anchorMap = null) {
 }
 
 /**
+ * Resolves clamped NPC travel speed in tiles per minute [6, 30].
+ */
+function resolveTravelSpeed(npc) {
+  return Math.max(6, Math.min(30, npc?.attributes?.travelSpeed ?? 10));
+}
+
+/**
+ * Converts an ordered array of coordinate points [{x, y}, ...] into Chebyshev legs.
+ * Skips zero-length consecutive segments.
+ */
+function buildLegsFromPoints(points) {
+  const legs = [];
+  let totalTiles = 0;
+  if (!Array.isArray(points) || points.length < 2) {
+    return { legs, totalTiles };
+  }
+
+  for (let k = 0; k < points.length - 1; k++) {
+    const p1 = points[k];
+    const p2 = points[k + 1];
+    if (!p1 || !p2) continue;
+    const len = Math.max(Math.abs(p2.x - p1.x), Math.abs(p2.y - p1.y));
+    if (len > 0) {
+      legs.push({ ax: p1.x, ay: p1.y, bx: p2.x, by: p2.y, len });
+      totalTiles += len;
+    }
+  }
+
+  return { legs, totalTiles };
+}
+
+/**
  * Builds a deterministic journey object between anchors.
  * Returns null if path is invalid, < 2 anchors, blocked by routeFn, totalTiles > maxTiles, or totalTiles === 0.
  */
@@ -77,15 +109,11 @@ function buildJourney({ pathAnchors, anchorMap, now = Date.now(), tilesPerMinute
       if (!Array.isArray(pts)) {
         return null;
       }
-      for (let k = 0; k < pts.length - 1; k++) {
-        const p1 = pts[k];
-        const p2 = pts[k + 1];
-        const len = Math.max(Math.abs(p2.x - p1.x), Math.abs(p2.y - p1.y));
-        if (len > 0) {
-          legs.push({ ax: p1.x, ay: p1.y, bx: p2.x, by: p2.y, len });
-          totalTiles += len;
-        }
+      const built = buildLegsFromPoints(pts);
+      for (const leg of built.legs) {
+        legs.push(leg);
       }
+      totalTiles += built.totalTiles;
     } else {
       // Chebyshev distance: max(|dx|, |dy|)
       const len = Math.max(Math.abs(bx - ax), Math.abs(by - ay));
@@ -169,5 +197,7 @@ function positionAt(journey, now = Date.now()) {
 module.exports = {
   toAnchorPath,
   buildJourney,
-  positionAt
+  positionAt,
+  buildLegsFromPoints,
+  resolveTravelSpeed
 };

@@ -20,12 +20,15 @@ for (const a of anchors) {
 }
 
 const { travelGraph } = require(path.join(rootDir, 'utils/travelGraph'));
-const { buildJourney, positionAt } = require(path.join(rootDir, 'utils/npcJourney'));
-const { defaultRouteFn } = require(path.join(rootDir, 'utils/npcRoute'));
+const { buildJourney, positionAt, resolveTravelSpeed } = require(path.join(rootDir, 'utils/npcJourney'));
+const { defaultRouteFn, loadRouteData } = require(path.join(rootDir, 'utils/npcRoute'));
 const { chooseDestination, planReturnHome } = require(path.join(rootDir, 'services/npcWanderPlanner'));
 const { snapWalkable } = require(path.join(rootDir, 'services/npcJourneyTick'));
 const { evaluateNpcSchedule } = require(path.join(rootDir, 'services/npcScheduler'));
-const { isTileWalkable } = require(path.join(rootDir, 'scripts/v28/lib/invariants'));
+const { isTileWalkable, createCachedWalkableFn, validateJourneyV19 } = require(path.join(rootDir, 'scripts/v28/lib/invariants'));
+
+const cachedWalkable = createCachedWalkableFn(isTileWalkable);
+const { barriers } = loadRouteData();
 
 const DAILY_HOME_STATES = new Set(['idle', 'socializing', 'working', 'sleeping', 'training', 'meditating']);
 
@@ -58,6 +61,8 @@ async function simulate() {
   let returnCount = 0;
   let teleportReturnCount = 0;
   let islandDestinationsCount = 0;
+  let v19ViolationsCount = 0;
+  let multiLegPassJourneysCount = 0;
   let nonIntegerPosCount = 0;
   let essentialJourneysCount = 0;
   let over900TilesCount = 0;
@@ -81,7 +86,7 @@ async function simulate() {
         !npc.activeJourney &&
         !['traveling', 'hunting', 'visiting'].includes(npc.schedule.activityState)
       ) {
-        const sched = evaluateNpcSchedule(npc, gameHour, { isWalkableFn: isTileWalkable });
+        const sched = evaluateNpcSchedule(npc, gameHour, { isWalkableFn: cachedWalkable });
         if (sched.changed) {
           npc.schedule.activityState = sched.activityState;
           npc.schedule.currentFacility = sched.currentFacility;
@@ -96,8 +101,8 @@ async function simulate() {
           }
 
           totalMoveTicks++;
-          if (!isTileWalkable(pos.x, pos.y)) rawNonWalkableTicks++;
-          const snapped = snapWalkable(pos.x, pos.y, isTileWalkable);
+          if (!cachedWalkable(pos.x, pos.y)) rawNonWalkableTicks++;
+          const snapped = snapWalkable(pos.x, pos.y, cachedWalkable);
 
           if (pos.arrived) {
             let landing = snapped;
@@ -106,7 +111,7 @@ async function simulate() {
               const ax = destAnchor.tileX ?? destAnchor.x;
               const ay = destAnchor.tileY ?? destAnchor.y;
               if (Number.isFinite(ax) && Number.isFinite(ay)) {
-                const anchorSnap = snapWalkable(ax, ay, isTileWalkable);
+                const anchorSnap = snapWalkable(ax, ay, cachedWalkable);
                 if (anchorSnap.ok !== false || landing.ok === false) {
                   landing = anchorSnap;
                 }
@@ -122,7 +127,7 @@ async function simulate() {
               okFalsePreservedTicks++;
             }
 
-            if (!isTileWalkable(npc.tileX, npc.tileY)) {
+            if (!cachedWalkable(npc.tileX, npc.tileY)) {
               nonWalkableWrittenCount++;
             }
 
@@ -142,7 +147,7 @@ async function simulate() {
               okFalsePreservedTicks++;
             }
 
-            if (!isTileWalkable(npc.tileX, npc.tileY)) {
+            if (!cachedWalkable(npc.tileX, npc.tileY)) {
               nonWalkableWrittenCount++;
             }
           }
@@ -152,7 +157,7 @@ async function simulate() {
         if (away && npc.stayUntil && now >= npc.stayUntil) {
           const returnPlan = planReturnHome(npc, { anchorMap, graph: travelGraph, now, routeFn: defaultRouteFn });
           if (returnPlan && !returnPlan.teleport) {
-            const speed = Math.max(6, Math.min(30, npc.attributes?.travelSpeed ?? 10));
+            const speed = resolveTravelSpeed(npc);
             const journey = returnPlan.journey || buildJourney({
               pathAnchors: returnPlan.pathAnchors,
               anchorMap,
@@ -163,6 +168,8 @@ async function simulate() {
               routeFn: defaultRouteFn
             });
             if (journey) {
+              v19ViolationsCount += validateJourneyV19(npc.name, journey, barriers).length;
+              if (journey.legs.length > (journey.pathAnchors.length - 1)) multiLegPassJourneysCount++;
               returnCount++;
               npc.activeJourney = journey;
               npc.schedule.activityState = 'traveling';
@@ -180,7 +187,7 @@ async function simulate() {
             if (homeAnchor) {
               const hx = homeAnchor.tileX ?? homeAnchor.x;
               const hy = homeAnchor.tileY ?? homeAnchor.y;
-              const homeSnap = snapWalkable(hx, hy, isTileWalkable);
+              const homeSnap = snapWalkable(hx, hy, cachedWalkable);
               if (homeSnap.ok) {
                 npc.tileX = homeSnap.x;
                 npc.tileY = homeSnap.y;
@@ -211,7 +218,7 @@ async function simulate() {
               islandDestinationsCount++;
             }
 
-            const speed = Math.max(6, Math.min(30, npc.attributes?.travelSpeed ?? 10));
+            const speed = resolveTravelSpeed(npc);
             const journey = plan.journey || buildJourney({
               pathAnchors: plan.pathAnchors,
               anchorMap,
@@ -222,6 +229,8 @@ async function simulate() {
             });
 
             if (journey) {
+              v19ViolationsCount += validateJourneyV19(npc.name, journey, barriers).length;
+              if (journey.legs.length > (journey.pathAnchors.length - 1)) multiLegPassJourneysCount++;
               if (journey.totalTiles > 900) {
                 over900TilesCount++;
               }
@@ -259,6 +268,7 @@ async function simulate() {
     recordedJourneys.length > 0 &&
     essentialJourneysCount === 0 &&
     islandDestinationsCount === 0 &&
+    v19ViolationsCount === 0 &&
     over900TilesCount === 0 &&
     nonIntegerPosCount === 0 &&
     nonWalkableWrittenCount === 0 &&
@@ -276,12 +286,14 @@ async function simulate() {
     `Jumlah Perjalanan Terjadi: ${recordedJourneys.length} (Berangkat: ${outwardCount}, Pulang: ${returnCount}, Teleport Pulang: ${teleportReturnCount})`,
     `Perbandingan vs V31 (${v31Journeys} perjalanan): ${deltaJourneys >= 0 ? '+' : ''}${deltaJourneys}`,
     `Panjang Rata-rata Perjalanan: ${avgLength} Petak (Tile)`,
+    `Perjalanan Ber-detour Celah Resmi (Multi-Leg): ${multiLegPassJourneysCount}`,
     `Jumlah Anchor Berbeda Dikunjungi: ${visitedAnchors.size} Anchor`,
     `Total Tick Pergerakan Dievaluasi SnapWalkable: ${totalMoveTicks}`,
     `Titik Mentah Non-Walkable Dicegat: ${rawNonWalkableTicks}`,
     `Titik ok:false Dipertahankan di Daratan Lama: ${okFalsePreservedTicks}`,
     `Pelanggaran Posisi Non-Walkable Tertulis: ${nonWalkableWrittenCount}`,
     `Pelanggaran Tujuan Pulau (island): ${islandDestinationsCount}`,
+    `Pelanggaran Invariant V19 Sepanjang Simulasi: ${v19ViolationsCount}`,
     `NPC Sedang Jalan / Bertamu di Akhir Simulasi: ${stillMidTrip} / ${stillVisiting}`,
     `NPC Macet Away Tanpa stayUntil: ${stuckNoStayUntil}`,
     `Pelanggaran NPC Esensial Berjalan: ${essentialJourneysCount}`,

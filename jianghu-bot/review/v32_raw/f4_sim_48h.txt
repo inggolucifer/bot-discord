@@ -4,12 +4,14 @@ Jumlah Populasi NPC: 764 Karakter
 Jumlah Perjalanan Terjadi: 3516 (Berangkat: 1776, Pulang: 1740, Teleport Pulang: 0)
 Perbandingan vs V31 (3382 perjalanan): +134
 Panjang Rata-rata Perjalanan: 386.9 Petak (Tile)
+Perjalanan Ber-detour Celah Resmi (Multi-Leg): 0
 Jumlah Anchor Berbeda Dikunjungi: 45 Anchor
 Total Tick Pergerakan Dievaluasi SnapWalkable: 13696
 Titik Mentah Non-Walkable Dicegat: 1304
 Titik ok:false Dipertahankan di Daratan Lama: 293
 Pelanggaran Posisi Non-Walkable Tertulis: 0
 Pelanggaran Tujuan Pulau (island): 0
+Pelanggaran Invariant V19 Sepanjang Simulasi: 0
 NPC Sedang Jalan / Bertamu di Akhir Simulasi: 42 / 23
 NPC Macet Away Tanpa stayUntil: 0
 Pelanggaran NPC Esensial Berjalan: 0

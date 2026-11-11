@@ -5,12 +5,8 @@
  */
 
 const { makeRng, hash32, pickOne, pickWeighted } = require('../utils/npcRng');
-const { toAnchorPath, buildJourney } = require('../utils/npcJourney');
+const { toAnchorPath, buildJourney, resolveTravelSpeed } = require('../utils/npcJourney');
 const { defaultRouteFn } = require('../utils/npcRoute');
-
-function resolveTravelSpeed(npc) {
-  return Math.max(6, Math.min(30, npc?.attributes?.travelSpeed ?? 10));
-}
 
 /**
  * Evaluates whether an NPC should start a journey on gameDay, and selects a valid destination.

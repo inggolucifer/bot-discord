@@ -462,4 +462,103 @@ describe('NPC Journey Full Lifecycle Integration (V31 F1)', () => {
     expect(checked.schedule.tileY).toBe(2700);
     expect(capturedLogs.some((l) => l.includes('[NpcJourney] teleport pulang Pengelana Terdampar Pulau'))).toBe(true);
   });
+
+  it('(n) In-flight legacy journey completes its existing legs normally without being recalculated or canceled', async () => {
+    const now = 36000000;
+    const legacyJourney = {
+      type: 'journey',
+      purpose: 'berkelana',
+      fromId: 'desa_a',
+      toId: 'desa_b',
+      pathAnchors: ['desa_a', 'desa_b'],
+      startedAt: now - 300000,
+      etaAt: now + 300000,
+      totalTiles: 100,
+      legs: [{ ax: 100, ay: 100, bx: 200, by: 100, len: 100 }],
+      stayMs: 1800000
+    };
+
+    const travelingNpc = await Npc.create({
+      _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799439017'),
+      name: 'Musafir Legacy Terbang',
+      gender: 'female',
+      vitalStatus: { isAlive: true, isEssential: false },
+      tileX: 120,
+      tileY: 100,
+      schedule: {
+        currentAnchorId: 'desa_a',
+        homeAnchorId: 'desa_a',
+        wanderLevel: 1,
+        activityState: 'traveling',
+        targetDestination: legacyJourney,
+        tileX: 120,
+        tileY: 100
+      },
+      attributes: { travelSpeed: 10 }
+    });
+
+    await runJourneyTick({ Npc, now, anchorMap: dummyAnchorMap, graph: dummyGraph, isWalkableFn });
+    let checked = await Npc.findById(travelingNpc._id);
+    expect(checked.schedule.activityState).toBe('traveling');
+    expect(checked.schedule.targetDestination.legs).toEqual(legacyJourney.legs);
+    expect(checked.tileX).toBe(150);
+
+    await runJourneyTick({ Npc, now: legacyJourney.etaAt + 1000, anchorMap: dummyAnchorMap, graph: dummyGraph, isWalkableFn });
+    checked = await Npc.findById(travelingNpc._id);
+    expect(checked.schedule.activityState).toBe('visiting');
+    expect(checked.schedule.currentAnchorId).toBe('desa_b');
+    expect(checked.tileX).toBe(200);
+    expect(checked.tileY).toBe(100);
+  });
+
+  it('(o) Displaced idle NPC separated from home by an impassable barrier teleports safely home', async () => {
+    const now = 36000000;
+    const seaAnchorMap = {
+      dermaga_donghai: { id: 'dermaga_donghai', name: 'Dermaga Donghai', type: 'port', x: 3920, y: 2700, tileX: 3920, tileY: 2700 }
+    };
+
+    const displacedNpc = await Npc.create({
+      _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799439018'),
+      name: 'Nelayan Terseret Ombak',
+      gender: 'male',
+      vitalStatus: { isAlive: true, isEssential: false },
+      tileX: 4350,
+      tileY: 2750,
+      schedule: {
+        currentAnchorId: 'dermaga_donghai',
+        homeAnchorId: 'dermaga_donghai',
+        wanderLevel: 1,
+        activityState: 'idle',
+        tileX: 4350,
+        tileY: 2750
+      },
+      attributes: { travelSpeed: 10 }
+    });
+
+    const origLog = console.log;
+    const capturedLogs = [];
+    console.log = (...args) => {
+      capturedLogs.push(args.map(String).join(' '));
+      origLog(...args);
+    };
+
+    try {
+      await runJourneyTick({
+        Npc,
+        now,
+        anchorMap: seaAnchorMap,
+        graph: dummyGraph,
+        isWalkableFn: (x, y) => x === 3920 && y === 2700
+      });
+    } finally {
+      console.log = origLog;
+    }
+
+    const checked = await Npc.findById(displacedNpc._id);
+    expect(checked.schedule.currentAnchorId).toBe('dermaga_donghai');
+    expect(checked.schedule.activityState).toBe('idle');
+    expect(checked.tileX).toBe(3920);
+    expect(checked.tileY).toBe(2700);
+    expect(capturedLogs.some((l) => l.includes('[NpcJourney] teleport pulang Nelayan Terseret Ombak'))).toBe(true);
+  });
 });

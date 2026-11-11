@@ -44,7 +44,20 @@ function isStrictlyInside(x, y, bounds) {
  */
 function firstCrossSampleFraction(ax, ay, bx, by, barrier) {
   if (!barrier || !barrier.bounds) return -1;
+  if (!Number.isFinite(ax) || !Number.isFinite(ay) || !Number.isFinite(bx) || !Number.isFinite(by)) {
+    return -1;
+  }
   const { bounds } = barrier;
+
+  // Fast O(1) AABB reject when segment lies completely outside barrier bounds.
+  if (
+    Math.max(ax, bx) <= bounds.minX ||
+    Math.min(ax, bx) >= bounds.maxX ||
+    Math.max(ay, by) <= bounds.minY ||
+    Math.min(ay, by) >= bounds.maxY
+  ) {
+    return -1;
+  }
 
   // Rule 1: If endpoint A or B itself is strictly inside bounds, ignore this barrier.
   if (isStrictlyInside(ax, ay, bounds) || isStrictlyInside(bx, by, bounds)) {
@@ -100,8 +113,8 @@ function buildCrossWaypoints(ax, ay, bx, by, barrier, pass) {
   const horizontal = (maxX - minX) >= (maxY - minY);
 
   if (horizontal) {
-    const sisiA = ay < minY ? minY - 2 : maxY + 2;
-    const sisiB = by < minY ? minY - 2 : (by > maxY ? maxY + 2 : (sisiA === minY - 2 ? maxY + 2 : minY - 2));
+    const sisiA = ay <= minY ? minY - 2 : maxY + 2;
+    const sisiB = by <= minY ? minY - 2 : (by >= maxY ? maxY + 2 : (sisiA === minY - 2 ? maxY + 2 : minY - 2));
     return [
       { x: ax, y: ay },
       { x: pass.x, y: sisiA },
@@ -111,8 +124,8 @@ function buildCrossWaypoints(ax, ay, bx, by, barrier, pass) {
     ];
   }
 
-  const sisiA = ax < minX ? minX - 2 : maxX + 2;
-  const sisiB = bx < minX ? minX - 2 : (bx > maxX ? maxX + 2 : (sisiA === minX - 2 ? maxX + 2 : minX - 2));
+  const sisiA = ax <= minX ? minX - 2 : maxX + 2;
+  const sisiB = bx <= minX ? minX - 2 : (bx >= maxX ? maxX + 2 : (sisiA === minX - 2 ? maxX + 2 : minX - 2));
   return [
     { x: ax, y: ay },
     { x: sisiA, y: pass.y },
@@ -143,6 +156,9 @@ function dedupIntegerPoints(points) {
  * Returns array of integer waypoints [{x, y}, ...], or null if blocked.
  */
 function routeLeg(ax, ay, bx, by, data, depth = 0) {
+  if (!Number.isFinite(ax) || !Number.isFinite(ay) || !Number.isFinite(bx) || !Number.isFinite(by)) {
+    return null;
+  }
   const routeData = data || loadRouteData();
   const barriers = routeData.barriers || [];
   const passes = routeData.passes || [];

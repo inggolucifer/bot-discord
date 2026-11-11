@@ -5,11 +5,70 @@ const obs = require('../../../utils/objectScatter');
 const Npc = require('../../../models/Npc');
 const { loadRouteData, segmentCrossesBarrier } = require('../../../utils/npcRoute');
 
+/**
+ * Validates V19 journey leg continuity and pass-only barrier crossing on an active journey.
+ */
+function validateJourneyV19(npcName, dest, barriers = loadRouteData().barriers) {
+  const issues = [];
+  if (!dest || !Array.isArray(dest.legs) || dest.legs.length === 0) {
+    return issues;
+  }
+
+  const allLegsFinite = dest.legs.every(
+    (l) => Number.isFinite(l.ax) && Number.isFinite(l.ay) && Number.isFinite(l.bx) && Number.isFinite(l.by) && Number.isFinite(l.len)
+  );
+  if (!allLegsFinite) {
+    return issues;
+  }
+
+  for (let idx = 0; idx < dest.legs.length - 1; idx++) {
+    if (dest.legs[idx].bx !== dest.legs[idx + 1].ax || dest.legs[idx].by !== dest.legs[idx + 1].ay) {
+      issues.push({
+        code: 'V19',
+        message: `NPC "${npcName}" journey has discontinuous legs at index ${idx} -> ${idx + 1}`
+      });
+      return issues;
+    }
+  }
+
+  for (let idx = 0; idx < dest.legs.length; idx++) {
+    const leg = dest.legs[idx];
+    const hit = barriers.find((b) => segmentCrossesBarrier(leg.ax, leg.ay, leg.bx, leg.by, b));
+    if (hit) {
+      issues.push({
+        code: 'V19',
+        message: `NPC "${npcName}" journey leg ${idx} crosses barrier "${hit.id}" without pass`
+      });
+      break;
+    }
+  }
+
+  return issues;
+}
+
 function isTileWalkable(tileX, tileY) {
   const tile = pwe.getTileAt(tileX, tileY);
   if (!tile || tile.isSolid) return false;
   if (typeof obs.isCellBlocked === 'function' && obs.isCellBlocked(tileX, tileY)) return false;
   return true;
+}
+
+/**
+ * Wraps a pure walkability predicate with an in-memory coordinate cache for offline censuses/simulations.
+ */
+function createCachedWalkableFn(baseFn = isTileWalkable) {
+  const cache = new Map();
+  return function cachedWalkable(x, y) {
+    const key = (x >= -1000 && x < 90000 && y >= -1000 && y < 90000)
+      ? (x + 1000) * 100000 + (y + 1000)
+      : `${x},${y}`;
+    let val = cache.get(key);
+    if (val === undefined) {
+      val = baseFn(x, y);
+      cache.set(key, val);
+    }
+    return val;
+  };
 }
 
 /**
@@ -269,35 +328,9 @@ function checkInvariants({ npcs = [], families = [], anchors = [], config = null
         });
       }
 
-      const allLegsFinite = Array.isArray(dest.legs) && dest.legs.length > 0 && dest.legs.every(
-        (l) => Number.isFinite(l.ax) && Number.isFinite(l.ay) && Number.isFinite(l.bx) && Number.isFinite(l.by) && Number.isFinite(l.len)
-      );
-      if (allLegsFinite) {
-        let continuous = true;
-        for (let idx = 0; idx < dest.legs.length - 1; idx++) {
-          if (dest.legs[idx].bx !== dest.legs[idx + 1].ax || dest.legs[idx].by !== dest.legs[idx + 1].ay) {
-            continuous = false;
-            violations.push({
-              code: 'V19',
-              message: `NPC "${n.name}" journey has discontinuous legs at index ${idx} -> ${idx + 1}`
-            });
-            break;
-          }
-        }
-        if (continuous) {
-          const { barriers } = loadRouteData();
-          for (let idx = 0; idx < dest.legs.length; idx++) {
-            const leg = dest.legs[idx];
-            const hit = barriers.find((b) => segmentCrossesBarrier(leg.ax, leg.ay, leg.bx, leg.by, b));
-            if (hit) {
-              violations.push({
-                code: 'V19',
-                message: `NPC "${n.name}" journey leg ${idx} crosses barrier "${hit.id}" without pass`
-              });
-              break;
-            }
-          }
-        }
+      const v19Issues = validateJourneyV19(n.name, dest, loadRouteData().barriers);
+      for (const issue of v19Issues) {
+        violations.push(issue);
       }
     }
   }
@@ -317,5 +350,7 @@ function checkInvariants({ npcs = [], families = [], anchors = [], config = null
 
 module.exports = {
   checkInvariants,
-  isTileWalkable
+  validateJourneyV19,
+  isTileWalkable,
+  createCachedWalkableFn
 };
