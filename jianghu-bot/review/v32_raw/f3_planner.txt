@@ -1,20 +1,17 @@
 RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
 
- ✓ tests/unit/npc/v32_planner_route.test.mjs (6 tests) 1946ms
-   ✓ NPC Wander Planner Route & Island Ban (V32 F3) (6)
-     ✓ (a) 500 seed acak deterministik (termasuk realmIndex >= 3 di dermaga_donghai) tidak pernah memilih atau melintasi anchor bertipe island 878ms
-     ✓ (b) dari 500 seed acak, tidak ada rencana yang buildJourney(..., routeFn) nya null dan semua membawa plan.journey valid 1052ms
+ ✓ tests/unit/npc/v32_planner_route.test.mjs (6 tests) 263ms
 stdout | tests/integration/npcJourneyLifecycle.test.js > NPC Journey Full Lifecycle Integration (V31 F1) > (m) Stranded NPC at pulau_penyu_raksasa whose return route is blocked teleports safely to homeAnchorId tile and logs teleport pulang
 [NpcJourney] teleport pulang Pengelana Terdampar Pulau
 
 stdout | tests/integration/npcJourneyLifecycle.test.js > NPC Journey Full Lifecycle Integration (V31 F1) > (o) Displaced idle NPC separated from home by an impassable barrier teleports safely home
 [NpcJourney] teleport pulang Nelayan Terseret Ombak
 
- ✓ tests/integration/npcJourneyLifecycle.test.js (9 tests) 2080ms
+ ✓ tests/integration/npcJourneyLifecycle.test.js (9 tests) 1630ms
    ✓ NPC Journey Full Lifecycle Integration (V31 F1) (9)
-     ✓ Full lifecycle: depart -> travel mid-way protected -> arrive visiting -> stay protected from schedule -> return home -> idle -> depart 24h later 530ms
+     ✓ Full lifecycle: depart -> travel mid-way protected -> arrive visiting -> stay protected from schedule -> return home -> idle -> depart 24h later 420ms
 
  Test Files  2 passed (2)
       Tests  15 passed (15)
-   Start at  14:25:11
-   Duration  5.45s (tests 57%, import 41%, worker 1%, transform 1%)
+   Start at  16:02:23
+   Duration  4.55s (import 55%, tests 42%, worker 1%, transform 1%)

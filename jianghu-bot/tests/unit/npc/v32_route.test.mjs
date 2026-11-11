@@ -11,6 +11,7 @@ const {
   defaultRouteFn
 } = require('../../../utils/npcRoute');
 const {
+  toAnchorPath,
   buildJourney,
   positionAt,
   buildLegsFromPoints,
@@ -355,5 +356,22 @@ describe('buildJourney routeFn Integration (V32 F2)', () => {
       routeFn: () => [{ x: 2500, y: 3000 }, { x: NaN, y: 3500 }, { x: 2500, y: 3700 }]
     });
     expect(badJourney).toBeNull();
+  });
+
+  it('(6) memoization defaultRouteFn kebal mutasi pemanggil dan cache WeakMap toAnchorPath terinvalidation saat kunci bertambah', () => {
+    const first = defaultRouteFn(2400, 3000, 2400, 3700);
+    const snapshot = first.map((p) => ({ x: p.x, y: p.y }));
+    first[0].x = -999;
+    first.push({ x: 9999, y: 9999 });
+
+    const second = defaultRouteFn(2400, 3000, 2400, 3700);
+    expect(second).toEqual(snapshot);
+
+    const dynamicMap = {
+      a: { id: 'a', name: 'Desa Awal', x: 100, y: 100 }
+    };
+    expect(toAnchorPath(['Desa Awal', 'Kota Baru'], dynamicMap)).toEqual(['a', 'Kota Baru']);
+    dynamicMap.b = { id: 'b', name: 'Kota Baru', x: 200, y: 100 };
+    expect(toAnchorPath(['Desa Awal', 'Kota Baru'], dynamicMap)).toEqual(['a', 'b']);
   });
 });

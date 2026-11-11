@@ -4,6 +4,29 @@
  * Zero database access, pure and testable.
  */
 
+const anchorNameMapCache = new WeakMap();
+
+/**
+ * Returns a cached lowercase name/id -> canonical id Map for the given anchorMap object.
+ */
+function getAnchorLookupMap(anchorMap) {
+  const keys = Object.keys(anchorMap);
+  const cached = anchorNameMapCache.get(anchorMap);
+  if (cached && cached.keyCount === keys.length) {
+    return cached.map;
+  }
+  const nameToId = new Map();
+  for (const id of keys) {
+    const a = anchorMap[id];
+    if (a && a.name) {
+      nameToId.set(a.name.toLowerCase(), a.id || id);
+    }
+    nameToId.set(id.toLowerCase(), (a && a.id) || id);
+  }
+  anchorNameMapCache.set(anchorMap, { keyCount: keys.length, map: nameToId });
+  return nameToId;
+}
+
 /**
  * Adaptor: Converts travelGraph.shortestPath result into an array of anchor IDs.
  * Returns null if path is unreachable, empty, or invalid.
@@ -24,14 +47,7 @@ function toAnchorPath(rawPath, anchorMap = null) {
   if (!pathArr || pathArr.length === 0) return null;
 
   if (anchorMap) {
-    // If nodes are names, map them to IDs
-    const nameToId = new Map();
-    for (const [id, a] of Object.entries(anchorMap)) {
-      if (a && a.name) {
-        nameToId.set(a.name.toLowerCase(), a.id || id);
-      }
-      nameToId.set(id.toLowerCase(), a.id || id);
-    }
+    const nameToId = getAnchorLookupMap(anchorMap);
     const resolved = [];
     for (const p of pathArr) {
       const match = nameToId.get(String(p).toLowerCase()) || p;

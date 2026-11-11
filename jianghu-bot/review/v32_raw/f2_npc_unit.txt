@@ -1,57 +1,52 @@
 RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
 
- ✓ tests/unit/npc/v32_planner_route.test.mjs (6 tests) 2880ms
-   ✓ NPC Wander Planner Route & Island Ban (V32 F3) (6)
-     ✓ (a) 500 seed acak deterministik (termasuk realmIndex >= 3 di dermaga_donghai) tidak pernah memilih atau melintasi anchor bertipe island 1480ms
-     ✓ (b) dari 500 seed acak, tidak ada rencana yang buildJourney(..., routeFn) nya null dan semua membawa plan.journey valid 1360ms
- ✓ tests/unit/npc/v31_snap_walkable.test.mjs (8 tests) 2554ms
- ✓ tests/unit/npc/v27_seeding_invariants.test.mjs (14 tests) 1096ms
-   ✓ V27 Master Seeding Invariants Suite (I1 - I14) (14)
-     ✓ I10: ZERO-DECIMAL policy: all numerical attributes across all NPCs are pure integers 493ms
- ✓ tests/unit/npc/v32_invariant_v19.test.mjs (4 tests) 479ms
-   ✓ Invariant V19: Journey Leg Continuity & Pass-Only Barrier Crossing (V32 F4) (4)
-     ✓ MERAH pada journey dengan legs yang terputus (tidak kontinu) 332ms
- ✓ tests/unit/npc/v28_ticker.test.mjs (14 tests) 331ms
- ✓ tests/unit/npc/v27_scheduler_movement.test.mjs (4 tests) 105ms
- ✓ tests/unit/npc/v28_actions.test.mjs (5 tests) 404ms
- ✓ tests/unit/npc/v28_battle_resolution.test.mjs (10 tests) 270ms
- ✓ tests/unit/npc/v28_vendetta.test.mjs (15 tests) 139ms
- ✓ tests/unit/npc/v28_dialogue_wiring.test.mjs (3 tests) 185ms
+ ✓ tests/unit/npc/v32_planner_route.test.mjs (6 tests) 431ms
+ ✓ tests/unit/npc/v27_seeding_invariants.test.mjs (14 tests) 426ms
+ ✓ tests/unit/npc/v32_invariant_v19.test.mjs (4 tests) 308ms
+ ✓ tests/unit/npc/v31_snap_walkable.test.mjs (8 tests) 3743ms
+ ✓ tests/unit/npc/v28_ticker.test.mjs (14 tests) 575ms
+   ✓ NPC Living Simulation Ticker (V28 / B3) (14)
+     ✓ 1. evaluateNpcSchedule selects sleeping activity at night (hour 23) 350ms
+ ✓ tests/unit/npc/v28_battle_resolution.test.mjs (10 tests) 359ms
+ ✓ tests/unit/npc/v28_actions.test.mjs (5 tests) 418ms
+ ✓ tests/unit/npc/v27_lifecycle_vendetta.test.mjs (4 tests) 246ms
+ ✓ tests/unit/npc/v28_vendetta.test.mjs (15 tests) 135ms
+ ✓ tests/unit/npc/v27_schema_integrity.test.mjs (7 tests) 219ms
 stdout | tests/unit/npc/v28_seed_world.test.mjs > NPC World Seed & Invariants V1-V14 (V28 / B1) > 21. ensureNpcWorld respects NPC_SEED_ON_BOOT="false"
 [NpcBootstrap] NPC_SEED_ON_BOOT is false, skipping bootstrap.
 
- ✓ tests/unit/npc/v28_seed_world.test.mjs (22 tests) 5952ms
+ ✓ tests/unit/npc/v28_seed_world.test.mjs (22 tests) 6005ms
    ✓ NPC World Seed & Invariants V1-V14 (V28 / B1) (22)
-     ✓ 10. [V6] all NPC coordinates are on walkable tiles 520ms
-     ✓ 18. [V13] all 764 NPC documents pass validateSync() on Npc Mongoose model 4886ms
- ✓ tests/unit/npc/v27_lifecycle_vendetta.test.mjs (4 tests) 252ms
- ✓ tests/unit/npc/v27_generator_family.test.mjs (4 tests) 143ms
- ✓ tests/unit/npcLabels.test.js (4 tests) 104ms
- ✓ tests/unit/npc/v27_schema_integrity.test.mjs (7 tests) 177ms
- ✓ tests/unit/npc/v28_visibility.test.mjs (4 tests) 137ms
- ✓ tests/unit/npc/v27_static_data.test.mjs (6 tests) 71ms
- ✓ tests/unit/npc/v30_wander_planner.test.mjs (8 tests) 86ms
- ✓ tests/unit/npc/v28_death_door.test.mjs (3 tests) 112ms
- ✓ tests/unit/npc/v32_route.test.mjs (18 tests) 60ms
- ✓ tests/unit/npc/v30_schema.test.mjs (4 tests) 40ms
- ✓ tests/unit/npc/v28_antislop_static.test.mjs (4 tests) 41ms
- ✓ tests/unit/npc/v27_math_time_stats.test.mjs (10 tests) 40ms
- ✓ tests/unit/npc/v30_journey_math.test.mjs (10 tests) 28ms
- ✓ tests/unit/npc/v27_dialogue_engine.test.mjs (3 tests) 43ms
- ✓ tests/unit/npc/v28_visibility_queries.test.mjs (12 tests) 67ms
- ✓ tests/unit/npc/v28_dialogue_runner.test.mjs (11 tests) 25ms
- ✓ tests/unit/npc/v30_hunt_engine.test.mjs (9 tests) 22ms
- ✓ tests/unit/npc/v28_npc_labels.test.mjs (4 tests) 18ms
- ✓ tests/unit/npc/v30_wander_seed.test.mjs (2 tests) 19ms
- ✓ tests/unit/npc/v28_proximity.test.mjs (4 tests) 12ms
+     ✓ 10. [V6] all NPC coordinates are on walkable tiles 447ms
+     ✓ 18. [V13] all 764 NPC documents pass validateSync() on Npc Mongoose model 5051ms
+ ✓ tests/unit/npc/v27_generator_family.test.mjs (4 tests) 133ms
+ ✓ tests/unit/npc/v28_visibility_queries.test.mjs (12 tests) 64ms
+ ✓ tests/unit/npc/v27_scheduler_movement.test.mjs (4 tests) 89ms
+ ✓ tests/unit/npc/v28_dialogue_wiring.test.mjs (3 tests) 206ms
+ ✓ tests/unit/npc/v28_visibility.test.mjs (4 tests) 135ms
+ ✓ tests/unit/npc/v27_static_data.test.mjs (6 tests) 63ms
+ ✓ tests/unit/npc/v28_death_door.test.mjs (3 tests) 85ms
+ ✓ tests/unit/npcLabels.test.js (4 tests) 101ms
+ ✓ tests/unit/npc/v30_wander_planner.test.mjs (8 tests) 60ms
+ ✓ tests/unit/npc/v28_antislop_static.test.mjs (4 tests) 189ms
+ ✓ tests/unit/npc/v27_dialogue_engine.test.mjs (3 tests) 32ms
+ ✓ tests/unit/npc/v32_route.test.mjs (19 tests) 64ms
+ ✓ tests/unit/npc/v27_math_time_stats.test.mjs (10 tests) 41ms
+ ✓ tests/unit/npc/v30_schema.test.mjs (4 tests) 49ms
+ ✓ tests/unit/npc/v28_dialogue_runner.test.mjs (11 tests) 30ms
+ ✓ tests/unit/npc/v30_wander_seed.test.mjs (2 tests) 15ms
+ ✓ tests/unit/npc/v30_journey_math.test.mjs (10 tests) 25ms
+ ✓ tests/unit/npc/v28_npc_labels.test.mjs (4 tests) 17ms
+ ✓ tests/unit/npc/v30_hunt_engine.test.mjs (9 tests) 24ms
+ ✓ tests/unit/npc/v28_proximity.test.mjs (4 tests) 11ms
 
  Test Files  31 passed (31)
-      Tests  236 passed (236)
-   Start at  14:24:32
-   Duration  37.74s (import 79%, tests 17%, transform 2%, worker 2%)
+      Tests  237 passed (237)
+   Start at  16:01:38
+   Duration  44.17s (import 82%, tests 13%, transform 3%, worker 2%)
 
-    Isolate  31 workers spawned · ~669ms startup each (spawn + environment, per file)
-             at least ~6.24s faster with isolate: false — reuses workers across files instead of one per file
+    Isolate  31 workers spawned · ~639ms startup each (spawn + environment, per file)
+             at least ~5.96s faster with isolate: false — reuses workers across files instead of one per file
 
 
 stderr | tests/unit/npc/v28_dialogue_wiring.test.mjs

@@ -1,11 +1,13 @@
 RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
 
- ✓ tests/unit/npc/v32_invariant_v19.test.mjs (4 tests) 303ms
+ ✓ tests/unit/npc/v32_invariant_v19.test.mjs (4 tests) 453ms
+   ✓ Invariant V19: Journey Leg Continuity & Pass-Only Barrier Crossing (V32 F4) (4)
+     ✓ MERAH pada journey dengan legs yang terputus (tidak kontinu) 353ms
 
  Test Files  1 passed (1)
       Tests  4 passed (4)
-   Start at  14:25:17
-   Duration  2.43s (import 83%, tests 15%, worker 1%, transform 1%)
+   Start at  16:02:29
+   Duration  2.24s (import 74%, tests 24%, worker 1%, transform 1%)
 
 [AuditNpcWorld] Auditing 764 NPCs across 52 anchors...
 [AuditNpcWorld] Results saved to D:\gitub\bot-discord\jianghu-bot\review\v28_raw\npc_audit.json

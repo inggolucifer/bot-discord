@@ -220,11 +220,28 @@ function routeLeg(ax, ay, bx, by, data, depth = 0) {
   return dedupIntegerPoints(resolved);
 }
 
+const DEFAULT_ROUTE_CACHE_MAX = 4096;
+const defaultRouteCache = new Map();
+
 /**
- * Default routeFn using cached barriers and passes from world-data.
+ * Default routeFn using cached barriers, passes, and bounded memoization.
+ * Clones cached waypoint arrays so callers cannot mutate cache state.
  */
 function defaultRouteFn(ax, ay, bx, by) {
-  return routeLeg(ax, ay, bx, by, loadRouteData());
+  if (!Number.isFinite(ax) || !Number.isFinite(ay) || !Number.isFinite(bx) || !Number.isFinite(by)) {
+    return null;
+  }
+  const key = `${ax},${ay}->${bx},${by}`;
+  if (defaultRouteCache.has(key)) {
+    const cached = defaultRouteCache.get(key);
+    return cached ? cached.map((p) => ({ x: p.x, y: p.y })) : null;
+  }
+  const computed = routeLeg(ax, ay, bx, by, loadRouteData());
+  if (defaultRouteCache.size >= DEFAULT_ROUTE_CACHE_MAX) {
+    defaultRouteCache.clear();
+  }
+  defaultRouteCache.set(key, computed ? computed.map((p) => ({ x: p.x, y: p.y })) : null);
+  return computed;
 }
 
 module.exports = {

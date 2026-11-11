@@ -43,6 +43,10 @@ function chooseDestination(npc, { anchors, anchorMap, graph, ladder, gameDay, no
   const currentAnchor = anchorMap ? anchorMap[currentAnchorId] : null;
   const currentRegion = currentAnchor?.regionSlug || '';
   const realmIndex = npc.cultivation?.realmIndex || 0;
+  const speed = resolveTravelSpeed(npc);
+  const curX = Number.isFinite(currentAnchor?.tileX) ? currentAnchor.tileX : currentAnchor?.x;
+  const curY = Number.isFinite(currentAnchor?.tileY) ? currentAnchor.tileY : currentAnchor?.y;
+  const canTrianglePrune = routeFn === defaultRouteFn && Number.isFinite(curX) && Number.isFinite(curY);
 
   const candidates = [];
   const anchorList = Array.isArray(anchors) ? anchors : Object.values(anchorMap || {});
@@ -57,6 +61,16 @@ function chooseDestination(npc, { anchors, anchorMap, graph, ladder, gameDay, no
     if (realmIndex < 3) {
       if (cand.type === 'danger_zone' || cand.type === 'secret_realm') {
         continue;
+      }
+    }
+
+    // By Chebyshev triangle inequality, routed pathTiles >= direct Chebyshev distance; prune early > 900.
+    if (canTrianglePrune) {
+      const candRef = (anchorMap && anchorMap[cand.id]) || cand;
+      const cx = Number.isFinite(candRef.tileX) ? candRef.tileX : candRef.x;
+      const cy = Number.isFinite(candRef.tileY) ? candRef.tileY : candRef.y;
+      if (Number.isFinite(cx) && Number.isFinite(cy)) {
+        if (Math.max(Math.abs(cx - curX), Math.abs(cy - curY)) > 900) continue;
       }
     }
 
@@ -87,7 +101,6 @@ function chooseDestination(npc, { anchors, anchorMap, graph, ladder, gameDay, no
     if (pathAnchors.some((aid) => anchorMap?.[aid]?.type === 'island')) continue;
 
     // Validate full pass-routed journey upfront so candidates are never selected if blocked or > 900 tiles
-    const speed = resolveTravelSpeed(npc);
     const journey = buildJourney({
       pathAnchors,
       anchorMap,

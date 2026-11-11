@@ -295,7 +295,8 @@ function checkInvariants({ npcs = [], families = [], anchors = [], config = null
     }
   }
 
-  // Invariant V18: setiap NPC dengan targetDestination.type==='journey' punya legs array tidak kosong, semua angka finite, etaAt > startedAt
+  // Invariant V18-V19: active journeys have finite non-empty continuous legs, etaAt > startedAt, and no unpassed barrier crossing
+  const routeBarriers = loadRouteData().barriers;
   for (const n of npcs) {
     const dest = n.schedule?.targetDestination;
     if (dest && dest.type === 'journey') {
@@ -328,7 +329,7 @@ function checkInvariants({ npcs = [], families = [], anchors = [], config = null
         });
       }
 
-      const v19Issues = validateJourneyV19(n.name, dest, loadRouteData().barriers);
+      const v19Issues = validateJourneyV19(n.name, dest, routeBarriers);
       for (const issue of v19Issues) {
         violations.push(issue);
       }
