@@ -71,12 +71,15 @@ const COMMANDS = [
 function checkPort(port) {
   return new Promise((resolve) => {
     const tryUrl = (host, fallback) => {
-      const req = http.get(`http://${host}:${port}`, () => resolve(true));
+      const req = http.get(`http://${host}:${port}/dev/npc-preview`, (res) => {
+        res.resume();
+        resolve(res.statusCode >= 200 && res.statusCode < 500);
+      });
       req.on('error', () => {
         if (fallback) fallback();
         else resolve(false);
       });
-      req.setTimeout(8000, () => {
+      req.setTimeout(25000, () => {
         req.destroy();
         if (fallback) fallback();
         else resolve(false);

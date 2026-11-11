@@ -312,7 +312,7 @@ async function evaluateVendettasForPlayer({ player, px, py, Vendetta, Ambush, Np
     }
 
     const hunter = NpcMod ? await NpcMod.findById(v.hunterNpcId) : null;
-    if (!hunter || !hunter.vitalStatus?.isAlive) continue;
+    if (!hunter || !hunter.vitalStatus?.isAlive || hunter.vitalStatus?.isEssential) continue;
 
     const step = huntStep({ hunter, player, anchors, isWalkableFn, now });
     const enteringOrSteppingHunt = step.moved || (

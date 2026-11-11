@@ -266,6 +266,7 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
 
   const npcs = await Npc.find({
     'vitalStatus.isAlive': true,
+    'vitalStatus.isEssential': { $ne: true },
     'schedule.activityState': { $ne: 'hunting' },
     $or: [
       { 'schedule.wanderLevel': { $gt: 0 } },
@@ -281,7 +282,7 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
   const bulkOps = [];
 
   for (const npc of npcs) {
-    if (npc.schedule?.activityState === 'hunting') continue;
+    if (npc.vitalStatus?.isEssential || npc.schedule?.activityState === 'hunting') continue;
 
     if (npc.schedule?.targetDestination?.type === 'journey') {
       const outcome = processTravelingNpc(npc, { now, anchorMap, isWalkableFn, bulkOps });
