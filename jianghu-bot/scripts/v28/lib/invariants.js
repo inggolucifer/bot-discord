@@ -3,6 +3,7 @@ const path = require('path');
 const pwe = require('../../../utils/proceduralWorldEngine');
 const obs = require('../../../utils/objectScatter');
 const Npc = require('../../../models/Npc');
+const { loadRouteData, segmentCrossesBarrier } = require('../../../utils/npcRoute');
 
 function isTileWalkable(tileX, tileY) {
   const tile = pwe.getTileAt(tileX, tileY);
@@ -266,6 +267,37 @@ function checkInvariants({ npcs = [], families = [], anchors = [], config = null
           code: 'V18',
           message: `NPC "${n.name}" journey has invalid timing: startedAt=${dest.startedAt}, etaAt=${dest.etaAt}`
         });
+      }
+
+      const allLegsFinite = Array.isArray(dest.legs) && dest.legs.length > 0 && dest.legs.every(
+        (l) => Number.isFinite(l.ax) && Number.isFinite(l.ay) && Number.isFinite(l.bx) && Number.isFinite(l.by) && Number.isFinite(l.len)
+      );
+      if (allLegsFinite) {
+        let continuous = true;
+        for (let idx = 0; idx < dest.legs.length - 1; idx++) {
+          if (dest.legs[idx].bx !== dest.legs[idx + 1].ax || dest.legs[idx].by !== dest.legs[idx + 1].ay) {
+            continuous = false;
+            violations.push({
+              code: 'V19',
+              message: `NPC "${n.name}" journey has discontinuous legs at index ${idx} -> ${idx + 1}`
+            });
+            break;
+          }
+        }
+        if (continuous) {
+          const { barriers } = loadRouteData();
+          for (let idx = 0; idx < dest.legs.length; idx++) {
+            const leg = dest.legs[idx];
+            const hit = barriers.find((b) => segmentCrossesBarrier(leg.ax, leg.ay, leg.bx, leg.by, b));
+            if (hit) {
+              violations.push({
+                code: 'V19',
+                message: `NPC "${n.name}" journey leg ${idx} crosses barrier "${hit.id}" without pass`
+              });
+              break;
+            }
+          }
+        }
       }
     }
   }

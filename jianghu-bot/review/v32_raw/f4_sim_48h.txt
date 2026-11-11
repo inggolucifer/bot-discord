@@ -1,0 +1,26 @@
+=== LAPORAN SIMULASI PERJALANAN NPC (48 JAM GAME — V32 PASS-ROUTED) ===
+Waktu Simulasi: 48 Jam Game (Langkah: 10 Menit, Total: 288 Steps)
+Jumlah Populasi NPC: 764 Karakter
+Jumlah Perjalanan Terjadi: 3516 (Berangkat: 1776, Pulang: 1740, Teleport Pulang: 0)
+Perbandingan vs V31 (3382 perjalanan): +134
+Panjang Rata-rata Perjalanan: 386.9 Petak (Tile)
+Jumlah Anchor Berbeda Dikunjungi: 45 Anchor
+Total Tick Pergerakan Dievaluasi SnapWalkable: 13696
+Titik Mentah Non-Walkable Dicegat: 1304
+Titik ok:false Dipertahankan di Daratan Lama: 293
+Pelanggaran Posisi Non-Walkable Tertulis: 0
+Pelanggaran Tujuan Pulau (island): 0
+NPC Sedang Jalan / Bertamu di Akhir Simulasi: 42 / 23
+NPC Macet Away Tanpa stayUntil: 0
+Pelanggaran NPC Esensial Berjalan: 0
+Pelanggaran Jarak > 900 Tile (Berangkat): 0
+Pelanggaran Koordinat Non-Integer: 0
+
+5 Contoh Perjalanan Nyata:
+  1. [Lin Wufeng] Oase Shadi -> Desa Shaquan | Tujuan: mengunjungi_kerabat | Jarak: 220 tile | Durasi: 22 menit
+  2. [Ma Meng] Tianjing -> Sekte Pedang Langit | Tujuan: mengunjungi_kerabat | Jarak: 550 tile | Durasi: 55 menit
+  3. [Wang Zhiruo] Tianjing -> Dusun Kebun Persik | Tujuan: berkelana | Jarak: 550 tile | Durasi: 55 menit
+  4. [Ding Huilong] Tianjing -> Pos Menara Pantau Danau | Tujuan: berkelana | Jarak: 550 tile | Durasi: 55 menit
+  5. [Lu Guang] Tianjing -> Kota Fengyang | Tujuan: mengunjungi_kerabat | Jarak: 250 tile | Durasi: 25 menit
+
+Status Validasi: PASSED (100% VALID)

@@ -1,0 +1,24 @@
+=== SENSUS PENUH WALKABILITY RUTE ANTAR-ANCHOR (V32 F4) ===
+Jumlah Pasangan Anchor Dicoba (All-Pairs): 2652
+Jumlah Rute Diterima (Valid & <= 900 tile): 605
+Jumlah Rute Ditolak Total: 2047
+  - Tidak ada jalur / < 2 anchor: 0
+  - Larangan pulau (island tujuan/transit): 102
+  - Diblokir barrier tanpa celah / kedalaman > 3: 0
+  - Jarak setelah detour > 900 tile: 1945
+Total Titik Leg Dievaluasi (tiap 10% per leg): 15323
+Titik Non-Walkable Sebelum Snap: 1334 (8.71%)
+Titik ok:false Setelah Snap (Radius 40): 102 (0.67%)
+Status Ambang Exit Skrip (<= 1.00%): PASSED (Target Ideal <= 0.50%: BELUM TERCAPAI)
+
+Top 10 Rute Penyumbang ok:false Terbanyak:
+  1. desa_heiyan -> luoyang_kecil: 2 titik ok:false (medan padat di luar radius snap 40)
+  2. desa_xingcun -> kaki_gunung_azure: 2 titik ok:false (endpoint di dalam barrier (azure_wall))
+  3. desa_xingcun -> makam_kaisar_pedang_purba: 2 titik ok:false (endpoint di dalam barrier (azure_wall))
+  4. desa_xingcun -> sekte_awan_pedang: 2 titik ok:false (endpoint di dalam barrier (azure_wall))
+  5. dusun_kebun_persik -> kaki_gunung_azure: 2 titik ok:false (endpoint di dalam barrier (azure_wall))
+  6. dusun_kebun_persik -> makam_kaisar_pedang_purba: 2 titik ok:false (endpoint di dalam barrier (azure_wall))
+  7. dusun_kebun_persik -> sekte_awan_pedang: 2 titik ok:false (endpoint di dalam barrier (azure_wall))
+  8. gua_purba_bunga_aprikot -> kaki_gunung_azure: 2 titik ok:false (endpoint di dalam barrier (azure_wall))
+  9. gua_purba_bunga_aprikot -> makam_kaisar_pedang_purba: 2 titik ok:false (endpoint di dalam barrier (azure_wall))
+  10. gua_purba_bunga_aprikot -> sekte_awan_pedang: 2 titik ok:false (endpoint di dalam barrier (azure_wall))

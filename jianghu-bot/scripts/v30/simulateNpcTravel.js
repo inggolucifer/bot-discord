@@ -21,6 +21,7 @@ for (const a of anchors) {
 
 const { travelGraph } = require(path.join(rootDir, 'utils/travelGraph'));
 const { buildJourney, positionAt } = require(path.join(rootDir, 'utils/npcJourney'));
+const { defaultRouteFn } = require(path.join(rootDir, 'utils/npcRoute'));
 const { chooseDestination, planReturnHome } = require(path.join(rootDir, 'services/npcWanderPlanner'));
 const { snapWalkable } = require(path.join(rootDir, 'services/npcJourneyTick'));
 const { evaluateNpcSchedule } = require(path.join(rootDir, 'services/npcScheduler'));
@@ -55,6 +56,8 @@ async function simulate() {
   const visitedAnchors = new Set();
   let outwardCount = 0;
   let returnCount = 0;
+  let teleportReturnCount = 0;
+  let islandDestinationsCount = 0;
   let nonIntegerPosCount = 0;
   let essentialJourneysCount = 0;
   let over900TilesCount = 0;
@@ -147,16 +150,17 @@ async function simulate() {
       } else {
         const away = npc.schedule.homeAnchorId && npc.schedule.currentAnchorId !== npc.schedule.homeAnchorId;
         if (away && npc.stayUntil && now >= npc.stayUntil) {
-          const returnPlan = planReturnHome(npc, { anchorMap, graph: travelGraph, now });
-          if (returnPlan) {
+          const returnPlan = planReturnHome(npc, { anchorMap, graph: travelGraph, now, routeFn: defaultRouteFn });
+          if (returnPlan && !returnPlan.teleport) {
             const speed = Math.max(6, Math.min(30, npc.attributes?.travelSpeed ?? 10));
-            const journey = buildJourney({
+            const journey = returnPlan.journey || buildJourney({
               pathAnchors: returnPlan.pathAnchors,
               anchorMap,
               now,
               tilesPerMinute: speed,
               purpose: 'pulang',
-              maxTiles: 10000
+              maxTiles: 10000,
+              routeFn: defaultRouteFn
             });
             if (journey) {
               returnCount++;
@@ -171,6 +175,23 @@ async function simulate() {
                 durationMinutes: Math.round((journey.etaAt - journey.startedAt) / 60000)
               });
             }
+          } else {
+            const homeAnchor = anchorMap[npc.schedule.homeAnchorId];
+            if (homeAnchor) {
+              const hx = homeAnchor.tileX ?? homeAnchor.x;
+              const hy = homeAnchor.tileY ?? homeAnchor.y;
+              const homeSnap = snapWalkable(hx, hy, isTileWalkable);
+              if (homeSnap.ok) {
+                npc.tileX = homeSnap.x;
+                npc.tileY = homeSnap.y;
+                npc.schedule.tileX = homeSnap.x;
+                npc.schedule.tileY = homeSnap.y;
+                npc.schedule.currentAnchorId = npc.schedule.homeAnchorId;
+                npc.schedule.activityState = 'idle';
+                npc.stayUntil = null;
+                teleportReturnCount++;
+              }
+            }
           }
         } else if (!away && DAILY_HOME_STATES.has(npc.schedule.activityState)) {
           const plan = chooseDestination(npc, {
@@ -178,21 +199,26 @@ async function simulate() {
             anchorMap,
             graph: travelGraph,
             gameDay,
-            now
+            now,
+            routeFn: defaultRouteFn
           });
 
           if (plan) {
             if (npc.vitalStatus?.isEssential) {
               essentialJourneysCount++;
             }
+            if (anchorMap[plan.toAnchorId]?.type === 'island') {
+              islandDestinationsCount++;
+            }
 
             const speed = Math.max(6, Math.min(30, npc.attributes?.travelSpeed ?? 10));
-            const journey = buildJourney({
+            const journey = plan.journey || buildJourney({
               pathAnchors: plan.pathAnchors,
               anchorMap,
               now,
               tilesPerMinute: speed,
-              purpose: plan.purpose
+              purpose: plan.purpose,
+              routeFn: defaultRouteFn
             });
 
             if (journey) {
@@ -232,6 +258,7 @@ async function simulate() {
   const passed = (
     recordedJourneys.length > 0 &&
     essentialJourneysCount === 0 &&
+    islandDestinationsCount === 0 &&
     over900TilesCount === 0 &&
     nonIntegerPosCount === 0 &&
     nonWalkableWrittenCount === 0 &&
@@ -239,17 +266,22 @@ async function simulate() {
     returnCount > 0
   );
 
+  const v31Journeys = 3382;
+  const deltaJourneys = recordedJourneys.length - v31Journeys;
+
   const output = [
-    `=== LAPORAN SIMULASI PERJALANAN NPC (48 JAM GAME — V31 MAXIMIZED) ===`,
+    `=== LAPORAN SIMULASI PERJALANAN NPC (48 JAM GAME — V32 PASS-ROUTED) ===`,
     `Waktu Simulasi: 48 Jam Game (Langkah: 10 Menit, Total: ${TOTAL_STEPS} Steps)`,
     `Jumlah Populasi NPC: ${simNpcs.length} Karakter`,
-    `Jumlah Perjalanan Terjadi: ${recordedJourneys.length} (Berangkat: ${outwardCount}, Pulang: ${returnCount})`,
+    `Jumlah Perjalanan Terjadi: ${recordedJourneys.length} (Berangkat: ${outwardCount}, Pulang: ${returnCount}, Teleport Pulang: ${teleportReturnCount})`,
+    `Perbandingan vs V31 (${v31Journeys} perjalanan): ${deltaJourneys >= 0 ? '+' : ''}${deltaJourneys}`,
     `Panjang Rata-rata Perjalanan: ${avgLength} Petak (Tile)`,
     `Jumlah Anchor Berbeda Dikunjungi: ${visitedAnchors.size} Anchor`,
     `Total Tick Pergerakan Dievaluasi SnapWalkable: ${totalMoveTicks}`,
     `Titik Mentah Non-Walkable Dicegat: ${rawNonWalkableTicks}`,
     `Titik ok:false Dipertahankan di Daratan Lama: ${okFalsePreservedTicks}`,
     `Pelanggaran Posisi Non-Walkable Tertulis: ${nonWalkableWrittenCount}`,
+    `Pelanggaran Tujuan Pulau (island): ${islandDestinationsCount}`,
     `NPC Sedang Jalan / Bertamu di Akhir Simulasi: ${stillMidTrip} / ${stillVisiting}`,
     `NPC Macet Away Tanpa stayUntil: ${stuckNoStayUntil}`,
     `Pelanggaran NPC Esensial Berjalan: ${essentialJourneysCount}`,
@@ -266,10 +298,9 @@ async function simulate() {
 
   console.log(output);
 
-  fs.writeFileSync(path.join(rootDir, 'review/v30_raw/m5_travel_sim.txt'), output, 'utf8');
-  const v31Dir = path.join(rootDir, 'review/v31_raw');
-  if (!fs.existsSync(v31Dir)) fs.mkdirSync(v31Dir, { recursive: true });
-  fs.writeFileSync(path.join(v31Dir, 'f2_sim_48h.txt'), output + '\n', 'utf8');
+  const v32Dir = path.join(rootDir, 'review/v32_raw');
+  if (!fs.existsSync(v32Dir)) fs.mkdirSync(v32Dir, { recursive: true });
+  fs.writeFileSync(path.join(v32Dir, 'f4_sim_48h.txt'), output + '\n', 'utf8');
 
   if (!passed) {
     process.exit(1);

@@ -1,0 +1,21 @@
+=== vitest v32_invariant_v19.test.mjs (exit 0) ===
+RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
+
+ ✓ tests/unit/npc/v32_invariant_v19.test.mjs (3 tests) 189ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  10:46:11
+   Duration  1.83s (import 85%, tests 12%, worker 2%, transform 1%)
+=== auditNpcWorld.js (exit 0) ===
+[AuditNpcWorld] Auditing 764 NPCs across 52 anchors...
+[AuditNpcWorld] Results saved to D:\gitub\bot-discord\jianghu-bot\review\v28_raw\npc_audit.json
+[AuditNpcWorld] Stats: {
+  totalNpcs: 764,
+  essentialCount: 18,
+  deadCount: 0,
+  uniqueLocations: 764,
+  totalFamilies: 8,
+  populatedAnchors: 46
+}
+[AuditNpcWorld] PASSED: 0 violations! All invariants V1-V19 satisfied.

@@ -1,0 +1,47 @@
+RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
+
+ ❯ tests/unit/npc/v32_invariant_v19.test.mjs (3 tests | 2 failed) 207ms
+   ❯ Invariant V19: Journey Leg Continuity & Pass-Only Barrier Crossing (V32 F4) (3)
+     × MERAH pada journey dengan legs yang terputus (tidak kontinu) 156ms
+     × MERAH pada journey yang menyilang azure_wall atau eastern_sea_coast tanpa lewat celah 23ms
+     ✓ HIJAU pada journey ber-routeFn yang melewati celah resmi azure_wall 25ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  10:45:14
+   Duration  1.76s (import 81%, tests 14%, transform 3%, worker 2%)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/npc/v32_invariant_v19.test.mjs > Invariant V19: Journey Leg Continuity & Pass-Only Barrier Crossing (V32 F4) > MERAH pada journey dengan legs yang terputus (tidak kontinu)
+AssertionError: expected 0 to be greater than 0
+ ❯ tests/unit/npc/v32_invariant_v19.test.mjs:44:24
+     42|     const res = checkInvariants({ npcs: [makeNpcWithJourney(brokenJour…
+     43|     const v19 = res.violations.filter((v) => v.code === 'V19');
+     44|     expect(v19.length).toBeGreaterThan(0);
+       |                        ^
+     45|   });
+     46|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/unit/npc/v32_invariant_v19.test.mjs > Invariant V19: Journey Leg Continuity & Pass-Only Barrier Crossing (V32 F4) > MERAH pada journey yang menyilang azure_wall atau eastern_sea_coast tanpa lewat celah
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/unit/npc/v32_invariant_v19.test.mjs:61:62
+     59|
+     60|     const resWall = checkInvariants({ npcs: [makeNpcWithJourney(illega…
+     61|     expect(resWall.violations.some((v) => v.code === 'V19')).toBe(true…
+       |                                                              ^
+     62|
+     63|     const illegalSeaJourney = {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
