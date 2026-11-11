@@ -1,0 +1,119 @@
+{
+  "timestamp": "2026-11-11T04:21:30.813Z",
+  "overallPass": true,
+  "totalSteps": 11,
+  "passedSteps": 11,
+  "failedSteps": 0,
+  "results": [
+    {
+      "step": "1. npm test",
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "durationMs": 67755,
+      "pass": true,
+      "timedOut": false,
+      "stdout": "> jianghu-world-bot@1.0.0 test\n> node scripts/syntaxCheckAll.js\n\n[SYNTAX-CHECK] Memindai seluruh berkas JavaScript di proyek...\n[SYNTAX-CHECK] Ditemukan 709 berkas .js. Menjalankan node --check...\n\n✅ [SYNTAX-CHECK PASSED] Seluruh 709 berkas JavaScript valid tanpa error sintaks.",
+      "stderr": ""
+    },
+    {
+      "step": "2. npx vitest run",
+      "command": "npx.cmd vitest run",
+      "exitCode": 0,
+      "durationMs": 67031,
+      "pass": true,
+      "timedOut": false,
+      "stdout": "\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv5.0.5 \u001b[39m\u001b[90mD:/gitub/bot-discord/jianghu-bot\u001b[39m\n\n\u001b[90mstdout\u001b[2m | tests/integration/essentialStoryNpc.test.js\u001b[2m > \u001b[22m\u001b[2mEssential Story NPC Lifecycle Protection (P1 Integration)\n\u001b[22m\u001b[39m[SeedNpc] Loading existing snapshot from D:\\gitub\\bot-discord\\jianghu-bot\\world-data\\npc-ecosystem-snapshot-v27.json...\n[SeedNpc] Connecting to MongoDB to upsert NPC ecosystem...\n\n \u001b[32m✓\u001b[39m tests/integration/npcHuntAmbush.test.js \u001b[2m(\u001b[22m\u001b[2m7 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 3552\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[32m✓\u001b[39m NPC Hunt & Hostile Ambush Integration Tests (H2) \u001b[2m(7)\u001b[22m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m 1. Online player with hunter 100 tiles away: after 1 tick hunter moves closer and state is hunting\u001b[33m 819\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/integration/npcAmbushRoutes.test.js \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 2920\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[32m✓\u001b[39m NPC Ambush Routes Integration (P0) \u001b[2m(4)\u001b[22m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m POST /api/npc/ambush/:id/resolve with choice fight resolves ambush\u001b[33m 332\u001b[2mms\u001b[22m\u001b[39m\n\u001b[90mstdout\u001b[2m | tests/integration/essentialStoryNpc.test.js\u001b[2m > \u001b[22m\u001b[2mEssential Story NPC Lifecycle Protection (P1 Integration)\n\u001b[22m\u001b[39m[SeedNpc] NPC bulkWrite complete: 764 inserted, 0 modified.\n\n\u001b[90mstdout\u001b[2m | tests/integration/essentialStoryNpc.test.js\u001b[2m > \u001b[22m\u001b[2mEssential Story NPC Lifecycle Protection (P1 Integration)\n\u001b[22m\u001b[39m[SeedNpc] Family bulkWrite complete: 8 inserted, 0 modified.\n\n \u001b[32m✓\u001b[39m tests/integration/essentialStoryNpc.test.js \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 6443\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[32m✓\u001b[39m Essential Story NPC Lifecycle Protection (P1 Integration) \u001b[2m(1)\u001b[22m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m verifies all essential story NPCs are protected from death: downed status and isAlive remains true\u001b[33m 311\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/integration/npcJourneyTick.test.js \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 2007\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/unit/settlementAccess.test.mjs \u001b[2m(\u001b[22m\u001b[2m10 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 6540\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[32m✓\u001b[39m Settlement Footprint Walkability & Access (V24 H1) \u001b[2m(10)\u001b[22m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m 6. ObjectScatter does not block cells inside settlement footprint\u001b[33m 2394\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m 7. Unpacked static chunks match direct getTileAt for settlement walkability\u001b[33m 3979\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/integration/npcRequestFavor.test.js \u001b[2m(\u001b[22m\u001b[2m5 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1446\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/integration/nearbyRealtime.test.mjs \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 688\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/unit/worldRegionZones.test.mjs \u001b[2m(\u001b[22m\u001b[2m20 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1098\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[32m✓\u001b[39m V23 G1 — Perbaikan Data Dunia, Jalan Aman, dan Travel Graph 52 Anchor \u001b[2m(20)\u001b[22m\n     \u001b[32m✓\u001b[39m V23 G3 — Tabel Risiko Dinamis & Generator Tata Letak Zona (Z8, Invariance) \u001b[2m(6)\u001b[22m\n       \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m Z8.2: Seluruh zona tetap berada di luar radius eksklusi pemukiman\u001b[33m 351\u001b[2mms\u001b[22m\u001b[39m\n       \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m Z8.3: Tidak ada zona tetap yang saling tumpang tindih secara spasial (AABB)\u001b[33m 347\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/integration/npcHuntJourneyConflict.test.js \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 4511\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[32m✓\u001b[39m NPC Hunter vs Scheduled Journey Conflict Integration (V31 F3) \u001b[2m(6)\u001b[22m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m (a) Hunter traveling on a journey cancels journey upon hunting; runJourneyTick does not overwrite coordinates\u001b[33m 609\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m (b) When vendetta is resolved, hunter becomes idle; if away from home, eventually returns via runJourneyTick\u001b[33m 434\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/unit/blockerDescriber.test.mjs \u001b[2m(\u001b[22m\u001b[2m10 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 865\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/unit/npc/v32_planner_route.test.mjs \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1783\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[32m✓\u001b[39m NPC Wander Planner Route & Is",
+      "stderr": "\u001b[90mstderr\u001b[2m | tests/integration/npcAmbushRoutes.test.js\n\u001b[22m\u001b[39m[SECURITY] JWT_SECRET environment variable is unset. Using default development secret.\n\n\u001b[90mstderr\u001b[2m | tests/unit/instancedZoneRoutes.test.mjs\n\u001b[22m\u001b[39m[SECURITY] JWT_SECRET environment variable is unset. Using default development secret.\n\n\u001b[90mstderr\u001b[2m | tests/integration/npcInteractionApi.test.mjs\n\u001b[22m\u001b[39m[SECURITY] JWT_SECRET environment variable is unset. Using default development secret.\n\n\u001b[90mstderr\u001b[2m | tests/integration/npcInteractionApi.test.mjs\n\u001b[22m\u001b[39m[SECURITY] JWT_SECRET environment variable is unset. Using default development secret.\n\n\u001b[90mstderr\u001b[2m | tests/integration/nearbyNpcStreaming.test.mjs\n\u001b[22m\u001b[39m[SECURITY] JWT_SECRET environment variable is unset. Using default development secret.\n\n\u001b[90mstderr\u001b[2m | tests/integration/nearbyNpcStreaming.test.mjs\n\u001b[22m\u001b[39m[SECURITY] JWT_SECRET environment variable is unset. Using default development secret.\n\n\u001b[90mstderr\u001b[2m | tests/unit/npc/v28_dialogue_wiring.test.mjs\n\u001b[22m\u001b[39m[SECURITY] JWT_SECRET environment variable is unset. Using default development secret.\n\n\u001b[90mstderr\u001b[2m | tests/unit/npc/v28_dialogue_wiring.test.mjs\n\u001b[22m\u001b[39m[SECURITY] JWT_SECRET environment variable is unset. Using default development secret."
+    },
+    {
+      "step": "3. node scripts/v28/auditNpcWorld.js",
+      "command": "node scripts/v28/auditNpcWorld.js",
+      "exitCode": 0,
+      "durationMs": 8763,
+      "pass": true,
+      "timedOut": false,
+      "stdout": "[AuditNpcWorld] Auditing 764 NPCs across 52 anchors...\n[AuditNpcWorld] Results saved to D:\\gitub\\bot-discord\\jianghu-bot\\review\\v28_raw\\npc_audit.json\n[AuditNpcWorld] Stats: {\n  totalNpcs: 764,\n  essentialCount: 18,\n  deadCount: 0,\n  uniqueLocations: 764,\n  totalFamilies: 8,\n  populatedAnchors: 46\n}\n[AuditNpcWorld] PASSED: 0 violations! All invariants V1-V19 satisfied.",
+      "stderr": ""
+    },
+    {
+      "step": "4. node scripts/v28/layoutProbe.js http://localhost:3100",
+      "command": "node scripts/v28/layoutProbe.js http://localhost:3100",
+      "exitCode": 0,
+      "durationMs": 21913,
+      "pass": true,
+      "timedOut": false,
+      "stdout": "[LAYOUT-PROBE V29] Initializing Playwright against http://localhost:3100/dev/npc-preview...\n\n--- Testing [dialogue] at viewport mobile (390x844) ---\nScreenshot saved to dlg_mobile.png\n[choices check] Advancing dialogue to reveal action choices...\nChoices screenshot saved to dlg_choices_mobile.png\nEvaluated 3 text nodes, 1 buttons.\n✓ [dialogue @ mobile] PASSED: 0 violations.\n\n--- Testing [dialogue] at viewport desktop (1440x900) ---\nScreenshot saved to dlg_desktop.png\n[choices check] Advancing dialogue to reveal action choices...\nChoices screenshot saved to dlg_choices_desktop.png\nEvaluated 3 text nodes, 1 buttons.\n✓ [dialogue @ desktop] PASSED: 0 violations.\n\n--- Testing [profile] at viewport mobile (390x844) ---\nScreenshot saved to prof_mobile.png\nEvaluated 133 text nodes, 22 buttons.\n✓ [profile @ mobile] PASSED: 0 violations.\n\n--- Testing [profile] at viewport desktop (1440x900) ---\nScreenshot saved to prof_desktop.png\nEvaluated 133 text nodes, 22 buttons.\n✓ [profile @ desktop] PASSED: 0 violations.\n\n======================================================\n[LAYOUT-PROBE COMPLETE] Total Violations: 0\nReport written to D:\\gitub\\bot-discord\\jianghu-bot\\review\\v32_raw\\layout_probe.json\n======================================================",
+      "stderr": ""
+    },
+    {
+      "step": "5. npm --prefix web-dashboard run build",
+      "command": "npm.cmd --prefix web-dashboard run build",
+      "exitCode": 0,
+      "durationMs": 55539,
+      "pass": true,
+      "timedOut": false,
+      "stdout": "> web-dashboard@0.1.0 build\n> next build\n\n▲ Next.js 16.3.2 (Turbopack)\n- Environments: .env.local, .env\n✓ Running next.config.ts took 2.6s\n\n  Creating an optimized production build ...\n✓ Compiled successfully in 25.0s\n  Running TypeScript ...\n  Finished TypeScript in 14.4s ...\n  Collecting page data using 3 workers ...\n  Generating static pages using 3 workers (0/34) ...\n  Generating static pages using 3 workers (8/34) \r\n  Generating static pages using 3 workers (16/34) \r\n  Generating static pages using 3 workers (25/34) \r\n✓ Generating static pages using 3 workers (34/34) in 2.0s\n  Finalizing page optimization ...\n\nRoute (app)\n┌ ○ /\n├ ○ /_not-found\n├ ƒ /admin-oracle\n├ ○ /almanack\n├ ƒ /api/client-log\n├ ƒ /arena\n├ ○ /assets\n├ ○ /auth\n├ ○ /auth/callback\n├ ○ /barter\n├ ○ /character\n├ ○ /condition\n├ ƒ /cultivation\n├ ○ /daily-hub\n├ ○ /dev/npc-preview\n├ ○ /dev/perf\n├ ○ /explore\n├ ○ /inventory\n├ ○ /leaderboard\n├ ƒ /market\n├ ○ /marriage\n├ ○ /pet\n├ ○ /professions\n├ ○ /profile\n├ ○ /sect\n├ ○ /sect-arena\n├ ƒ /skill-tree\n├ ƒ /skills\n├ ○ /tournament\n├ ○ /worker\n├ ○ /world\n└ ○ /world-boss\n\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand",
+      "stderr": ""
+    },
+    {
+      "step": "6. Cek Aset Terlarang",
+      "command": "6. Cek Aset Terlarang",
+      "exitCode": 0,
+      "durationMs": 18337,
+      "pass": true,
+      "timedOut": false,
+      "stdout": "Clean. No forbidden assets found.",
+      "stderr": ""
+    },
+    {
+      "step": "7. Cek Git Bersih",
+      "command": "7. Cek Git Bersih",
+      "exitCode": 0,
+      "durationMs": 117,
+      "pass": true,
+      "timedOut": false,
+      "stdout": "M jianghu-bot/scripts/v30/gateRunner.js\n?? jianghu-bot/review/v32_raw/dlg_choices_desktop.png\n?? jianghu-bot/review/v32_raw/dlg_choices_mobile.png\n?? jianghu-bot/review/v32_raw/dlg_desktop.png\n?? jianghu-bot/review/v32_raw/dlg_mobile.png\n?? jianghu-bot/review/v32_raw/layout_probe.json\n?? jianghu-bot/review/v32_raw/prof_desktop.png\n?? jianghu-bot/review/v32_raw/prof_mobile.png",
+      "stderr": ""
+    },
+    {
+      "step": "8. Cek Anti-Slop",
+      "command": "node scripts/v30/antislopScan.js",
+      "exitCode": 0,
+      "durationMs": 135,
+      "pass": true,
+      "timedOut": false,
+      "stdout": "[ANTISLOP PASSED] All 7 NPC components are clean of slop tokens.",
+      "stderr": ""
+    },
+    {
+      "step": "9. npx vitest run tests/integration/npcJourneyLifecycle.test.js tests/integration/npcHuntJourneyConflict.test.js tests/unit/npc/v31_snap_walkable.test.mjs",
+      "command": "npx.cmd vitest run tests/integration/npcJourneyLifecycle.test.js tests/integration/npcHuntJourneyConflict.test.js tests/unit/npc/v31_snap_walkable.test.mjs",
+      "exitCode": 0,
+      "durationMs": 9020,
+      "pass": true,
+      "timedOut": false,
+      "stdout": "\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv5.0.5 \u001b[39m\u001b[90mD:/gitub/bot-discord/jianghu-bot\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/unit/npc/v31_snap_walkable.test.mjs \u001b[2m(\u001b[22m\u001b[2m8 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1992\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[32m✓\u001b[39m snapWalkable Unit & Coordinate Protection Tests (V31 F2) \u001b[2m(8)\u001b[22m\n     \u001b[32m✓\u001b[39m Integration: NPC on ok: false tile preserves existing coordinates \u001b[2m(2)\u001b[22m\n       \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m 5. NPC does not write raw coordinates when snapWalkable returns ok: false\u001b[33m 340\u001b[2mms\u001b[22m\u001b[39m\n\u001b[90mstdout\u001b[2m | tests/integration/npcJourneyLifecycle.test.js\u001b[2m > \u001b[22m\u001b[2mNPC Journey Full Lifecycle Integration (V31 F1)\u001b[2m > \u001b[22m\u001b[2m(m) Stranded NPC at pulau_penyu_raksasa whose return route is blocked teleports safely to homeAnchorId tile and logs teleport pulang\n\u001b[22m\u001b[39m[NpcJourney] teleport pulang Pengelana Terdampar Pulau\n\n \u001b[32m✓\u001b[39m tests/integration/npcJourneyLifecycle.test.js \u001b[2m(\u001b[22m\u001b[2m7 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 2498\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[32m✓\u001b[39m NPC Journey Full Lifecycle Integration (V31 F1) \u001b[2m(7)\u001b[22m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m Full lifecycle: depart -> travel mid-way protected -> arrive visiting -> stay protected from schedule -> return home -> idle -> depart 24h later\u001b[33m 521\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/integration/npcHuntJourneyConflict.test.js \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 3256\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[32m✓\u001b[39m NPC Hunter vs Scheduled Journey Conflict Integration (V31 F3) \u001b[2m(6)\u001b[22m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m (a) Hunter traveling on a journey cancels journey upon hunting; runJourneyTick does not overwrite coordinates\u001b[33m 750\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m (b) When vendetta is resolved, hunter becomes idle; if away from home, eventually returns via runJourneyTick\u001b[33m 313\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m21 passed\u001b[39m\u001b[22m\u001b[90m (21)\u001b[39m\n\u001b[2m   Start at \u001b[22m 11:20:50\n\u001b[2m   Duration \u001b[22m 5.96s\u001b[2m (tests 54%, import 45%, worker 1%)\u001b[22m",
+      "stderr": ""
+    },
+    {
+      "step": "10. node scripts/v32/checkRouteWalkability.js",
+      "command": "node scripts/v32/checkRouteWalkability.js",
+      "exitCode": 0,
+      "durationMs": 29980,
+      "pass": true,
+      "timedOut": false,
+      "stdout": "=== SENSUS PENUH WALKABILITY RUTE ANTAR-ANCHOR (V32 F4) ===\nJumlah Pasangan Anchor Dicoba (All-Pairs): 2652\nJumlah Rute Diterima (Valid & <= 900 tile): 605\nJumlah Rute Ditolak Total: 2047\n  - Tidak ada jalur / < 2 anchor: 0\n  - Larangan pulau (island tujuan/transit): 102\n  - Diblokir barrier tanpa celah / kedalaman > 3: 0\n  - Jarak setelah detour > 900 tile: 1945\nTotal Titik Leg Dievaluasi (tiap 10% per leg): 15323\nTitik Non-Walkable Sebelum Snap: 1334 (8.71%)\nTitik ok:false Setelah Snap (Radius 40): 102 (0.67%)\nStatus Ambang Exit Skrip (<= 1.00%): PASSED (Target Ideal <= 0.50%: BELUM TERCAPAI)\n\nTop 10 Rute Penyumbang ok:false Terbanyak:\n  1. desa_heiyan -> luoyang_kecil: 2 titik ok:false (medan padat di luar radius snap 40)\n  2. desa_xingcun -> kaki_gunung_azure: 2 titik ok:false (endpoint di dalam barrier (azure_wall))\n  3. desa_xingcun -> makam_kaisar_pedang_purba: 2 titik ok:false (endpoint di dalam barrier (azure_wall))\n  4. desa_xingcun -> sekte_awan_pedang: 2 titik ok:false (endpoint di dalam barrier (azure_wall))\n  5. dusun_kebun_persik -> kaki_gunung_azure: 2 titik ok:false (endpoint di dalam barrier (azure_wall))\n  6. dusun_kebun_persik -> makam_kaisar_pedang_purba: 2 titik ok:false (endpoint di dalam barrier (azure_wall))\n  7. dusun_kebun_persik -> sekte_awan_pedang: 2 titik ok:false (endpoint di dalam barrier (azure_wall))\n  8. gua_purba_bunga_aprikot -> kaki_gunung_azure: 2 titik ok:false (endpoint di dalam barrier (azure_wall))\n  9. gua_purba_bunga_aprikot -> makam_kaisar_pedang_purba: 2 titik ok:false (endpoint di dalam barrier (azure_wall))\n  10. gua_purba_bunga_aprikot -> sekte_awan_pedang: 2 titik ok:false (endpoint di dalam barrier (azure_wall))",
+      "stderr": ""
+    },
+    {
+      "step": "11. npx vitest run tests/unit/npc/v32_route.test.mjs tests/unit/npc/v32_planner_route.test.mjs",
+      "command": "npx.cmd vitest run tests/unit/npc/v32_route.test.mjs tests/unit/npc/v32_planner_route.test.mjs",
+      "exitCode": 0,
+      "durationMs": 4570,
+      "pass": true,
+      "timedOut": false,
+      "stdout": "\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv5.0.5 \u001b[39m\u001b[90mD:/gitub/bot-discord/jianghu-bot\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/unit/npc/v32_route.test.mjs \u001b[2m(\u001b[22m\u001b[2m14 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 47\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/unit/npc/v32_planner_route.test.mjs \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1154\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[32m✓\u001b[39m NPC Wander Planner Route & Island Ban (V32 F3) \u001b[2m(4)\u001b[22m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m (a) 500 seed acak deterministik (termasuk realmIndex >= 3 di dermaga_donghai) tidak pernah memilih atau melintasi anchor bertipe island\u001b[33m 603\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m (b) dari 500 seed acak, tidak ada rencana yang buildJourney(..., routeFn) nya null dan semua membawa plan.journey valid\u001b[33m 544\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m2 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m18 passed\u001b[39m\u001b[22m\u001b[90m (18)\u001b[39m\n\u001b[2m   Start at \u001b[22m 11:21:29\n\u001b[2m   Duration \u001b[22m 1.66s\u001b[2m (tests 87%, import 7%, worker 5%, transform 2%)\u001b[22m",
+      "stderr": ""
+    }
+  ]
+}

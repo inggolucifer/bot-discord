@@ -8,10 +8,8 @@ const fs = require('fs');
 const path = require('path');
 const http = require('http');
 
-const RAW_DIR = path.resolve(__dirname, '../../review/v31_raw');
+const RAW_DIR = path.resolve(__dirname, '../../review/v32_raw');
 const GATE_OUTPUT = path.join(RAW_DIR, 'gate.json');
-const RAW_DIR_V30 = path.resolve(__dirname, '../../review/v30_raw');
-const GATE_OUTPUT_V30 = path.join(RAW_DIR_V30, 'gate.json');
 const ROOT_DIR = path.resolve(__dirname, '../..');
 
 const COMMANDS = [
@@ -64,6 +62,18 @@ const COMMANDS = [
     step: '9. npx vitest run tests/integration/npcJourneyLifecycle.test.js tests/integration/npcHuntJourneyConflict.test.js tests/unit/npc/v31_snap_walkable.test.mjs',
     cmd: process.platform === 'win32' ? 'npx.cmd' : 'npx',
     args: ['vitest', 'run', 'tests/integration/npcJourneyLifecycle.test.js', 'tests/integration/npcHuntJourneyConflict.test.js', 'tests/unit/npc/v31_snap_walkable.test.mjs'],
+    timeout: 120000
+  },
+  {
+    step: '10. node scripts/v32/checkRouteWalkability.js',
+    cmd: 'node',
+    args: ['scripts/v32/checkRouteWalkability.js'],
+    timeout: 180000
+  },
+  {
+    step: '11. npx vitest run tests/unit/npc/v32_route.test.mjs tests/unit/npc/v32_planner_route.test.mjs',
+    cmd: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+    args: ['vitest', 'run', 'tests/unit/npc/v32_route.test.mjs', 'tests/unit/npc/v32_planner_route.test.mjs'],
     timeout: 120000
   }
 ];
@@ -266,7 +276,7 @@ function runCommand(item) {
 
 async function main() {
   fs.mkdirSync(RAW_DIR, { recursive: true });
-  console.log(`[GATE RUNNER V30] Starting Master 8-Gate Pipeline...`);
+  console.log(`[GATE RUNNER V32] Starting Master 11-Gate Pipeline...`);
 
   const results = [];
   let overallPass = true;
@@ -289,9 +299,6 @@ async function main() {
   };
 
   fs.writeFileSync(GATE_OUTPUT, JSON.stringify(gateReport, null, 2));
-  if (fs.existsSync(RAW_DIR_V30)) {
-    fs.writeFileSync(GATE_OUTPUT_V30, JSON.stringify(gateReport, null, 2));
-  }
 
   console.log(`\n======================================================`);
   console.log(`[GATE SUMMARY TABLE V30]`);
