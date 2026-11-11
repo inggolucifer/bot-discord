@@ -1,20 +1,20 @@
 # LAPORAN AKHIR V31 — PERBAIKAN MAKSIMAL SISTEM PERJALANAN NPC (3 BUG)
 
 Dokumen resmi penyelesaian dan penguatan maksimal 3 bug sistem perjalanan serta perburuan NPC pada repositori `jianghu-bot` (Immortal-X).
-Waktu Verifikasi Final: 2026-11-10T14:35:40+07:00
-Status Akhir: **9/9 GATE LOLOS (100% PASS — 61 File Uji / 508 Tes Hijau)**
+Waktu Verifikasi Final: 2026-11-11T07:39:13+07:00
+Status Akhir: **9/9 GATE LOLOS (100% PASS — 61 File Uji / 510 Tes Hijau)**
 
 ---
 
 ## 1. Ringkasan Eksekutif & Hasil Perbaikan
 
-Pada versi V31 (termasuk siklus penguatan penuh), dilakukan penyelesaian menyeluruh hingga ke kasus batas (*edge cases*) pada 3 bug sistem perjalanan NPC:
+Pada versi V31 (termasuk siklus penguatan penuh & refaktor modular), dilakukan penyelesaian menyeluruh hingga ke kasus batas (*edge cases*) pada 3 bug sistem perjalanan NPC:
 
 | Bug | Deskripsi & Akar Masalah | Solusi Implementasi Maksimal | Status | Bukti File Raw |
 |---|---|---|---|---|
-| **B1 (F1)** | NPC bertamu tidak pernah pulang karena status `visiting` tertimpa jadwal harian, perjalanan pulang tertahan batas 900 tile, dan NPC di rumah berstatus `visiting` bisa terkunci | Pengecualian `'visiting'` di `npcTicker.js`; pemulangan berbasis spasial (`homeAnchorId !== currentAnchorId`), `maxTiles: 10000` untuk `pulang`, `stayUntil` otomatis untuk data lama, serta *self-heal* status `visiting` di rumah | **PASSED (5/5)** | `f1_lifecycle_red.txt`<br>`f1_lifecycle.txt` |
-| **B2 (F2)** | Titik interpolasi jalur & titik kedatangan berpotensi masuk laut/tebing karena radius snap 10 tidak cukup; scan spiral penuh juga boros iterasi | Scan keliling cincin Chebyshev $O(r)$ radius 40 (**14× lebih cepat**), penanda `ok: true/false`, serta proteksi koordinat baik saat **bergerak** maupun saat **tiba** (`pos.arrived`) agar titik tidak walkable tak pernah ditulis | **PASSED (8/8)** | `f2_unit_red.txt`<br>`f2_unit.txt`<br>`f2_walkability.txt`<br>`f2_sim_48h.txt` |
-| **B3 (F3)** | Pemburu berstatus hunting ditimpa kembali posisinya oleh `runJourneyTick`; pemburu yang kehilangan jejak (>200 tile), `wanderLevel: 0`, atau tersesat di rimba tak pernah pulang | Helper `resetHunterToIdle` saat vendetta selesai / pemain offline / jejak hilang (>200 tile); `huntStep` membatalkan `targetDestination`; `runJourneyTick` mengecualikan `hunting`, menjangkau `stayUntil != null` (`wanderLevel: 0`), dan memulangkan pemburu tersesat (`disp > 30`) | **PASSED (5/5)** | `f3_hunt_conflict_red.txt`<br>`f3_hunt_conflict.txt` |
+| **B1 (F1)** | NPC bertamu tidak pernah pulang karena status `visiting` tertimpa jadwal harian, perjalanan pulang tertahan batas 900 tile, anchor lama tak dikenal macet, dan NPC di rumah berstatus `visiting` bisa terkunci | Pengecualian `'visiting'` di `npcTicker.js`; pemulangan berbasis spasial (`homeAnchorId !== currentAnchorId`), `maxTiles: 10000` untuk `pulang`, `stayUntil` otomatis untuk data lama, fallback `buildDirectWalkBackJourney` untuk anchor terhapus, serta *self-heal* status `visiting` di rumah & penguncian NPC esensial | **PASSED (6/6)** | `f1_lifecycle_red.txt`<br>`f1_lifecycle.txt` |
+| **B2 (F2)** | Titik interpolasi jalur & titik kedatangan berpotensi masuk laut/tebing karena radius snap 10 tidak cukup; scan spiral penuh juga boros iterasi | Scan keliling cincin Chebyshev $O(r)$ radius 40 (**14× lebih cepat**), penanda `ok: true/false`, serta proteksi koordinat via `applySnapCoords` & `resolveLandingCoordinates` baik saat **bergerak** maupun saat **tiba** (`pos.arrived`) agar titik tidak walkable tak pernah ditulis | **PASSED (8/8)** | `f2_unit_red.txt`<br>`f2_unit.txt`<br>`f2_walkability.txt`<br>`f2_sim_48h.txt` |
+| **B3 (F3)** | Pemburu berstatus hunting ditimpa kembali posisinya oleh `runJourneyTick`; pemburu kehilangan jejak (>200 tile), cooldown pasca-sergapan, `wanderLevel: 0`, atau tersesat di rimba tak pernah pulang | Refaktor modular `cleanupStaleHunters` & `resetHunterToIdle` saat vendetta selesai / cooldown 3 jam / pemain offline / jejak hilang (>200 tile); `huntStep` membatalkan `targetDestination`; `runJourneyTick` mengecualikan `hunting` & `isEssential`, menjangkau `stayUntil != null` (`wanderLevel: 0`), dan memulangkan pemburu tersesat (`disp > 30`) | **PASSED (6/6)** | `f3_hunt_conflict_red.txt`<br>`f3_hunt_conflict.txt` |
 
 ---
 
@@ -23,14 +23,14 @@ Pada versi V31 (termasuk siklus penguatan penuh), dilakukan penyelesaian menyelu
 ### F1: Perbaikan B1 — NPC yang Bertamu Harus Pulang
 - **Perbaikan**:
   1. `services/npcTicker.js`: `schedule.activityState: { $nin: ['traveling', 'hunting', 'visiting'] }`.
-  2. `services/npcJourneyTick.js`:
+  2. `services/npcJourneyTick.js` (`processIdleOrVisitingNpc`):
      - Pemulangan berbasis `away = homeAnchorId !== currentAnchorId` dan `stayUntil <= now`.
-     - Batas jarak `maxTiles: 10000` pada `buildJourney` khusus `purpose: 'pulang'`.
+     - Batas jarak `maxTiles: 10000` pada `buildJourney` khusus `purpose: 'pulang'`, plus fallback `buildDirectWalkBackJourney` bila `currentAnchorId` tak lagi ada di `anchorMap`.
      - Pemberian `stayUntil = now + 30 menit` otomatis untuk NPC lama yang `away` tanpa `stayUntil`.
      - *Self-heal* untuk NPC di rumah (`!away`) dengan status tertinggal `'visiting'`.
 - **Bukti Uji (`tests/integration/npcJourneyLifecycle.test.js`)**:
-  - **MERAH**: Status `visiting` tertimpa menjadi `working`, legacy NPC tanpa `stayUntil` macet, perjalanan pulang > 900 tile gagal dimulai, dan status `visiting` di rumah tidak pulih (`review/v31_raw/f1_lifecycle_red.txt`).
-  - **HIJAU**: **5/5 tes integrasi Mongoose asli lolos** termasuk siklus 24 jam game, legacy `stayUntil`, pulang 1.200 tile, *self-heal* `visiting` di rumah, dan larangan berangkat lagi saat sedang `away` (`review/v31_raw/f1_lifecycle.txt`).
+  - **MERAH**: Status `visiting` tertimpa menjadi `working`, legacy NPC tanpa `stayUntil` macet, perjalanan pulang > 900 tile gagal dimulai, status `visiting` di rumah tidak pulih, dan anchor lama tak dikenal macet (`review/v31_raw/f1_lifecycle_red.txt`).
+  - **HIJAU**: **6/6 tes integrasi Mongoose asli lolos** termasuk siklus 24 jam game, legacy `stayUntil`, pulang 1.200 tile, *self-heal* `visiting` di rumah, larangan berangkat saat `away`, serta fallback anchor terhapus (`review/v31_raw/f1_lifecycle.txt`).
 
 ---
 
@@ -66,13 +66,14 @@ Pada versi V31 (termasuk siklus penguatan penuh), dilakukan penyelesaian menyelu
 - **Perbaikan**:
   1. `services/npcVendettaEngine.js`:
      - Saat `huntStep` melangkah atau masuk status `'hunting'`, set `targetDestination = null`, `stayUntil = null`, dan panggil `markModified('schedule')`.
-     - Helper tunggal `resetHunterToIdle(hunter, now)` menangani penghentian perburuan saat vendetta selesai, pemain offline (>10 menit), maupun **kehilangan jejak (`dist > 200` / `step.state === 'idle'`)**, dengan menetapkan `stayUntil = new Date(now)`.
+     - Helper modular `resetHunterToIdle(hunter, now)` dan `cleanupStaleHunters` menangani penghentian perburuan saat vendetta selesai, **cooldown 3 jam pasca-sergapan (`lastAmbushAt`)**, pemain offline (>10 menit), maupun **kehilangan jejak (`dist > 200` / `step.state === 'idle'`)**, dengan menetapkan `stayUntil = new Date(now)`.
+     - Menambahkan proteksi `hunter.vitalStatus?.isEssential` agar NPC esensial tidak pernah dipicu dalam perburuan dendam.
   2. `services/npcJourneyTick.js`:
-     - Filter query menambahkan `'schedule.activityState': { $ne: 'hunting' }` serta `$or` mencakup `stayUntil != null` agar pemburu dengan `wanderLevel: 0` juga dipulangkan setelah selesai bertugas.
-     - Penanganan pemburu tersesat di rimba (`!away && disp > 30`) melalui perjalanan `walkBack` (`purpose: 'pulang'`) kembali ke koordinat `homeAnchor`.
+     - Filter query mengecualikan `'schedule.activityState': { $ne: 'hunting' }` dan `'vitalStatus.isEssential': { $ne: true }`, serta `$or` mencakup `stayUntil != null` agar pemburu dengan `wanderLevel: 0` juga dipulangkan setelah selesai bertugas.
+     - Penanganan pemburu tersesat di rimba (`!away && disp > 30`) melalui perjalanan `buildDirectWalkBackJourney` (`purpose: 'pulang'`) kembali ke koordinat `homeAnchor`.
 - **Bukti Uji (`tests/integration/npcHuntJourneyConflict.test.js`)**:
-  - **MERAH**: Pemburu terseret kembali ke rute lama oleh `runJourneyTick`, pemburu kehilangan jejak tetap `'hunting'`, pemburu `wanderLevel: 0` macet di luar, dan pemburu tersesat di rimba tak kembali ke rumah (`review/v31_raw/f3_hunt_conflict_red.txt`).
-  - **HIJAU**: **5/5 skenario integrasi lolos** (`review/v31_raw/f3_hunt_conflict.txt`).
+  - **MERAH**: Pemburu terseret kembali ke rute lama oleh `runJourneyTick`, pemburu kehilangan jejak tetap `'hunting'`, pemburu `wanderLevel: 0` macet di luar, pemburu tersesat di rimba tak kembali ke rumah, serta pemburu tetap `'hunting'` saat cooldown 3 jam (`review/v31_raw/f3_hunt_conflict_red.txt`).
+  - **HIJAU**: **6/6 skenario integrasi lolos** (`review/v31_raw/f3_hunt_conflict.txt`).
 
 ---
 
@@ -82,15 +83,15 @@ Keluaran resmi dari `node scripts/v30/gateRunner.js http://localhost:3100` (`rev
 
 | Gerbang | Perintah / Verifikasi | Durasi | Status | Exit Code |
 |---|---|---|---|---|
-| **1. Syntax Check** | `npm test` (704 berkas JS `node --check`) | 76.9s | **PASS** | 0 |
-| **2. Full Test Suite** | `npx vitest run` (**61 file uji, 508 tes**) | 71.1s | **PASS** | 0 |
-| **3. Audit Ekosistem** | `node scripts/v28/auditNpcWorld.js` (764 NPC, V1–V18) | 11.1s | **PASS** | 0 |
-| **4. Layout & Visual Probe** | `node scripts/v28/layoutProbe.js http://localhost:3100` (P1–P16, 0 pelanggaran) | 29.9s | **PASS** | 0 |
-| **5. Production Build** | `npm --prefix web-dashboard run build` (Next.js 16.3.2 Turbopack) | 83.1s | **PASS** | 0 |
-| **6. Cek Aset Terlarang** | Pemindaian rekursif `toi_scenery\|xihua_standing` (0 temuan) | 18.4s | **PASS** | 0 |
+| **1. Syntax Check** | `npm test` (704 berkas JS `node --check`) | 100.4s | **PASS** | 0 |
+| **2. Full Test Suite** | `npx vitest run` (**61 file uji, 510 tes**) | 151.8s | **PASS** | 0 |
+| **3. Audit Ekosistem** | `node scripts/v28/auditNpcWorld.js` (764 NPC, V1–V18) | 20.5s | **PASS** | 0 |
+| **4. Layout & Visual Probe** | `node scripts/v28/layoutProbe.js http://localhost:3100` (P1–P16, 0 pelanggaran) | 40.1s | **PASS** | 0 |
+| **5. Production Build** | `npm --prefix web-dashboard run build` (Next.js 16.3.2 Turbopack) | 162.3s | **PASS** | 0 |
+| **6. Cek Aset Terlarang** | Pemindaian rekursif `toi_scenery\|xihua_standing` (0 temuan) | 21.2s | **PASS** | 0 |
 | **7. Cek Git Bersih** | Tidak ada `package-lock.json`, `.next`, `node_modules`, atau `AGENTS.md` untracked | 0.1s | **PASS** | 0 |
-| **8. Cek Anti-Slop** | `node scripts/v30/antislopScan.js` (7/7 komponen NPC bersih) | 0.1s | **PASS** | 0 |
-| **9. V31 Focused Suite** | `npx vitest run npcJourneyLifecycle npcHuntJourneyConflict v31_snap_walkable` (**18/18 tes**) | 8.7s | **PASS** | 0 |
+| **8. Cek Anti-Slop** | `node scripts/v30/antislopScan.js` (7/7 komponen NPC bersih) | 0.2s | **PASS** | 0 |
+| **9. V31 Focused Suite** | `npx vitest run npcJourneyLifecycle npcHuntJourneyConflict v31_snap_walkable` (**20/20 tes**) | 19.9s | **PASS** | 0 |
 
 Audit ekosistem dunia (`node scripts/v28/auditNpcWorld.js`):
 - Total NPC: 764 | Essential: 18 | Mati: 0 | Invariants V1–V18: **0 Violations (PASSED)**
@@ -117,3 +118,6 @@ Audit ekosistem dunia (`node scripts/v28/auditNpcWorld.js`):
 5. `8f848a2e` - `v31(F1): maksimalkan pemulangan NPC jarak >900 tile dan self-heal status visiting di rumah`
 6. `055626f5` - `v31(F2): optimasi perimeter snapWalkable O(r), proteksi koordinat arrival, dan sensus simulasi 48 jam`
 7. `e3ea0fcc` - `v31(F3): tangani pemburu kehilangan jejak (>200 tile), wanderLevel 0, dan displaced hunter pulang`
+8. `694b9e1e` - `v31(G): verifikasi ulang gate 9/9 lolos dan laporan maksimal V31`
+9. `6365e9ba` - `v31(F1,F3): refaktor modular journey/vendetta tick, fallback anchor terhapus, dan cooldown stand-down`
+10. `a522d566` - `v31(G): perbaikan checkPort gateRunner ke /dev/npc-preview dan proteksi NPC esensial di journey/vendetta`
