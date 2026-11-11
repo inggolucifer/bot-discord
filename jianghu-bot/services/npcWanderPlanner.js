@@ -79,12 +79,12 @@ function chooseDestination(npc, { anchors, anchorMap, graph, ladder, gameDay, no
 
     if (!pathAnchors || pathAnchors.length < 2) continue;
 
-    // Ban any route that transits through an island node
-    if (pathAnchors.some((aid) => anchorMap?.[aid]?.type === 'island')) continue;
-
     // Max 2 hops: path length <= 3 (e.g. A -> B -> C is 2 hops)
     const hops = pathAnchors.length - 1;
     if (hops > 2) continue;
+
+    // Ban any route that transits through an island node
+    if (pathAnchors.some((aid) => anchorMap?.[aid]?.type === 'island')) continue;
 
     // Validate full pass-routed journey upfront so candidates are never selected if blocked or > 900 tiles
     const speed = resolveTravelSpeed(npc);
@@ -168,18 +168,31 @@ function planReturnHome(npc, { anchorMap, graph, now = Date.now(), routeFn = def
   }
 
   const speed = resolveTravelSpeed(npc);
-  const hasIslandTransit = pathAnchors.slice(1, -1).some((aid) => anchorMap?.[aid]?.type === 'island');
-  const journey = hasIslandTransit
-    ? null
-    : buildJourney({
-        pathAnchors,
-        anchorMap,
-        now,
-        tilesPerMinute: speed,
-        purpose: 'pulang',
-        maxTiles: 10000,
-        routeFn
-      });
+  const buildReturnJourney = (anchorsList) => {
+    const hasIslandTransit = anchorsList.slice(1, -1).some((aid) => anchorMap?.[aid]?.type === 'island');
+    if (hasIslandTransit) return null;
+    return buildJourney({
+      pathAnchors: anchorsList,
+      anchorMap,
+      now,
+      tilesPerMinute: speed,
+      purpose: 'pulang',
+      maxTiles: 10000,
+      routeFn
+    });
+  };
+
+  let journey = buildReturnJourney(pathAnchors);
+
+  // If multi-hop graph path got blocked or transited an island between mainland anchors, try direct [current, home].
+  if (!journey && pathAnchors.length > 2 && currentAnchor?.type !== 'island' && homeAnchor?.type !== 'island') {
+    const directAnchors = [currentAnchorId, homeAnchorId];
+    const directJourney = buildReturnJourney(directAnchors);
+    if (directJourney) {
+      pathAnchors = directAnchors;
+      journey = directJourney;
+    }
+  }
 
   if (!journey) {
     return {

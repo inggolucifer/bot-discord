@@ -212,4 +212,26 @@ describe('NPC Wander Planner Route & Island Ban (V32 F3)', () => {
     expect(directRes.journey.totalTiles).toBeGreaterThan(900);
     expect(directRes.journey.legs.some((l) => azurePasses.some((p) => l.bx === p.x && l.by === p.y))).toBe(true);
   });
+
+  it('(f) planReturnHome jatuh kembali ke rute daratan langsung [asal, rumah] jika jalur transit graph tercemar island', () => {
+    const customMap = {
+      daratan_a: { id: 'daratan_a', name: 'Daratan A', type: 'village', x: 2400, y: 3000 },
+      pulau_x: { id: 'pulau_x', name: 'Pulau X', type: 'island', x: 4350, y: 2750 },
+      daratan_b: { id: 'daratan_b', name: 'Daratan B', type: 'village', x: 2400, y: 3700 }
+    };
+    const pollutedGraph = {
+      shortestPath: () => ({ path: ['daratan_a', 'pulau_x', 'daratan_b'], totalLi: 120 })
+    };
+    const res = planReturnHome({
+      _id: 'npc_mainland_fallback',
+      attributes: { travelSpeed: 10 },
+      schedule: { currentAnchorId: 'daratan_a', homeAnchorId: 'daratan_b', activityState: 'visiting' }
+    }, { anchorMap: customMap, graph: pollutedGraph, now: 5000000 });
+
+    expect(res).not.toBeNull();
+    expect(res.teleport).toBe(false);
+    expect(res.pathAnchors).toEqual(['daratan_a', 'daratan_b']);
+    expect(res.journey.legs.length).toBeGreaterThan(1);
+    expect(res.pathAnchors).not.toContain('pulau_x');
+  });
 });

@@ -344,5 +344,16 @@ describe('buildJourney routeFn Integration (V32 F2)', () => {
     expect(resolveTravelSpeed({ attributes: { travelSpeed: 2 } })).toBe(6);
     expect(resolveTravelSpeed({ attributes: { travelSpeed: 99 } })).toBe(30);
     expect(resolveTravelSpeed({ attributes: { travelSpeed: 18 } })).toBe(18);
+
+    // Non-finite waypoint in routeFn output rejects cleanly as null instead of skipping a segment
+    expect(buildLegsFromPoints([{ x: 100, y: 100 }, { x: NaN, y: 200 }])).toBeNull();
+    const badJourney = buildJourney({
+      pathAnchors: ['utara', 'selatan'],
+      anchorMap,
+      now: 1000,
+      tilesPerMinute: 10,
+      routeFn: () => [{ x: 2500, y: 3000 }, { x: NaN, y: 3500 }, { x: 2500, y: 3700 }]
+    });
+    expect(badJourney).toBeNull();
   });
 });

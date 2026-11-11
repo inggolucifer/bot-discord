@@ -12,7 +12,7 @@ const { travelGraph } = require('../../utils/travelGraph');
 const { toAnchorPath, buildJourney } = require('../../utils/npcJourney');
 const { defaultRouteFn, loadRouteData } = require('../../utils/npcRoute');
 const { snapWalkable } = require('../../services/npcJourneyTick');
-const { isTileWalkable, createCachedWalkableFn } = require('../v28/lib/invariants');
+const { isTileWalkable, createCachedWalkableFn, validateJourneyV19 } = require('../v28/lib/invariants');
 
 const anchorsPath = path.resolve(__dirname, '../../world-data/anchors.json');
 const anchors = JSON.parse(fs.readFileSync(anchorsPath, 'utf8'));
@@ -20,10 +20,18 @@ const anchorMap = Object.fromEntries(anchors.map((a) => [a.id, a]));
 const { barriers, passes } = loadRouteData();
 const cachedIsTileWalkable = createCachedWalkableFn(isTileWalkable);
 
-function pointInAnyBarrier(x, y) {
-  return barriers
-    .filter((b) => x > b.bounds.minX && x < b.bounds.maxX && y > b.bounds.minY && y < b.bounds.maxY)
-    .map((b) => b.id);
+function pathBarriersInvolved(pathAnchors) {
+  const involved = [];
+  for (const aid of pathAnchors) {
+    const a = anchorMap[aid];
+    if (!a) continue;
+    for (const b of barriers) {
+      if (a.x > b.bounds.minX && a.x < b.bounds.maxX && a.y > b.bounds.minY && a.y < b.bounds.maxY) {
+        involved.push({ aid, barrierId: b.id });
+      }
+    }
+  }
+  return involved;
 }
 
 function runCensus() {
@@ -39,6 +47,7 @@ function runCensus() {
   let okFalseCount = 0;
   let okFalseByBarrierInterior = 0;
   let okFalseByTerrain = 0;
+  let v19Violations = 0;
   const routeFails = {};
 
   for (let i = 0; i < anchors.length; i++) {
@@ -81,6 +90,7 @@ function runCensus() {
       }
 
       acceptedRoutes++;
+      v19Violations += validateJourneyV19(`${fromAnchor.id}->${toAnchor.id}`, unbounded, barriers).length;
       for (const leg of unbounded.legs) {
         for (let step = 0; step <= 10; step++) {
           const t = step / 10;
@@ -95,11 +105,13 @@ function runCensus() {
               okFalseCount++;
               const routeKey = `${fromAnchor.id} -> ${toAnchor.id}`;
               if (!routeFails[routeKey]) {
-                const startB = pointInAnyBarrier(fromAnchor.x, fromAnchor.y);
-                const endB = pointInAnyBarrier(toAnchor.x, toAnchor.y);
-                const hasInterior = [...startB, ...endB].length > 0;
+                const involved = pathBarriersInvolved(pathAnchors);
+                const hasInterior = involved.length > 0;
+                const endpointMatch = involved.some((e) => e.aid === fromAnchor.id || e.aid === toAnchor.id);
+                const barrierList = [...new Set(involved.map((e) => e.barrierId))].join(',');
+                const roleLabel = endpointMatch ? 'endpoint' : 'transit';
                 const cause = hasInterior
-                  ? `endpoint di dalam barrier (${[...new Set([...startB, ...endB])].join(',')})`
+                  ? `${roleLabel} di dalam barrier (${barrierList})`
                   : 'medan padat di luar radius snap 40';
                 routeFails[routeKey] = { count: 0, cause, hasInterior };
               }
@@ -144,8 +156,9 @@ function runCensus() {
     `Total Titik Leg Dievaluasi (tiap 10% per leg): ${totalPoints}`,
     `Titik Non-Walkable Sebelum Snap: ${rawNonWalkable} (${rawPct}%)`,
     `Titik ok:false Setelah Snap (Radius 40): ${okFalseCount} (${okFalsePct}%)`,
-    `  - Dari endpoint anchor di dalam bounds barrier: ${okFalseByBarrierInterior}`,
-    `  - Dari medan padat di luar radius snap 40: ${okFalseByTerrain}`,
+    `  - Dari anchor endpoint/transit di dalam bounds barrier: ${okFalseByBarrierInterior}`,
+    `  - Dari medan padat murni di luar bounds barrier: ${okFalseByTerrain}`,
+    `Pelanggaran Invariant V19 pada ${acceptedRoutes} Rute Valid: ${v19Violations}`,
     `Status Walkability Celah Resmi (${passes.length - blockedPasses.length}/${passes.length} walkable): ${blockedPasses.length === 0 ? 'SEMUA WALKABLE' : blockedPasses.map((p) => `${p.id}(${p.x},${p.y})`).join(', ')}`,
     `Status Ambang Exit Skrip (<= 1.00%): ${okFalsePctNum <= 1.0 ? 'PASSED' : 'FAILED'} (Target Ideal <= 0.50%: ${okFalsePctNum <= 0.5 ? 'TERCAPAI' : 'BELUM TERCAPAI'})`,
     '',

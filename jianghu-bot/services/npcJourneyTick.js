@@ -133,8 +133,9 @@ function buildDirectWalkBackJourney({ npc, homeAnchorId, homeAnchorObj, now, rou
 
   if (!Array.isArray(pts) || pts.length < 2) return null;
 
-  const { legs, totalTiles } = buildLegsFromPoints(pts);
-  if (totalTiles === 0) return null;
+  const built = buildLegsFromPoints(pts);
+  if (!built || built.totalTiles === 0) return null;
+  const { legs, totalTiles } = built;
 
   const speed = resolveTravelSpeed(npc);
   const durationMs = Math.ceil((totalTiles / speed) * 60000);

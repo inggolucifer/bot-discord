@@ -52,7 +52,7 @@ function resolveTravelSpeed(npc) {
 
 /**
  * Converts an ordered array of coordinate points [{x, y}, ...] into Chebyshev legs.
- * Skips zero-length consecutive segments.
+ * Skips zero-length consecutive segments. Returns null if any waypoint has non-finite coordinates.
  */
 function buildLegsFromPoints(points) {
   const legs = [];
@@ -64,7 +64,13 @@ function buildLegsFromPoints(points) {
   for (let k = 0; k < points.length - 1; k++) {
     const p1 = points[k];
     const p2 = points[k + 1];
-    if (!p1 || !p2) continue;
+    if (
+      !p1 || !p2 ||
+      !Number.isFinite(p1.x) || !Number.isFinite(p1.y) ||
+      !Number.isFinite(p2.x) || !Number.isFinite(p2.y)
+    ) {
+      return null;
+    }
     const len = Math.max(Math.abs(p2.x - p1.x), Math.abs(p2.y - p1.y));
     if (len > 0) {
       legs.push({ ax: p1.x, ay: p1.y, bx: p2.x, by: p2.y, len });
@@ -110,6 +116,9 @@ function buildJourney({ pathAnchors, anchorMap, now = Date.now(), tilesPerMinute
         return null;
       }
       const built = buildLegsFromPoints(pts);
+      if (!built) {
+        return null;
+      }
       for (const leg of built.legs) {
         legs.push(leg);
       }
