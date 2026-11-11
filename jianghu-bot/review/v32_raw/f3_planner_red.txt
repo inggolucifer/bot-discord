@@ -1,0 +1,111 @@
+RUN  v5.0.5 D:/gitub/bot-discord/jianghu-bot
+
+ ❯ tests/unit/npc/v32_planner_route.test.mjs (4 tests | 4 failed) 91ms
+   ❯ NPC Wander Planner Route & Island Ban (V32 F3) (4)
+     × (a) 500 seed acak deterministik (termasuk realmIndex >= 3 di dermaga_donghai) tidak pernah memilih atau melintasi anchor bertipe island 58ms
+     × (b) dari 500 seed acak, tidak ada rencana yang buildJourney(..., routeFn) nya null dan semua membawa plan.journey valid 22ms
+     × (c) rute dari anchor utara azure_wall ke selatan selalu melewati salah satu celah (|x - pass.x| <= 3) 3ms
+     × (d) planReturnHome untuk NPC terdampar di pulau_penyu_raksasa menghasilkan teleport pulang 3ms
+ ❯ tests/integration/npcJourneyLifecycle.test.js (7 tests | 1 failed) 1432ms
+   ❯ NPC Journey Full Lifecycle Integration (V31 F1) (7)
+     ✓ Full lifecycle: depart -> travel mid-way protected -> arrive visiting -> stay protected from schedule -> return home -> idle -> depart 24h later 319ms
+     ✓ (h) Legacy NPC (away from home without stayUntil) receives stayUntil and eventually returns home 68ms
+     ✓ (i) Away NPC > 900 tiles from home still successfully initiates and completes return trip 28ms
+     ✓ (j) Self-heal: NPC at homeAnchorId with activityState visiting transitions back to idle and clears stayUntil 28ms
+     ✓ (k) Away NPC NEVER starts a new outward journey before returning home even if stayUntil not yet expired 14ms
+     ✓ (l) Legacy NPC with unknown/deleted currentAnchorId falls back to direct walk-back to homeAnchorId 32ms
+     × (m) Stranded NPC at pulau_penyu_raksasa whose return route is blocked teleports safely to homeAnchorId tile and logs teleport pulang 78ms
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 6 passed (11)
+   Start at  10:43:12
+   Duration  3.62s (import 49%, tests 43%, transform 6%, worker 2%)
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/npcJourneyLifecycle.test.js > NPC Journey Full Lifecycle Integration (V31 F1) > (m) Stranded NPC at pulau_penyu_raksasa whose return route is blocked teleports safely to homeAnchorId tile and logs teleport pulang
+AssertionError: expected 'pulau_penyu_raksasa' to be 'dermaga_donghai' // Object.is equality
+
+Expected: "dermaga_donghai"
+Received: "pulau_penyu_raksasa"
+
+ ❯ tests/integration/npcJourneyLifecycle.test.js:455:46
+    453|
+    454|     const checked = await Npc.findById(strandedNpc._id);
+    455|     expect(checked.schedule.currentAnchorId).toBe('dermaga_donghai');
+       |                                              ^
+    456|     expect(checked.schedule.activityState).toBe('idle');
+    457|     expect(checked.schedule.targetDestination).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/unit/npc/v32_planner_route.test.mjs > NPC Wander Planner Route & Island Ban (V32 F3) > (a) 500 seed acak deterministik (termasuk realmIndex >= 3 di dermaga_donghai) tidak pernah memilih atau melintasi anchor bertipe island
+AssertionError: expected 'island' not to be 'island' // Object.is equality
+ ❯ tests/unit/npc/v32_planner_route.test.mjs:42:54
+     40|       if (plan) {
+     41|         pickedDestinations.push(plan);
+     42|         expect(anchorMap[plan.toAnchorId]?.type).not.toBe('island');
+       |                                                      ^
+     43|         for (const aid of plan.pathAnchors || []) {
+     44|           expect(anchorMap[aid]?.type).not.toBe('island');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/unit/npc/v32_planner_route.test.mjs > NPC Wander Planner Route & Island Ban (V32 F3) > (b) dari 500 seed acak, tidak ada rencana yang buildJourney(..., routeFn) nya null dan semua membawa plan.journey valid
+AssertionError: expected undefined to be truthy
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/unit/npc/v32_planner_route.test.mjs:80:30
+     78|       if (plan) {
+     79|         planCount++;
+     80|         expect(plan.journey).toBeTruthy();
+       |                              ^
+     81|         expect(Array.isArray(plan.journey.legs)).toBe(true);
+     82|         expect(plan.journey.legs.length).toBeGreaterThan(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/unit/npc/v32_planner_route.test.mjs > NPC Wander Planner Route & Island Ban (V32 F3) > (c) rute dari anchor utara azure_wall ke selatan selalu melewati salah satu celah (|x - pass.x| <= 3)
+AssertionError: expected undefined to be truthy
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/unit/npc/v32_planner_route.test.mjs:140:39
+    138|
+    139|     expect(selectedCrossPlan).not.toBeNull();
+    140|     expect(selectedCrossPlan.journey).toBeTruthy();
+       |                                       ^
+    141|     const waypoints = selectedCrossPlan.journey.legs.flatMap((l) => [
+    142|       { x: l.ax, y: l.ay },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/unit/npc/v32_planner_route.test.mjs > NPC Wander Planner Route & Island Ban (V32 F3) > (d) planReturnHome untuk NPC terdampar di pulau_penyu_raksasa menghasilkan teleport pulang
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/unit/npc/v32_planner_route.test.mjs:170:26
+    168|     expect(res.toAnchorId).toBe('dermaga_donghai');
+    169|     expect(res.purpose).toBe('pulang');
+    170|     expect(res.teleport).toBe(true);
+       |                          ^
+    171|   });
+    172| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯

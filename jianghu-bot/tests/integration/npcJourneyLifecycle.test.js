@@ -404,4 +404,62 @@ describe('NPC Journey Full Lifecycle Integration (V31 F1)', () => {
     expect(checked.tileX).toBe(100);
     expect(checked.tileY).toBe(100);
   });
+
+  it('(m) Stranded NPC at pulau_penyu_raksasa whose return route is blocked teleports safely to homeAnchorId tile and logs teleport pulang', async () => {
+    const now = 36000000;
+    const seaAnchorMap = {
+      dermaga_donghai: { id: 'dermaga_donghai', name: 'Dermaga Donghai', type: 'port', x: 3920, y: 2700, tileX: 3920, tileY: 2700 },
+      pulau_penyu_raksasa: { id: 'pulau_penyu_raksasa', name: 'Pulau Penyu Raksasa', type: 'island', x: 4350, y: 2750, tileX: 4350, tileY: 2750 }
+    };
+
+    const strandedNpc = await Npc.create({
+      _id: new mongoose.Types.ObjectId('507f1f77bcf86cd799439016'),
+      name: 'Pengelana Terdampar Pulau',
+      gender: 'male',
+      vitalStatus: { isAlive: true, isEssential: false },
+      cultivation: { realmIndex: 5 },
+      tileX: 4350,
+      tileY: 2750,
+      schedule: {
+        currentAnchorId: 'pulau_penyu_raksasa',
+        homeAnchorId: 'dermaga_donghai',
+        wanderLevel: 2,
+        activityState: 'visiting',
+        stayUntil: new Date(now - 5000),
+        tileX: 4350,
+        tileY: 2750
+      },
+      attributes: { travelSpeed: 10 }
+    });
+
+    const origLog = console.log;
+    const capturedLogs = [];
+    console.log = (...args) => {
+      capturedLogs.push(args.map(String).join(' '));
+      origLog(...args);
+    };
+
+    try {
+      await runJourneyTick({
+        Npc,
+        now,
+        anchorMap: seaAnchorMap,
+        graph: dummyGraph,
+        isWalkableFn: (x, y) => x === 3920 && y === 2700
+      });
+    } finally {
+      console.log = origLog;
+    }
+
+    const checked = await Npc.findById(strandedNpc._id);
+    expect(checked.schedule.currentAnchorId).toBe('dermaga_donghai');
+    expect(checked.schedule.activityState).toBe('idle');
+    expect(checked.schedule.targetDestination).toBeNull();
+    expect(checked.schedule.stayUntil).toBeNull();
+    expect(checked.tileX).toBe(3920);
+    expect(checked.tileY).toBe(2700);
+    expect(checked.schedule.tileX).toBe(3920);
+    expect(checked.schedule.tileY).toBe(2700);
+    expect(capturedLogs.some((l) => l.includes('[NpcJourney] teleport pulang Pengelana Terdampar Pulau'))).toBe(true);
+  });
 });

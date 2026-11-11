@@ -5,6 +5,7 @@
  */
 
 const { positionAt, buildJourney } = require('../utils/npcJourney');
+const { defaultRouteFn } = require('../utils/npcRoute');
 const { chooseDestination, planReturnHome } = require('./npcWanderPlanner');
 
 const DAILY_HOME_STATES = new Set(['idle', 'socializing', 'working', 'sleeping', 'training', 'meditating']);
@@ -91,9 +92,35 @@ function resolveLandingCoordinates({ snapped, destination, anchorMap, isWalkable
 }
 
 /**
- * Builds a direct 1-leg return journey from the NPC's current coordinates to its home anchor.
+ * Teleports a stranded NPC safely onto a walkable tile at homeAnchorId and resets state to idle.
  */
-function buildDirectWalkBackJourney({ npc, homeAnchorId, homeAnchorObj, now }) {
+function teleportNpcHome(bulkOps, npc, homeAnchorId, homeAnchorObj, isWalkableFn) {
+  if (!homeAnchorId || !homeAnchorObj) return false;
+  const homeX = homeAnchorObj.tileX ?? homeAnchorObj.x;
+  const homeY = homeAnchorObj.tileY ?? homeAnchorObj.y;
+  if (!Number.isFinite(homeX) || !Number.isFinite(homeY)) return false;
+
+  const snap = snapWalkable(homeX, homeY, isWalkableFn);
+  if (!snap || snap.ok !== true) return false;
+
+  const fields = {
+    'schedule.currentAnchorId': homeAnchorId,
+    'schedule.activityState': 'idle',
+    'schedule.targetDestination': null,
+    'schedule.stayUntil': null,
+    'schedule.currentFacility': ''
+  };
+  applySnapCoords(fields, snap);
+  pushFieldSet(bulkOps, npc._id, fields);
+  console.log(`[NpcJourney] teleport pulang ${npc.name || npc._id}`);
+  return true;
+}
+
+/**
+ * Builds a routed walk-back journey from the NPC's current coordinates to its home anchor.
+ * Returns null if blocked by routeFn or zero distance.
+ */
+function buildDirectWalkBackJourney({ npc, homeAnchorId, homeAnchorObj, now, routeFn = defaultRouteFn }) {
   if (!homeAnchorId || !homeAnchorObj) return null;
 
   const hx = npc.schedule?.tileX ?? npc.tileX;
@@ -104,11 +131,28 @@ function buildDirectWalkBackJourney({ npc, homeAnchorId, homeAnchorObj, now }) {
     return null;
   }
 
-  const dist = Math.max(Math.abs(hx - homeX), Math.abs(hy - homeY));
-  if (dist === 0) return null;
+  const pts = typeof routeFn === 'function'
+    ? routeFn(hx, hy, homeX, homeY)
+    : [{ x: hx, y: hy }, { x: homeX, y: homeY }];
+
+  if (!Array.isArray(pts) || pts.length < 2) return null;
+
+  const legs = [];
+  let totalTiles = 0;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const len = Math.max(Math.abs(p2.x - p1.x), Math.abs(p2.y - p1.y));
+    if (len > 0) {
+      legs.push({ ax: p1.x, ay: p1.y, bx: p2.x, by: p2.y, len });
+      totalTiles += len;
+    }
+  }
+
+  if (totalTiles === 0) return null;
 
   const speed = getTravelSpeed(npc);
-  const durationMs = Math.ceil((dist / speed) * 60000);
+  const durationMs = Math.ceil((totalTiles / speed) * 60000);
   return {
     type: 'journey',
     purpose: 'pulang',
@@ -117,8 +161,8 @@ function buildDirectWalkBackJourney({ npc, homeAnchorId, homeAnchorObj, now }) {
     pathAnchors: [homeAnchorId],
     startedAt: now,
     etaAt: now + durationMs,
-    totalTiles: dist,
-    legs: [{ ax: hx, ay: hy, bx: homeX, by: homeY, len: dist }]
+    totalTiles,
+    legs
   };
 }
 
@@ -158,7 +202,7 @@ function processTravelingNpc(npc, { now, anchorMap, isWalkableFn, bulkOps }) {
 /**
  * Processes an idle/visiting NPC: handles return home, legacy recovery, displacement walk-back, or outward trip.
  */
-function processIdleOrVisitingNpc(npc, { now, gameDay, anchorMap, graph, ladder, bulkOps }) {
+function processIdleOrVisitingNpc(npc, { now, gameDay, anchorMap, graph, ladder, isWalkableFn, bulkOps }) {
   const activityState = npc.schedule?.activityState || 'idle';
   const currentAnchorId = npc.schedule?.currentAnchorId || npc.schedule?.homeAnchorId;
   const homeAnchorId = npc.schedule?.homeAnchorId;
@@ -167,25 +211,31 @@ function processIdleOrVisitingNpc(npc, { now, gameDay, anchorMap, graph, ladder,
   const homeAnchorObj = anchorMap && homeAnchorId ? anchorMap[homeAnchorId] : null;
 
   if (away && stayUntil && new Date(stayUntil).getTime() <= now) {
-    const returnPlan = planReturnHome(npc, { anchorMap, graph, now });
+    const returnPlan = planReturnHome(npc, { anchorMap, graph, now, routeFn: defaultRouteFn });
     let journey = null;
-    if (returnPlan && Array.isArray(returnPlan.pathAnchors) && returnPlan.pathAnchors.length >= 2) {
-      journey = buildJourney({
+    if (returnPlan && !returnPlan.teleport) {
+      journey = returnPlan.journey || buildJourney({
         pathAnchors: returnPlan.pathAnchors,
         anchorMap,
         now,
         tilesPerMinute: getTravelSpeed(npc),
         purpose: 'pulang',
-        maxTiles: 10000
+        maxTiles: 10000,
+        routeFn: defaultRouteFn
       });
     }
-    if (!journey) {
-      journey = buildDirectWalkBackJourney({ npc, homeAnchorId, homeAnchorObj, now });
+
+    const knownCurrentAnchor = Boolean(anchorMap && anchorMap[currentAnchorId]);
+    if (!journey && !(knownCurrentAnchor && returnPlan?.teleport)) {
+      journey = buildDirectWalkBackJourney({ npc, homeAnchorId, homeAnchorObj, now, routeFn: defaultRouteFn });
     }
+
     if (journey) {
       pushJourneyStart(bulkOps, npc._id, journey);
       return true;
     }
+
+    teleportNpcHome(bulkOps, npc, homeAnchorId, homeAnchorObj, isWalkableFn);
     return false;
   }
 
@@ -211,11 +261,13 @@ function processIdleOrVisitingNpc(npc, { now, gameDay, anchorMap, graph, ladder,
     : 0;
 
   if (disp > 30 && (!stayUntil || new Date(stayUntil).getTime() <= now) && activityState !== 'visiting') {
-    const walkBack = buildDirectWalkBackJourney({ npc, homeAnchorId, homeAnchorObj, now });
+    const walkBack = buildDirectWalkBackJourney({ npc, homeAnchorId, homeAnchorObj, now, routeFn: defaultRouteFn });
     if (walkBack) {
       pushJourneyStart(bulkOps, npc._id, walkBack);
       return true;
     }
+    teleportNpcHome(bulkOps, npc, homeAnchorId, homeAnchorObj, isWalkableFn);
+    return false;
   }
 
   if (activityState === 'visiting') {
@@ -230,17 +282,23 @@ function processIdleOrVisitingNpc(npc, { now, gameDay, anchorMap, graph, ladder,
       graph,
       ladder,
       gameDay,
-      now
+      now,
+      routeFn: defaultRouteFn
     });
 
-    if (destPlan && Array.isArray(destPlan.pathAnchors) && destPlan.pathAnchors.length >= 2) {
-      const journey = buildJourney({
-        pathAnchors: destPlan.pathAnchors,
-        anchorMap,
-        now,
-        tilesPerMinute: getTravelSpeed(npc),
-        purpose: destPlan.purpose
-      });
+    if (destPlan) {
+      const journey = destPlan.journey || (
+        Array.isArray(destPlan.pathAnchors) && destPlan.pathAnchors.length >= 2
+          ? buildJourney({
+              pathAnchors: destPlan.pathAnchors,
+              anchorMap,
+              now,
+              tilesPerMinute: getTravelSpeed(npc),
+              purpose: destPlan.purpose,
+              routeFn: defaultRouteFn
+            })
+          : null
+      );
       if (journey) {
         journey.stayMs = destPlan.stayMs;
         pushJourneyStart(bulkOps, npc._id, journey, { 'schedule.lastJourneyDay': gameDay });
@@ -288,7 +346,7 @@ async function runJourneyTick({ Npc, now = Date.now(), anchorMap, graph, ladder 
       const outcome = processTravelingNpc(npc, { now, anchorMap, isWalkableFn, bulkOps });
       if (outcome === 'arrived') arrived++;
       else if (outcome === 'moved') moved++;
-    } else if (processIdleOrVisitingNpc(npc, { now, gameDay, anchorMap, graph, ladder, bulkOps })) {
+    } else if (processIdleOrVisitingNpc(npc, { now, gameDay, anchorMap, graph, ladder, isWalkableFn, bulkOps })) {
       started++;
     }
   }

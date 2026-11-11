@@ -5,13 +5,18 @@
  */
 
 const { makeRng, hash32, pickOne, pickWeighted } = require('../utils/npcRng');
-const { toAnchorPath } = require('../utils/npcJourney');
+const { toAnchorPath, buildJourney } = require('../utils/npcJourney');
+const { defaultRouteFn } = require('../utils/npcRoute');
+
+function resolveTravelSpeed(npc) {
+  return Math.max(6, Math.min(30, npc?.attributes?.travelSpeed ?? 10));
+}
 
 /**
  * Evaluates whether an NPC should start a journey on gameDay, and selects a valid destination.
- * Returns { toAnchorId, purpose, pathAnchors, stayMs } or null.
+ * Returns { toAnchorId, purpose, pathAnchors, stayMs, journey } or null.
  */
-function chooseDestination(npc, { anchors, anchorMap, graph, ladder, gameDay, now = Date.now() }) {
+function chooseDestination(npc, { anchors, anchorMap, graph, ladder, gameDay, now = Date.now(), routeFn = defaultRouteFn }) {
   if (!npc || !npc.vitalStatus) return null;
 
   // 1. Hard filters
@@ -49,9 +54,12 @@ function chooseDestination(npc, { anchors, anchorMap, graph, ladder, gameDay, no
   for (const cand of anchorList) {
     if (!cand || cand.id === currentAnchorId) continue;
 
-    // Filter tier: skip danger_zone, secret_realm, island unless realmIndex >= 3
+    // Forever ban island destinations (regardless of realmIndex)
+    if (cand.type === 'island') continue;
+
+    // Filter tier: skip danger_zone, secret_realm unless realmIndex >= 3
     if (realmIndex < 3) {
-      if (cand.type === 'danger_zone' || cand.type === 'secret_realm' || cand.type === 'island') {
+      if (cand.type === 'danger_zone' || cand.type === 'secret_realm') {
         continue;
       }
     }
@@ -75,13 +83,28 @@ function chooseDestination(npc, { anchors, anchorMap, graph, ladder, gameDay, no
 
     if (!pathAnchors || pathAnchors.length < 2) continue;
 
+    // Ban any route that transits through an island node
+    if (pathAnchors.some((aid) => anchorMap?.[aid]?.type === 'island')) continue;
+
     // Max 2 hops: path length <= 3 (e.g. A -> B -> C is 2 hops)
     const hops = pathAnchors.length - 1;
     if (hops > 2) continue;
 
+    // Validate full pass-routed journey upfront so candidates are never selected if blocked or > 900 tiles
+    const speed = resolveTravelSpeed(npc);
+    const journey = buildJourney({
+      pathAnchors,
+      anchorMap,
+      now,
+      tilesPerMinute: speed,
+      purpose: 'berkelana',
+      routeFn
+    });
+    if (!journey) continue;
+
     // Weight: 60 for same region, 40 for different region
     const weight = cand.regionSlug === currentRegion ? 60 : 40;
-    candidates.push({ anchor: cand, pathAnchors, weight });
+    candidates.push({ anchor: cand, pathAnchors, journey, weight });
   }
 
   if (candidates.length === 0) {
@@ -102,19 +125,22 @@ function chooseDestination(npc, { anchors, anchorMap, graph, ladder, gameDay, no
   // 6. Stay duration: 20 to 60 minutes
   const stayMinutes = 20 + Math.floor(rng() * 41);
   const stayMs = stayMinutes * 60000;
+  const testedJourney = { ...selected.journey, purpose, stayMs };
 
   return {
     toAnchorId: selected.anchor.id,
     purpose,
     pathAnchors: selected.pathAnchors,
-    stayMs
+    stayMs,
+    journey: testedJourney
   };
 }
 
 /**
  * Plans a return trip to homeAnchorId (purpose: 'pulang', without RNG).
+ * Uses routeFn to validate reachability; flags teleport: true if route is blocked.
  */
-function planReturnHome(npc, { anchorMap, graph, now = Date.now() }) {
+function planReturnHome(npc, { anchorMap, graph, now = Date.now(), routeFn = defaultRouteFn }) {
   const currentAnchorId = npc.schedule?.currentAnchorId || '';
   const homeAnchorId = npc.schedule?.homeAnchorId || '';
 
@@ -145,11 +171,38 @@ function planReturnHome(npc, { anchorMap, graph, now = Date.now() }) {
     pathAnchors = [currentAnchorId, homeAnchorId];
   }
 
+  const speed = resolveTravelSpeed(npc);
+  const hasIslandTransit = pathAnchors.slice(1, -1).some((aid) => anchorMap?.[aid]?.type === 'island');
+  const journey = hasIslandTransit
+    ? null
+    : buildJourney({
+        pathAnchors,
+        anchorMap,
+        now,
+        tilesPerMinute: speed,
+        purpose: 'pulang',
+        maxTiles: 10000,
+        routeFn
+      });
+
+  if (!journey) {
+    return {
+      toAnchorId: homeAnchorId,
+      purpose: 'pulang',
+      pathAnchors: null,
+      stayMs: 0,
+      teleport: true,
+      journey: null
+    };
+  }
+
   return {
     toAnchorId: homeAnchorId,
     purpose: 'pulang',
     pathAnchors,
-    stayMs: 0
+    stayMs: 0,
+    teleport: false,
+    journey
   };
 }
 
