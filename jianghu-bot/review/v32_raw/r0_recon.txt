@@ -1,0 +1,96 @@
+=== 1. barriers.json ===
+azure_wall {"minX":0,"maxX":3950,"minY":3100,"maxY":3600}
+great_rift {"minX":1600,"maxX":2800,"minY":1800,"maxY":2050}
+west_cliff {"minX":1450,"maxX":1600,"minY":1500,"maxY":3100}
+lava_lakes {"minX":700,"maxX":1500,"minY":300,"maxY":1100}
+eastern_sea_coast {"minX":3950,"maxX":4200,"minY":1000,"maxY":3500}
+mirror_lake_water {"minX":3100,"maxX":3700,"minY":3600,"maxY":4100}
+forbidden_peaks {"minX":3300,"maxX":3950,"minY":4100,"maxY":4900}
+
+=== 2. passes.json ===
+north_pass azure_wall 2200 3350 3
+mist_pass azure_wall 2600 3350 3
+sword_gorge azure_wall 3100 3350 3
+merchant_pass west_cliff 1500 2250 10
+chain_bridge great_rift 2300 1950 5
+caravan_gap azure_wall 750 3350 3
+
+=== 3. anchors (island/port) ===
+[
+  [ 'dermaga_donghai', 'port', 3920, 2700 ],
+  [ 'pulau_penyu_raksasa', 'island', 4350, 2750 ],
+  [ 'dermaga_teluk_sembilan', 'port', 2500, 2300 ]
+]
+
+=== 4. utils/npcJourney.js (lines 1-60) ===
+/**
+ * Pure Mathematical Journey Engine for NPCs (V30)
+ * Calculates Chebyshev legs, deterministic interpolation, and ETA.
+ * Zero database access, pure and testable.
+ */
+
+/**
+ * Adaptor: Converts travelGraph.shortestPath result into an array of anchor IDs.
+ * Returns null if path is unreachable, empty, or invalid.
+ */
+function toAnchorPath(rawPath, anchorMap = null) {
+  if (!rawPath) return null;
+
+  let pathArr = null;
+  if (Array.isArray(rawPath)) {
+    pathArr = rawPath;
+  } else if (rawPath && Array.isArray(rawPath.path)) {
+    if (rawPath.totalLi === Infinity || rawPath.path.length === 0) {
+      return null;
+    }
+    pathArr = rawPath.path;
+  }
+
+  if (!pathArr || pathArr.length === 0) return null;
+
+  if (anchorMap) {
+    // If nodes are names, map them to IDs
+    const nameToId = new Map();
+    for (const [id, a] of Object.entries(anchorMap)) {
+      if (a && a.name) {
+        nameToId.set(a.name.toLowerCase(), a.id || id);
+      }
+      nameToId.set(id.toLowerCase(), a.id || id);
+    }
+    const resolved = [];
+    for (const p of pathArr) {
+      const match = nameToId.get(String(p).toLowerCase()) || p;
+      resolved.push(match);
+    }
+    return resolved;
+  }
+
+  return pathArr;
+}
+
+/**
+ * Builds a deterministic journey object between anchors.
+ * Returns null if path is invalid, < 2 anchors, totalTiles > maxTiles, or totalTiles === 0.
+ */
+function buildJourney({ pathAnchors, anchorMap, now = Date.now(), tilesPerMinute = 10, purpose = 'berkelana', maxTiles = 900 }) {
+  if (!Array.isArray(pathAnchors) || pathAnchors.length < 2) {
+    return null;
+  }
+
+  const legs = [];
+  let totalTiles = 0;
+
+  for (let i = 0; i < pathAnchors.length - 1; i++) {
+    const fromAnchor = anchorMap ? anchorMap[pathAnchors[i]] : null;
+    const toAnchor = anchorMap ? anchorMap[pathAnchors[i + 1]] : null;
+
+=== 5. grep island|buildJourney|planReturnHome ===
+services/npcWanderPlanner.js:52:    // Filter tier: skip danger_zone, secret_realm, island unless realmIndex >= 3
+services/npcWanderPlanner.js:54:      if (cand.type === 'danger_zone' || cand.type === 'secret_realm' || cand.type === 'island') {
+services/npcWanderPlanner.js:117:function planReturnHome(npc, { anchorMap, graph, now = Date.now() }) {
+services/npcWanderPlanner.js:158:  planReturnHome
+services/npcJourneyTick.js:7:const { positionAt, buildJourney } = require('../utils/npcJourney');
+services/npcJourneyTick.js:8:const { chooseDestination, planReturnHome } = require('./npcWanderPlanner');
+services/npcJourneyTick.js:170:    const returnPlan = planReturnHome(npc, { anchorMap, graph, now });
+services/npcJourneyTick.js:173:      journey = buildJourney({
+services/npcJourneyTick.js:237:      const journey = buildJourney({
